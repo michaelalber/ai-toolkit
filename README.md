@@ -1,6 +1,8 @@
 # AI Toolkit
 
-A collection of Claude Code skills for AI-assisted software development workflows.
+A collection of AI coding agent skills and subagents for AI-assisted software development workflows.
+
+Supports [Claude Code](https://claude.ai/code) and [OpenCode](https://opencode.ai/).
 
 ## Skills
 
@@ -25,9 +27,29 @@ A comprehensive set of skills for Test-Driven Development with AI assistance. Ba
 
 ## Installation
 
-Copy the desired skill directories from `skills/` into your Claude Code skills location:
-- User skills: `~/.claude/skills/`
-- Project skills: `.claude/skills/` in your repository
+### Claude Code
+
+```bash
+# Skills
+ln -sf /path/to/ai-toolkit/skills/* ~/.claude/skills/
+
+# Subagents
+ln -sf /path/to/ai-toolkit/subagents/*.md ~/.claude/agents/
+```
+
+See [skills/README.md](skills/README.md) and [subagents/README.md](subagents/README.md) for details.
+
+### OpenCode
+
+```bash
+# Skills (OpenCode supports Claude-compatible paths)
+ln -sf /path/to/ai-toolkit/skills/* ~/.claude/skills/
+
+# Agents
+ln -sf /path/to/ai-toolkit/opencode/agents/*.md ~/.config/opencode/agents/
+```
+
+See [opencode/agents/README.md](opencode/agents/README.md) for details.
 
 ## Usage
 
