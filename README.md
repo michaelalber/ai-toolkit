@@ -41,6 +41,10 @@ Skills are invoked automatically based on context or can be triggered with slash
 /jira-review   # Review a Jira issue
 ```
 
+## Author
+
+[Michael K Alber](https://github.com/michaelalber)
+
 ## License
 
 MIT License - see [LICENSE](LICENSE) for details.
