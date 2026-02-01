@@ -33,11 +33,11 @@ A comprehensive set of skills for Test-Driven Development with AI assistance. Ba
 # Skills
 ln -sf /path/to/ai-toolkit/skills/* ~/.claude/skills/
 
-# Subagents
-ln -sf /path/to/ai-toolkit/subagents/*.md ~/.claude/agents/
+# Agents
+ln -sf /path/to/ai-toolkit/claude/agents/*.md ~/.claude/agents/
 ```
 
-See [skills/README.md](skills/README.md) and [subagents/README.md](subagents/README.md) for details.
+See [skills/README.md](skills/README.md) and [claude/agents/README.md](claude/agents/README.md) for details.
 
 ### OpenCode
 

@@ -82,4 +82,4 @@ Skills can be invoked as slash commands:
 /jira-review
 ```
 
-Or referenced by subagents that depend on them.
+Or referenced by agents that depend on them.
