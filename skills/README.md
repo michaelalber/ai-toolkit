@@ -20,7 +20,7 @@ mkdir -p ~/.claude/skills
 ln -sf /path/to/ai-toolkit/skills/* ~/.claude/skills/
 
 # Remove the README.md symlink
-rm ~/.claude/skills/README.md
+rm -f ~/.claude/skills/README.md
 ```
 
 #### Option 2: Copy
@@ -63,7 +63,7 @@ mkdir -p ~/.config/opencode/skills
 ln -sf /path/to/ai-toolkit/skills/* ~/.config/opencode/skills/
 
 # Remove the README.md symlink
-rm ~/.config/opencode/skills/README.md
+rm -f ~/.config/opencode/skills/README.md
 ```
 
 #### Option 2: Symlink to Claude location

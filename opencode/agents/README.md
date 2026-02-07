@@ -16,6 +16,9 @@ mkdir -p ~/.config/opencode/agents
 
 # Symlink all agent files
 ln -sf /path/to/ai-toolkit/opencode/agents/*.md ~/.config/opencode/agents/
+
+# Remove the README.md symlink
+rm -f ~/.config/opencode/agents/README.md
 ```
 
 ### Option 2: Copy
@@ -40,6 +43,9 @@ For project-specific agents:
 ```bash
 mkdir -p .opencode/agents
 ln -sf /path/to/ai-toolkit/opencode/agents/*.md .opencode/agents/
+
+# Remove the README.md symlink
+rm -f .opencode/agents/README.md
 ```
 
 ## Verification
@@ -66,10 +72,12 @@ OpenCode supports Claude-compatible skill paths. Install skills to one of these 
 # OpenCode native path
 mkdir -p ~/.config/opencode/skills
 ln -sf /path/to/ai-toolkit/skills/* ~/.config/opencode/skills/
+rm -f ~/.config/opencode/skills/README.md
 
 # Or Claude-compatible path (also supported by OpenCode)
 mkdir -p ~/.claude/skills
 ln -sf /path/to/ai-toolkit/skills/* ~/.claude/skills/
+rm -f ~/.claude/skills/README.md
 ```
 
 The agent will use the `skill` tool to load:

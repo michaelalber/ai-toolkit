@@ -16,6 +16,9 @@ mkdir -p ~/.claude/agents
 
 # Symlink all agent files
 ln -sf /path/to/ai-toolkit/claude/agents/*.md ~/.claude/agents/
+
+# Remove the README.md symlink
+rm -f ~/.claude/agents/README.md
 ```
 
 ### Option 2: Copy
@@ -45,6 +48,9 @@ mkdir -p ~/.claude/skills
 
 # Symlink all skills
 ln -sf /path/to/ai-toolkit/skills/* ~/.claude/skills/
+
+# Remove the README.md symlink
+rm -f ~/.claude/skills/README.md
 ```
 
 ## Available Agents
