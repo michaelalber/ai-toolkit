@@ -103,11 +103,38 @@ After installation, verify the skills are available:
 | `tdd-refactor` | Safe refactoring patterns and code smell detection |
 | `tdd-verify` | TDD compliance verification and scoring |
 
+### Enterprise .NET Suite
+
+| Skill | Description |
+|-------|-------------|
+| `dotnet-vertical-slice` | Scaffold vertical slice architecture with CQRS + FreeMediator |
+| `ef-migration-manager` | EF Core migration lifecycle with safety checks and rollback |
+| `nuget-package-scaffold` | NuGet package creation with CI/CD and test harness |
+| `blazor-telerik-component` | Telerik Blazor UI patterns for grids, forms, dialogs |
+| `legacy-migration-analyzer` | .NET Framework to .NET 10 migration analysis |
+
+### Edge/IoT/Robotics Suite
+
+| Skill | Description |
+|-------|-------------|
+| `edge-cv-pipeline` | OpenCV + TFLite computer vision pipeline for Jetson/Pi |
+| `jetson-deploy` | Jetson Orin Nano deployment and TensorRT optimization |
+| `sensor-integration` | Sensor data pipeline with I2C/SPI/UART/GPIO protocols |
+| `picar-x-behavior` | Composable robot behaviors for SunFounder Picar-X |
+
+### AI/ML Bridge Suite
+
+| Skill | Description |
+|-------|-------------|
+| `rag-pipeline` | RAG scaffold with Ollama/cloud embeddings and vector stores |
+| `mcp-server-scaffold` | Custom MCP server creation with FastMCP and testing |
+| `ollama-model-workflow` | Local LLM management with Modelfile and benchmarking |
+
 ### Other Skills
 
 | Skill | Description |
 |-------|-------------|
-| `jira-review` | Automated Jira issue analysis and improvement suggestions |
+| `python-arch-review` | Python architecture review and code quality analysis |
 
 ## Skill Structure
 
@@ -126,9 +153,12 @@ skill-name/
 Skills can be invoked as slash commands:
 
 ```
-/tdd-cycle
-/tdd-verify
-/jira-review
+/tdd-cycle                  # Start a TDD session
+/dotnet-vertical-slice      # Scaffold a vertical slice feature
+/ef-migration-manager       # Manage EF Core migrations safely
+/edge-cv-pipeline           # Build an edge CV pipeline
+/rag-pipeline               # Scaffold a RAG pipeline
+/mcp-server-scaffold        # Create a custom MCP server
 ```
 
 Or referenced by agents that depend on them.
