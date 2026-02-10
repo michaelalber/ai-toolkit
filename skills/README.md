@@ -145,6 +145,24 @@ After installation, verify the skills are available:
 | `technical-debt-assessor` | Debt quantification and business case building |
 | `architecture-journal` | ADR templates with 30/90/180-day retrospectives |
 
+### Agent Support Suite
+
+Skills that provide domain knowledge and execution protocols for autonomous agents.
+
+| Skill | Description | Used By |
+|-------|-------------|---------|
+| `automated-code-review` | Autonomous review execution checklists for security, correctness, performance, maintainability, style | code-review-agent |
+| `test-scaffold` | Test generation conventions, AAA naming, mock patterns for FreeMediator/repositories | test-generation-agent |
+| `doc-sync` | Documentation staleness detection, XML doc generation, README sync | documentation-agent |
+| `supply-chain-audit` | NuGet/npm/pip vulnerability scanning, license matrix, CVE correlation | dependency-audit-agent |
+| `environment-health` | Docker health checks, service monitoring, container lifecycle, connection validation | environment-health-agent |
+| `model-optimization` | Quantization workflows, TensorRT/TFLite conversion, accuracy/latency benchmarking | model-optimization-agent |
+| `anomaly-detection` | Statistical anomaly detection, drift algorithms, alert/log/calibrate decision trees | sensor-anomaly-agent |
+| `fleet-management` | Rolling deployment strategies, multi-device coordination, rollback triggers | fleet-deployment-agent |
+| `research-synthesis` | Multi-source cross-referencing, source credibility scoring, briefing formats | research-agent |
+| `session-context` | Git change summarization, ADR relevance matching, pattern applicability | context-builder-agent |
+| `task-decomposition` | Goal breakdown heuristics, dependency DAGs, sub-agent assignment protocols | task-decomposition-agent |
+
 ### Other Skills
 
 | Skill | Description |

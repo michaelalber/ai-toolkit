@@ -55,9 +55,43 @@ rm -f ~/.claude/skills/README.md
 
 ## Available Agents
 
-| Agent | Description |
-|-------|-------------|
-| `tdd-agent` | Autonomous TDD with strict guardrails. Drives the complete RED-GREEN-REFACTOR cycle independently. |
+### Development Workflow
+
+| Agent | Description | Skills |
+|-------|-------------|--------|
+| `tdd-agent` | Autonomous TDD with strict guardrails. Drives the complete RED-GREEN-REFACTOR cycle independently. | tdd-cycle, tdd-implementer, tdd-refactor, tdd-verify |
+| `code-review-agent` | Autonomous code review — security, correctness, performance, maintainability, and style analysis with structured findings. | code-review-coach, security-review-trainer, pr-feedback-writer, automated-code-review |
+| `test-generation-agent` | Autonomous test generation using TDD patterns. Analyzes code, identifies gaps, generates tests with proper naming and mocking. | tdd-implementer, tdd-cycle, dotnet-vertical-slice, test-scaffold |
+| `documentation-agent` | Autonomous documentation sync — detects staleness, generates XML docs, updates READMEs, and maintains ADRs. | architecture-journal, doc-sync |
+| `dependency-audit-agent` | Autonomous dependency auditing — vulnerability scanning, license compliance, and upgrade path analysis. | dependency-mapper, technical-debt-assessor, supply-chain-audit |
+
+### DevOps / Infrastructure
+
+| Agent | Description | Skills |
+|-------|-------------|--------|
+| `migration-orchestrator` | Semi-autonomous migration orchestration — EF Core and .NET Framework migrations with approval gates. | ef-migration-manager, legacy-migration-analyzer |
+| `environment-health-agent` | Autonomous environment health monitoring — Docker, services, connections, and recovery for dev environments. | environment-health |
+
+### Edge AI / IoT
+
+| Agent | Description | Skills |
+|-------|-------------|--------|
+| `model-optimization-agent` | Autonomous model optimization — quantization, format conversion, and accuracy/latency benchmarking for edge deployment. | edge-cv-pipeline, jetson-deploy, model-optimization |
+| `sensor-anomaly-agent` | Autonomous sensor anomaly detection — statistical outlier detection, drift monitoring, and recalibration recommendations. | sensor-integration, anomaly-detection |
+| `fleet-deployment-agent` | Semi-autonomous fleet deployment — canary, staged rollout, health gates, and rollback across edge device fleets. | jetson-deploy, fleet-management |
+
+### Knowledge / RAG
+
+| Agent | Description | Skills |
+|-------|-------------|--------|
+| `research-agent` | Autonomous research — multi-source investigation, credibility scoring, cross-referencing, and structured briefings. | rag-pipeline, research-synthesis |
+| `context-builder-agent` | Autonomous context assembly — git change summarization, ADR matching, dependency mapping for session starts. | architecture-journal, dependency-mapper, session-context |
+
+### Meta / Orchestration
+
+| Agent | Description | Skills |
+|-------|-------------|--------|
+| `task-decomposition-agent` | Meta-orchestrator — decomposes complex goals into sub-tasks and assigns to specialized agents. Does NOT execute tasks itself. | task-decomposition |
 
 ## Usage
 
@@ -65,6 +99,9 @@ Once installed, agents can be invoked by the Task tool or referenced in Claude C
 
 ```
 Use tdd-agent to implement a Calculator.add method
+Use code-review-agent to review the latest changes
+Use migration-orchestrator to plan the EF Core migration
+Use research-agent to investigate WebSocket vs SSE for real-time updates
 ```
 
-The agent will operate autonomously, following TDD discipline with explicit state tracking and evidence-based verification.
+Each agent operates autonomously with explicit state tracking, guardrails, and evidence-based verification.

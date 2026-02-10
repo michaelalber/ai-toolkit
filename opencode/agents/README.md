@@ -30,11 +30,7 @@ mkdir -p ~/.config/opencode/agents
 cp /path/to/ai-toolkit/opencode/agents/*.md ~/.config/opencode/agents/
 ```
 
-**Note:** When copying, exclude this README to avoid confusion:
-
-```bash
-cp /path/to/ai-toolkit/opencode/agents/tdd-agent.md ~/.config/opencode/agents/
-```
+**Note:** When copying, exclude this README to avoid confusion. Copy only the `.md` agent files you need.
 
 ### Project-Local Installation
 
@@ -54,17 +50,51 @@ After installation, verify the agents are available:
 
 1. Open OpenCode
 2. Press `Tab` to cycle through available agents, or check the agent list
-3. The `tdd-agent` should appear as a subagent option
+3. Your installed agents should appear as subagent options
 
 ## Available Agents
+
+### Development Workflow
 
 | Agent | Mode | Description |
 |-------|------|-------------|
 | `tdd-agent` | subagent | Autonomous TDD with strict guardrails. Drives the complete RED-GREEN-REFACTOR cycle independently. |
+| `code-review-agent` | subagent | Autonomous code review — security, correctness, performance, maintainability, and style analysis. |
+| `test-generation-agent` | subagent | Autonomous test generation using TDD patterns with proper naming and mocking. |
+| `documentation-agent` | subagent | Autonomous documentation sync — staleness detection, XML docs, README sync, ADR maintenance. |
+| `dependency-audit-agent` | subagent | Autonomous dependency auditing — vulnerability scanning, license compliance, upgrade paths. |
+
+### DevOps / Infrastructure
+
+| Agent | Mode | Description |
+|-------|------|-------------|
+| `migration-orchestrator` | subagent | Semi-autonomous migration orchestration with approval gates for EF Core and .NET migrations. |
+| `environment-health-agent` | subagent | Autonomous environment health monitoring for Docker, services, and connections. |
+
+### Edge AI / IoT
+
+| Agent | Mode | Description |
+|-------|------|-------------|
+| `model-optimization-agent` | subagent | Autonomous model optimization — quantization, conversion, and benchmarking for edge. |
+| `sensor-anomaly-agent` | subagent | Autonomous sensor anomaly detection — statistical outliers, drift, and recalibration. |
+| `fleet-deployment-agent` | subagent | Semi-autonomous fleet deployment — canary, staged rollout, and rollback for edge fleets. |
+
+### Knowledge / RAG
+
+| Agent | Mode | Description |
+|-------|------|-------------|
+| `research-agent` | subagent | Autonomous research — multi-source investigation, credibility scoring, and structured briefings. |
+| `context-builder-agent` | subagent | Autonomous context assembly — git changes, ADR matching, and dependency mapping. |
+
+### Meta / Orchestration
+
+| Agent | Mode | Description |
+|-------|------|-------------|
+| `task-decomposition-agent` | subagent | Meta-orchestrator — decomposes goals into sub-tasks and assigns to specialized agents. |
 
 ## Skills Installation (Required for Full Functionality)
 
-The tdd-agent loads skills on-demand for detailed guidance. **Skills must be installed** for the agent to access reference material like implementation patterns, code smells, and refactoring catalogs.
+Agents load skills on-demand for detailed guidance. **Skills must be installed** for agents to access reference material.
 
 OpenCode supports Claude-compatible skill paths. Install skills to one of these locations:
 
@@ -80,11 +110,7 @@ ln -sf /path/to/ai-toolkit/skills/* ~/.claude/skills/
 rm -f ~/.claude/skills/README.md
 ```
 
-The agent will use the `skill` tool to load:
-- `tdd-cycle` - Phase transitions and state management
-- `tdd-implementer` - Minimal implementation patterns (Python, TypeScript, .NET)
-- `tdd-refactor` - Code smell detection and refactoring catalog
-- `tdd-verify` - Compliance scoring and anti-patterns
+Each agent's "Available Skills" section lists the skills it loads on-demand via the `skill` tool.
 
 ## Differences from Claude Code Version
 
@@ -99,13 +125,16 @@ The OpenCode version has core TDD knowledge inlined in the agent prompt, with in
 
 ## Usage
 
-Once installed, invoke the tdd-agent as a subagent:
+Once installed, invoke agents as subagents:
 
 ```
 Use tdd-agent to implement a Calculator.add method
+Use code-review-agent to review the latest changes
+Use migration-orchestrator to plan the EF Core migration
+Use research-agent to investigate WebSocket vs SSE for real-time updates
 ```
 
-The agent will operate autonomously, following TDD discipline with explicit state tracking and evidence-based verification.
+Each agent operates autonomously with explicit state tracking, guardrails, and evidence-based verification.
 
 ## Configuration
 

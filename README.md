@@ -69,6 +69,48 @@ Skills for developing software engineering judgment through deliberate practice,
 | `technical-debt-assessor` | Debt quantification practice — deliberate vs accidental, cost-to-fix vs cost-to-carry, business case building. |
 | `architecture-journal` | Lightweight ADR templates with retrospective prompts at 30/90/180 days for converting experience into expertise. |
 
+## Agents
+
+Autonomous agents that make decisions and take actions independently. Each agent has both Claude Code and OpenCode versions.
+
+### Development Workflow
+
+| Agent | Description |
+|-------|-------------|
+| `tdd-agent` | Autonomous TDD — drives the complete RED-GREEN-REFACTOR cycle with strict guardrails. |
+| `code-review-agent` | Autonomous code review — security, correctness, performance, maintainability, and style analysis. |
+| `test-generation-agent` | Autonomous test generation — analyzes code, identifies gaps, generates tests with TDD patterns. |
+| `documentation-agent` | Autonomous documentation sync — detects staleness, generates XML docs, updates READMEs. |
+| `dependency-audit-agent` | Autonomous dependency auditing — vulnerability scanning, license compliance, upgrade paths. |
+
+### DevOps / Infrastructure
+
+| Agent | Description |
+|-------|-------------|
+| `migration-orchestrator` | Semi-autonomous migration orchestration — EF Core and .NET Framework migrations with approval gates. |
+| `environment-health-agent` | Autonomous environment health monitoring — Docker, services, connections, and recovery. |
+
+### Edge AI / IoT
+
+| Agent | Description |
+|-------|-------------|
+| `model-optimization-agent` | Autonomous model optimization — quantization, format conversion, and benchmarking for edge. |
+| `sensor-anomaly-agent` | Autonomous sensor anomaly detection — statistical outliers, drift monitoring, recalibration. |
+| `fleet-deployment-agent` | Semi-autonomous fleet deployment — canary, staged rollout, health gates, and rollback. |
+
+### Knowledge / RAG
+
+| Agent | Description |
+|-------|-------------|
+| `research-agent` | Autonomous research — multi-source investigation, credibility scoring, and structured briefings. |
+| `context-builder-agent` | Autonomous context assembly — git change summarization, ADR matching, dependency mapping. |
+
+### Meta / Orchestration
+
+| Agent | Description |
+|-------|-------------|
+| `task-decomposition-agent` | Meta-orchestrator — decomposes complex goals into sub-tasks and assigns to specialized agents. |
+
 ## Installation
 
 ### Claude Code
