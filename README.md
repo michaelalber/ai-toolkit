@@ -52,6 +52,23 @@ Skills for RAG pipelines, MCP servers, and local LLM management. Python-focused.
 | `mcp-server-scaffold` | Custom MCP server creation with FastMCP (Python), testing patterns, and protocol reference. |
 | `ollama-model-workflow` | Local LLM management with Modelfile configuration, quantization, and benchmarking. |
 
+### Coaching & Learning Suite
+
+Skills for developing software engineering judgment through deliberate practice, Socratic questioning, and compressed feedback loops.
+
+| Skill | Description |
+|-------|-------------|
+| `architecture-review` | Devil's advocate critic — challenges designs via Socratic questioning against SOLID, coupling, failure modes, and scalability. |
+| `pattern-tradeoff-analyzer` | Pattern selection coach — presents 2-3 patterns with explicit tradeoffs, challenges golden hammer tendencies. |
+| `system-design-kata` | Domain-calibrated exercises (security workflows, edge fleet, hybrid cloud) with critique rubrics. |
+| `dependency-mapper` | Coupling visualization with Robert C. Martin metrics — makes architectural decisions visible as dependency patterns. |
+| `code-review-coach` | Deliberate practice for review — user reviews first, then compares against expert analysis with category-based scoring. |
+| `refactor-challenger` | Refactoring prioritization coach — distinguishes aesthetic preferences from production-impact smells. |
+| `security-review-trainer` | Progressive security challenges — intentional vulnerabilities in clean code, scored findings, increasing difficulty. |
+| `pr-feedback-writer` | Review communication coach — blocking vs suggestion vs nit, constructive framing, explaining the "why". |
+| `technical-debt-assessor` | Debt quantification practice — deliberate vs accidental, cost-to-fix vs cost-to-carry, business case building. |
+| `architecture-journal` | Lightweight ADR templates with retrospective prompts at 30/90/180 days for converting experience into expertise. |
+
 ## Installation
 
 ### Claude Code
@@ -93,6 +110,11 @@ Skills are invoked automatically based on context or can be triggered with slash
 /rag-pipeline               # Scaffold a RAG pipeline
 /mcp-server-scaffold        # Create a custom MCP server
 /ollama-model-workflow      # Manage local LLMs with Ollama
+/architecture-review        # Challenge a design with Socratic questioning
+/code-review-coach          # Practice deliberate code review
+/pattern-tradeoff-analyzer  # Analyze pattern tradeoffs
+/security-review-trainer    # Progressive security challenges
+/architecture-journal       # Record and review architecture decisions
 ```
 
 ## Author

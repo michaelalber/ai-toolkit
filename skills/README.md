@@ -130,6 +130,21 @@ After installation, verify the skills are available:
 | `mcp-server-scaffold` | Custom MCP server creation with FastMCP and testing |
 | `ollama-model-workflow` | Local LLM management with Modelfile and benchmarking |
 
+### Coaching & Learning Suite
+
+| Skill | Description |
+|-------|-------------|
+| `architecture-review` | Devil's advocate architecture critic with Socratic questioning |
+| `pattern-tradeoff-analyzer` | Pattern selection coach with explicit tradeoff analysis |
+| `system-design-kata` | Domain-calibrated design exercises with critique rubrics |
+| `dependency-mapper` | Coupling visualization with Robert C. Martin metrics |
+| `code-review-coach` | Deliberate practice for code review with scoring |
+| `refactor-challenger` | Refactoring prioritization by business impact |
+| `security-review-trainer` | Progressive security challenges with difficulty levels |
+| `pr-feedback-writer` | Review communication coach for constructive feedback |
+| `technical-debt-assessor` | Debt quantification and business case building |
+| `architecture-journal` | ADR templates with 30/90/180-day retrospectives |
+
 ### Other Skills
 
 | Skill | Description |
@@ -159,6 +174,10 @@ Skills can be invoked as slash commands:
 /edge-cv-pipeline           # Build an edge CV pipeline
 /rag-pipeline               # Scaffold a RAG pipeline
 /mcp-server-scaffold        # Create a custom MCP server
+/architecture-review        # Challenge a design with Socratic questioning
+/code-review-coach          # Practice deliberate code review
+/security-review-trainer    # Progressive security challenge training
+/architecture-journal       # Record and review architecture decisions
 ```
 
 Or referenced by agents that depend on them.
