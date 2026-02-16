@@ -1,7 +1,6 @@
 ---
 description: Autonomous model optimization for edge deployment. Use when optimizing ML models through quantization, pruning, format conversion (TensorRT/TFLite), and accuracy/latency benchmarking.
 mode: subagent
-model: anthropic/claude-sonnet-4-20250514
 tools:
   read: true
   edit: true
@@ -42,7 +41,7 @@ Load these skills on-demand for detailed guidance. Use the `skill` tool when you
 2. Load `edge-cv-pipeline` when integrating the optimized model into a vision pipeline
 3. Load `jetson-deploy` when targeting Jetson hardware for deployment and containerization
 
-**Note:** Skills must be installed in `~/.claude/skills/` or `~/.config/opencode/skills/` to be available.
+**Note:** Skills are located in `~/.config/opencode/skills/`.
 
 ## Guardrails
 

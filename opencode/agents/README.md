@@ -96,18 +96,12 @@ After installation, verify the agents are available:
 
 Agents load skills on-demand for detailed guidance. **Skills must be installed** for agents to access reference material.
 
-OpenCode supports Claude-compatible skill paths. Install skills to one of these locations:
+Install skills to the OpenCode skills directory:
 
 ```bash
-# OpenCode native path
 mkdir -p ~/.config/opencode/skills
 ln -sf /path/to/ai-toolkit/skills/* ~/.config/opencode/skills/
 rm -f ~/.config/opencode/skills/README.md
-
-# Or Claude-compatible path (also supported by OpenCode)
-mkdir -p ~/.claude/skills
-ln -sf /path/to/ai-toolkit/skills/* ~/.claude/skills/
-rm -f ~/.claude/skills/README.md
 ```
 
 Each agent's "Available Skills" section lists the skills it loads on-demand via the `skill` tool.
@@ -144,7 +138,6 @@ You can customize the agent by editing the frontmatter:
 ---
 description: Autonomous TDD with strict guardrails
 mode: subagent
-model: anthropic/claude-sonnet-4-20250514  # Change model here
 tools:
   read: true
   edit: true
@@ -154,5 +147,7 @@ tools:
   grep: true
 ---
 ```
+
+The agents inherit the model configured in your OpenCode settings, so no `model` field is needed. To override for a specific agent, add `model: provider/model-name` to the frontmatter.
 
 See [OpenCode Agents Documentation](https://opencode.ai/docs/agents/) for all available options.

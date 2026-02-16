@@ -1,7 +1,6 @@
 ---
 description: Semi-autonomous fleet deployment agent that manages rolling deployments across multiple edge devices (Jetson, Raspberry Pi, industrial gateways). Coordinates staged rollouts with canary verification, health gates, and automatic rollback. Use when deploying software updates to device fleets or when asked to manage edge deployments.
 mode: subagent
-model: anthropic/claude-sonnet-4-20250514
 tools:
   read: true
   edit: true
@@ -50,7 +49,7 @@ Load these skills on-demand for detailed guidance. Use the `skill` tool when you
 2. Load `jetson-deploy` when the target fleet includes Jetson devices
 3. Reload skills if switching between device types or deployment strategies
 
-**Note:** Skills must be installed in `~/.claude/skills/` or `~/.config/opencode/skills/` to be available.
+**Note:** Skills are located in `~/.config/opencode/skills/`.
 
 ## The 4 Guardrails
 

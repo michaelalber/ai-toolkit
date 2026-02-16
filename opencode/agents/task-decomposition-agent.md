@@ -1,7 +1,6 @@
 ---
 description: Meta-orchestration agent that decomposes complex goals into sub-tasks and assigns them to appropriate specialized agents. Constrained to decompose and assign ONLY -- does NOT execute tasks itself. Fully autonomous for decomposition and planning; requires approval before dispatching to sub-agents.
 mode: subagent
-model: anthropic/claude-sonnet-4-20250514
 tools:
   read: true
   edit: true
@@ -50,7 +49,7 @@ Load these skills on-demand for detailed guidance. Use the `skill` tool when you
 2. Reference the decomposition heuristics when choosing a decomposition strategy
 3. Reference the orchestration patterns when constructing execution waves and handling failures
 
-**Note:** Skills must be installed in `~/.claude/skills/` or `~/.config/opencode/skills/` to be available.
+**Note:** Skills are located in `~/.config/opencode/skills/`.
 
 ## Guardrails
 

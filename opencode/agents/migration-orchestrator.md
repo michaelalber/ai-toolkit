@@ -1,7 +1,6 @@
 ---
 description: Semi-autonomous migration orchestrator that plans and coordinates .NET Framework to .NET 8/10 migrations, database schema migrations, and legacy system modernization. Requires explicit approval before destructive operations.
 mode: subagent
-model: anthropic/claude-sonnet-4-20250514
 tools:
   read: true
   edit: true
@@ -47,7 +46,7 @@ Load these skills on-demand for detailed guidance. Use the `skill` tool when you
 2. Load `ef-migration-manager` when entering EXECUTE phase for any database migration steps
 3. Load both skills if a migration step involves simultaneous application and database changes
 
-**Note:** Skills must be installed in `~/.claude/skills/` or `~/.config/opencode/skills/` to be available.
+**Note:** Skills are located in `~/.config/opencode/skills/`.
 
 ## Guardrails
 

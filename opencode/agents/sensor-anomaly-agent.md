@@ -1,7 +1,6 @@
 ---
 description: Autonomous sensor anomaly detection agent. Use when monitoring sensor data streams, detecting statistical anomalies and drift, classifying anomaly types, and recommending corrective actions.
 mode: subagent
-model: anthropic/claude-sonnet-4-20250514
 tools:
   read: true
   edit: true
@@ -41,7 +40,7 @@ Load these skills on-demand for detailed guidance. Use the `skill` tool when you
 2. Load `anomaly-detection` when configuring detection algorithms, analyzing drift, or tuning thresholds
 3. Load both skills when building an end-to-end anomaly detection pipeline from scratch
 
-**Note:** Skills must be installed in `~/.claude/skills/` or `~/.config/opencode/skills/` to be available.
+**Note:** Skills are located in `~/.config/opencode/skills/`.
 
 ## Guardrails
 

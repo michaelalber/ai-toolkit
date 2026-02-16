@@ -1,7 +1,6 @@
 ---
 description: Autonomous test generation agent that analyzes source code and generates comprehensive test suites. Supports unit tests, integration tests, and edge case detection.
 mode: subagent
-model: anthropic/claude-sonnet-4-20250514
 tools:
   read: true
   edit: true
@@ -50,7 +49,7 @@ Load these skills on-demand for detailed guidance. Use the `skill` tool when you
 3. Load `tdd-implementer` if the session involves writing implementation alongside tests
 4. Load `tdd-cycle` if full TDD workflow is requested
 
-**Note:** Skills must be installed in `~/.claude/skills/` or `~/.config/opencode/skills/` to be available.
+**Note:** Skills are located in `~/.config/opencode/skills/`.
 
 ## Guardrails
 

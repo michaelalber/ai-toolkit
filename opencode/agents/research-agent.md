@@ -1,7 +1,6 @@
 ---
 description: Autonomous research agent that investigates technical questions by gathering information from multiple sources, cross-referencing findings, scoring source credibility, and producing structured briefings with citations. Use when exploring unfamiliar technologies, comparing options, or building evidence-based recommendations.
 mode: subagent
-model: anthropic/claude-sonnet-4-20250514
 tools:
   read: true
   edit: true
@@ -44,7 +43,7 @@ Load these skills on-demand for detailed guidance. Use the `skill` tool when you
 2. Load `rag-pipeline` when the research involves large document corpora that benefit from vector search and retrieval
 3. Re-load skills if you need to reference specific frameworks during CROSS-REFERENCE or SYNTHESIZE phases
 
-**Note:** Skills must be installed in `~/.claude/skills/` or `~/.config/opencode/skills/` to be available.
+**Note:** Skills are located in `~/.config/opencode/skills/`.
 
 ## Guardrails
 

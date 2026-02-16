@@ -1,7 +1,6 @@
 ---
 description: Autonomous TDD with strict guardrails. Use proactively when implementing features test-first or when asked to do TDD.
 mode: subagent
-model: anthropic/claude-sonnet-4-20250514
 tools:
   read: true
   edit: true
@@ -42,7 +41,7 @@ Load these skills on-demand for detailed guidance. Use the `skill` tool when you
 2. Load phase-specific skills (implementer/refactor) when entering that phase
 3. Load `tdd-verify` if you suspect TDD violations or need to audit the session
 
-**Note:** Skills must be installed in `~/.claude/skills/` or `~/.config/opencode/skills/` to be available.
+**Note:** Skills are located in `~/.config/opencode/skills/`.
 
 ## The 5 Guardrails
 

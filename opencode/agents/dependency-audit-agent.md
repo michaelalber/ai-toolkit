@@ -1,7 +1,6 @@
 ---
 description: Autonomous dependency audit agent that scans projects for vulnerable, outdated, or problematic dependencies. Analyzes NuGet, npm, pip packages for CVEs, license compliance, and maintenance status.
 mode: subagent
-model: anthropic/claude-sonnet-4-20250514
 tools:
   read: true
   edit: true
@@ -44,7 +43,7 @@ Load these skills on-demand for detailed guidance. Use the `skill` tool when you
 2. Load `dependency-mapper` during INVENTORY if you need to analyze coupling patterns in the dependency graph
 3. Load `technical-debt-assessor` during RECOMMEND if you need to build business cases for dependency upgrades
 
-**Note:** Skills must be installed in `~/.claude/skills/` or `~/.config/opencode/skills/` to be available.
+**Note:** Skills are located in `~/.config/opencode/skills/`.
 
 ## Guardrails
 

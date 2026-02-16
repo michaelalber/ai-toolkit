@@ -1,7 +1,6 @@
 ---
 description: Autonomous documentation agent that detects stale docs, generates XML doc comments, syncs READMEs with code changes, and maintains API documentation. Use when documentation is missing, outdated, or needs systematic review.
 mode: subagent
-model: anthropic/claude-sonnet-4-20250514
 tools:
   read: true
   edit: true
@@ -42,7 +41,7 @@ Load these skills on-demand for detailed guidance. Use the `skill` tool when you
 2. Load `architecture-journal` when documentation changes reveal undocumented architecture decisions
 3. Reload `doc-sync` during VALIDATE phase if you need to re-check staleness heuristics
 
-**Note:** Skills must be installed in `~/.claude/skills/` or `~/.config/opencode/skills/` to be available.
+**Note:** Skills are located in `~/.config/opencode/skills/`.
 
 ## The 4 Guardrails
 

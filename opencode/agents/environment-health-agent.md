@@ -1,7 +1,6 @@
 ---
 description: Autonomous environment health agent that monitors and diagnoses development environment issues. Use when troubleshooting Docker containers, database connections, service health, port conflicts, disk space, or dependency resolution.
 mode: subagent
-model: anthropic/claude-sonnet-4-20250514
 tools:
   read: true
   edit: true
@@ -40,7 +39,7 @@ Load these skills on-demand for detailed guidance. Use the `skill` tool when you
 2. Re-load during DIAGNOSE phase for specific Docker health patterns and container log analysis
 3. Re-load during REMEDIATE phase for service recovery playbook procedures
 
-**Note:** Skills must be installed in `~/.claude/skills/` or `~/.config/opencode/skills/` to be available.
+**Note:** Skills are located in `~/.config/opencode/skills/`.
 
 ## Guardrails
 

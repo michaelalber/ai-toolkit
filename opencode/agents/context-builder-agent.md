@@ -1,7 +1,6 @@
 ---
 description: Autonomous context builder agent that assembles relevant project context for AI coding sessions. Summarizes recent git changes, identifies relevant ADRs, maps dependency patterns, and produces a context briefing that accelerates session start. Use when beginning a coding session, onboarding to a codebase, or preparing context for a focused task.
 mode: subagent
-model: anthropic/claude-sonnet-4-20250514
 tools:
   read: true
   edit: true
@@ -49,7 +48,7 @@ Load these skills on-demand for detailed guidance. Use the `skill` tool when you
 2. Load `dependency-mapper` when mapping dependencies around the focus area for coupling metrics and visualization
 3. Load `architecture-journal` when scanning for ADRs and checking retrospective schedules
 
-**Note:** Skills must be installed in `~/.claude/skills/` or `~/.config/opencode/skills/` to be available.
+**Note:** Skills are located in `~/.config/opencode/skills/`.
 
 ## The 4 Guardrails
 
