@@ -4,6 +4,14 @@ A collection of AI coding agent skills and autonomous subagents for AI-assisted 
 
 Supports [Claude Code](https://claude.ai/code) and [OpenCode](https://opencode.ai/).
 
+## Setup
+
+**Claude Code**: The included [`CLAUDE.md`](CLAUDE.md) provides project conventions. It references [`AGENTS.md`](AGENTS.md) which contains the full skill and agent structure guidelines.
+
+**OpenCode**: The included [`AGENTS.md`](AGENTS.md) is automatically recognized. Skills and agents use the same conventions across both platforms.
+
+**Other AI Tools** (Cursor, Windsurf, GitHub Copilot, etc.): [`AGENTS.md`](AGENTS.md) follows the emerging standard for universal agent instructions. Most tools will pick it up automatically from the project root.
+
 ## Skills
 
 ### TDD Suite

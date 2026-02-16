@@ -1,15 +1,11 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+See [AGENTS.md](AGENTS.md) for full project conventions, skill structure, and agent formats.
 
-## Project Overview
+## Quick Reference
 
-AI Toolkit - A collection of AI-related tools and utilities.
-
-## Repository Structure
-
-- `skills/` - Directory for skill implementations (currently empty, awaiting development)
-
-## Development
-
-This project is in its initial stages. Build commands, test runners, and linting tools will be documented here as the project develops.
+- **47 skills** in `skills/<name>/SKILL.md` -- each with `references/` directory
+- **13 agents** in `claude/agents/<name>.md` (Claude Code) and `opencode/agents/<name>.md` (OpenCode)
+- **Gold standard skill template**: `skills/architecture-review/SKILL.md`
+- **Skill format**: 10 mandatory sections (Title, Philosophy, Principles, Workflow, State Block, Templates, Rules, Anti-Patterns, Error Recovery, Integration)
+- **Agent format**: 10 mandatory sections (Title, Philosophy, Guardrails, Protocol, Self-Check, Error Recovery, Rules, Session Template, State Block, Completion)
