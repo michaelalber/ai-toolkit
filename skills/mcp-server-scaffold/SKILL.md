@@ -353,7 +353,7 @@ Actions:
 
 ## Integration with Other Skills
 
-### RAG Pipeline (`rag-pipeline`)
+### RAG Pipeline (`rag-pipeline-python`)
 
 MCP servers are natural interfaces for RAG pipelines. Expose retrieval and generation as tools:
 
@@ -370,7 +370,7 @@ async def get_document(doc_id: str) -> str:
     return await rag_pipeline.get_document(doc_id)
 ```
 
-When building MCP servers that wrap RAG functionality, follow the `rag-pipeline` skill for retrieval quality patterns and the MCP server scaffold for the transport/interface layer.
+When building MCP servers that wrap RAG functionality, follow the `rag-pipeline-python` skill for retrieval quality patterns and the MCP server scaffold for the transport/interface layer.
 
 ### Ollama Model Workflow (`ollama-model-workflow`)
 

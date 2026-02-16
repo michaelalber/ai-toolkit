@@ -1,6 +1,6 @@
 ---
 name: legacy-migration-analyzer
-description: Analyze .NET Framework to .NET 10 migration paths. Use when assessing legacy codebases for modernization, identifying breaking changes, and planning incremental migration strategies.
+description: Analyze .NET Framework to .NET 10 migration paths. Use when assessing legacy codebases for modernization, identifying breaking changes, and planning incremental migration strategies. Also triggers on "upgrade framework", "migrate to .net 10", "framework to core", "legacy .net", ".net framework upgrade", "modernize .net", "upgrade .net framework project", "convert csproj to sdk-style".
 ---
 
 # Legacy Migration Analyzer
@@ -109,12 +109,15 @@ Before beginning analysis, verify:
 
 **Actions:**
 
-1. Cross-reference each NuGet package against [Breaking Changes Catalog](references/breaking-changes-catalog.md)
+1. Cross-reference each NuGet package against [Breaking Changes Catalog](references/breaking-changes-catalog.md) and [Breaking Changes 4.x to 10](references/breaking-changes-4x-to-10.md)
 2. Score each project using the [Migration Decision Matrix](references/migration-decision-matrix.md)
-3. Classify each breaking change by severity: Blocker, High, Medium, Low
-4. Identify hard blockers (no known migration path)
-5. Calculate effort estimates per project
-6. Aggregate into overall solution risk score
+3. Consult [Package Replacement Map](references/package-replacement-map.md) for NuGet package migration paths
+4. Consult [API Replacement Patterns](references/api-replacement-patterns.md) for code-level migration patterns
+5. For web applications, consult [ASP.NET to Blazor Patterns](references/aspnet-to-blazor-patterns.md)
+6. Classify each breaking change by severity: Blocker, High, Medium, Low
+7. Identify hard blockers (no known migration path)
+8. Calculate effort estimates per project
+9. Aggregate into overall solution risk score
 
 **Decision Tree -- Migration Approach Selection:**
 
@@ -506,6 +509,176 @@ RIGHT: "Scan results show 14 projects, 87 NuGet packages (12 incompatible),
         finally the web project with a parallel ASP.NET Core implementation."
 ```
 
+## .NET Framework Upgrade Specifics
+
+This section provides detailed guidance for .NET Framework 4.x to .NET 10 upgrade execution, complementing the analysis workflow above with concrete strategies, project file conversion patterns, and complexity classification criteria.
+
+### Target Framework Recommendations
+
+| Scenario | Target |
+|----------|--------|
+| New projects | .NET 10 (latest LTS) |
+| Production upgrades | .NET 10 or .NET 8 (current LTS) |
+| Shared libraries | Multi-target if needed |
+
+### Upgrade Strategies
+
+#### Strategy 1: In-Place Upgrade (Recommended for most projects)
+1. Convert `.csproj` to SDK-style
+2. Update target framework to `net10.0`
+3. Replace incompatible packages (see [Package Replacement Map](references/package-replacement-map.md))
+4. Fix breaking API changes (see [API Replacement Patterns](references/api-replacement-patterns.md))
+5. Update configuration to `appsettings.json`
+
+#### Strategy 2: Parallel Migration (For complex apps)
+1. Create new .NET 10 project alongside legacy
+2. Copy/migrate code file by file
+3. Share database via EF Core
+4. Run both in parallel during transition
+
+#### Strategy 3: Strangler Fig (For monoliths)
+1. Extract features as new .NET 10 microservices
+2. Route requests to new services
+3. Gradually replace legacy components
+4. Decommission old app when empty
+
+### Project File Conversion
+
+#### Legacy `.csproj` Format
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\..." />
+  <PropertyGroup>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    ...
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    ...
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Class1.cs" />
+    ...
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
+```
+
+#### SDK-Style `.csproj` Format (Target)
+```xml
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="PackageName" Version="X.Y.Z" />
+  </ItemGroup>
+
+</Project>
+```
+
+#### Web Project SDK-Style
+```xml
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+  </PropertyGroup>
+
+</Project>
+```
+
+### Complexity Classification
+
+#### Low Complexity (1-2 weeks)
+- Class libraries with no web dependencies
+- Console applications
+- Already uses SDK-style project
+- Standard NuGet packages only
+
+#### Medium Complexity (2-4 weeks)
+- Web API (non-MVC)
+- Entity Framework 6 to EF Core migration
+- Some configuration changes
+- Limited System.Web usage
+
+#### High Complexity (4-8+ weeks)
+- Full ASP.NET MVC application
+- Heavy System.Web dependencies
+- WCF services
+- Windows-specific features
+- Custom MSBuild tasks
+- Binary serialization
+
+### Upgrade Analysis Commands
+
+```bash
+# Find all project files
+find . -name "*.csproj" -o -name "*.vbproj" -o -name "*.fsproj"
+
+# Check target frameworks
+grep -r "<TargetFramework" --include="*.csproj" | sort -u
+
+# Identify SDK-style vs legacy projects
+find . -name "*.csproj" -exec grep -L "Sdk=" {} \;  # Legacy format
+
+# Check for packages.config (needs migration)
+find . -name "packages.config"
+
+# System.Web dependencies (major blocker)
+grep -r "using System\.Web" --include="*.cs" | wc -l
+
+# WCF usage (needs alternative)
+grep -r "using System\.ServiceModel" --include="*.cs"
+
+# ConfigurationManager (needs replacement)
+grep -r "ConfigurationManager" --include="*.cs"
+
+# BinaryFormatter (security concern)
+grep -r "BinaryFormatter" --include="*.cs"
+```
+
+### Upgrade Tools
+
+#### .NET Upgrade Assistant
+```bash
+# Install
+dotnet tool install -g upgrade-assistant
+
+# Analyze solution
+upgrade-assistant analyze <solution.sln>
+
+# Upgrade project
+upgrade-assistant upgrade <project.csproj>
+```
+
+#### try-convert (Project File Conversion)
+```bash
+# Install
+dotnet tool install -g try-convert
+
+# Convert project
+try-convert -p <project.csproj>
+
+# Convert solution
+try-convert -w <solution.sln>
+```
+
+### Reference Files
+
+For detailed migration patterns, consult these references:
+
+- [Breaking Changes: .NET Framework 4.x to .NET 10](references/breaking-changes-4x-to-10.md) -- Critical and medium-impact breaking changes by version with code migration examples
+- [Package Replacement Map](references/package-replacement-map.md) -- Comprehensive NuGet package replacement guide organized by category (web, EF, logging, DI, auth, caching, etc.)
+- [API Replacement Patterns](references/api-replacement-patterns.md) -- Code-level API migration patterns for HttpContext, configuration, logging, caching, session, EF, controllers, DI, and more
+- [ASP.NET to Blazor Patterns](references/aspnet-to-blazor-patterns.md) -- Web Forms/MVC to Blazor migration including component conversion, form handling, authentication, and incremental strategy
+
 ## Anti-Patterns Table
 
 | Anti-Pattern | Why It's Wrong | Correct Approach |
@@ -529,7 +702,7 @@ The .NET Upgrade Assistant cannot parse the solution or crashes during analysis.
 1. Verify the solution builds on .NET Framework first
 2. Check for unsupported project types (e.g., SSDT, Fabric, native C++)
 3. Analyze projects individually if the solution-level analysis fails
-4. Fall back to manual analysis using the [Breaking Changes Catalog](references/breaking-changes-catalog.md)
+4. Fall back to manual analysis using the [Breaking Changes Catalog](references/breaking-changes-catalog.md) and [Breaking Changes 4.x to 10](references/breaking-changes-4x-to-10.md)
 5. Report the issue to the Upgrade Assistant GitHub repository
 
 ### Problem: NuGet Package Has No .NET 10 Version
@@ -583,3 +756,5 @@ Stakeholders expect a 3-month migration but the assessment says 9-12 months.
 - **`dotnet-vertical-slice`** -- When the migration plan calls for decomposing a monolithic application, use this skill to structure the new .NET 10 projects as vertical slices. This is especially relevant in strangler fig migrations where new features are built in .NET 10 while legacy features remain on .NET Framework. Each new slice should follow the vertical slice architecture from the start.
 
 - **`nuget-package-scaffold`** -- When the migration analysis identifies shared libraries that need to be extracted or multi-targeted, use this skill to scaffold proper NuGet package projects. Multi-targeting (`net48;net10.0`) during the transition period requires correct package metadata, conditional compilation, and proper dependency management that this skill handles.
+
+- **`dotnet-vertical-slice`** (Telerik Blazor UI section) -- When the migration plan involves converting ASP.NET Web Forms or MVC views to Blazor, use the Telerik Blazor UI generation section in `dotnet-vertical-slice` for component implementation. The [ASP.NET to Blazor Patterns](references/aspnet-to-blazor-patterns.md) reference provides migration patterns that map legacy controls to Telerik Blazor equivalents.

@@ -1,9 +1,9 @@
-# Jira Issue Review Skill
-
 ---
 name: jira-review
 description: Automatically review Jira issues for implementation readiness. Detects complexity signals, parses acceptance criteria, and recommends clarification or planning mode when needed.
 ---
+
+# Jira Issue Review Skill
 
 ## Core Philosophy
 

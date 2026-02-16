@@ -1,5 +1,5 @@
 ---
-name: rag-pipeline
+name: rag-pipeline-python
 description: Scaffold RAG pipelines with Ollama or cloud embeddings. Use when building retrieval-augmented generation systems with local or cloud LLMs, vector stores, and document processing.
 ---
 

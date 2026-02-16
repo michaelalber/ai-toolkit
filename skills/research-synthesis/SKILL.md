@@ -431,9 +431,9 @@ Actions:
 
 ## Integration with Other Skills
 
-### RAG Pipeline (`rag-pipeline`)
+### RAG Pipeline (`rag-pipeline-python`)
 
-When research involves large document corpora (technical documentation sets, codebases, paper collections), use the `rag-pipeline` skill to build a searchable knowledge base:
+When research involves large document corpora (technical documentation sets, codebases, paper collections), use the `rag-pipeline-python` skill to build a searchable knowledge base:
 
 - Ingest research documents into a vector store for semantic search
 - Use retrieval to find relevant passages across large corpora

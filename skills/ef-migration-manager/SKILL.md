@@ -531,5 +531,5 @@ protected override void Up(MigrationBuilder migrationBuilder)
 ## Integration with Other Skills
 
 - **`dotnet-vertical-slice`** -- When creating a new vertical slice feature, use this skill to manage any database schema changes required by the feature's data layer. The migration should be part of the slice's implementation, following the Plan/Create/Review/Apply lifecycle.
-- **`blazor-telerik-component`** -- When Blazor UI components require new data fields or entities, coordinate schema changes through this skill. Ensure migrations are applied before updating component data bindings. Grid and form components that bind to entity properties need their backing schema changes managed here.
+- **`dotnet-vertical-slice`** (Telerik Blazor UI section) -- When Blazor UI components require new data fields or entities, coordinate schema changes through this skill. Ensure migrations are applied before updating component data bindings. Grid and form components that bind to entity properties need their backing schema changes managed here.
 - **`legacy-migration-analyzer`** -- When analyzing legacy systems for migration, use this skill to plan the EF Core schema that will replace the legacy database. Coordinate between the legacy analysis findings and the new migration plan.

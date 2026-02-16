@@ -288,7 +288,7 @@ grep -rn "UseHsts\|UseHttpsRedirection" --include="*.cs"
 
 ### What to Look For
 
-See the `nuget-security-review` skill for comprehensive NuGet package analysis.
+See the `supply-chain-audit` skill (NuGet-specific review section) for comprehensive NuGet package analysis.
 
 ```bash
 dotnet list package --vulnerable

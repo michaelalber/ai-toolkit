@@ -1,11 +1,9 @@
----
-name: nuget-security-review
-description: Reviews NuGet packages for security vulnerabilities and available updates. Generates manager-friendly executive summaries explaining risks and update priorities. Use when asked to review dependencies, audit packages, check for vulnerabilities, review NuGet packages, assess security risks, or check for outdated packages. Triggers on phrases like "review nuget", "package security", "dependency audit", "outdated packages", "vulnerability scan", "check dependencies".
----
-
 # NuGet Package Security & Update Review
 
-Conducts comprehensive NuGet package reviews with executive summaries suitable for management reporting.
+Reference for conducting comprehensive NuGet package security reviews with executive summaries
+suitable for management reporting. Consolidated from the standalone nuget-security-review skill.
+
+---
 
 ## Quick Start
 
@@ -35,7 +33,9 @@ dotnet list [project.csproj] package --vulnerable
 dotnet list package --vulnerable --include-transitive
 ```
 
-## Output Format
+---
+
+## Two-Part Report Structure
 
 Generate the report in this exact format:
 
@@ -66,7 +66,7 @@ Generate the report in this exact format:
 
 #### Package-by-Package Summary
 
-**[Package.Name]** (Current: X.X.X → Latest: Y.Y.Y)
+**[Package.Name]** (Current: X.X.X -> Latest: Y.Y.Y)
 - **Priority**: [High/Medium/Low]
 - **Why Update**: [1-2 sentences explaining in non-technical terms why this update matters. Focus on stability, performance, or compatibility benefits.]
 
@@ -110,9 +110,9 @@ Generate the report in this exact format:
 1. [List low priority items]
 ```
 
-## Priority Guidelines
+---
 
-See `references/severity-guidelines.md` for detailed prioritization rules.
+## Priority Guidelines
 
 ### Quick Reference
 
@@ -137,9 +137,13 @@ See `references/severity-guidelines.md` for detailed prioritization rules.
 - Minor/patch updates only
 - No security implications
 
-## Writing Executive Summaries
+See [nuget-severity-guidelines.md](nuget-severity-guidelines.md) for detailed prioritization
+rules, priority matrices, compliance considerations, and manager-friendly summary templates per
+severity level.
 
-See `references/executive-summary-templates.md` for guidance on writing manager-friendly summaries.
+---
+
+## Writing Executive Summaries
 
 ### Key Principles
 
@@ -149,13 +153,21 @@ See `references/executive-summary-templates.md` for guidance on writing manager-
 4. **Provide context**: "1 of 3 vulnerabilities is critical" not just "3 vulnerabilities found"
 5. **Recommend actions**: Always end with clear next steps
 
+See [nuget-executive-summary-templates.md](nuget-executive-summary-templates.md) for complete
+template library including per-package explanation templates, vulnerability explanation templates,
+and a severity language guide for translating technical terms into manager-friendly language.
+
+---
+
 ## Example Vulnerability Explanations
 
 **Instead of**: "CVE-2024-12345: Deserialization of untrusted data vulnerability in Newtonsoft.Json allowing RCE"
 
 **Write**: "This vulnerability could allow an attacker to run malicious code on our servers by sending specially crafted data. If exploited, an attacker could gain full control of the affected system. This directly impacts our ability to protect customer data and maintain service availability."
 
-## No Issues Found
+---
+
+## No Issues Found Template
 
 If no vulnerabilities or updates are found:
 

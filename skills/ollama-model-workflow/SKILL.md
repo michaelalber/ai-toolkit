@@ -421,7 +421,7 @@ Actions:
 
 ## Integration with Other Skills
 
-- **RAG Pipeline** (`rag-pipeline`): Use this skill to select and configure embedding models (e.g., `nomic-embed-text`, `mxbai-embed-large`) and generation models for RAG workflows. Benchmark embedding throughput and generation quality before integrating into the RAG pipeline.
+- **RAG Pipeline** (`rag-pipeline-python`): Use this skill to select and configure embedding models (e.g., `nomic-embed-text`, `mxbai-embed-large`) and generation models for RAG workflows. Benchmark embedding throughput and generation quality before integrating into the RAG pipeline.
 - **MCP Server Scaffold** (`mcp-server-scaffold`): When building MCP servers that expose LLM capabilities, use this skill to select, configure, and benchmark the backing Ollama model. Ensure the Modelfile is committed alongside the MCP server code.
 - **Jetson Deploy** (`jetson-deploy`): For edge deployment on NVIDIA Jetson, use the hardware matching guide to select appropriately sized models and quantizations that fit Jetson VRAM constraints (typically 4-16 GB shared memory).
 - **Edge CV Pipeline** (`edge-cv-pipeline`): When combining vision models with LLMs at the edge, use this skill to manage the LLM component while the edge-cv-pipeline handles the vision model. Coordinate VRAM budgets between both models.

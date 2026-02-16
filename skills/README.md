@@ -107,11 +107,16 @@ After installation, verify the skills are available:
 
 | Skill | Description |
 |-------|-------------|
-| `dotnet-vertical-slice` | Scaffold vertical slice architecture with CQRS + FreeMediator |
+| `dotnet-vertical-slice` | Scaffold vertical slice architecture with CQRS + FreeMediator + Telerik Blazor UI |
 | `ef-migration-manager` | EF Core migration lifecycle with safety checks and rollback |
 | `nuget-package-scaffold` | NuGet package creation with CI/CD and test harness |
-| `blazor-telerik-component` | Telerik Blazor UI patterns for grids, forms, dialogs |
-| `legacy-migration-analyzer` | .NET Framework to .NET 10 migration analysis |
+| `legacy-migration-analyzer` | .NET Framework to .NET 10 migration analysis and upgrade patterns |
+| `dotnet-architecture-checklist` | .NET Blazor architecture review checklist with CQRS/FreeMediator validation |
+| `dotnet-security-review` | OWASP-based .NET security review with Telerik specialization |
+| `dotnet-security-review-federal` | Federal compliance overlay (NIST 800-53, DOE, CUI) for .NET security |
+| `minimal-api-scaffolder` | .NET 10 minimal API scaffolding with OpenAPI and versioning |
+| `shared-kernel-generator` | Shared kernel module generation for DenaliDataSystems patterns |
+| `4d-schema-migration` | 4D database to SQL Server/EF Core migration specialist |
 
 ### Edge/IoT/Robotics Suite
 
@@ -126,7 +131,8 @@ After installation, verify the skills are available:
 
 | Skill | Description |
 |-------|-------------|
-| `rag-pipeline` | RAG scaffold with Ollama/cloud embeddings and vector stores |
+| `rag-pipeline-python` | RAG scaffold with Ollama/cloud embeddings and vector stores (Python/LangChain/LlamaIndex) |
+| `rag-pipeline-dotnet` | RAG implementation with Microsoft Semantic Kernel (.NET) |
 | `mcp-server-scaffold` | Custom MCP server creation with FastMCP and testing |
 | `ollama-model-workflow` | Local LLM management with Modelfile and benchmarking |
 
@@ -167,7 +173,8 @@ Skills that provide domain knowledge and execution protocols for autonomous agen
 
 | Skill | Description |
 |-------|-------------|
-| `python-arch-review` | Python architecture review and code quality analysis |
+| `python-arch-review` | Python architecture review with TDD, YAGNI, and code quality gates |
+| `jira-review` | Jira ticket review with complexity scoring and requirements extraction |
 
 ## Skill Structure
 
@@ -190,7 +197,8 @@ Skills can be invoked as slash commands:
 /dotnet-vertical-slice      # Scaffold a vertical slice feature
 /ef-migration-manager       # Manage EF Core migrations safely
 /edge-cv-pipeline           # Build an edge CV pipeline
-/rag-pipeline               # Scaffold a RAG pipeline
+/rag-pipeline-python        # Scaffold a RAG pipeline (Python)
+/rag-pipeline-dotnet        # Scaffold a RAG pipeline (.NET Semantic Kernel)
 /mcp-server-scaffold        # Create a custom MCP server
 /architecture-review        # Challenge a design with Socratic questioning
 /code-review-coach          # Practice deliberate code review

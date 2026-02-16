@@ -1,6 +1,6 @@
 ---
 name: supply-chain-audit
-description: Software supply chain vulnerability scanning, license compliance analysis, and CVE correlation across NuGet, npm, and pip ecosystems. Provides vulnerability database references, scanning tool guidance, CVSS severity interpretation, and license compatibility matrices for dependency audits.
+description: Software supply chain vulnerability scanning, license compliance analysis, and CVE correlation across NuGet, npm, and pip ecosystems. Provides vulnerability database references, scanning tool guidance, CVSS severity interpretation, and license compatibility matrices for dependency audits. Also performs NuGet package security reviews with manager-friendly executive summaries. Triggers on phrases like "review nuget", "package security", "nuget audit", "outdated packages", "vulnerability scan", "check dependencies", "nuget security review".
 ---
 
 # Supply Chain Audit
@@ -379,3 +379,34 @@ Detailed reference materials for applying these concepts:
 
 - [Vulnerability Sources](references/vulnerability-sources.md) -- Vulnerability databases (NVD, GitHub Advisory, OSV), scanning tools per ecosystem, CVE severity scoring with CVSS, and cross-database correlation techniques
 - [License Matrix](references/license-matrix.md) -- License compatibility matrix for common open-source licenses, corporate policy considerations, copyleft risk assessment, and distribution model analysis
+- [NuGet Security Review](references/nuget-security-review.md) -- NuGet-specific review workflow, two-part report template (updates + vulnerabilities), priority guidelines, executive summary writing guidance, and "no issues found" template
+- [NuGet Severity Guidelines](references/nuget-severity-guidelines.md) -- Detailed severity/priority classification for NuGet packages, CVSS-based prioritization rules, priority matrix, CISA KEV catalog escalation, and industry compliance patching timelines
+- [NuGet Executive Summary Templates](references/nuget-executive-summary-templates.md) -- Manager-friendly summary templates for updates and security findings, per-package explanation templates, vulnerability explanation templates, and a severity language guide
+
+## NuGet-Specific Review
+
+For .NET projects, this skill includes a dedicated NuGet package security review workflow that
+produces management-ready reports. This goes beyond the standard vulnerability scan by generating
+executive summaries and business-impact assessments suitable for non-technical stakeholders.
+
+**When to use the NuGet review workflow:**
+- When asked to "review NuGet packages" or "audit .NET dependencies"
+- When preparing dependency reports for management or compliance
+- When conducting periodic security reviews of .NET solutions
+- When onboarding to an existing .NET codebase and assessing dependency health
+
+**NuGet review process:**
+1. Locate all `.csproj` files in the solution
+2. Run `dotnet list package --outdated` for update analysis
+3. Run `dotnet list package --vulnerable` for security analysis
+4. Generate the two-part report (updates + vulnerabilities) using the template in [nuget-security-review.md](references/nuget-security-review.md)
+
+**Report structure:**
+- **Part 1: Packages Requiring Updates** -- executive summary, update details table, package-by-package summaries with business impact
+- **Part 2: Security Vulnerabilities** -- executive summary, vulnerability details table, vulnerability-by-vulnerability summaries with risk explanations in plain language
+- **Summary & Recommendations** -- categorized by urgency (immediate / scheduled / monitor)
+
+**Key references:**
+- Report template and review commands: [references/nuget-security-review.md](references/nuget-security-review.md)
+- Severity classification and priority matrix: [references/nuget-severity-guidelines.md](references/nuget-severity-guidelines.md)
+- Executive summary templates and severity language guide: [references/nuget-executive-summary-templates.md](references/nuget-executive-summary-templates.md)

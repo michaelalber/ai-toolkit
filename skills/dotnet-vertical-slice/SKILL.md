@@ -1,6 +1,6 @@
 ---
 name: dotnet-vertical-slice
-description: Scaffold vertical slice architecture with CQRS + FreeMediator. Use when creating feature-based .NET projects with command/query separation and pipeline behaviors.
+description: Scaffold vertical slice architecture with CQRS + FreeMediator, including optional Telerik Blazor UI generation. Use when creating feature-based .NET projects with command/query separation and pipeline behaviors. Triggers on "scaffold feature", "create slice", "new feature", "generate cqrs", "add command", "add query", "create handler", "vertical slice".
 ---
 
 # Vertical Slice Architecture with CQRS + FreeMediator
@@ -388,6 +388,413 @@ public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TReques
 }
 ```
 
+## Telerik Blazor UI Generation (Conditional)
+
+When the project uses Telerik UI for Blazor, generate Blazor pages alongside the backend slice. The UI pages live inside the feature folder under `Pages/` and use FreeMediator to dispatch commands and queries. Only generate these templates when the project has Telerik Blazor dependencies.
+
+### Extended Feature Folder Structure (With Blazor UI)
+
+```
+Features/{FeatureName}/
+├── Commands/
+│   ├── Create{Entity}/
+│   │   ├── Create{Entity}Command.cs
+│   │   ├── Create{Entity}Handler.cs
+│   │   └── Create{Entity}Validator.cs
+│   ├── Update{Entity}/
+│   │   ├── Update{Entity}Command.cs
+│   │   ├── Update{Entity}Handler.cs
+│   │   └── Update{Entity}Validator.cs
+│   └── Delete{Entity}/
+│       ├── Delete{Entity}Command.cs
+│       └── Delete{Entity}Handler.cs
+├── Queries/
+│   ├── Get{Entity}ById/
+│   │   ├── Get{Entity}ByIdQuery.cs
+│   │   └── Get{Entity}ByIdHandler.cs
+│   └── Get{Entity}List/
+│       ├── Get{Entity}ListQuery.cs
+│       └── Get{Entity}ListHandler.cs
+├── DTOs/
+│   ├── {Entity}Dto.cs
+│   └── {Entity}ListDto.cs
+├── Pages/
+│   ├── {Entity}List.razor
+│   └── {Entity}Edit.razor
+├── Mapping/
+│   └── {Entity}MappingConfig.cs
+└── Tests/
+    ├── Create{Entity}Tests.cs
+    ├── Update{Entity}Tests.cs
+    └── Get{Entity}ListTests.cs
+```
+
+### List Page Template (TelerikGrid)
+
+```razor
+@* Features/Users/Pages/UserList.razor *@
+@page "/users"
+@inject IMediator Mediator
+@inject NavigationManager Navigation
+
+<PageTitle>Users</PageTitle>
+
+<h1>Users</h1>
+
+<TelerikGrid Data="@users"
+             TItem="UserListDto"
+             Pageable="true"
+             PageSize="20"
+             Sortable="true"
+             FilterMode="GridFilterMode.FilterRow"
+             OnRead="@OnGridRead"
+             Height="600px">
+
+    <GridToolBarTemplate>
+        <TelerikButton OnClick="@CreateNew" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary" Icon="@SvgIcon.Plus">
+            Add User
+        </TelerikButton>
+    </GridToolBarTemplate>
+
+    <GridColumns>
+        <GridColumn Field="@nameof(UserListDto.Id)" Title="ID" Width="80px" />
+        <GridColumn Field="@nameof(UserListDto.FullName)" Title="Name" />
+        <GridColumn Field="@nameof(UserListDto.Email)" Title="Email" />
+        <GridColumn Field="@nameof(UserListDto.DepartmentName)" Title="Department" />
+        <GridColumn Field="@nameof(UserListDto.IsActive)" Title="Active" Width="100px">
+            <Template>
+                @{
+                    var item = context as UserListDto;
+                    <TelerikCheckBox Value="@item!.IsActive" Enabled="false" />
+                }
+            </Template>
+        </GridColumn>
+
+        <GridCommandColumn Width="200px">
+            <GridCommandButton Icon="@SvgIcon.Pencil" OnClick="@(args => Edit(args.Item as UserListDto))">Edit</GridCommandButton>
+            <GridCommandButton Icon="@SvgIcon.Trash" OnClick="@(args => Delete(args.Item as UserListDto))">Delete</GridCommandButton>
+        </GridCommandColumn>
+    </GridColumns>
+</TelerikGrid>
+
+<TelerikDialog @bind-Visible="@showDeleteDialog" Title="Confirm Delete">
+    <DialogContent>
+        <p>Are you sure you want to delete @userToDelete?.FullName?</p>
+    </DialogContent>
+    <DialogButtons>
+        <TelerikButton OnClick="@ConfirmDelete" ThemeColor="@ThemeConstants.Button.ThemeColor.Error">Delete</TelerikButton>
+        <TelerikButton OnClick="@CancelDelete">Cancel</TelerikButton>
+    </DialogButtons>
+</TelerikDialog>
+
+@code {
+    private List<UserListDto> users = new();
+    private bool showDeleteDialog = false;
+    private UserListDto? userToDelete;
+
+    private async Task OnGridRead(GridReadEventArgs args)
+    {
+        var result = await Mediator.Send(new GetUserListQuery(
+            Page: args.Request.Page,
+            PageSize: args.Request.PageSize));
+
+        users = result.Items.ToList();
+        args.Total = result.TotalCount;
+    }
+
+    private void CreateNew() => Navigation.NavigateTo("/users/edit");
+
+    private void Edit(UserListDto? user)
+    {
+        if (user != null)
+            Navigation.NavigateTo($"/users/edit/{user.Id}");
+    }
+
+    private void Delete(UserListDto? user)
+    {
+        userToDelete = user;
+        showDeleteDialog = true;
+    }
+
+    private async Task ConfirmDelete()
+    {
+        if (userToDelete != null)
+        {
+            await Mediator.Send(new DeleteUserCommand(userToDelete.Id));
+            showDeleteDialog = false;
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private void CancelDelete()
+    {
+        showDeleteDialog = false;
+        userToDelete = null;
+    }
+}
+```
+
+### Edit Page Template (TelerikForm)
+
+```razor
+@* Features/Users/Pages/UserEdit.razor *@
+@page "/users/edit/{Id:int?}"
+@inject IMediator Mediator
+@inject NavigationManager Navigation
+
+<PageTitle>@(Id.HasValue ? "Edit User" : "New User")</PageTitle>
+
+<h1>@(Id.HasValue ? "Edit User" : "New User")</h1>
+
+<TelerikForm Model="@user" OnValidSubmit="@HandleSubmit" Width="500px">
+    <FormValidation>
+        <FluentValidationValidator />
+    </FormValidation>
+
+    <FormItems>
+        <FormItem Field="@nameof(UserDto.FirstName)" LabelText="First Name">
+            <Template>
+                <TelerikTextBox @bind-Value="@user.FirstName" Width="100%" />
+            </Template>
+        </FormItem>
+
+        <FormItem Field="@nameof(UserDto.LastName)" LabelText="Last Name">
+            <Template>
+                <TelerikTextBox @bind-Value="@user.LastName" Width="100%" />
+            </Template>
+        </FormItem>
+
+        <FormItem Field="@nameof(UserDto.Email)" LabelText="Email">
+            <Template>
+                <TelerikTextBox @bind-Value="@user.Email" Width="100%" />
+            </Template>
+        </FormItem>
+
+        <FormItem Field="@nameof(UserDto.DepartmentId)" LabelText="Department">
+            <Template>
+                <TelerikDropDownList @bind-Value="@user.DepartmentId"
+                                     Data="@departments"
+                                     TextField="Name"
+                                     ValueField="Id"
+                                     DefaultText="Select Department..."
+                                     Width="100%" />
+            </Template>
+        </FormItem>
+    </FormItems>
+
+    <FormButtons>
+        <TelerikButton ButtonType="ButtonType.Submit" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">
+            Save
+        </TelerikButton>
+        <TelerikButton ButtonType="ButtonType.Button" OnClick="@Cancel">
+            Cancel
+        </TelerikButton>
+    </FormButtons>
+</TelerikForm>
+
+@code {
+    [Parameter] public int? Id { get; set; }
+
+    private UserDto user = new();
+    private List<DepartmentDto> departments = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        departments = await Mediator.Send(new GetDepartmentListQuery());
+
+        if (Id.HasValue)
+        {
+            var loaded = await Mediator.Send(new GetUserByIdQuery(Id.Value));
+            if (loaded != null)
+                user = loaded;
+        }
+    }
+
+    private async Task HandleSubmit()
+    {
+        Result result;
+
+        if (Id.HasValue)
+        {
+            result = await Mediator.Send(new UpdateUserCommand(
+                Id.Value, user.FirstName, user.LastName, user.Email, user.DepartmentId));
+        }
+        else
+        {
+            var createResult = await Mediator.Send(new CreateUserCommand(
+                user.FirstName, user.LastName, user.Email, user.DepartmentId));
+            result = createResult.IsSuccess ? Result.Success() : Result.Failure(createResult.Error);
+        }
+
+        if (result.IsSuccess)
+        {
+            Navigation.NavigateTo("/users");
+        }
+    }
+
+    private void Cancel() => Navigation.NavigateTo("/users");
+}
+```
+
+## DTO and Mapping Templates
+
+### DTO Templates
+
+```csharp
+// Features/Users/DTOs/UserDto.cs
+namespace MyApp.Features.Users.DTOs;
+
+public class UserDto
+{
+    public int Id { get; set; }
+    public string FirstName { get; set; } = string.Empty;
+    public string LastName { get; set; } = string.Empty;
+    public string Email { get; set; } = string.Empty;
+    public int DepartmentId { get; set; }
+    public string? DepartmentName { get; set; }
+    public DateTime CreatedDate { get; set; }
+    public DateTime ModifiedDate { get; set; }
+
+    public string FullName => $"{FirstName} {LastName}";
+}
+
+// Features/Users/DTOs/UserListDto.cs
+public class UserListDto
+{
+    public int Id { get; set; }
+    public string FirstName { get; set; } = string.Empty;
+    public string LastName { get; set; } = string.Empty;
+    public string Email { get; set; } = string.Empty;
+    public string DepartmentName { get; set; } = string.Empty;
+    public bool IsActive { get; set; }
+
+    public string FullName => $"{FirstName} {LastName}";
+}
+```
+
+### Mapster Mapping Configuration
+
+```csharp
+// Features/Users/Mapping/UserMappingConfig.cs
+using Mapster;
+using MyApp.Domain.Entities;
+using MyApp.Features.Users.Commands.CreateUser;
+using MyApp.Features.Users.DTOs;
+
+namespace MyApp.Features.Users.Mapping;
+
+public class UserMappingConfig : IRegister
+{
+    public void Register(TypeAdapterConfig config)
+    {
+        // Command to Entity
+        config.NewConfig<CreateUserCommand, User>()
+            .Ignore(dest => dest.Id)
+            .Ignore(dest => dest.CreatedDate)
+            .Ignore(dest => dest.ModifiedDate);
+
+        // Entity to DTO
+        config.NewConfig<User, UserDto>()
+            .Map(dest => dest.DepartmentName, src => src.Department != null ? src.Department.Name : null);
+
+        config.NewConfig<User, UserListDto>()
+            .Map(dest => dest.DepartmentName, src => src.Department != null ? src.Department.Name : string.Empty);
+    }
+}
+```
+
+## Handler Test Templates
+
+Handler tests verify command and query logic in isolation using xUnit, Moq, and FluentAssertions. These complement the NSubstitute-based patterns in the [Vertical Slice Testing](references/dotnet-vertical-testing.md) reference.
+
+```csharp
+// Features/Users/Tests/CreateUserTests.cs
+using Xunit;
+using Moq;
+using FluentAssertions;
+using MyApp.Features.Users.Commands.CreateUser;
+
+namespace MyApp.Tests.Features.Users;
+
+public class CreateUserTests
+{
+    [Fact]
+    public async Task CreateUser_WithValidData_ReturnsSuccessWithId()
+    {
+        // Arrange
+        var db = TestDbContext.Create();
+        var handler = new CreateUserHandler(db, Mock.Of<ILogger<CreateUserHandler>>());
+
+        var command = new CreateUserCommand(
+            FirstName: "John",
+            LastName: "Doe",
+            Email: "john.doe@example.com",
+            DepartmentId: 1);
+
+        // Act
+        var result = await handler.Handle(command, CancellationToken.None);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().BeGreaterThan(0);
+
+        var user = await db.Users.FindAsync(result.Value);
+        user.Should().NotBeNull();
+        user!.FirstName.Should().Be("John");
+        user.Email.Should().Be("john.doe@example.com");
+    }
+
+    [Fact]
+    public async Task CreateUser_WithDuplicateEmail_ReturnsFailure()
+    {
+        // Arrange
+        var db = TestDbContext.Create();
+        db.Users.Add(new User { Email = "existing@example.com" });
+        await db.SaveChangesAsync();
+
+        var handler = new CreateUserHandler(db, Mock.Of<ILogger<CreateUserHandler>>());
+
+        var command = new CreateUserCommand(
+            FirstName: "Jane",
+            LastName: "Doe",
+            Email: "existing@example.com",
+            DepartmentId: 1);
+
+        // Act
+        var result = await handler.Handle(command, CancellationToken.None);
+
+        // Assert
+        result.IsSuccess.Should().BeFalse();
+        result.Error.Should().Contain("already exists");
+    }
+}
+```
+
+## Scaffold Command
+
+Generate a new feature folder structure from the command line:
+
+```bash
+# Standard feature (API-only, no Blazor pages)
+mkdir -p Features/{Entity}/Commands/Create{Entity}
+mkdir -p Features/{Entity}/Commands/Update{Entity}
+mkdir -p Features/{Entity}/Commands/Delete{Entity}
+mkdir -p Features/{Entity}/Queries/Get{Entity}ById
+mkdir -p Features/{Entity}/Queries/Get{Entity}List
+mkdir -p Features/{Entity}/Tests
+
+# Extended feature (with Blazor UI, DTOs, and mapping)
+mkdir -p Features/{Entity}/Commands/Create{Entity}
+mkdir -p Features/{Entity}/Commands/Update{Entity}
+mkdir -p Features/{Entity}/Commands/Delete{Entity}
+mkdir -p Features/{Entity}/Queries/Get{Entity}ById
+mkdir -p Features/{Entity}/Queries/Get{Entity}List
+mkdir -p Features/{Entity}/DTOs
+mkdir -p Features/{Entity}/Pages
+mkdir -p Features/{Entity}/Mapping
+mkdir -p Features/{Entity}/Tests
+```
+
 ## Anti-Patterns Table
 
 | Anti-Pattern | Why It's Wrong | Correct Approach |
@@ -466,7 +873,7 @@ Symptom: Transaction commits before validation, or logging misses exceptions
 ## Integration with Other Skills
 
 - **`ef-migration-manager`** -- When a vertical slice feature requires new database tables or columns, use `ef-migration-manager` to create and apply the migration. The migration should be planned alongside the feature: define the entity in the slice, then create the migration. The handler's data access code depends on the schema being in place.
-- **`blazor-telerik-component`** -- Grid and form components are the UI layer of a vertical slice. Start with this skill to build the backend (command/query handler, validator, endpoint), then use `blazor-telerik-component` to create the Blazor component that calls the endpoint. The feature's response record defines the shape of the data the component will display.
+- **Telerik Blazor UI Generation** (see section above) -- Grid and form components are the UI layer of a vertical slice. Start with this skill to build the backend (command/query handler, validator, endpoint), then use the Telerik Blazor UI Generation section to create the Blazor component that calls the endpoint. The feature's response record defines the shape of the data the component will display.
 - **`tdd-cycle`** -- Vertical slices are ideal for TDD. Each slice is a small, testable unit. Use `tdd-cycle` to drive the handler implementation: write a failing test for the handler's behavior (RED), implement the handler minimally (GREEN), then refactor. The handler's isolation makes it straightforward to test without mocking half the application.
 - **`tdd-agent`** -- For autonomous development of vertical slice features, `tdd-agent` can drive the entire cycle: scaffold the feature folder, write handler tests in RED, implement in GREEN, refactor. The strict guardrails of `tdd-agent` pair well with the structural constraints of vertical slices -- both prioritize discipline and small, verifiable steps.
 
