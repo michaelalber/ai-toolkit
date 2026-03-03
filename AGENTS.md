@@ -4,7 +4,7 @@ Project instructions for AI coding agents (Claude Code, OpenCode, GitHub Copilot
 
 ## Project Overview
 
-AI Toolkit -- a collection of 47 skills and 13 autonomous agents for AI-assisted software development. Supports Claude Code and OpenCode.
+AI Toolkit -- a collection of 48 skills and 14 autonomous agents for AI-assisted software development. Supports Claude Code and OpenCode.
 
 ## Repository Structure
 
@@ -124,3 +124,4 @@ Key difference: Claude uses `skills:` array in frontmatter; OpenCode uses `skill
 | AI/ML | rag-pipeline-python, rag-pipeline-dotnet, mcp-server-scaffold, ollama-model-workflow | RAG, MCP servers, local LLMs |
 | Coaching | architecture-review, pattern-tradeoff-analyzer, system-design-kata, dependency-mapper, code-review-coach, refactor-challenger, security-review-trainer, pr-feedback-writer, technical-debt-assessor, architecture-journal | Engineering judgment |
 | Agent Support | automated-code-review, test-scaffold, doc-sync, supply-chain-audit, environment-health, model-optimization, anomaly-detection, fleet-management, research-synthesis, session-context, task-decomposition | Domain knowledge for agents |
+| Agent Design | agent-spec-writer | Spec design and extraction for AI agents |
