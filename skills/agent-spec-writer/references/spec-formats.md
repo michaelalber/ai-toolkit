@@ -1,6 +1,6 @@
 # Spec Format Templates
 
-Complete templates for all four target formats. Use these during the GENERATE phase of `agent-spec-writer`.
+Complete templates for all five target formats. Use these during the GENERATE phase of `agent-spec-writer`.
 
 ---
 
@@ -509,3 +509,294 @@ Items marked `[NEEDS INPUT]` that must be resolved before deployment:
 - [ ] [Gap 1: what information is needed and where to find it]
 - [ ] [Gap 2: what information is needed and where to find it]
 ```
+
+---
+
+## Format 5: GitHub Spec Kit (`.specify/` directory)
+
+Path: `.specify/spec.md`, `.specify/plan.md`, `.specify/tasks/<name>.md`, `.specify/constitution.md` (optional)
+
+The GitHub Spec Kit (`github/spec-kit`) implements a **Specify → Plan → Tasks** gated workflow. Each file has a distinct purpose. Produce all files that apply; `constitution.md` is only needed if the project has non-negotiable constraints (it maps directly to the GUARDRAILS phase Never tier).
+
+**Source:** `github/spec-kit` — 55k+ stars, released September 2024. Supported slash commands: `/specify`, `/plan`, `/tasks` (Claude Code, GitHub Copilot, Gemini CLI).
+
+### `spec.md` (Vision + Requirements)
+
+Output of VISION and STRUCTURE phases.
+
+```markdown
+# [Project Name] Specification
+
+**Version**: [N]
+**Status**: [Draft | Review | Approved]
+**Date**: [YYYY-MM-DD]
+
+---
+
+## Goal
+
+[One sentence — the result of the VISION phase three-test review.]
+
+[2-3 sentences expanding on purpose, users, and how success will be measured.]
+
+---
+
+## Background
+
+[Why this is being built. What problem it solves. What exists today and why it is insufficient.]
+
+---
+
+## Requirements
+
+### Functional Requirements
+
+- **[REQ-001]**: [Specific, verifiable requirement]
+- **[REQ-002]**: [Specific, verifiable requirement]
+- **[REQ-003]**: [Specific, verifiable requirement]
+
+[Use REQ-XXX IDs for traceability to plan.md and tasks.]
+
+### Non-Functional Requirements (QoS)
+
+- **Performance**: [Latency budget, throughput target, or SLA. e.g., "p99 response < 200ms under 500 concurrent users"]
+- **Security**: [Auth requirements, data sensitivity, secrets handling]
+- **Reliability**: [Uptime target, error rate ceiling, retry behavior]
+- **Observability**: [Logging, tracing, alerting requirements]
+
+[For AI/ML agents, add:]
+
+### AI/ML Guardrails
+
+- **Confidence threshold**: [e.g., "Escalate to human review when confidence < 0.8"]
+- **Human-in-the-loop triggers**: [Conditions requiring human approval before action]
+- **Data restrictions**: [What data the agent may and may not access or retain]
+- **Escalation path**: [Who or what receives escalated items]
+
+---
+
+## Scope
+
+### In Scope
+- [Capability 1]
+- [Capability 2]
+
+### Out of Scope
+- [Explicit exclusion 1 — prevents scope creep]
+- [Explicit exclusion 2]
+
+---
+
+## Success Criteria
+
+| Goal | Success Criterion | How to Verify |
+|------|-----------------|---------------|
+| [REQ-001] | [Specific, measurable outcome] | [Third-party verification method] |
+| [REQ-002] | [Specific, measurable outcome] | [Third-party verification method] |
+
+---
+
+## Open Questions
+
+- [ ] [Question 1 — what decision is still open, who owns it, and when it must be resolved]
+- [ ] [Question 2]
+```
+
+---
+
+### `plan.md` (Architecture + Approach)
+
+Output of an architecture planning pass after `spec.md` is approved. Maps requirements to implementation approach.
+
+```markdown
+# [Project Name] Implementation Plan
+
+**Spec version**: [N — must match spec.md version]
+**Status**: [Draft | Review | Approved]
+**Date**: [YYYY-MM-DD]
+
+---
+
+## Approach
+
+[2-4 sentences. What is the high-level implementation strategy? What architectural pattern applies?]
+
+---
+
+## Architecture
+
+[Describe the system structure. Use C4 model levels as appropriate:]
+
+### System Context
+[Who uses the system and what external systems does it interact with?]
+
+### Key Components
+
+| Component | Responsibility | Technology |
+|-----------|---------------|------------|
+| [name] | [what it does] | [stack] |
+| [name] | [what it does] | [stack] |
+
+### Data Flow
+[How data moves through the system. Include sequence for the primary use case.]
+
+---
+
+## Requirement Mapping
+
+| REQ-ID | Implementation Approach | Component |
+|--------|------------------------|-----------|
+| REQ-001 | [How this requirement is satisfied] | [Which component] |
+| REQ-002 | [How this requirement is satisfied] | [Which component] |
+
+---
+
+## Technical Decisions
+
+| Decision | Choice | Rationale | Alternatives Rejected |
+|----------|--------|-----------|----------------------|
+| [e.g., Database] | [e.g., PostgreSQL] | [Why] | [What else was considered] |
+| [e.g., Auth] | [e.g., JWT] | [Why] | [What else was considered] |
+
+[Record each decision as an ADR in `docs/adr/` and link here. See `architecture-journal` skill.]
+
+---
+
+## Risks
+
+| Risk | Likelihood | Impact | Mitigation |
+|------|-----------|--------|------------|
+| [risk] | High/Med/Low | High/Med/Low | [mitigation] |
+
+---
+
+## Milestones
+
+| Milestone | Deliverable | Tasks |
+|-----------|-------------|-------|
+| M1 | [what is done] | [task files in tasks/] |
+| M2 | [what is done] | [task files in tasks/] |
+```
+
+---
+
+### `tasks/<name>.md` (Executable Work Unit)
+
+One file per self-contained unit of work. Produced during GENERATE phase. Each task must be completable by a single agent in a single session.
+
+```markdown
+# Task: [Short descriptive title]
+
+**ID**: TASK-[NNN]
+**Spec**: [REQ-IDs this task satisfies]
+**Milestone**: [M1 / M2 / etc.]
+**Status**: [Backlog | In Progress | Done | Blocked]
+**Blocked by**: [TASK-NNN, or "none"]
+
+---
+
+## Objective
+
+[One sentence. What is done when this task is complete?]
+
+---
+
+## Acceptance Criteria
+
+- [ ] [Specific, verifiable criterion — written as a test assertion if possible]
+- [ ] [Specific, verifiable criterion]
+- [ ] [Specific, verifiable criterion]
+
+---
+
+## Context
+
+[What the agent needs to know before starting. Include:]
+- Relevant files: `[path/to/file]`
+- Key dependencies: [other tasks or components this builds on]
+- Constraints: [anything the agent must not change or break]
+
+---
+
+## Steps
+
+1. [Concrete step — specific enough that an agent can execute without clarification]
+2. [Concrete step]
+3. [Concrete step]
+4. Run tests: `[exact test command]`
+5. Verify acceptance criteria above are met
+
+---
+
+## Out of Scope
+
+- [Explicit exclusion — prevents task from absorbing adjacent work]
+
+---
+
+## Notes
+
+[Links to spec.md requirements, ADRs, or external references]
+```
+
+---
+
+### `constitution.md` (Non-Negotiable Principles) — Optional
+
+Only produce this file if the project has non-negotiable agent behavior constraints. Maps directly to the GUARDRAILS phase Never tier. Omit if the agent has no hard constraints beyond common sense.
+
+```markdown
+# [Project Name] Constitution
+
+**Version**: [N]
+**Date**: [YYYY-MM-DD]
+
+> These principles are non-negotiable. They apply in every session, to every agent
+> working in this repository, regardless of other instructions.
+
+---
+
+## Always (No Approval Needed)
+
+- [Safe, routine action the agent performs automatically]
+- [Safe, routine action the agent performs automatically]
+
+---
+
+## Ask First (Require Human Approval)
+
+- [High-impact or irreversible action that requires confirmation]
+- [High-impact or irreversible action that requires confirmation]
+
+---
+
+## Never (Hard Stops)
+
+- 🚫 [Forbidden action — specific and verifiable]
+- 🚫 [Forbidden action — specific and verifiable]
+- 🚫 Never commit secrets, credentials, or API keys
+- 🚫 Never push directly to the main/production branch
+- 🚫 [Domain-specific hard stop]
+
+---
+
+## Security Constraints
+
+- [Specific security rule — e.g., "All file paths must be validated before read/write"]
+- [Specific security rule]
+
+---
+
+## Revision History
+
+| Version | Date | Change |
+|---------|------|--------|
+| 1.0 | [date] | Initial constitution |
+```
+
+**Key notes for GitHub Spec Kit:**
+- Files live under `.specify/` in the project root
+- `spec.md` is approved before `plan.md` is written — do not merge them
+- Each `tasks/*.md` file is one unit of work for one agent in one session
+- `constitution.md` constraints override all other instructions at runtime
+- Use `architecture-journal` skill to record technical decisions from `plan.md` as ADRs

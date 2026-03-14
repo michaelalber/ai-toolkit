@@ -5,7 +5,9 @@ description: >
   three-tier boundary definition, and measurable success criteria to produce a complete, deployable spec.
   Use when designing a new skill, agent, or any AI system that needs explicit behavioral boundaries.
   Triggers on "write agent spec", "create agent spec", "spec for ai agent", "agent specification",
-  "define agent", "new skill spec", "new agent spec", "design agent behavior", "agent boundaries".
+  "define agent", "new skill spec", "new agent spec", "design agent behavior", "agent boundaries",
+  "spec kit", "spec.md", "plan.md", "github spec kit", "specify workflow", "write a spec",
+  "software requirements spec", "SRS", "write requirements".
 ---
 
 # Agent Spec Writer (Interactive Spec Coach)
@@ -79,6 +81,7 @@ Before writing anything, establish what type of spec is being produced and what 
    - **Claude agent** (`claude/agents/<name>.md`) — autonomous Claude Code agent
    - **OpenCode agent** (`opencode/agents/<name>.md`) — autonomous OpenCode agent
    - **Generic PRD** — standalone AI agent spec, not tied to a specific toolkit
+   - **GitHub Spec Kit** (`.specify/spec.md` + `plan.md` + `tasks/` + optional `constitution.md`) — Specify → Plan → Tasks gated workflow for Claude Code, GitHub Copilot, and Gemini CLI
 2. Determine the starting point:
    - **Greenfield** — no existing code; spec is written from intent
    - **Existing codebase** — run `spec-extractor-agent` first to generate a draft, then bring it here for refinement
@@ -87,12 +90,14 @@ Before writing anything, establish what type of spec is being produced and what 
 
 **Exit criterion:** Spec type, starting point, and domain are all explicit and agreed.
 
+**GitHub Spec Kit selection note:** If the user mentions "spec kit", "spec.md", "plan.md", "specify workflow", or wants to produce files for the `.specify/` directory, select `github-spec-kit` as the type. The Spec Kit workflow produces three files — `spec.md` (VISION + STRUCTURE phases), `plan.md` (architecture approach), and at least one `tasks/*.md` file (executable work units). A `constitution.md` is optional but maps directly to the GUARDRAILS phase. Route the session accordingly: VISION + STRUCTURE → `spec.md`; an additional architecture planning pass → `plan.md`; GENERATE → task files.
+
 **ORIENT Intake Template:**
 
 ```markdown
 ## Spec Design Intake
 
-**Spec type**: [skill | claude-agent | opencode-agent | generic-prd]
+**Spec type**: [skill | claude-agent | opencode-agent | generic-prd | github-spec-kit]
 **Domain**: [what this agent does and for whom]
 **Starting point**: [greenfield | existing-code + draft from spec-extractor-agent]
 **Target file**: [where the spec will live]
@@ -140,14 +145,15 @@ STRONG: "An agent that autonomously runs linting and the test suite after every
 
 **Entry question:** "What does the agent need to know to do its job?"
 
-Build the six PRD sections:
+Build the seven PRD sections:
 
 1. **Commands**: Exact executable commands with flags. Extract from existing code if available; never guess.
 2. **Testing**: Framework location, coverage expectations, test procedures.
 3. **Project Structure**: Directory hierarchy the agent will navigate.
 4. **Code Style**: Actual code examples showing preferred patterns.
 5. **Git Workflow**: Branch naming, commit format, PR requirements.
-6. **Boundaries**: The three-tier system (built in Phase 4: GUARDRAILS).
+6. **QoS & Constraints**: Non-functional requirements the agent must satisfy or respect. Ask: "Are there latency budgets, throughput targets, or uptime SLAs this agent must honor?" For AI/ML agents specifically, also ask: "What confidence thresholds trigger escalation? What requires human-in-the-loop review? What data is off-limits?" Leave blank only if the domain has zero QoS requirements — which is rare. Mark unknowns `[NEEDS INPUT]`.
+7. **Boundaries**: The three-tier system (built in Phase 4: GUARDRAILS).
 
 **For each section, apply the Specificity Test:**
 
@@ -159,7 +165,7 @@ CAN A THIRD PARTY EXECUTE THIS WITHOUT ASKING FOR CLARIFICATION?
 
 **If existing code is present:** All commands should come from `spec-extractor-agent`'s draft. The STRUCTURE phase becomes verification rather than invention.
 
-**Exit criterion:** All five non-boundary sections are populated with verifiable content. Every gap is explicitly marked `[NEEDS INPUT: <detection hint>]`.
+**Exit criterion:** All six non-boundary sections are populated with verifiable content (or explicitly marked `[NEEDS INPUT: <detection hint>]`). QoS & Constraints is populated if the domain has any performance, security, or AI/ML guardrail requirements.
 
 ### Phase 4: GUARDRAILS — Define the Three-Tier Boundary System
 
@@ -223,9 +229,10 @@ See [Spec Formats](references/spec-formats.md) for complete templates in all fou
 ```markdown
 ## Pre-Generate Spec Checklist
 
-- [ ] Spec type confirmed (skill / claude-agent / opencode-agent / generic-prd)
+- [ ] Spec type confirmed (skill / claude-agent / opencode-agent / generic-prd / github-spec-kit)
 - [ ] Goal statement passes three-test review (valuable, sufficient, verifiable)
-- [ ] All six PRD sections populated (or gaps marked [NEEDS INPUT])
+- [ ] All seven PRD sections populated (or gaps marked [NEEDS INPUT])
+- [ ] QoS & Constraints section addressed (even if empty by explicit decision)
 - [ ] Three-tier boundary table populated in all three tiers
 - [ ] "Never" tier has at least two explicit hard stops
 - [ ] At least one measurable success criterion per goal
@@ -242,7 +249,7 @@ Maintain state across conversation turns:
 ```
 <spec-writer-state>
 phase: orient | vision | structure | guardrails | validate | generate
-spec_type: skill | claude-agent | opencode-agent | generic-prd
+spec_type: skill | claude-agent | opencode-agent | generic-prd | github-spec-kit
 domain: [brief description of what the agent does]
 target_file: [where the spec will live]
 vision_statement: [one-sentence goal, or "pending"]
@@ -316,9 +323,9 @@ Welcome. I will coach you through designing a complete, deployable spec for your
 
 **How this works:**
 
-1. We clarify what you are building and what type of spec you need (skill, Claude agent, OpenCode agent, or generic PRD)
+1. We clarify what you are building and what type of spec you need (skill, Claude agent, OpenCode agent, generic PRD, or GitHub Spec Kit)
 2. We craft a clear goal statement — one sentence that captures purpose, workflow, and expected outcome
-3. We build the PRD sections: commands, testing, project structure, code style, and git workflow
+3. We build the PRD sections: commands, testing, project structure, code style, git workflow, and QoS constraints
 4. We define the three-tier boundary system: what the agent always does, asks about, and never does
 5. We define measurable success criteria and self-checks
 6. I generate the complete spec in your target format, ready to commit
@@ -373,7 +380,7 @@ Now we move to [next phase], which will [brief description of what this phase es
 **[Agent/Skill Name]** spec is ready for review.
 
 **Summary:**
-- **Type**: [skill / claude-agent / opencode-agent / generic-prd]
+- **Type**: [skill / claude-agent / opencode-agent / generic-prd / github-spec-kit]
 - **Goal**: [one-sentence vision statement]
 - **Always actions**: [N] defined
 - **Ask First actions**: [N] defined

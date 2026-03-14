@@ -607,6 +607,8 @@ This skill works with and references the following related skills:
 
 - **dependency-mapper** -- Dependency maps reveal the consequences of architecture decisions. When reviewing a decision's impact at 90 or 180 days, use dependency-mapper to visualize how the decision affected system coupling and dependencies.
 
+- **MADR (external standard)** -- The ADR templates in this skill follow the MADR (Markdown Architectural Decision Records) format by Michael Nygard and the ADR community (`adr/madr` on GitHub). MADR is the canonical reference when you need ADRs that are parseable by tooling such as `adr-tools`, `Log4brains`, or `adr-log`. The templates here are compatible with MADR — the main additions are the retrospective schedule and learning extract sections, which MADR does not include. If a project requires strict MADR compliance, use the bare templates from the MADR repo and append the retrospective sections as separate linked files.
+
 **Workflow integration example**:
 1. Use pattern-tradeoff-analyzer to evaluate caching strategies
 2. Record the decision in architecture-journal as an ADR
