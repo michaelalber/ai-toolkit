@@ -34,6 +34,22 @@ This skill coordinates the full lifecycle of sensor integration: from physical w
 | **Reproducibility** | Same hardware + same code = same readings within tolerance | High |
 | **Documentation** | Every sensor integration must include wiring diagram, calibration data, and protocol configuration | Medium |
 
+## Knowledge Base Lookups
+
+Use `search_knowledge` (grounded-code-mcp) to ground decisions in authoritative references.
+
+| Query | When to Call |
+|-------|--------------|
+| `search_knowledge("I2C SPI UART GPIO protocol selection")` | During IDENTIFY — choosing the right bus protocol for a new sensor |
+| `search_knowledge("sensor calibration offset gain correction")` | During CALIBRATE — implementing linear or multi-point calibration |
+| `search_knowledge("Raspberry Pi sensor I2C smbus2")` | During CONNECT — setting up I2C on Raspberry Pi or Jetson |
+| `search_knowledge("Python sensor data pipeline async")` | During PUBLISH — designing async data acquisition loops |
+| `search_knowledge("anomaly detection outlier sensor validation")` | During VALIDATE — building range checks and anomaly flagging |
+| `search_code_examples("I2C sensor read Python")` | Before writing driver code — find canonical patterns |
+| `search_code_examples("MQTT publish sensor data Python")` | Before writing publisher — find MQTT client patterns |
+
+**Protocol:** Search `automation` and `robotics` collections for hardware-specific guidance. Always cite the source path from KB results. If KB returns nothing useful for a sensor-specific question, fall back to the datasheet.
+
 ## Workflow
 
 ### Pipeline State Machine

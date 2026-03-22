@@ -97,20 +97,16 @@ If the user mentions "spec kit", "spec.md", "plan.md", "specify workflow", "spec
 ```
 # Mandatory KB lookups when github-spec-kit type is detected:
 search_knowledge(
-  collection="internal",
   query="github spec kit spec template feature user stories"
 )
 search_knowledge(
-  collection="internal",
   query="spec kit plan template research data model contracts"
 )
 search_knowledge(
-  collection="internal",
   query="spec kit tasks template user story parallel"
 )
 # If constitution.md is needed:
 search_knowledge(
-  collection="internal",
   query="spec kit constitution template principles"
 )
 ```
@@ -270,16 +266,16 @@ Before writing any file, retrieve the authoritative templates from grounded-code
 
 ```
 # Before generating spec.md:
-search_knowledge(collection="internal", query="github spec kit spec template feature user stories priority")
+search_knowledge(query="github spec kit spec template feature user stories priority")
 
 # Before generating plan.md:
-search_knowledge(collection="internal", query="spec kit plan template technical context research data model")
+search_knowledge(query="spec kit plan template technical context research data model")
 
 # Before generating tasks.md:
-search_knowledge(collection="internal", query="spec kit tasks template user story parallel task format")
+search_knowledge(query="spec kit tasks template user story parallel task format")
 
 # Before generating constitution.md (only if needed):
-search_knowledge(collection="internal", query="spec kit constitution template principles nine articles")
+search_knowledge(query="spec kit constitution template principles nine articles")
 ```
 
 Use the KB-returned content as the authoritative template. Key differences from the naive structure:
@@ -296,7 +292,7 @@ See [Spec Formats](references/spec-formats.md) for the complete KB-grounded temp
 ## Pre-Generate Spec Checklist
 
 - [ ] Spec type confirmed (skill / claude-agent / opencode-agent / generic-prd / github-spec-kit)
-- [ ] For github-spec-kit type: grounded-code-mcp KB lookup complete — templates confirmed against collection="internal"
+- [ ] For github-spec-kit type: grounded-code-mcp KB lookup complete — templates confirmed via search_knowledge queries
 - [ ] Goal statement passes three-test review (valuable, sufficient, verifiable)
 - [ ] All seven PRD sections populated (or gaps marked [NEEDS INPUT])
 - [ ] QoS & Constraints section addressed (even if empty by explicit decision)
@@ -405,7 +401,7 @@ Welcome. I will coach you through designing a complete, deployable spec for your
 
 **If you are starting from scratch:** We build from intent. Some sections will have `[NEEDS INPUT]` markers that you fill in as the codebase takes shape.
 
-**If you want a GitHub Spec Kit:** I will retrieve the authoritative templates from the grounded-code-mcp knowledge base (collection `internal`) before generating any output. Do not skip this step — training-data assumptions about spec-kit structure diverge from the actual format.
+**If you want a GitHub Spec Kit:** I will retrieve the authoritative templates from the grounded-code-mcp knowledge base before generating any output. Do not skip this step — training-data assumptions about spec-kit structure diverge from the actual format.
 
 To begin: **What are you building, and do you have existing code to work from?**
 
@@ -488,7 +484,7 @@ next_action: User reviews, fills gaps, commits spec
 
 ### CRITICAL: Always Ground GitHub Spec Kit Output Against the KB
 
-When producing any GitHub Spec Kit output (`spec.md`, `plan.md`, `tasks.md`, or `constitution.md`), you MUST call `search_knowledge(collection="internal")` with the appropriate query before generating the content. Training data assumptions about spec-kit structure are unreliable — the KB contains the authoritative templates.
+When producing any GitHub Spec Kit output (`spec.md`, `plan.md`, `tasks.md`, or `constitution.md`), you MUST call `search_knowledge(query="...")` with the appropriate query before generating the content. Training data assumptions about spec-kit structure are unreliable — the KB contains the authoritative templates.
 
 ```
 WRONG: Generating github-spec-kit output directly from memory:
@@ -498,7 +494,7 @@ WRONG: Generating github-spec-kit output directly from memory:
   - Producing a plan.md without research.md/data-model.md companion files
 
 RIGHT: Call search_knowledge first, then generate:
-  search_knowledge(collection="internal", query="github spec kit spec template feature user stories")
+  search_knowledge(query="github spec kit spec template feature user stories")
   → Use returned template structure as the authoritative format
   → spec.md lives in specs/[###-feature-name]/spec.md
   → User stories have P1/P2/P3 priorities and Independent Test descriptions

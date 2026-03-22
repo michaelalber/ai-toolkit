@@ -43,6 +43,22 @@ This skill provides the knowledge framework for auditing that trust. It covers t
 | 9 | **Lock Files Are Security Controls** | Lock files pin exact versions and integrity hashes. Without them, builds are non-reproducible and vulnerable to dependency confusion, version substitution, and registry compromises. Treat lock files as security-critical artifacts. |
 | 10 | **Audit Regularly, Not Once** | Dependencies change. New CVEs are published daily. Packages are abandoned, compromised, or deprecated. A clean audit today does not guarantee a clean audit next month. Automate recurring audits. |
 
+## Knowledge Base Lookups
+
+Use `search_knowledge` (grounded-code-mcp) to ground decisions in authoritative references.
+
+| Query | When to Call |
+|-------|--------------|
+| `search_knowledge("OWASP vulnerable outdated components supply chain")` | During Phase 1 — grounding CVE findings in OWASP A06:2021 context |
+| `search_knowledge("CVSS score severity vulnerability assessment")` | During Phase 1 — interpreting CVSS scores and contextual risk |
+| `search_knowledge("software license MIT Apache GPL compatibility")` | During Phase 2 — classifying license compatibility |
+| `search_knowledge("NuGet package security dotnet vulnerable")` | During NuGet review — grounding .NET-specific vulnerability patterns |
+| `search_knowledge("npm audit pip-audit dependency scanning")` | During Phase 1 — selecting and interpreting ecosystem-specific scanners |
+| `search_knowledge("NIST 800-218 secure software supply chain")` | For federal/compliance context — SSDF supply chain controls |
+| `search_code_examples("dotnet list package vulnerable NuGet")` | Before running .NET scans — correct scanner invocation patterns |
+
+**Protocol:** Search `gov` for federal/NIST compliance context. Search `dotnet` for .NET-specific scanner guidance. Search `python` for pip-audit patterns. Always cite the source path from KB results.
+
 ## Workflow
 
 ### Phase 1: Vulnerability Scan

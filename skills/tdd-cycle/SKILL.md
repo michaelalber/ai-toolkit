@@ -17,6 +17,19 @@ This skill coordinates the canonical TDD cycle: **RED → GREEN → REFACTOR**. 
 2. **GREEN**: Write minimal code to make the test pass
 3. **REFACTOR**: Improve code structure while keeping tests green
 
+## Knowledge Base Lookups
+
+Use `search_knowledge` (grounded-code-mcp) to ground decisions in authoritative references.
+
+| Query | When to Call |
+|-------|--------------|
+| `search_knowledge("TDD red green refactor cycle phases")` | At session start — confirms canonical phase definitions and transition rules |
+| `search_knowledge("Kent Beck test desiderata properties")` | When evaluating test quality — authoritative source for the 12 properties |
+| `search_knowledge("test-first development discipline XP")` | When enforcing TDD discipline — grounding in XP practices |
+| `search_knowledge("unit test naming conventions AAA arrange act assert")` | When guiding test structure — naming and organization patterns |
+
+**Protocol:** Search before advising on phase transitions or test quality criteria. Cite the source path in your response.
+
 ## Kent Beck's 12 Test Desiderata
 
 Use this framework to evaluate test quality at every phase:

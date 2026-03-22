@@ -36,6 +36,21 @@ Manager-friendly reporting is not optional. If a security review cannot be under
 | 9 | **Dependency Awareness** | Every NuGet package, npm module, and JavaScript library is attack surface. Outdated components with known CVEs are the easiest entry point for adversaries. Defer to the `supply-chain-audit` skill for comprehensive dependency analysis. |
 | 10 | **Telerik Component Security** | Telerik products span three distinct security profiles: Blazor (low CVE risk), ASP.NET MVC/Kendo (medium), and ASP.NET AJAX/RadControls (high -- multiple critical RCE CVEs). Always identify which product line is in use before assessing risk. See `references/telerik-security.md` for version-specific guidance. |
 
+## Knowledge Base Lookups
+
+Use `search_knowledge` (grounded-code-mcp) to ground decisions in authoritative references.
+
+| Query | When to Call |
+|-------|--------------|
+| `search_knowledge("OWASP Top 10 injection XSS broken access control")` | At RECONNAISSANCE phase — load authoritative OWASP categories before scanning |
+| `search_knowledge("ASP.NET Core authentication authorization policy JWT")` | During authentication/authorization scan — confirms secure patterns |
+| `search_knowledge("SQL injection parameterized queries Entity Framework")` | When reviewing data access layer — authoritative injection prevention patterns |
+| `search_knowledge("Telerik RadAsyncUpload CVE ASP.NET AJAX security")` | When Telerik AJAX/RadControls is detected — load CVE-specific guidance |
+| `search_knowledge("NIST input validation output encoding secure defaults")` | When scoring findings against compliance baselines |
+| `search_knowledge("logging sensitive data PII credentials security")` | During logging hygiene review — confirms what must not appear in logs |
+
+**Protocol:** Search at RECONNAISSANCE phase and before scoring any finding category. Cite the source path in the executive summary and technical findings.
+
 ## Workflow
 
 ### Phase 1: RECONNAISSANCE

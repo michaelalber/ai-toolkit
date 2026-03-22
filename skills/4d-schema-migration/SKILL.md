@@ -65,6 +65,22 @@ leave it behind.
 | 9 | **Maintain referential integrity order** | Migrate parent tables before child tables. Build foreign keys after all data is loaded, then validate with orphan-detection queries. |
 | 10 | **Rollback capability at every phase** | Maintain the source 4D export untouched. Script every migration step so it can be re-run from scratch. Never modify the source. |
 
+## Knowledge Base Lookups
+
+Use `search_knowledge` (grounded-code-mcp) to ground decisions in authoritative references.
+
+| Query | When to Call |
+|-------|--------------|
+| `search_knowledge("4D data types integer boolean date time")` | During MAP phase — verify 4D type semantics before mapping to SQL Server |
+| `search_knowledge("4D subtable multi-value field structure")` | During INVENTORY phase — identify non-standard 4D patterns requiring decomposition |
+| `search_knowledge("4D methods triggers business logic")` | During INVENTORY phase — catalog 4D code requiring conversion to .NET services |
+| `search_knowledge("SQL Server data types NVARCHAR DECIMAL DATETIME2")` | During GENERATE phase — verify SQL Server type selection for edge cases |
+| `search_knowledge("EF Core entity configuration fluent API")` | During GENERATE phase — ground EF Core entity and configuration class patterns |
+| `search_knowledge("Blazor Telerik form validation FluentValidation")` | During FORMS phase — verify form conversion patterns and validation approach |
+| `search_knowledge("database migration validation row count integrity")` | During VALIDATE phase — confirm post-migration validation query patterns |
+
+**Protocol:** Always search `4d_legacy` collection first for any 4D-specific behavior (type semantics, NULL handling, record numbers). Search `dotnet` for target-side patterns. Cite sources in the migration inventory report and type mapping table.
+
 ---
 
 ## Workflow

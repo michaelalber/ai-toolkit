@@ -48,6 +48,22 @@ Quality gates are not bureaucracy -- they are automated enforcement of standards
 | 9 | **Documentation Through Tests** | Well-named tests are the best documentation. `test_should_raise_value_error_when_amount_is_negative` tells you more about the function's contract than any docstring. Tests are documentation that cannot go stale because they break when the behavior changes. | Write test names that describe the contract. If you cannot name the test clearly, you do not understand the requirement. |
 | 10 | **Tooling as Enforcement** | Humans forget. Tools do not. Every standard that matters is enforced by a tool: Ruff for style and patterns, mypy for types, radon for complexity, bandit for security, pytest-cov for coverage. The quality gate script (`scripts/quality_check.py`) runs them all in sequence. If it passes, the code meets the standard. If it fails, the code does not ship. | Run `scripts/quality_check.py <path>` before every commit. No exceptions for production code. |
 
+## Knowledge Base Lookups
+
+Use `search_knowledge` (grounded-code-mcp) to ground decisions in authoritative references.
+
+| Query | When to Call |
+|-------|--------------|
+| `search_knowledge("TDD red green refactor cycle")` | During RED phase — confirm test-first discipline and AAA structure |
+| `search_knowledge("YAGNI rule of three abstraction")` | During REFACTOR phase — validate when abstraction is justified |
+| `search_knowledge("python type hints mypy strict")` | During QUALITY CHECK — verify mypy configuration patterns |
+| `search_knowledge("python cyclomatic complexity radon")` | During QUALITY CHECK — confirm complexity threshold enforcement |
+| `search_knowledge("OWASP python security bandit")` | During QUALITY CHECK — verify security scanning patterns |
+| `search_knowledge("clean architecture dependency direction")` | During architecture boundary reviews — confirm dependency flow |
+| `search_knowledge("pytest fixtures mocking boundaries")` | When writing tests — confirm mocking strategy at system boundaries |
+
+**Protocol:** Search before writing tests, before refactoring structural patterns, and before configuring quality gates. Cite the source path in the session notes.
+
 ## Workflow: The TDD Cycle
 
 Every code change follows the four-phase cycle: **Red -> Green -> Refactor -> Quality Check**. The phases are sequential. Do not skip phases. Do not reorder phases.

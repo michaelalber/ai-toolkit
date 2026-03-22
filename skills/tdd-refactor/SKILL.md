@@ -19,6 +19,20 @@ The REFACTOR phase improves code quality while maintaining behavior. Tests are y
 - If green, continue or commit
 - If red, immediately revert
 
+## Knowledge Base Lookups
+
+Use `search_knowledge` (grounded-code-mcp) to ground decisions in authoritative references.
+
+| Query | When to Call |
+|-------|--------------|
+| `search_knowledge("refactoring code smells catalog Martin Fowler")` | When identifying smells — authoritative smell catalog and refactoring recipes |
+| `search_knowledge("extract method extract class refactoring patterns")` | When choosing a refactoring — specific mechanics and safe-step guidance |
+| `search_knowledge("SOLID principles single responsibility open closed")` | When evaluating design after refactoring — check alignment with SOLID |
+| `search_knowledge("duplication DRY principle abstraction")` | When addressing duplication — confirms when extraction is appropriate vs. premature |
+| `search_knowledge("cyclomatic complexity maintainability index metrics")` | When using quality metrics to guide refactoring scope |
+
+**Protocol:** Search when a smell is identified but the correct refactoring recipe is uncertain. Cite the source path in your response.
+
 ## Kent Beck's 12 Test Desiderata (REFACTOR Phase Focus)
 
 | Property | REFACTOR Phase Application |

@@ -34,6 +34,22 @@ This skill builds end-to-end computer vision pipelines for edge devices. The pip
 | **Observable Pipeline** | Expose FPS, latency, temperature, and memory metrics at all times | Medium |
 | **Power Efficiency** | Minimize unnecessary wakeups, batch when possible, sleep between inference cycles for battery-powered deployments | Low |
 
+## Knowledge Base Lookups
+
+Use `search_knowledge` (grounded-code-mcp) to ground decisions in authoritative references.
+
+| Query | When to Call |
+|-------|--------------|
+| `search_knowledge("OpenCV camera capture threading queue")` | During CAPTURE — building thread-safe frame capture loops |
+| `search_knowledge("TFLite inference Raspberry Pi XNNPACK delegate")` | During INFER — configuring TFLite delegates on ARM hardware |
+| `search_knowledge("image preprocessing normalization resize")` | During PREPROCESS — implementing correct normalization for the model |
+| `search_knowledge("MQTT publish subscribe IoT Python")` | During PUBLISH — setting up result publishing with paho-mqtt |
+| `search_knowledge("edge inference latency profiling benchmarking")` | During any stage — profiling and optimizing pipeline latency |
+| `search_code_examples("TFLite interpreter Python inference")` | Before writing inference code — canonical TFLite patterns |
+| `search_code_examples("OpenCV VideoCapture threading Python")` | Before writing capture code — threading and queue patterns |
+
+**Protocol:** Search `edge_ai` and `robotics` collections for computer vision pipeline patterns. Search `python` for threading and async patterns. Always cite the source path from KB results.
+
 ## Workflow
 
 ### Pipeline Architecture

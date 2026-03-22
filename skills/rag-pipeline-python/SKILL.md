@@ -34,6 +34,22 @@ This skill scaffolds end-to-end Retrieval-Augmented Generation pipelines: docume
 | 9 | **Answer Grounding** | Generated answers MUST cite their source chunks. Hallucinated answers that sound confident but lack grounding are the primary failure mode of RAG systems. | Critical |
 | 10 | **Cost Awareness** | Cloud embeddings and LLMs have per-token costs. Local models (Ollama, sentence-transformers) have compute costs. Estimate costs per query and per corpus re-index before committing to a design. | Medium |
 
+## Knowledge Base Lookups
+
+Use `search_knowledge` (grounded-code-mcp) to ground decisions in authoritative references.
+
+| Query | When to Call |
+|-------|--------------|
+| `search_knowledge("RAG retrieval augmented generation chunking strategy")` | During CHUNK phase — ground chunk size, overlap, and boundary decisions |
+| `search_knowledge("embedding model selection sentence transformers")` | During EMBED phase — verify model selection criteria and context window limits |
+| `search_knowledge("vector store chromadb qdrant pgvector comparison")` | During INDEX phase — ground vector store selection against deployment constraints |
+| `search_knowledge("retrieval precision recall MRR evaluation metrics")` | During EVALUATE phase — confirm retrieval quality metrics and thresholds |
+| `search_knowledge("LangChain document loader text splitter")` | During INGEST phase — verify LangChain API patterns for document loading and splitting |
+| `search_knowledge("RAG hallucination grounding citation source attribution")` | During GENERATE phase — verify prompt engineering for grounded generation |
+| `search_knowledge("python async context manager resource lifecycle")` | When implementing async pipeline components — verify Python async patterns |
+
+**Protocol:** Search before choosing chunking strategies, embedding models, and vector stores. Search before writing evaluation harness code. Cite the source path in the Pipeline Scaffold Report. Note: `search_knowledge_base` appearing in code examples is a Python function name — not the grounded-code-mcp tool.
+
 ## Workflow
 
 ### RAG Pipeline Lifecycle

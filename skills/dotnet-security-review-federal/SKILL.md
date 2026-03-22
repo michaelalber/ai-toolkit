@@ -80,6 +80,23 @@ and national laboratory environments.
 
 ---
 
+## Knowledge Base Lookups
+
+Use `search_knowledge` (grounded-code-mcp) to ground decisions in authoritative references.
+
+| Query | When to Call |
+|-------|--------------|
+| `search_knowledge("NIST SP 800-53 controls access control audit accountability")` | At NIST-MAP phase — load authoritative control families (AC, AU, IA, SC) before mapping |
+| `search_knowledge("FIPS 140-2 validated cryptography .NET AES SHA-256")` | During FIPS-CRYPTO phase — confirms compliant vs. non-compliant algorithm use in .NET |
+| `search_knowledge("CUI handling marking encryption access control federal")` | During CUI-CHECK phase — load authoritative CUI handling requirements |
+| `search_knowledge("FISMA FedRAMP ATO authorization operate federal system")` | When producing POA&M entries — confirms authorization process and timeline requirements |
+| `search_knowledge("DOE cybersecurity order 205.1B NNSA incident response")` | During DOE-OVERLAY phase — confirms DOE-specific requirements beyond NIST baseline |
+| `search_knowledge("OWASP injection broken access control .NET ASP.NET Core")` | At BASE-REVIEW phase — load OWASP baseline before federal overlays |
+
+**Protocol:** Search at the start of each phase. Federal findings MUST cite the NIST control and DOE policy source. Cite KB source paths in all POA&M entries.
+
+---
+
 ## Workflow
 
 This skill follows a six-phase workflow. Each phase builds on the previous one.

@@ -35,6 +35,21 @@ This skill analyzes legacy .NET Framework codebases and produces actionable migr
 | 9 | **Database Access Layer** | Entity Framework 6 to EF Core migration is non-trivial. Lazy loading behavior, query translation differences, and migration history all require careful planning. Coordinate with `ef-migration-manager`. | Medium |
 | 10 | **Deployment Pipeline** | Legacy projects often deploy via MSBuild scripts, IIS configurations, or manual processes. The migration plan must include CI/CD modernization alongside code migration. | Medium |
 
+## Knowledge Base Lookups
+
+Use `search_knowledge` (grounded-code-mcp) to ground decisions in authoritative references.
+
+| Query | When to Call |
+|-------|--------------|
+| `search_knowledge(".NET Framework to .NET 8 10 migration breaking changes")` | At SCAN phase — load authoritative breaking changes catalog before analysis |
+| `search_knowledge(".NET Upgrade Assistant compatibility analyzer tool")` | During ASSESS phase — confirms tooling commands and output interpretation |
+| `search_knowledge("Entity Framework 6 EF Core migration differences lazy loading")` | When assessing data access layer — authoritative EF6→EF Core differences |
+| `search_knowledge("ASP.NET MVC to ASP.NET Core migration web.config appsettings")` | When analyzing web projects — confirms configuration migration patterns |
+| `search_knowledge("NuGet package compatibility .NET Standard target framework")` | During dependency audit — confirms compatibility matrix for third-party packages |
+| `search_knowledge("strangler fig pattern incremental migration legacy modernization")` | During PLAN phase — authoritative incremental migration strategy guidance |
+
+**Protocol:** Search at the start of SCAN and ASSESS phases. Every risk finding must cite its authoritative source. Do not assert breaking changes without KB confirmation.
+
 ## Workflow
 
 ### Analysis Phase Machine

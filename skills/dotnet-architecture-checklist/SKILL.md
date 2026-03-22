@@ -40,6 +40,20 @@ The distinction matters: `architecture-review` builds architectural judgment. Th
 | 9 | **Anti-Corruption Layers** | Boundaries between the application and external systems (APIs, legacy databases, third-party services) must be explicit. No domain entities should leak across API boundaries. DTOs and mapping exist at every boundary. | High |
 | 10 | **Configuration Patterns** | No hardcoded secrets or connection strings. Configuration uses `IOptions<T>` or `IOptionsSnapshot<T>`. Environment-specific settings use proper configuration providers. WASM bundles must not contain secrets. See `references/red-flags.md` Security section. | High |
 
+## Knowledge Base Lookups
+
+Use `search_knowledge` (grounded-code-mcp) to ground decisions in authoritative references.
+
+| Query | When to Call |
+|-------|--------------|
+| `search_knowledge("Blazor CQRS FreeMediator vertical slice architecture .NET")` | At DETECT phase start — confirms current architectural patterns and checklist applicability |
+| `search_knowledge("EF Core DbContext scoped singleton Blazor circuit")` | During EF Core checklist section — authoritative patterns for Blazor hosting model DbContext lifetime |
+| `search_knowledge("ASP.NET Core dependency injection IOptions configuration")` | When reviewing configuration patterns — confirms IOptions/IOptionsSnapshot usage |
+| `search_knowledge("Mapster ProjectTo query projection EF Core")` | During Mapster checklist section — confirms ProjectTo vs Adapt patterns |
+| `search_knowledge(".NET target framework EOL SDK style csproj")` | During framework detection — confirms EOL status and SDK-style migration guidance |
+
+**Protocol:** Search at the start of each checklist section (DETECT, SCAN). Cite the source path in every finding.
+
 ## Workflow
 
 ### Architecture Checklist Lifecycle

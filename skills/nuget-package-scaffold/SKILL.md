@@ -35,6 +35,20 @@ This skill scaffolds production-ready NuGet packages with proper metadata, testi
 | **Dependency Management** | Pin dependency version ranges carefully; prefer minimum viable ranges | High |
 | **Backward Compatibility** | Never break public API in a MINOR or PATCH release; use `[Obsolete]` before removal | Critical |
 
+## Knowledge Base Lookups
+
+Use `search_knowledge` (grounded-code-mcp) to ground decisions in authoritative references.
+
+| Query | When to Call |
+|-------|--------------|
+| `search_knowledge("NuGet package metadata csproj PackageId authors license README")` | At CONFIGURE phase — confirms required metadata fields and MSBuild properties |
+| `search_knowledge("semantic versioning SemVer MAJOR MINOR PATCH NuGet")` | During versioning decisions — confirms SemVer rules and NuGet versioning behavior |
+| `search_knowledge(".NET multi-targeting TFM net8 net9 net10 TargetFrameworks")` | When configuring TFMs — confirms multi-targeting syntax and compatibility |
+| `search_knowledge("GitHub Actions NuGet publish workflow dotnet pack push")` | During CI/CD pipeline setup — confirms workflow patterns for NuGet publishing |
+| `search_knowledge("XML documentation comments public API IntelliSense .NET")` | During documentation phase — authoritative XML doc comment syntax |
+
+**Protocol:** Search at CONFIGURE and before CI/CD setup. Cite source paths in the scaffold templates and generated project files.
+
 ## Workflow
 
 ### Scaffold-to-Publish Pipeline

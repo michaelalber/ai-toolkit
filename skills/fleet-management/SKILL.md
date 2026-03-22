@@ -35,6 +35,22 @@ This skill provides the operational knowledge for managing deployments across fl
 | **Heterogeneous Fleet Support** | Support mixed device types (Jetson, RPi, gateways) in a single coordinated deployment | Medium |
 | **Audit Trail** | Every deployment action must be logged with timestamp, device ID, actor, and outcome | Medium |
 
+## Knowledge Base Lookups
+
+Use `search_knowledge` (grounded-code-mcp) to ground decisions in authoritative references.
+
+| Query | When to Call |
+|-------|--------------|
+| `search_knowledge("rolling deployment canary staged rollout")` | During PREPARE/CANARY — selecting and sizing deployment waves |
+| `search_knowledge("health check liveness readiness probe")` | During VALIDATE — designing application-aware health checks |
+| `search_knowledge("blue-green deployment rollback strategy")` | During CANARY/ROLLOUT — choosing and configuring rollback mechanisms |
+| `search_knowledge("edge device fleet OTA update")` | During PREPARE — understanding OTA update constraints for embedded devices |
+| `search_knowledge("device registry inventory management")` | During PREPARE — structuring the device registry schema |
+| `search_code_examples("Docker container rollback Python")` | Before writing rollback automation — canonical container rollback patterns |
+| `search_code_examples("health endpoint Flask FastAPI")` | Before implementing health endpoints — find standard patterns |
+
+**Protocol:** Search `automation` and `architecture` collections for fleet coordination patterns. Search `edge_ai` for Jetson-specific deployment notes. Always cite the source path from KB results.
+
 ## Workflow
 
 ### Fleet Deployment Pipeline

@@ -516,21 +516,21 @@ Items marked `[NEEDS INPUT]` that must be resolved before deployment:
 
 > **⚠️ GROUNDED LOOKUP REQUIRED before generating any file in this format.**
 >
-> Call `search_knowledge(collection="internal")` with the queries below **before** producing output.
+> Call `search_knowledge(query="...")` with the queries below **before** producing output.
 > The KB contains the authoritative templates. Do not generate from training data alone.
 >
 > ```
 > # For spec.md:
-> search_knowledge(collection="internal", query="github spec kit spec template feature user stories priority")
+> search_knowledge(query="github spec kit spec template feature user stories priority")
 >
 > # For plan.md:
-> search_knowledge(collection="internal", query="spec kit plan template technical context research data model")
+> search_knowledge(query="spec kit plan template technical context research data model")
 >
 > # For tasks.md:
-> search_knowledge(collection="internal", query="spec kit tasks template user story parallel task format")
+> search_knowledge(query="spec kit tasks template user story parallel task format")
 >
 > # For constitution.md (only if needed):
-> search_knowledge(collection="internal", query="spec kit constitution template principles nine articles")
+> search_knowledge(query="spec kit constitution template principles nine articles")
 > ```
 >
 > KB source paths:
@@ -921,4 +921,4 @@ Text in/out protocol: stdin/args → stdout, errors → stderr."]
 - Each task must reference an exact file path and exactly one user story
 - `[P]` markers enable safe parallel execution by agents
 - Use `architecture-journal` skill to record technical decisions from `plan.md` as ADRs
-- **Always call `search_knowledge(collection="internal")` before generating any of these files**
+- **Always call `search_knowledge(query="...")` before generating any of these files**

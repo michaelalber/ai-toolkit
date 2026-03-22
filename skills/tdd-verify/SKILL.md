@@ -18,6 +18,19 @@ TDD verification ensures that the discipline was followed, not just that tests e
 - Score TDD compliance
 - Guide improvement
 
+## Knowledge Base Lookups
+
+Use `search_knowledge` (grounded-code-mcp) to ground decisions in authoritative references.
+
+| Query | When to Call |
+|-------|--------------|
+| `search_knowledge("TDD anti-patterns test after implementation coverage theater")` | During verification — authoritative anti-pattern catalog to check against |
+| `search_knowledge("test quality desiderata behavioral isolated deterministic")` | When scoring test quality — confirms the 12 properties and their verification questions |
+| `search_knowledge("code coverage mutation testing quality metrics")` | When assessing coverage quality vs. coverage theater |
+| `search_knowledge("TDD discipline red green refactor commit order")` | When auditing commit history — confirms expected TDD commit sequence |
+
+**Protocol:** Search at verification start to load the authoritative compliance criteria. Cite the source path in your scorecard.
+
 ## Kent Beck's 12 Test Desiderata (Verification Focus)
 
 Use these properties to evaluate test quality:

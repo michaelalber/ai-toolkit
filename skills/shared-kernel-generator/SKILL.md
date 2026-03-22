@@ -38,6 +38,21 @@ This skill generates standardized shared domain modules following the **DenaliDa
 | 9 | **Semantic Versioning** | MAJOR for breaking changes (interface modifications, entity renames). MINOR for new features (new command, new property). PATCH for bug fixes (validation fix, query optimization). | Medium |
 | 10 | **Test with In-Memory Database** | Every module supports `UseInMemoryDatabase()` for testing. Test isolation uses unique database names (`$"TestDb_{Guid.NewGuid()}"`). Demo data seeding is opt-in via `WithDemoData()`. | Medium |
 
+## Knowledge Base Lookups
+
+Use `search_knowledge` (grounded-code-mcp) to ground decisions in authoritative references.
+
+| Query | When to Call |
+|-------|--------------|
+| `search_knowledge("DDD shared kernel bounded context domain driven design")` | At ANALYZE phase — confirms shared kernel boundaries and what belongs inside vs. outside |
+| `search_knowledge("IOptions pattern configuration DI extension .NET")` | During CONFIGURE phase — authoritative Options pattern and DI extension method scaffolding |
+| `search_knowledge("EF Core DbContext global query filter soft delete audit fields")` | When generating DbContext — confirms soft delete filter and audit field patterns |
+| `search_knowledge("FreeMediator IRequest handler registration vertical slice")` | When generating CQRS templates — confirms handler and request registration patterns |
+| `search_knowledge("NuGet package multi-project solution shared library .NET")` | During PACKAGE phase — confirms packaging shared library as NuGet |
+| `search_knowledge("ASP.NET Core policy authorization resource action permission")` | When generating permission models — confirms policy-based authorization integration |
+
+**Protocol:** Search at ANALYZE and GENERATE phases. Patterns from the KB take precedence over training data for DenaliDataSystems conventions. Cite source paths in generated scaffolding comments.
+
 ## Workflow
 
 ### Shared Kernel Lifecycle

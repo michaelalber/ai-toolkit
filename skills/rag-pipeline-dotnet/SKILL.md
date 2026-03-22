@@ -43,6 +43,22 @@ RAG is the primary pattern for grounding LLM responses in organizational knowled
 | 9 | **Federal Data Handling** | Validate data classification before ingestion. CUI requires access controls and audit trails. Classified data is never eligible for RAG. See `references/federal-ai-compliance.md`. | Critical |
 | 10 | **Air-Gapped Deployment** | Support disconnected environments with Ollama (local LLM + embeddings) and on-premise vector stores (Qdrant, pgvector). No external API calls. FIPS compliance depends on host OS configuration. | High |
 
+## Knowledge Base Lookups
+
+Use `search_knowledge` (grounded-code-mcp) to ground decisions in authoritative references.
+
+| Query | When to Call |
+|-------|--------------|
+| `search_knowledge("Semantic Kernel vector store memory connector")` | During CONFIGURE phase — verify Semantic Kernel API patterns for memory and connectors |
+| `search_knowledge("RAG retrieval augmented generation chunking embedding")` | During INGEST/CHUNK phases — ground chunk size and overlap decisions |
+| `search_knowledge("vector similarity search embedding model selection")` | During INDEX phase — verify embedding model selection criteria |
+| `search_knowledge("NIST AI RMF federal compliance audit logging")` | During federal deployment configuration — verify NIST AI RMF transparency requirements |
+| `search_knowledge("FedRAMP Azure Government CUI data classification")` | During federal compliance review — verify CUI handling and authorized service requirements |
+| `search_knowledge("retrieval precision recall evaluation RAG metrics")` | During EVALUATE phase — confirm retrieval evaluation metrics and thresholds |
+| `search_knowledge("ASP.NET Core dependency injection CancellationToken")` | During CONFIGURE phase — verify .NET DI and async patterns for the pipeline |
+
+**Protocol:** Search before configuring the Semantic Kernel pipeline, before selecting vector stores or embedding models, and before implementing federal compliance features. Cite the source in the Pipeline Configuration Summary and Deployment Checklist.
+
 ## Workflow
 
 ### RAG Pipeline Lifecycle

@@ -34,6 +34,23 @@ This skill covers the complete model optimization pipeline: profiling baseline p
 | **Mixed Precision** | When uniform INT8 fails accuracy, use FP16 for sensitive layers and INT8 for the rest | Medium |
 | **Deployment Metadata** | Package optimized models with benchmark results, preprocessing config, and provenance information | Medium |
 
+## Knowledge Base Lookups
+
+Use `search_knowledge` (grounded-code-mcp) to ground decisions in authoritative references.
+
+| Query | When to Call |
+|-------|--------------|
+| `search_knowledge("quantization INT8 PTQ calibration dataset")` | During OPTIMIZE — choosing post-training quantization strategy |
+| `search_knowledge("TensorRT FP16 INT8 engine conversion")` | During OPTIMIZE — converting to TensorRT for Jetson targets |
+| `search_knowledge("TFLite quantization ARM Raspberry Pi")` | During OPTIMIZE — converting to TFLite for ARM targets |
+| `search_knowledge("ONNX model export PyTorch TensorFlow")` | During PROFILE/OPTIMIZE — exporting to ONNX as interchange format |
+| `search_knowledge("model pruning structured unstructured channels")` | During OPTIMIZE — applying pruning to reduce model size |
+| `search_knowledge("inference benchmark latency percentile P95")` | During BENCHMARK — measuring latency with statistical rigor |
+| `search_code_examples("TensorRT calibration INT8 Python")` | Before INT8 calibration — find calibration dataset patterns |
+| `search_code_examples("ONNX export PyTorch torch.onnx")` | Before ONNX export — find correct opset and export options |
+
+**Protocol:** Search `edge_ai` collection first for model optimization patterns. Search `python` for framework-specific code patterns. Always cite the source path from KB results. Report accuracy degradation before proceeding.
+
 ## Workflow
 
 ### Optimization Pipeline

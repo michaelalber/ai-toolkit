@@ -34,6 +34,22 @@ This skill orchestrates the full lifecycle of deploying AI applications to NVIDI
 | **Incremental Deployment** | Deploy one component at a time; validate each stage before adding the next pipeline element | Medium |
 | **Telemetry from Day One** | Instrument with tegrastats and jtop from the first deployment; do not wait for production to add monitoring | Medium |
 
+## Knowledge Base Lookups
+
+Use `search_knowledge` (grounded-code-mcp) to ground decisions in authoritative references.
+
+| Query | When to Call |
+|-------|--------------|
+| `search_knowledge("TensorRT FP16 INT8 quantization Jetson")` | During CONVERT/OPTIMIZE — selecting precision and quantization strategy |
+| `search_knowledge("Jetson JetPack CUDA cuDNN compatibility")` | During SETUP — verifying version compatibility before any installation |
+| `search_knowledge("Docker container NVIDIA GPU runtime")` | During CONTAINERIZE — configuring nvidia-docker runtime |
+| `search_knowledge("TensorRT ONNX model conversion trtexec")` | During CONVERT — converting ONNX models to TensorRT engines |
+| `search_knowledge("Jetson power mode thermal monitoring tegrastats")` | During BENCHMARK — measuring thermal behavior and power draw |
+| `search_code_examples("TensorRT Python inference engine")` | Before writing inference code — find TensorRT Python API patterns |
+| `search_code_examples("Docker Compose systemd service autostart")` | During DEPLOY — configuring auto-start and restart policies |
+
+**Protocol:** Search `edge_ai` and `robotics` collections for Jetson and TensorRT guidance. Search `automation` for containerization and fleet deployment context. Always cite the source path from KB results.
+
 ## Workflow
 
 ### Deployment Pipeline

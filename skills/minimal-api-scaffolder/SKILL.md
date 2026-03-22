@@ -38,6 +38,21 @@ This skill scaffolds and maintains Minimal API endpoints in .NET 10 projects wit
 | 9 | **CORS Configuration** | CORS origins are explicitly configured per environment. Development may use permissive settings; production must whitelist specific origins from configuration. Never use `AllowAnyOrigin()` in production. | High |
 | 10 | **Health Checks** | Every API project includes health check endpoints (`/health`, `/health/ready`, `/health/live`) mapped with `.AllowAnonymous()`. Database connectivity and critical dependencies are included in readiness checks. | Medium |
 
+## Knowledge Base Lookups
+
+Use `search_knowledge` (grounded-code-mcp) to ground decisions in authoritative references.
+
+| Query | When to Call |
+|-------|--------------|
+| `search_knowledge("ASP.NET Core Minimal API endpoint group TypedResults .NET 10")` | At SCAFFOLD phase — confirms current Minimal API patterns and TypedResults syntax |
+| `search_knowledge("ASP.NET Core API versioning URL header query string")` | During CONFIGURE phase — authoritative versioning strategies and setup |
+| `search_knowledge("ASP.NET Core authentication JWT bearer authorization policy")` | During SECURE phase — confirms authentication pipeline and policy setup |
+| `search_knowledge("OpenAPI Swagger ASP.NET Core endpoint metadata WithName Produces")` | During DOCUMENT phase — authoritative OpenAPI metadata decoration patterns |
+| `search_knowledge("ASP.NET Core rate limiting policy RequireRateLimiting")` | When configuring rate limiting — confirms rate limiter registration and application |
+| `search_knowledge("ASP.NET Core health checks ready live endpoints")` | When scaffolding health checks — confirms health check endpoint patterns |
+
+**Protocol:** Search before each scaffold phase (CONFIGURE, SCAFFOLD, SECURE, DOCUMENT). Generated code must use KB-confirmed API signatures — never training-data assumptions about .NET versioned APIs. Cite source paths in generated file headers.
+
 ## Workflow
 
 ### Minimal API Scaffold Lifecycle

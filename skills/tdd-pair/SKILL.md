@@ -15,6 +15,19 @@ Pair programming with AI brings human judgment and AI capabilities together. The
 **The Partnership Principle:**
 Two minds working together produce better code than either alone — but roles must be clear.
 
+## Knowledge Base Lookups
+
+Use `search_knowledge` (grounded-code-mcp) to ground decisions in authoritative references.
+
+| Query | When to Call |
+|-------|--------------|
+| `search_knowledge("pair programming ping pong TDD navigator driver")` | At session start — confirms pair roles and ping-pong protocol |
+| `search_knowledge("TDD test naming behavior specification")` | When writing tests in the pair session — authoritative naming conventions |
+| `search_knowledge("XP extreme programming practices pair collaboration")` | When establishing collaboration norms — grounding in XP source material |
+| `search_knowledge("test quality behavioral structure-insensitive readable")` | During review turns — confirms test quality criteria for both partners |
+
+**Protocol:** Search at session initialization and when disagreements arise about test quality or implementation approach. Cite the source path in your response.
+
 ## Kent Beck's 12 Test Desiderata (Pair Focus)
 
 In pair programming, both partners share responsibility for test quality:

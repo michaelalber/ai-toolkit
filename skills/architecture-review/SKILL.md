@@ -46,6 +46,22 @@ Most architecture reviews fail because they are either rubber stamps ("looks goo
 | 9 | **Simplicity Requires Defense** | Complexity is the default outcome of every design process. Simplicity requires active, continuous defense. Every meeting adds a feature. Every stakeholder adds a requirement. Every developer adds an abstraction. The architecture review must be the voice that asks: "Do we need this? What happens if we remove it? What is the simplest thing that could work?" | Challenge every abstraction layer, every indirection, every "just in case" component. Demand justification. |
 | 10 | **Evidence Over Intuition** | "I think this will be fast enough" is not evidence. "We benchmarked this at 2400 RPS with p99 latency of 45ms on hardware similar to production" is evidence. Architecture decisions based on intuition produce architectures that work by accident. Architecture decisions based on evidence produce architectures that work by design. The review must distinguish between what the architect believes and what the architect has measured. | For every performance, scalability, or reliability claim, ask: "How do you know? What is the evidence?" |
 
+## Knowledge Base Lookups
+
+Use `search_knowledge` (grounded-code-mcp) to ground decisions in authoritative references.
+
+| Query | When to Call |
+|-------|--------------|
+| `search_knowledge("SOLID principles architecture diagnostic")` | During ATTEMPT phase — ground SOLID diagnostic questions in authoritative principles |
+| `search_knowledge("coupling afferent efferent stability metrics")` | During ATTEMPT phase — ground coupling-revealing questions in Martin's metrics |
+| `search_knowledge("failure modes distributed systems resilience")` | During ATTEMPT phase — inform failure mode questioning with real distributed failure patterns |
+| `search_knowledge("scalability bottleneck architecture tradeoffs")` | During ATTEMPT phase — ground scalability boundary questions in evidence |
+| `search_knowledge("STRIDE threat modeling security architecture")` | During security boundary questioning — verify threat modeling approach |
+| `search_knowledge("architecture decision records ADR tradeoffs")` | During REFLECT phase — guide ADR creation from accepted tradeoffs |
+| `search_knowledge("12 factor app operational complexity")` | During operational readiness questioning — ground deployment and monitoring concerns |
+
+**Protocol:** Search at the start of each category (SOLID, coupling, failure modes, scalability, security) to calibrate questioning depth and terminology to authoritative sources. Cite in the vulnerability report.
+
 ## Workflow: The CACR Loop
 
 The CACR loop (Challenge, Attempt, Compare, Reflect) is the core interaction pattern. It structures the conversation so the architect builds judgment, not just a list of fixes.

@@ -17,6 +17,20 @@ The GREEN phase has one job: make the failing test pass with **minimal code**. T
 2. **Obvious Implementation**: Write the real code if trivially simple
 3. **Triangulation**: Use multiple examples to force generalization
 
+## Knowledge Base Lookups
+
+Use `search_knowledge` (grounded-code-mcp) to ground decisions in authoritative references.
+
+| Query | When to Call |
+|-------|--------------|
+| `search_knowledge("TDD fake it triangulation obvious implementation strategies")` | When choosing an implementation strategy — confirms Fake It / Triangulation / Obvious Implementation order |
+| `search_knowledge("minimal implementation GREEN phase test passes")` | When writing GREEN phase code — authoritative guidance on "minimum code to pass" |
+| `search_knowledge("unit test AAA arrange act assert pattern")` | When reviewing the failing test before implementing — confirms test structure is sound |
+| `search_knowledge("Python implementation patterns type hints")` | For Python projects — idiomatic implementation patterns |
+| `search_knowledge("C# implementation patterns minimal")` | For .NET projects — idiomatic implementation patterns |
+
+**Protocol:** Search at the start of a GREEN phase session to confirm the implementation strategy. Cite the source path in your response.
+
 ## Kent Beck's 12 Test Desiderata (GREEN Phase Focus)
 
 During GREEN, prioritize these properties:

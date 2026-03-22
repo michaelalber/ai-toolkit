@@ -36,6 +36,20 @@ Every `import`, `using`, `require`, or `#include` statement is an architectural 
 | 9 | **The Main Sequence** | The ideal relationship between I and A follows the line A + I = 1. Distance from this line (D) measures how well a module balances stability with abstractness. D=0 is ideal; D approaching 0.7+ demands attention. |
 | 10 | **Circular Dependencies Are Urgent** | Cycles in the dependency graph are not technical debt to be tracked -- they are structural defects that compound over time. Every cycle should be understood, and most should be broken. |
 
+## Knowledge Base Lookups
+
+Use `search_knowledge` (grounded-code-mcp) to ground decisions in authoritative references.
+
+| Query | When to Call |
+|-------|--------------|
+| `search_knowledge("Robert Martin package coupling metrics instability abstractness")` | During COMPARE phase — verify Ca/Ce/I/A/D formulas and interpretation |
+| `search_knowledge("acyclic dependencies principle stable abstractions")` | During COMPARE phase — ground SDP/SAP violation explanations |
+| `search_knowledge("dependency inversion principle interface abstraction")` | During REFLECT phase — recommend concrete strategies for breaking cycles |
+| `search_knowledge("clean architecture dependency direction layers")` | During REFLECT phase — verify that dependency direction aligns with intended architecture |
+| `search_knowledge("circular dependency refactoring strategies")` | During REFLECT phase — surface proven cycle-breaking techniques |
+
+**Protocol:** Search before presenting metrics to ensure formulas and thresholds are grounded. Search before recommending refactoring strategies to confirm the approach against authoritative patterns. Cite the source in the dependency scan report.
+
 ## Workflow: CACR Interaction Loop
 
 This skill uses the **Challenge - Attempt - Compare - Reflect** coaching loop.

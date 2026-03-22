@@ -35,6 +35,20 @@ This skill manages the full Entity Framework Core migration lifecycle: **Plan, C
 | 9 | **Seed Data Management** | Seed data belongs in migrations or `HasData()` configurations, not in application startup code. Seed changes are migration events. | Medium |
 | 10 | **Migration Naming** | Use descriptive, timestamped names that convey intent: `AddUserEmailIndex`, `SplitAddressFromCustomer`, `RemoveDeprecatedStatusColumn`. | Medium |
 
+## Knowledge Base Lookups
+
+Use `search_knowledge` (grounded-code-mcp) to ground decisions in authoritative references.
+
+| Query | When to Call |
+|-------|--------------|
+| `search_knowledge("EF Core migration create apply rollback script generation")` | At session start — confirms dotnet-ef CLI commands and migration lifecycle |
+| `search_knowledge("EF Core migration Up Down idempotent script SQL generation")` | During REVIEW SQL phase — authoritative idempotent script patterns |
+| `search_knowledge("database migration zero downtime column rename data loss")` | During PLAN phase — confirms zero-downtime migration strategies |
+| `search_knowledge("EF Core DbContext model snapshot migration conflict resolution")` | When resolving migration conflicts — authoritative conflict resolution process |
+| `search_knowledge("SQL Server PostgreSQL DDL ALTER TABLE index constraint")` | When reviewing generated DDL — confirms safe vs. dangerous DDL operations by database |
+
+**Protocol:** Search before the REVIEW SQL and TEST ROLLBACK phases. Never proceed to APPLY without KB-confirmed safe DDL patterns for the target database. Cite source paths in migration review comments.
+
 ## Workflow
 
 ### Migration Lifecycle

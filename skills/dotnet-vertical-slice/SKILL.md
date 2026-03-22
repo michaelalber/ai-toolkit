@@ -35,6 +35,21 @@ This skill scaffolds and maintains vertical slice architecture in .NET projects 
 | 9 | **Endpoint Thinness** | API endpoints (Minimal API or controller actions) do nothing except deserialize the request, send it through FreeMediator, and serialize the response. No business logic in endpoints. | High |
 | 10 | **Test Proximity** | Tests for a feature mirror the feature folder structure. A feature's tests live together and test the handler, validator, and endpoint as a cohesive unit. | Medium |
 
+## Knowledge Base Lookups
+
+Use `search_knowledge` (grounded-code-mcp) to ground decisions in authoritative references.
+
+| Query | When to Call |
+|-------|--------------|
+| `search_knowledge("vertical slice architecture CQRS feature folder .NET")` | At session start — confirms vertical slice conventions and feature folder structure |
+| `search_knowledge("FreeMediator IRequest handler pipeline behavior .NET")` | When scaffolding handlers or pipeline behaviors — authoritative FreeMediator patterns |
+| `search_knowledge("FluentValidation IValidator async rule .NET")` | When scaffolding validators — confirms async validation and rule syntax |
+| `search_knowledge("ASP.NET Core Minimal API TypedResults endpoint group")` | When scaffolding endpoints — authoritative typed results and route group patterns |
+| `search_knowledge("EF Core DbContext dependency injection scoped lifetime")` | When scaffolding DbContext and repository patterns — authoritative DI lifetime rules |
+| `search_knowledge("C# record immutable request response DTO")` | When defining request/response types — confirms records-as-DTOs convention |
+
+**Protocol:** Search before scaffolding each new component type (handler, validator, endpoint, pipeline behavior). Cite the source path in generated code comments.
+
 ## Workflow
 
 ### Vertical Slice Lifecycle

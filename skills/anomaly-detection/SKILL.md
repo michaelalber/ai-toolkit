@@ -32,6 +32,20 @@ This skill provides the statistical methods, drift detection algorithms, and dec
 | **Drift Awareness** | Gradual drift is harder to detect than spikes but often more consequential | High |
 | **Recalibration Discipline** | Recalibration is an invasive action that requires evidence and approval | Critical |
 
+## Knowledge Base Lookups
+
+Use `search_knowledge` (grounded-code-mcp) to ground decisions in authoritative references.
+
+| Query | When to Call |
+|-------|--------------|
+| `search_knowledge("Z-score CUSUM EWMA anomaly detection statistical methods")` | At BASELINE phase — confirms algorithm selection and threshold calculation formulas |
+| `search_knowledge("sensor drift detection time series change point")` | When implementing drift detection — authoritative drift detection methods |
+| `search_knowledge("Python numpy scipy statistical anomaly detection time series")` | When implementing Python detection code — authoritative library patterns |
+| `search_knowledge("alert fatigue false positive threshold tuning sensor")` | During RESPOND phase — confirms alert hygiene and threshold tuning strategies |
+| `search_knowledge("sensor calibration recalibration trigger conditions")` | When building recalibration decision trees — confirms when to trigger vs. suppress |
+
+**Protocol:** Search at BASELINE and DETECT phases. Algorithm choices must be grounded in the KB before implementation. Cite source paths in implementation comments.
+
 ## Workflow
 
 ### Anomaly Detection Pipeline

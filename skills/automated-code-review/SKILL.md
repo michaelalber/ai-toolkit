@@ -52,6 +52,21 @@ These principles govern every automated review execution.
 | 10 | **Positive Signal** | Report what the code does well, not just what it does poorly. Positive observations calibrate the review and prevent the report from reading as pure criticism. At minimum, one positive observation per file reviewed. | MEDIUM -- positive observations section required in output |
 
 
+## Knowledge Base Lookups
+
+Use `search_knowledge` (grounded-code-mcp) to ground decisions in authoritative references.
+
+| Query | When to Call |
+|-------|--------------|
+| `search_knowledge("OWASP top 10 injection SQL XSS")` | During SCAN phase — calibrate security checklist items to current OWASP guidance |
+| `search_knowledge("code review correctness error handling")` | During ANALYZE phase — verify correctness checklist completeness |
+| `search_knowledge("N+1 query performance database loop")` | During ANALYZE phase — confirm performance patterns for the performance checklist |
+| `search_knowledge("cyclomatic complexity maintainability code smell")` | During ANALYZE phase — ground maintainability thresholds in authoritative metrics |
+| `search_knowledge("clean code naming conventions single responsibility")` | During convention detection — calibrate naming and responsibility guidelines |
+| `search_knowledge("security authentication authorization access control")` | During security checklist — verify auth/authz verification patterns |
+
+**Protocol:** Search at the start of the SCAN phase to calibrate checklists, and during ANALYZE when a checklist item requires deeper verification criteria. Cite the source in findings where authoritative guidance informed severity assignment.
+
 ## Workflow
 
 ### Execution Pipeline
