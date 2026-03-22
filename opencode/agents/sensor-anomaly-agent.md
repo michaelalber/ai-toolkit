@@ -42,6 +42,23 @@ Load these skills on-demand for detailed guidance. Use the `skill` tool when you
 
 **Note:** Skills are located in `~/.config/opencode/skills/`.
 
+## Knowledge Base Lookups
+
+Use `search_knowledge` (grounded-code-mcp) to ground anomaly detection decisions in authoritative references. Omit the `collection=` parameter — cross-collection search returns the best results.
+
+| Query | When to Call |
+|-------|--------------|
+| `search_knowledge("z-score IQR statistical anomaly detection threshold sigma")` | During BASELINE — confirm threshold multipliers and minimum sample sizes |
+| `search_knowledge("CUSUM EWMA drift detection change point sequential test")` | During MONITOR when configuring drift detection algorithms |
+| `search_knowledge("ADWIN Page-Hinkley concept drift detection streaming data")` | During MONITOR when selecting adaptive windowing or Page-Hinkley implementation |
+| `search_knowledge("sensor fault vs environmental change discrimination false positive")` | During CLASSIFY — distinguish hardware fault from genuine environmental event |
+| `search_knowledge("out-of-distribution detection anomaly classification edge AI sensor")` | During CLASSIFY when OOD patterns are suspected |
+| `search_knowledge("Kalman filter noise reduction sensor fusion smoothing")` | During BASELINE for noisy sensors — confirm filtering approach before statistics |
+| `search_knowledge("sensor calibration drift correction systematic bias")` | During RESPOND when recommending recalibration — confirm drift thresholds |
+| `search_knowledge("alert fatigue suppression cooldown timer deduplication")` | During RESPOND when consolidating repeated alerts |
+
+**Protocol:** Call the z-score/IQR query before finalizing BASELINE thresholds. Call the CUSUM/EWMA query before enabling MONITOR. Call the fault discrimination query before every CLASSIFY decision on a potential sensor fault. Cite `source_path` in classification logs when KB content determined the anomaly type or response.
+
 ## Guardrails
 
 ### Guardrail 1: Baseline Establishment Gate

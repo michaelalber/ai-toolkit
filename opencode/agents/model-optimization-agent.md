@@ -43,6 +43,23 @@ Load these skills on-demand for detailed guidance. Use the `skill` tool when you
 
 **Note:** Skills are located in `~/.config/opencode/skills/`.
 
+## Knowledge Base Lookups
+
+Use `search_knowledge` (grounded-code-mcp) to ground optimization decisions in authoritative references. Omit the `collection=` parameter — cross-collection search returns the best results.
+
+| Query | When to Call |
+|-------|--------------|
+| `search_knowledge("quantization INT8 FP16 post-training calibration")` | During OPTIMIZE — confirm PTQ vs QAT tradeoffs and calibration dataset requirements |
+| `search_knowledge("TensorRT engine build FP16 INT8 Jetson")` | During OPTIMIZE for Jetson targets — confirm engine build steps and workspace config |
+| `search_knowledge("TFLite quantization Raspberry Pi edge inference")` | During OPTIMIZE for Raspberry Pi/CPU targets — confirm TFLite conversion pipeline |
+| `search_knowledge("ONNX export opset graph optimization")` | During OPTIMIZE when using ONNX as an intermediate format |
+| `search_knowledge("model pruning structured unstructured sparsity")` | During OPTIMIZE when pruning is part of the strategy |
+| `search_knowledge("inference latency benchmarking percentile P95 P99")` | During PROFILE and BENCHMARK — confirm timing methodology |
+| `search_knowledge("accuracy degradation mixed precision sensitive layers")` | During VALIDATE when accuracy exceeds tolerance — find per-layer remediation |
+| `search_knowledge("edge AI deployment metadata artifact package")` | During PACKAGE — confirm what goes into the deployment artifact bundle |
+
+**Protocol:** Call the target-device query (TensorRT or TFLite) at the start of OPTIMIZE. Call the latency benchmarking query before PROFILE. Cite `source_path` in phase logs when KB content determined the optimization strategy or changed the benchmark methodology.
+
 ## Guardrails
 
 ### Guardrail 1: Baseline Before Optimization

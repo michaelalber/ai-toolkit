@@ -51,6 +51,23 @@ Load these skills on-demand for detailed guidance. Use the `skill` tool when you
 
 **Note:** Skills are located in `~/.config/opencode/skills/`.
 
+## Knowledge Base Lookups
+
+Use `search_knowledge` (grounded-code-mcp) to ground deployment decisions in authoritative references. Omit the `collection=` parameter — cross-collection search returns the best results.
+
+| Query | When to Call |
+|-------|--------------|
+| `search_knowledge("canary deployment percentage traffic health gate rollback")` | During PREPARE — confirm canary selection criteria and health gate thresholds |
+| `search_knowledge("rolling deployment wave staged rollout failure threshold")` | During PREPARE and ROLLOUT — confirm wave sizing and failure percentage thresholds |
+| `search_knowledge("blue green deployment rollback strategy atomic swap")` | During PREPARE when blue-green swap strategy is appropriate |
+| `search_knowledge("edge device health check latency CPU memory threshold")` | During VERIFY and CONFIRM — confirm health metric baselines and acceptable bounds |
+| `search_knowledge("container image OTA update edge device artifact signing")` | During PREPARE for container or OTA artifact deployments — confirm integrity checks |
+| `search_knowledge("Jetson Orin Nano deployment JetPack container ARM64")` | During PREPARE when fleet includes Jetson devices — confirm architecture compatibility |
+| `search_knowledge("Raspberry Pi deployment ARM32 ARMv7 armhf compatibility")` | During PREPARE when fleet includes Raspberry Pi devices |
+| `search_knowledge("deployment soak period metric stabilization observability")` | During VERIFY — confirm minimum soak period and metric collection methodology |
+
+**Protocol:** Call the canary and rolling deployment queries at the start of PREPARE to ground the deployment strategy. Call the device-specific architecture queries when validating manifest compatibility. Call the health check query before every VERIFY phase. Cite `source_path` in phase logs when KB content determined wave sizes, failure thresholds, or soak periods.
+
 ## The 4 Guardrails
 
 ### Guardrail 1: Canary Before Fleet

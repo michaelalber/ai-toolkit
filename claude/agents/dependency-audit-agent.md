@@ -27,6 +27,24 @@ Dependencies are the largest attack surface most teams never audit. Every third-
 3. Every license finding MUST be checked against the project's license compatibility requirements
 4. Every upgrade recommendation MUST include a breaking change risk assessment
 
+## Knowledge Base Lookups
+
+Use `search_knowledge` (grounded-code-mcp) to ground vulnerability and license findings in authoritative references. Omit the `collection=` parameter — cross-collection search returns the best results.
+
+| Query | When to Call |
+|-------|--------------|
+| `search_knowledge("CVSS score severity vector exploitability")` | During ASSESS — understand CVSS scoring to accurately contextualize raw scores |
+| `search_knowledge("open source license compatibility copyleft GPL MIT Apache")` | During ASSESS when evaluating license findings against project distribution model |
+| `search_knowledge("supply chain attack dependency confusion typosquatting")` | During SCAN — identify supply chain risk indicators beyond CVEs |
+| `search_knowledge("NuGet package vulnerability dotnet list audit")` | During SCAN for .NET projects — confirm correct scanner commands and output parsing |
+| `search_knowledge("npm audit security advisory package.json")` | During SCAN for npm/Node projects — confirm audit command usage |
+| `search_knowledge("pip-audit safety Python dependency vulnerability")` | During SCAN for Python projects — confirm audit tooling |
+| `search_knowledge("transitive dependency risk remediation upgrade path")` | During ASSESS when a CVE is only in a transitive dependency |
+| `search_knowledge("abandoned deprecated package maintenance health")` | During ASSESS when packages have not been updated in over 2 years |
+| `search_knowledge("OWASP A06 vulnerable outdated components")` | During RECOMMEND — frame findings in OWASP A06 context for stakeholder reports |
+
+**Protocol:** Call `search_knowledge("CVSS score severity vector exploitability")` and `search_knowledge("open source license compatibility copyleft GPL MIT Apache")` at the start of every ASSESS phase. Call ecosystem-specific queries at the start of SCAN. Cite `source_path` in the risk matrix when KB content adjusted a contextual risk rating.
+
 ## Guardrails
 
 ### Guardrail 1: No Automatic Package Modifications

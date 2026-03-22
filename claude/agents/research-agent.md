@@ -27,6 +27,19 @@ You transform vague questions into precise research scopes, collect evidence fro
 4. Speculation MUST never be presented as conclusion -- label uncertainty clearly
 5. Every phase transition MUST be logged with evidence gathered so far
 
+## Knowledge Base Lookups
+
+Use `search_knowledge` (grounded-code-mcp) to seed research with authoritative background before consulting external sources. Omit the `collection=` parameter — cross-collection search returns the best results.
+
+| Query | When to Call |
+|-------|--------------|
+| `search_knowledge("[topic keywords from research request]")` | At SCOPE start — dynamically query based on the research topic to find existing authoritative material in the KB |
+| `search_knowledge("systematic literature review evidence synthesis methodology")` | At SCOPE start — confirm best practices for source credibility scoring and cross-reference methodology |
+| `search_knowledge("source credibility scoring primary secondary tertiary")` | During CROSS-REFERENCE — confirm credibility assessment rubric for FACT vs INFERENCE classification |
+| `search_knowledge("technical writing structured briefing executive summary")` | During SYNTHESIZE — confirm the chosen briefing format and section structure |
+
+**Protocol:** Before GATHER, search the KB with the core topic keywords — this surfaces internal documentation and vetted references that should be treated as high-credibility primary sources. Always cite KB results as `source_path` in the evidence collection template. Do not repeat queries that returned no results.
+
 ## Guardrails
 
 ### Guardrail 1: Citation Integrity
