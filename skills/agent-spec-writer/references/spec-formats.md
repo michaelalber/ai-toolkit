@@ -512,122 +512,212 @@ Items marked `[NEEDS INPUT]` that must be resolved before deployment:
 
 ---
 
-## Format 5: GitHub Spec Kit (`.specify/` directory)
+## Format 5: GitHub Spec Kit (`specs/[###-feature-name]/` directory)
 
-Path: `.specify/spec.md`, `.specify/plan.md`, `.specify/tasks/<name>.md`, `.specify/constitution.md` (optional)
+> **⚠️ GROUNDED LOOKUP REQUIRED before generating any file in this format.**
+>
+> Call `search_knowledge(collection="internal")` with the queries below **before** producing output.
+> The KB contains the authoritative templates. Do not generate from training data alone.
+>
+> ```
+> # For spec.md:
+> search_knowledge(collection="internal", query="github spec kit spec template feature user stories priority")
+>
+> # For plan.md:
+> search_knowledge(collection="internal", query="spec kit plan template technical context research data model")
+>
+> # For tasks.md:
+> search_knowledge(collection="internal", query="spec kit tasks template user story parallel task format")
+>
+> # For constitution.md (only if needed):
+> search_knowledge(collection="internal", query="spec kit constitution template principles nine articles")
+> ```
+>
+> KB source paths:
+> - `internal/github-spec-kit-spec-template.md`
+> - `internal/github-spec-kit-plan-template.md`
+> - `internal/github-spec-kit-tasks-template.md`
+> - `internal/github-spec-kit-constitution-template.md`
 
-The GitHub Spec Kit (`github/spec-kit`) implements a **Specify → Plan → Tasks** gated workflow. Each file has a distinct purpose. Produce all files that apply; `constitution.md` is only needed if the project has non-negotiable constraints (it maps directly to the GUARDRAILS phase Never tier).
+The GitHub Spec Kit (`github/spec-kit`) implements a **Specify → Plan → Tasks** gated workflow
+supporting Claude Code, GitHub Copilot, Gemini CLI, opencode, Cursor, Windsurf, and more.
+Released September 2024, 55k+ stars.
 
-**Source:** `github/spec-kit` — 55k+ stars, released September 2024. Supported slash commands: `/specify`, `/plan`, `/tasks` (Claude Code, GitHub Copilot, Gemini CLI).
+Supported slash commands: `/speckit.specify`, `/speckit.plan`, `/speckit.tasks`
+(invoked via each tool's command directory — see agent-directory table below)
 
-### `spec.md` (Vision + Requirements)
+### Directory Structure (per feature)
 
-Output of VISION and STRUCTURE phases.
+```
+specs/[###-feature-name]/
+├── spec.md          # Feature spec — output of /speckit.specify
+├── plan.md          # Implementation plan — output of /speckit.plan
+├── research.md      # Technical research — phase 0 output of /speckit.plan
+├── data-model.md    # Entity/schema definitions — phase 1 output of /speckit.plan
+├── quickstart.md    # Validation scenarios — phase 1 output of /speckit.plan
+├── contracts/       # API contract definitions — phase 1 output of /speckit.plan
+└── tasks.md         # Executable task list — output of /speckit.tasks (NOT /speckit.plan)
+```
+
+Optional project-level file (not per-feature):
+
+```
+memory/constitution.md   # Non-negotiable project principles — maps to GUARDRAILS Never tier
+```
+
+### Agent Command File Directories
+
+The Specify CLI generates agent-specific command files when bootstrapping a project:
+
+| Agent | Directory | Format | CLI Tool |
+|-------|-----------|--------|----------|
+| Claude Code | `.claude/commands/` | Markdown | `claude` |
+| GitHub Copilot | `.github/agents/` | Markdown | N/A (IDE) |
+| Gemini CLI | `.gemini/commands/` | TOML | `gemini` |
+| opencode | `.opencode/command/` | Markdown | `opencode` |
+| Cursor | `.cursor/commands/` | Markdown | `cursor-agent` |
+| Windsurf | `.windsurf/workflows/` | Markdown | N/A (IDE) |
+
+### Workflow Summary
+
+| Phase | Command | Output |
+|-------|---------|--------|
+| Specify | `/speckit.specify` | `specs/[###]/spec.md` — feature spec with user stories |
+| Plan | `/speckit.plan` | `plan.md` + `research.md` + `data-model.md` + `contracts/` + `quickstart.md` |
+| Tasks | `/speckit.tasks` | `tasks.md` — organized by user story, with parallel markers |
+| Execute | Agent works from tasks.md | Implementation guided by spec + plan + tasks |
+
+**Gate rule:** `spec.md` must exist before `/speckit.plan` runs. `plan.md` must exist before `/speckit.tasks` runs.
+
+---
+
+### `spec.md` (Feature Specification)
+
+Path: `specs/[###-feature-name]/spec.md`
+Produced by: `/speckit.specify` (VISION + STRUCTURE phases)
 
 ```markdown
-# [Project Name] Specification
+# Feature Specification: [FEATURE NAME]
 
-**Version**: [N]
-**Status**: [Draft | Review | Approved]
-**Date**: [YYYY-MM-DD]
-
----
-
-## Goal
-
-[One sentence — the result of the VISION phase three-test review.]
-
-[2-3 sentences expanding on purpose, users, and how success will be measured.]
+**Feature Branch**: `[###-feature-name]`
+**Created**: [DATE]
+**Status**: Draft
+**Input**: User description: "[goal statement from VISION phase]"
 
 ---
 
-## Background
+## User Scenarios & Testing *(mandatory)*
 
-[Why this is being built. What problem it solves. What exists today and why it is insufficient.]
+<!--
+  User stories must be PRIORITIZED as user journeys ordered by importance.
+  Each story must be INDEPENDENTLY TESTABLE — implementing just one story
+  should produce a viable MVP that delivers value.
 
----
+  Priority: P1 = most critical, P2 = important, P3 = nice to have.
+-->
 
-## Requirements
+### User Story 1 — [Brief Title] (Priority: P1)
 
-### Functional Requirements
+[Describe this user journey in plain language]
 
-- **[REQ-001]**: [Specific, verifiable requirement]
-- **[REQ-002]**: [Specific, verifiable requirement]
-- **[REQ-003]**: [Specific, verifiable requirement]
+**Why this priority**: [Explain the value and urgency]
 
-[Use REQ-XXX IDs for traceability to plan.md and tasks.]
+**Independent Test**: [How this story can be tested in isolation — e.g., "Can be fully tested
+by [specific action] and delivers [specific value] without any other stories being complete"]
 
-### Non-Functional Requirements (QoS)
+#### Acceptance Criteria
 
-- **Performance**: [Latency budget, throughput target, or SLA. e.g., "p99 response < 200ms under 500 concurrent users"]
-- **Security**: [Auth requirements, data sensitivity, secrets handling]
-- **Reliability**: [Uptime target, error rate ceiling, retry behavior]
-- **Observability**: [Logging, tracing, alerting requirements]
-
-[For AI/ML agents, add:]
-
-### AI/ML Guardrails
-
-- **Confidence threshold**: [e.g., "Escalate to human review when confidence < 0.8"]
-- **Human-in-the-loop triggers**: [Conditions requiring human approval before action]
-- **Data restrictions**: [What data the agent may and may not access or retain]
-- **Escalation path**: [Who or what receives escalated items]
+- [ ] [Specific, verifiable criterion — written as a testable assertion]
+- [ ] [Specific, verifiable criterion]
+- [ ] [Specific, verifiable criterion]
 
 ---
 
-## Scope
+### User Story 2 — [Brief Title] (Priority: P2)
 
-### In Scope
-- [Capability 1]
-- [Capability 2]
+[Describe this user journey in plain language]
 
-### Out of Scope
+**Why this priority**: [Explain the value and why it is lower than P1]
+
+**Independent Test**: [How this story can be tested in isolation]
+
+#### Acceptance Criteria
+
+- [ ] [Specific, verifiable criterion]
+- [ ] [Specific, verifiable criterion]
+
+---
+
+## Out of Scope
+
+<!--
+  IMPORTANT: List explicit exclusions to prevent scope creep.
+  "Out of Scope" is as important as "In Scope" — it prevents the agent from
+  absorbing adjacent work and losing focus.
+-->
+
 - [Explicit exclusion 1 — prevents scope creep]
 - [Explicit exclusion 2]
 
 ---
 
-## Success Criteria
+## Technical Notes
 
-| Goal | Success Criterion | How to Verify |
-|------|-----------------|---------------|
-| [REQ-001] | [Specific, measurable outcome] | [Third-party verification method] |
-| [REQ-002] | [Specific, measurable outcome] | [Third-party verification method] |
+<!--
+  Optional but recommended: anything the agent needs to know before starting
+  that is not obvious from the user stories.
+-->
+
+- [Technical constraint, dependency, or gotcha]
+- [NEEDS INPUT: anything unknown at spec time]
 
 ---
 
 ## Open Questions
 
-- [ ] [Question 1 — what decision is still open, who owns it, and when it must be resolved]
+- [ ] [Question 1 — what decision is still open, who owns it, when it must be resolved]
 - [ ] [Question 2]
 ```
 
 ---
 
-### `plan.md` (Architecture + Approach)
+### `plan.md` (Implementation Plan)
 
-Output of an architecture planning pass after `spec.md` is approved. Maps requirements to implementation approach.
+Path: `specs/[###-feature-name]/plan.md`
+Produced by: `/speckit.plan` (architecture planning pass after `spec.md` is approved)
 
 ```markdown
-# [Project Name] Implementation Plan
+# Implementation Plan: [FEATURE NAME]
 
-**Spec version**: [N — must match spec.md version]
-**Status**: [Draft | Review | Approved]
-**Date**: [YYYY-MM-DD]
+**Branch**: `[###-feature-name]` | **Date**: [DATE] | **Spec**: [link to spec.md]
+**Input**: Feature specification from `specs/[###-feature-name]/spec.md`
 
 ---
 
-## Approach
+## Summary
 
-[2-4 sentences. What is the high-level implementation strategy? What architectural pattern applies?]
+[Extract from feature spec: primary requirement + technical approach from research]
+
+---
+
+## Technical Context
+
+**Language/Version**: [e.g., Python 3.12, .NET 10, TypeScript 5.x — or NEEDS CLARIFICATION]
+**Primary Dependencies**: [e.g., FastAPI, ASP.NET Core, React — or NEEDS CLARIFICATION]
+**Storage**: [if applicable, e.g., PostgreSQL, SQLite, files — or N/A]
+**Testing**: [e.g., pytest, xUnit, Vitest — or NEEDS CLARIFICATION]
+**Target Platform**: [e.g., Linux server, iOS 15+, browser — or NEEDS CLARIFICATION]
+**Project Type**: [e.g., library / cli / web-service / mobile-app / desktop-app]
+**Performance Goals**: [domain-specific — or NEEDS CLARIFICATION]
+**Constraints**: [e.g., <200ms p95, <100MB memory — or NEEDS CLARIFICATION]
+**Scale/Scope**: [e.g., 10k users, single-tenant, offline-capable — or NEEDS CLARIFICATION]
 
 ---
 
 ## Architecture
 
-[Describe the system structure. Use C4 model levels as appropriate:]
-
 ### System Context
+
 [Who uses the system and what external systems does it interact with?]
 
 ### Key Components
@@ -638,16 +728,17 @@ Output of an architecture planning pass after `spec.md` is approved. Maps requir
 | [name] | [what it does] | [stack] |
 
 ### Data Flow
+
 [How data moves through the system. Include sequence for the primary use case.]
 
 ---
 
 ## Requirement Mapping
 
-| REQ-ID | Implementation Approach | Component |
-|--------|------------------------|-----------|
-| REQ-001 | [How this requirement is satisfied] | [Which component] |
-| REQ-002 | [How this requirement is satisfied] | [Which component] |
+| User Story | Implementation Approach | Component |
+|------------|------------------------|-----------|
+| US1: [title] | [How this story is satisfied] | [Which component] |
+| US2: [title] | [How this story is satisfied] | [Which component] |
 
 ---
 
@@ -656,9 +747,8 @@ Output of an architecture planning pass after `spec.md` is approved. Maps requir
 | Decision | Choice | Rationale | Alternatives Rejected |
 |----------|--------|-----------|----------------------|
 | [e.g., Database] | [e.g., PostgreSQL] | [Why] | [What else was considered] |
-| [e.g., Auth] | [e.g., JWT] | [Why] | [What else was considered] |
 
-[Record each decision as an ADR in `docs/adr/` and link here. See `architecture-journal` skill.]
+[Record each significant decision as an ADR. See `architecture-journal` skill.]
 
 ---
 
@@ -670,89 +760,125 @@ Output of an architecture planning pass after `spec.md` is approved. Maps requir
 
 ---
 
-## Milestones
+## Project Structure
 
-| Milestone | Deliverable | Tasks |
-|-----------|-------------|-------|
-| M1 | [what is done] | [task files in tasks/] |
-| M2 | [what is done] | [task files in tasks/] |
+```
+[repo-root]/
+├── [dir]/          # [purpose]
+├── [dir]/          # [purpose]
+│   ├── [subdir]/   # [purpose]
+│   └── [file]      # [purpose]
+└── [file]          # [purpose]
+```
+
+### Documentation (this feature)
+
+```
+specs/[###-feature]/
+├── plan.md              # This file
+├── research.md          # Phase 0 output — technical background
+├── data-model.md        # Phase 1 output — entity/schema definitions
+├── quickstart.md        # Phase 1 output — key validation scenarios
+├── contracts/           # Phase 1 output — API contract definitions
+└── tasks.md             # Phase 2 output (from /speckit.tasks — NOT this command)
+```
 ```
 
 ---
 
-### `tasks/<name>.md` (Executable Work Unit)
+### `tasks.md` (Executable Task List)
 
-One file per self-contained unit of work. Produced during GENERATE phase. Each task must be completable by a single agent in a single session.
+Path: `specs/[###-feature-name]/tasks.md`
+Produced by: `/speckit.tasks` after `plan.md`, `data-model.md`, `contracts/`, and `research.md` exist
+
+**Format:** `[ID] [P?] [Story] Description`
+- `[P]` — task can run in parallel (different files, no conflicting dependencies)
+- `[Story]` — which user story this task belongs to (US1, US2, US3...)
+- Tasks are organized by user story to enable independent implementation and testing of each story
 
 ```markdown
-# Task: [Short descriptive title]
+# Tasks: [FEATURE NAME]
 
-**ID**: TASK-[NNN]
-**Spec**: [REQ-IDs this task satisfies]
-**Milestone**: [M1 / M2 / etc.]
-**Status**: [Backlog | In Progress | Done | Blocked]
-**Blocked by**: [TASK-NNN, or "none"]
+**Input**: Design documents from `specs/[###-feature-name]/`
+**Prerequisites**: `plan.md` (required), `spec.md` (required for user stories),
+                  `research.md`, `data-model.md`, `contracts/`
 
----
-
-## Objective
-
-[One sentence. What is done when this task is complete?]
+**Organization**: Tasks are grouped by user story to enable independent implementation
+and testing. Each story can be implemented, tested, and demonstrated independently.
 
 ---
 
-## Acceptance Criteria
+## User Story 1 — [Brief Title] (P1)
 
-- [ ] [Specific, verifiable criterion — written as a test assertion if possible]
-- [ ] [Specific, verifiable criterion]
-- [ ] [Specific, verifiable criterion]
-
----
-
-## Context
-
-[What the agent needs to know before starting. Include:]
-- Relevant files: `[path/to/file]`
-- Key dependencies: [other tasks or components this builds on]
-- Constraints: [anything the agent must not change or break]
+- [ ] T001 Create [specific thing] in `[exact/file/path]`
+- [ ] T002 [P] [US1] Add [specific thing] in `[exact/file/path]`
+- [ ] T003 [P] [US1] Implement [specific thing] — `[exact/file/path]`
+- [ ] T004 [US1] Write tests for [specific thing] — `[exact/test/path]`
+- [ ] T005 [US1] Verify acceptance criteria: [criterion from spec.md]
 
 ---
 
-## Steps
+## User Story 2 — [Brief Title] (P2)
 
-1. [Concrete step — specific enough that an agent can execute without clarification]
-2. [Concrete step]
-3. [Concrete step]
-4. Run tests: `[exact test command]`
-5. Verify acceptance criteria above are met
+- [ ] T006 [US2] Add [specific thing] in `[exact/file/path]`
+- [ ] T007 [P] [US2] Implement [specific thing] — `[exact/file/path]`
+- [ ] T008 [US2] Write tests for [specific thing] — `[exact/test/path]`
+
+---
+
+## Integration
+
+- [ ] T009 Run full test suite: `[exact test command from plan.md]`
+- [ ] T010 Verify all acceptance criteria across all user stories are met
 
 ---
 
 ## Out of Scope
 
-- [Explicit exclusion — prevents task from absorbing adjacent work]
-
----
-
-## Notes
-
-[Links to spec.md requirements, ADRs, or external references]
+- [Explicit exclusion — prevents task from absorbing adjacent work from other features]
 ```
 
 ---
 
 ### `constitution.md` (Non-Negotiable Principles) — Optional
 
-Only produce this file if the project has non-negotiable agent behavior constraints. Maps directly to the GUARDRAILS phase Never tier. Omit if the agent has no hard constraints beyond common sense.
+Path: `memory/constitution.md` (project root, not per-feature)
+Only produce this file if the project has non-negotiable agent behavior constraints.
+Maps directly to the GUARDRAILS phase Never tier. Omit if no hard constraints exist.
 
 ```markdown
-# [Project Name] Constitution
+# [PROJECT NAME] Constitution
 
 **Version**: [N]
 **Date**: [YYYY-MM-DD]
 
 > These principles are non-negotiable. They apply in every session, to every agent
 > working in this repository, regardless of other instructions.
+
+---
+
+## Core Principles
+
+### I. [Principle Name — e.g., Library-First]
+
+[Principle description — e.g., "Every feature begins as a standalone library.
+Libraries must be self-contained, independently testable, and documented."]
+
+### II. [Principle Name — e.g., Test-First (NON-NEGOTIABLE)]
+
+[Principle description — e.g., "TDD mandatory: tests written → user approved →
+tests fail → then implement. Red-Green-Refactor cycle strictly enforced."]
+
+### III. [Principle Name — e.g., CLI Interface]
+
+[Principle description — e.g., "Every library exposes functionality via CLI.
+Text in/out protocol: stdin/args → stdout, errors → stderr."]
+
+### IV. [Principle Name — e.g., Integration Testing]
+
+[Principle description]
+
+[Add principles until the spec's Never tier is fully covered]
 
 ---
 
@@ -765,25 +891,18 @@ Only produce this file if the project has non-negotiable agent behavior constrai
 
 ## Ask First (Require Human Approval)
 
-- [High-impact or irreversible action that requires confirmation]
-- [High-impact or irreversible action that requires confirmation]
+- [High-impact or irreversible action requiring confirmation]
+- [High-impact or irreversible action requiring confirmation]
 
 ---
 
 ## Never (Hard Stops)
 
 - 🚫 [Forbidden action — specific and verifiable]
-- 🚫 [Forbidden action — specific and verifiable]
 - 🚫 Never commit secrets, credentials, or API keys
 - 🚫 Never push directly to the main/production branch
+- 🚫 Never modify production data without explicit approval
 - 🚫 [Domain-specific hard stop]
-
----
-
-## Security Constraints
-
-- [Specific security rule — e.g., "All file paths must be validated before read/write"]
-- [Specific security rule]
 
 ---
 
@@ -795,8 +914,11 @@ Only produce this file if the project has non-negotiable agent behavior constrai
 ```
 
 **Key notes for GitHub Spec Kit:**
-- Files live under `.specify/` in the project root
-- `spec.md` is approved before `plan.md` is written — do not merge them
-- Each `tasks/*.md` file is one unit of work for one agent in one session
-- `constitution.md` constraints override all other instructions at runtime
+- Files live under `specs/[###-feature-name]/` per feature — not `.specify/`
+- `constitution.md` lives at `memory/constitution.md` in the project root — not per-feature
+- `spec.md` is approved before `plan.md` is written; `plan.md` approved before `tasks.md` is generated
+- `tasks.md` is produced by `/speckit.tasks` only — **not** by `/speckit.plan`
+- Each task must reference an exact file path and exactly one user story
+- `[P]` markers enable safe parallel execution by agents
 - Use `architecture-journal` skill to record technical decisions from `plan.md` as ADRs
+- **Always call `search_knowledge(collection="internal")` before generating any of these files**

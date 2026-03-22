@@ -81,7 +81,7 @@ Before writing anything, establish what type of spec is being produced and what 
    - **Claude agent** (`claude/agents/<name>.md`) — autonomous Claude Code agent
    - **OpenCode agent** (`opencode/agents/<name>.md`) — autonomous OpenCode agent
    - **Generic PRD** — standalone AI agent spec, not tied to a specific toolkit
-   - **GitHub Spec Kit** (`.specify/spec.md` + `plan.md` + `tasks/` + optional `constitution.md`) — Specify → Plan → Tasks gated workflow for Claude Code, GitHub Copilot, and Gemini CLI
+   - **GitHub Spec Kit** (`specs/[###-feature-name]/` directory) — Specify → Plan → Tasks gated workflow supporting Claude Code, GitHub Copilot, Gemini CLI, opencode, Cursor, Windsurf, and more
 2. Determine the starting point:
    - **Greenfield** — no existing code; spec is written from intent
    - **Existing codebase** — run `spec-extractor-agent` first to generate a draft, then bring it here for refinement
@@ -90,7 +90,48 @@ Before writing anything, establish what type of spec is being produced and what 
 
 **Exit criterion:** Spec type, starting point, and domain are all explicit and agreed.
 
-**GitHub Spec Kit selection note:** If the user mentions "spec kit", "spec.md", "plan.md", "specify workflow", or wants to produce files for the `.specify/` directory, select `github-spec-kit` as the type. The Spec Kit workflow produces three files — `spec.md` (VISION + STRUCTURE phases), `plan.md` (architecture approach), and at least one `tasks/*.md` file (executable work units). A `constitution.md` is optional but maps directly to the GUARDRAILS phase. Route the session accordingly: VISION + STRUCTURE → `spec.md`; an additional architecture planning pass → `plan.md`; GENERATE → task files.
+**GitHub Spec Kit Detection and Grounded Knowledge Protocol:**
+
+If the user mentions "spec kit", "spec.md", "plan.md", "specify workflow", "speckit.specify", "speckit.plan", "speckit.tasks", or wants to produce files in a `specs/` directory, select `github-spec-kit` as the type and **immediately** retrieve the authoritative templates from the grounded-code-mcp knowledge base:
+
+```
+# Mandatory KB lookups when github-spec-kit type is detected:
+search_knowledge(
+  collection="internal",
+  query="github spec kit spec template feature user stories"
+)
+search_knowledge(
+  collection="internal",
+  query="spec kit plan template research data model contracts"
+)
+search_knowledge(
+  collection="internal",
+  query="spec kit tasks template user story parallel"
+)
+# If constitution.md is needed:
+search_knowledge(
+  collection="internal",
+  query="spec kit constitution template principles"
+)
+```
+
+The KB returns the authoritative template structure. Use it — **not training data** — as the ground truth for what the files must contain. The sources are:
+- `internal/github-spec-kit-spec-template.md` — feature spec with user stories, P1/P2/P3 priorities, independent testability
+- `internal/github-spec-kit-plan-template.md` — plan with technical context, research, data-model, quickstart, contracts
+- `internal/github-spec-kit-tasks-template.md` — tasks organized by user story, `[P]` parallel markers
+- `internal/github-spec-kit-constitution-template.md` — constitution with Nine Articles structure
+
+The Spec Kit workflow produces a `specs/[###-feature-name]/` directory per feature containing:
+- `spec.md` — feature specification (VISION + STRUCTURE phases)
+- `plan.md` — implementation plan with architecture approach (architecture planning pass)
+- `tasks.md` — executable task list derived from plan + contracts + data model
+- `research.md` — technical research output (phase 0 of `/speckit.plan`)
+- `data-model.md` — entity/schema definitions (phase 1 of `/speckit.plan`)
+- `contracts/` — API contract definitions (phase 1 of `/speckit.plan`)
+- `quickstart.md` — validation scenarios guide (phase 1 of `/speckit.plan`)
+- Optional: `memory/constitution.md` — non-negotiable project principles (maps to GUARDRAILS Never tier)
+
+Route the session accordingly: VISION + STRUCTURE → `spec.md`; architecture planning pass → `plan.md`; GENERATE → `tasks.md`. See [Spec Formats](references/spec-formats.md) Format 5 for the complete, KB-grounded templates.
 
 **ORIENT Intake Template:**
 
@@ -100,10 +141,11 @@ Before writing anything, establish what type of spec is being produced and what 
 **Spec type**: [skill | claude-agent | opencode-agent | generic-prd | github-spec-kit]
 **Domain**: [what this agent does and for whom]
 **Starting point**: [greenfield | existing-code + draft from spec-extractor-agent]
-**Target file**: [where the spec will live]
+**Target file**: [where the spec will live — for spec-kit: specs/[###-feature-name]/]
 **Related specs**: [any existing skills or agents this extends or replaces]
 **Known constraints**: [things the agent must or must never do that you already know]
 **Open questions**: [things you do not know yet that the spec will need]
+**KB lookup complete**: [yes — for github-spec-kit type only | n/a — for all other types]
 ```
 
 **If existing code is present:**
@@ -222,7 +264,31 @@ For the **Always** tier:
 
 Assemble the spec in the target format. All sections complete, all gaps resolved or explicitly marked. Output is a file ready to commit.
 
-See [Spec Formats](references/spec-formats.md) for complete templates in all four target formats.
+**For GitHub Spec Kit format — mandatory KB lookup before generating:**
+
+Before writing any file, retrieve the authoritative templates from grounded-code-mcp. Do not skip this step; the KB contains the ground-truth format that differs from common training data assumptions.
+
+```
+# Before generating spec.md:
+search_knowledge(collection="internal", query="github spec kit spec template feature user stories priority")
+
+# Before generating plan.md:
+search_knowledge(collection="internal", query="spec kit plan template technical context research data model")
+
+# Before generating tasks.md:
+search_knowledge(collection="internal", query="spec kit tasks template user story parallel task format")
+
+# Before generating constitution.md (only if needed):
+search_knowledge(collection="internal", query="spec kit constitution template principles nine articles")
+```
+
+Use the KB-returned content as the authoritative template. Key differences from the naive structure:
+- `spec.md` uses **user stories with P1/P2/P3 priorities** and an **Independent Test** field per story — not just requirement lists
+- `plan.md` includes `research.md`, `data-model.md`, `contracts/`, and `quickstart.md` as companion outputs of `/speckit.plan`
+- `tasks.md` uses `[ID] [P?] [Story] Description` format organized by user story — not generic phase-based task lists
+- Files live in `specs/[###-feature-name]/` — not `.specify/`
+
+See [Spec Formats](references/spec-formats.md) for the complete KB-grounded templates in all five target formats.
 
 **Pre-Generate Checklist:**
 
@@ -230,6 +296,7 @@ See [Spec Formats](references/spec-formats.md) for complete templates in all fou
 ## Pre-Generate Spec Checklist
 
 - [ ] Spec type confirmed (skill / claude-agent / opencode-agent / generic-prd / github-spec-kit)
+- [ ] For github-spec-kit type: grounded-code-mcp KB lookup complete — templates confirmed against collection="internal"
 - [ ] Goal statement passes three-test review (valuable, sufficient, verifiable)
 - [ ] All seven PRD sections populated (or gaps marked [NEEDS INPUT])
 - [ ] QoS & Constraints section addressed (even if empty by explicit decision)
@@ -251,12 +318,13 @@ Maintain state across conversation turns:
 phase: orient | vision | structure | guardrails | validate | generate
 spec_type: skill | claude-agent | opencode-agent | generic-prd | github-spec-kit
 domain: [brief description of what the agent does]
-target_file: [where the spec will live]
+target_file: [where the spec will live — for spec-kit: specs/[###-feature-name]/]
 vision_statement: [one-sentence goal, or "pending"]
 sections_complete: [comma-separated: commands, testing, structure, style, git, boundaries]
 open_gaps: [count of [NEEDS INPUT] markers remaining]
 never_tier_populated: true | false
 success_criteria_defined: true | false
+kb_lookup_complete: true | false | n/a (n/a for non-spec-kit types)
 last_action: [what was just done]
 next_action: [what should happen next]
 </spec-writer-state>
@@ -275,6 +343,7 @@ sections_complete: none
 open_gaps: unknown
 never_tier_populated: false
 success_criteria_defined: false
+kb_lookup_complete: n/a
 last_action: Intake complete
 next_action: Begin VISION phase — ask for goal statement
 </spec-writer-state>
@@ -291,6 +360,7 @@ sections_complete: commands, testing, structure, style, git
 open_gaps: 2
 never_tier_populated: false
 success_criteria_defined: false
+kb_lookup_complete: n/a
 last_action: STRUCTURE phase complete — 2 gaps marked [NEEDS INPUT]
 next_action: Elicit three-tier boundary system, starting with Never tier
 </spec-writer-state>
@@ -307,6 +377,7 @@ sections_complete: commands, testing, structure, style, git, boundaries
 open_gaps: 0
 never_tier_populated: true
 success_criteria_defined: true
+kb_lookup_complete: n/a
 last_action: Pre-generate checklist passed
 next_action: Generate final spec and write to target file
 </spec-writer-state>
@@ -334,6 +405,8 @@ Welcome. I will coach you through designing a complete, deployable spec for your
 
 **If you are starting from scratch:** We build from intent. Some sections will have `[NEEDS INPUT]` markers that you fill in as the codebase takes shape.
 
+**If you want a GitHub Spec Kit:** I will retrieve the authoritative templates from the grounded-code-mcp knowledge base (collection `internal`) before generating any output. Do not skip this step — training-data assumptions about spec-kit structure diverge from the actual format.
+
 To begin: **What are you building, and do you have existing code to work from?**
 
 <spec-writer-state>
@@ -346,6 +419,7 @@ sections_complete: none
 open_gaps: unknown
 never_tier_populated: false
 success_criteria_defined: false
+kb_lookup_complete: n/a
 last_action: Session opened
 next_action: Awaiting user's description of what they are building
 </spec-writer-state>
@@ -404,12 +478,38 @@ sections_complete: commands, testing, structure, style, git, boundaries
 open_gaps: [N]
 never_tier_populated: true
 success_criteria_defined: true
+kb_lookup_complete: [true | n/a]
 last_action: Spec generated and delivered
 next_action: User reviews, fills gaps, commits spec
 </spec-writer-state>
 ```
 
 ## AI Discipline Rules
+
+### CRITICAL: Always Ground GitHub Spec Kit Output Against the KB
+
+When producing any GitHub Spec Kit output (`spec.md`, `plan.md`, `tasks.md`, or `constitution.md`), you MUST call `search_knowledge(collection="internal")` with the appropriate query before generating the content. Training data assumptions about spec-kit structure are unreliable — the KB contains the authoritative templates.
+
+```
+WRONG: Generating github-spec-kit output directly from memory:
+  - Using .specify/ directory structure
+  - Generating tasks/ subdirectory instead of tasks.md
+  - Omitting user story priorities (P1/P2/P3) from spec.md
+  - Producing a plan.md without research.md/data-model.md companion files
+
+RIGHT: Call search_knowledge first, then generate:
+  search_knowledge(collection="internal", query="github spec kit spec template feature user stories")
+  → Use returned template structure as the authoritative format
+  → spec.md lives in specs/[###-feature-name]/spec.md
+  → User stories have P1/P2/P3 priorities and Independent Test descriptions
+  → plan.md documents companion files: research.md, data-model.md, contracts/, quickstart.md
+```
+
+The KB sources to retrieve for each file:
+- `internal/github-spec-kit-spec-template.md` → for `spec.md`
+- `internal/github-spec-kit-plan-template.md` → for `plan.md`
+- `internal/github-spec-kit-tasks-template.md` → for `tasks.md`
+- `internal/github-spec-kit-constitution-template.md` → for `constitution.md`
 
 ### CRITICAL: Ask One Question at a Time
 
@@ -482,7 +582,7 @@ RIGHT: "[NEEDS INPUT: run `cat package.json | grep -A10 scripts` to get exact
 | **Monolithic Spec** | One spec covering multiple unrelated domains (CI, security, database, deployment). | Each directive dilutes the others. Context windows are finite. When the spec fills the context, the spec becomes noise. | One domain per spec. When scope expands, create new specs and coordinate with `task-decomposition`. |
 | **Invented Commands** | Commands in the spec not verified against the actual codebase (e.g., assuming `npm test` when the project uses `bun test`). | The agent runs the wrong command, fails with confusing errors, and the developer loses trust in the spec. | Extract every command from actual project files or mark `[NEEDS INPUT]`. Never guess. |
 | **Aspirational Success Criteria** | Criteria like "agent writes clean code" or "agent helps the team move faster." | Cannot be verified. Cannot be tested. Provide no feedback signal for spec improvement. | Every criterion must answer: "How would a third party verify this without asking me?" |
-| **Format Mismatch** | Writing a generic PRD spec and expecting it to work as a SKILL.md, or writing Claude agent frontmatter for an OpenCode agent. | Different platforms have different required sections, frontmatter, and loading mechanisms. A mismatched spec fails silently. | Confirm the target format in ORIENT. Consult [Spec Formats](references/spec-formats.md) for exact required structure. |
+| **Format Mismatch** | Writing a generic PRD spec and expecting it to work as a SKILL.md, or writing Claude agent frontmatter for an OpenCode agent, or generating github-spec-kit output using `.specify/` directory layout instead of `specs/[###-feature-name]/`. | Different platforms have different required sections, frontmatter, and loading mechanisms. A mismatched spec fails silently. Generating spec-kit output from memory produces the wrong directory structure and missing companion files. | Confirm the target format in ORIENT. For github-spec-kit type, always perform KB lookup before generating. Consult [Spec Formats](references/spec-formats.md) for exact required structure. |
 | **No Self-Check Loops** | Spec defines what the agent should do but not how it verifies it did so correctly. | Agents without self-checks cannot distinguish "I completed the task" from "I completed the task correctly." | Every spec must define at least one self-check — a verification the agent runs on its own output before reporting completion. |
 | **Scope Creep** | Spec starts as one thing and gradually absorbs unrelated domains through "and also..." additions. | Each addition weakens the focus of the whole. The agent becomes a generalist with no clear priority ordering. | When scope expands, stop and address it explicitly. Create separate specs. Use `task-decomposition` for coordination. |
 | **Spec as Documentation** | Writing the spec after the agent is built to document what it does, rather than designing what it should do. | Documentation specs describe past behavior. Design specs constrain future behavior. Without a design spec, the agent has no explicit behavioral boundaries. | Write the spec before building. Start with VISION, then STRUCTURE, then GUARDRAILS. Spec precedes implementation. |
