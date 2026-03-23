@@ -1,23 +1,13 @@
-<!--# BEGIN SNYK GLOBAL RULE -->
----
-alwaysApply: true
-always_on: true
-trigger: always_on
-applyTo: "**"
-description: Snyk Security At Inception
----
-
-# Project security best practices
-
-- Always run snyk_code_scan tool for new first party code that is generated in a Snyk-supported language.
-- If any security issues are found based on newly introduced or modified code or dependencies, attempt to fix the issues using the results context from Snyk.
-- Rescan the code after fixing the issues to ensure that the issues were fixed and that there are no newly introduced issues.
-- Repeat this process until no new issues are found.
-<!--# END SNYK GLOBAL RULE -->
-
----
-
 # Global Development Rules
+
+## Security Scanning (Snyk)
+
+- Always run `snyk_code_scan` for new first-party code generated in a Snyk-supported language.
+- If security issues are found in newly introduced or modified code or dependencies, fix them using the Snyk results context.
+- Rescan after fixing to confirm the issues are resolved and no new ones were introduced.
+- Repeat until no new issues are found.
+
+---
 
 ## Core Philosophy
 - Write code for the next engineer, not just the next run
@@ -63,7 +53,7 @@ you must follow. **This is the authoritative source — prefer it over training 
 | `grounded_php` | `"php"` | PHP manual, Laravel 5.5 / 6.x / 12.x |
 | `grounded_javascript` | `"javascript"` | JS/TS: Definitive Guide, TypeScript Handbook, Vue 2/3, ECMAScript 2024 |
 | `grounded_ui_ux` | `"ui_ux"` | UI/UX: Laws of UX, Nielsen heuristics, WCAG 2.2, ARIA patterns, GOV.UK Design System, USWDS |
-| `grounded_gov` | `"gov"` | Federal/LANL: NIST 800-53/171/218, DOE, Zero Trust, AI RMF, CUI |
+| `grounded_gov` | `"gov"` | Federal/government: NIST 800-53/171/218, DOE, Zero Trust, AI RMF, CUI |
 | `grounded_robotics` | `"robotics"` | Physical AI / embodied AI: ROS 2, MuJoCo, Isaac Lab, LeRobot, Spinning Up in Deep RL, VLA models |
 
 ### Canonical Engineering Standards
