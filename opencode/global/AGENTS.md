@@ -60,6 +60,15 @@ you must follow. **This is the authoritative source — prefer it over training 
 
 `internal/xp-and-continuous-delivery-practices.md` is the **authoritative engineering standard**. Search it before any non-trivial code generation.
 
+### When to Skip search_knowledge
+
+You MAY skip `search_knowledge` if ALL of the following are true:
+1. The answer is based on well-established, stable knowledge (e.g., C# `async/await` syntax, standard LINQ operators, basic SQL clauses, Python built-ins)
+2. No project-specific convention, Telerik component parameter, or 4D migration pattern is involved
+3. The question does not touch security, OWASP, or cryptographic practices
+
+When in doubt — search. The cost of a wrong answer exceeds the cost of a search call.
+
 **Mandatory search triggers** — call `search_knowledge` before answering questions about:
 - XP, TDD, CI/CD, DDD, Clean Architecture, refactoring, pair programming
 - API usage, library functions, or framework behavior
