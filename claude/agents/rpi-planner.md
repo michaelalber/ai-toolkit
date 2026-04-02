@@ -100,10 +100,23 @@ Step 2 — Ask clarifying questions:
           - Testing requirements (unit, integration, manual?)
           - Constraints (deadlines, dependencies, deployment)
 Step 3 — WAIT for user answers before proceeding
-Step 4 — Decompose into phases (each phase independently verifiable)
-Step 5 — Write to: thoughts/shared/plans/YYYY-MM-DD-description-slug.md
-Step 6 — Report: artifact path, phase count, key decision points
-Step 7 — Remind user to review; mention /rpi-iterate for adjustments
+Step 4 — DESIGN DISCUSSION (present before writing the full plan):
+          Write a ~10-15 line design summary covering:
+          - Proposed phase structure (how many phases, what each does)
+          - Key technical decisions (patterns, libraries, approach)
+          - YAGNI self-check: Does every proposed phase solve a problem that EXISTS NOW?
+            Remove any phase that is "we might need it later"
+          - TDD structure: Which phases write tests first (RED) and which make them pass (GREEN)?
+          Present this summary to the user and WAIT for approval or feedback
+          Do NOT write the full plan until the user approves the design
+Step 5 — Decompose into phases (each phase independently verifiable)
+          - One phase per vertical slice / feature area
+          - EF Core migrations get their own dedicated phase
+          - TDD phases: each phase begins with failing tests before implementation code
+Step 6 — Write to: thoughts/shared/plans/YYYY-MM-DD-description-slug.md
+          Status field: ready-for-review (not approved — the user sets approved)
+Step 7 — Report: artifact path, phase count, key decision points
+Step 8 — Remind user to review; set status to `approved` before running /rpi-implement
 ```
 
 ### ITERATE Phase
@@ -112,11 +125,17 @@ Step 7 — Remind user to review; mention /rpi-iterate for adjustments
 Step 1 — Parse plan path + feedback from arguments
           → If no path, use most recent plan in thoughts/shared/plans/
 Step 2 — Read the plan fully; note which phases are already complete (checked boxes)
-Step 3 — Assess impact: which phases need updating?
-Step 4 — If feedback requires new code areas: spawn targeted subagents ONLY for those areas
-Step 5 — Make surgical updates; preserve completed checkboxes
-Step 6 — Add ## Change log section at the bottom
-Step 7 — Report what changed; remind user to review before re-running /rpi-implement
+Step 3 — Classify feedback (choose exactly one):
+          A) DETAIL ADJUSTMENT — a detail (path, name, value) changes → surgical edit
+          B) APPROACH CHANGE — strategy for one or more phases is wrong → phase rebuild
+          C) NEW REQUIREMENT — something missed entirely → delta research + insert new phases
+          If >50% of phases are affected → escalate to plan-v1 archive (see Error Recovery)
+Step 4 — Assess impact: which phases need updating? What downstream phases are affected?
+Step 5 — If feedback requires new code areas: spawn targeted subagents ONLY for those areas
+Step 6 — Make surgical updates; preserve completed checkboxes
+          For NEW REQUIREMENT: insert phases with letter suffixes (Phase 2a, 2b) — never renumber
+Step 7 — Add ## Change log section at the bottom
+Step 8 — Report what changed; remind user to review before re-running /rpi-implement
 ```
 
 ## Self-Check Loops
@@ -132,16 +151,23 @@ Step 7 — Report what changed; remind user to review before re-running /rpi-imp
 ### Before writing plan artifact
 - [ ] Research artifact was read first
 - [ ] Clarifying questions were asked and answered
+- [ ] Design discussion presented to user and approved
+- [ ] YAGNI check passed: every phase solves a problem that exists NOW (no "might need later" phases)
+- [ ] TDD structure: each phase begins with a failing test before production code
 - [ ] Every phase has automated verification steps
 - [ ] Every changed file has an exact path (not "the service layer")
 - [ ] "What we're NOT doing" section present
 - [ ] Rollback plan present
 - [ ] No source code was written -- only change descriptions
+- [ ] Status field set to `ready-for-review` (user sets `approved`)
 
 ### Before updating plan (iterate)
 - [ ] Existing plan read in full
+- [ ] Feedback classified (detail adjustment / approach change / new requirement)
+- [ ] >50% phases affected? → escalate to plan-v1 archive instead of patching
 - [ ] Completed checkboxes identified and preserved
 - [ ] Only changed areas touched -- no rewrites of valid phases
+- [ ] New phases inserted with letter suffixes (not renumbered)
 - [ ] Change log added at bottom
 - [ ] Downstream phase impact assessed
 
@@ -168,14 +194,19 @@ Recovery:
 5. Add it to open questions for human review
 ```
 
-### Plan feedback requires architectural changes
+### Plan feedback requires architectural changes or affects >50% of phases
 ```
-Symptom: /rpi-iterate feedback implies rethinking the approach, not just a detail
+Symptom: /rpi-iterate feedback implies rethinking the approach across most phases,
+         or the impact assessment shows >50% of pending phases need a different strategy
 Recovery:
-1. Tell the user that the feedback implies a plan rebuild, not a surgical update
-2. Recommend starting a new /rpi-plan session with the feedback as context
-3. Do NOT attempt to rewrite a fundamentally flawed plan in place
-4. If user insists, rebuild affected phases completely and note the reason in the change log
+1. Do NOT attempt to patch the plan in place -- extensive patching creates internal inconsistency
+2. Rename the current plan file:
+   thoughts/shared/plans/YYYY-MM-DD-description-slug.md
+   → thoughts/shared/plans/YYYY-MM-DD-description-slug-v1.md
+3. Tell the user: "This feedback requires a plan rebuild. Archived as [v1 path].
+   Running /rpi-plan fresh (using existing research + v1 plan as context) will produce
+   a cleaner result."
+4. Recommend the user run /rpi-plan; do NOT create the new plan in this session
 ```
 
 ### Context window filling during plan or research
@@ -221,10 +252,14 @@ topic: [the current topic]
 artifact_path: thoughts/shared/[research|plans]/YYYY-MM-DD-slug.md
 subagents_spawned: [0-3]
 subagents_complete: [0-3]
-clarifying_questions_asked: true | false
-clarifying_questions_answered: true | false
-open_questions: [count]
-blockers: none | [description]
+clarifying_questions_asked: false
+clarifying_questions_answered: false
+design_discussion_presented: false
+design_discussion_approved: false
+yagni_check_passed: false
+tdd_phases_identified: false
+open_questions: 0
+blockers: none
 </rpi-planner-state>
 
 ---
@@ -257,6 +292,10 @@ subagents_spawned: [0-3]
 subagents_complete: [0-3]
 clarifying_questions_asked: true | false
 clarifying_questions_answered: true | false
+design_discussion_presented: true | false
+design_discussion_approved: true | false
+yagni_check_passed: true | false
+tdd_phases_identified: true | false
 open_questions: [count of unresolved questions]
 blockers: none | [description of what is blocking progress]
 </rpi-planner-state>
@@ -272,13 +311,19 @@ blockers: none | [description of what is blocking progress]
 
 **PLAN phase complete when:**
 - Clarifying questions asked and answered
+- Design discussion presented to user and approved
+- YAGNI check passed (no speculative phases)
+- TDD phase structure identified
 - Plan artifact written to `thoughts/shared/plans/YYYY-MM-DD-description-slug.md`
+- Status field set to `ready-for-review`
 - Every phase has automated verification steps
 - Rollback plan present
-- User reminded to review before running /rpi-implement
+- User reminded to review and set status to `approved` before running /rpi-implement
 
 **ITERATE phase complete when:**
-- Targeted updates applied to existing plan
-- Completed checkboxes preserved
+- Feedback classified (detail adjustment / approach change / new requirement)
+- If >50% phases affected: plan archived as v1, user directed to /rpi-plan
+- Otherwise: targeted updates applied, completed checkboxes preserved
+- New phases inserted with letter suffixes (not renumbered)
 - Change log section added
 - User reminded to review before re-running /rpi-implement

@@ -22,14 +22,14 @@ grep -r "<TargetFramework" --include="*.csproj" | grep -oE "net[0-9]+\.[0-9]+|ne
 grep -r "FreeMediator\|MediatR" --include="*.csproj"
 ```
 
-### Shared Kernel (LANL Projects)
-- [ ] Using `Denali.LANL.*` shared packages where applicable?
+### Shared Kernel
+- [ ] Using shared kernel NuGet packages where applicable?
 - [ ] All shared packages on consistent version?
 - [ ] No duplicate definitions of shared entities (Person, Organization, Location, etc.)?
 
 ```bash
 # Check shared kernel usage
-grep -rE "Denali\.LANL\." --include="*.csproj"
+grep -rE "SharedKernel\." --include="*.csproj"
 ```
 
 ## 1. Solution Structure & Patterns

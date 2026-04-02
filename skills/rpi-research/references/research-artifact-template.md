@@ -11,6 +11,8 @@ Use this template when writing research artifacts to `thoughts/shared/research/Y
 date: YYYY-MM-DDTHH:MM:SS
 repository: [repo-name]
 topic: "[exact topic string from /rpi-research command]"
+branch: [git branch at time of research, e.g., main]
+git_commit: [short commit hash, e.g., a1b2c3d]
 tags: [research, tag-1, tag-2]
 status: complete
 ---
@@ -78,6 +80,14 @@ No opinions. No suggestions. Only what is true about the current codebase.]
 1. [Question requiring human judgment — e.g., "Should the plan consolidate the duplicated validation logic, or is the duplication intentional?"]
 2. [Unverified assumption — e.g., "Could not locate the IEmailSender registration — may not exist yet or may use different naming"]
 3. [Scope decision needed — e.g., "Does this change need to be backwards-compatible with the legacy workflow or can it break it?"]
+
+## Dependencies & Risks
+[Things outside this feature's control that could affect planning or implementation.]
+
+- **External dependency**: [e.g., "Feature requires a third-party API that may have rate limits — not investigated"]
+- **Migration risk**: [e.g., "Three tables affected — rollback requires coordinated migration reversal"]
+- **Test gap**: [e.g., "No integration tests exist for this area — plan should include adding them"]
+- **Unknown**: [e.g., "Could not determine if the legacy workflow is still in use — requires human confirmation"]
 ```
 
 ---

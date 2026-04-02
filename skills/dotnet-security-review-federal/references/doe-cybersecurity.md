@@ -1,6 +1,6 @@
 # DOE Cybersecurity Requirements
 
-Security requirements specific to Department of Energy environments, including LANL and other DOE/NNSA facilities.
+Security requirements specific to Department of Energy environments and other DOE/NNSA facilities.
 
 ---
 
@@ -28,7 +28,7 @@ DOE systems are categorized based on potential impact:
 | Moderate | Serious adverse effect | Serious adverse effect | Serious adverse effect |
 | High | Severe/catastrophic effect | Severe/catastrophic effect | Severe/catastrophic effect |
 
-**Most LANL internal systems are Moderate or High impact.**
+**Most DOE/NNSA internal systems are Moderate or High impact.**
 
 ### Required Security Controls
 
@@ -110,16 +110,16 @@ public interface IDoeAuditService
 
 ---
 
-## LANL-Specific Requirements
+## DOE Site-Specific Requirements
 
 ### Network Zones
 
-LANL operates multiple network security zones:
+DOE/NNSA sites typically operate multiple network security zones:
 
 | Zone | Access | Systems | Additional Controls |
 |------|--------|---------|---------------------|
 | Yellow (Open) | Internet accessible | Public web apps | WAF, DDoS protection |
-| Green (Internal) | LANL network only | Business systems | Internal firewall |
+| Green (Internal) | Site network only | Business systems | Internal firewall |
 | Turquoise (Restricted) | Need-to-know | CUI systems | Enhanced monitoring |
 | Red (Classified) | Cleared personnel | Classified systems | Air-gapped, TEMPEST |
 
@@ -158,7 +158,7 @@ public class NetworkZoneHandler : AuthorizationHandler<NetworkZoneRequirement>
 
 ### CUI/UCNI Handling
 
-LANL handles Controlled Unclassified Information (CUI) and Unclassified Controlled Nuclear Information (UCNI):
+DOE sites handle Controlled Unclassified Information (CUI) and Unclassified Controlled Nuclear Information (UCNI):
 
 ```csharp
 // Data classification markers
@@ -195,7 +195,7 @@ services.AddAuthorization(options =>
 
 ### Privileged Access Management
 
-DOE/LANL requires strict privileged access controls:
+DOE/NNSA requires strict privileged access controls:
 
 ```csharp
 // Privileged operations require additional authentication

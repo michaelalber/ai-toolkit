@@ -119,7 +119,7 @@ Key difference: Claude uses `skills:` array in frontmatter; OpenCode uses `skill
 | Suite | Skills | Focus |
 |-------|--------|-------|
 | TDD | tdd-cycle, tdd-implementer, tdd-refactor, tdd-agent, tdd-pair, tdd-verify | Test-Driven Development lifecycle |
-| Enterprise .NET | dotnet-vertical-slice, ef-migration-manager, nuget-package-scaffold, legacy-migration-analyzer, dotnet-architecture-checklist, dotnet-security-review, dotnet-security-review-federal, minimal-api-scaffolder, shared-kernel-generator, 4d-schema-migration | .NET patterns, migrations, security |
+| Enterprise .NET | dotnet-vertical-slice, ef-migration-manager, nuget-package-scaffold, legacy-migration-analyzer, dotnet-architecture-checklist, dotnet-security-review, dotnet-security-review-federal, minimal-api-scaffolder, 4d-schema-migration | .NET patterns, migrations, security |
 | Edge/IoT | edge-cv-pipeline, jetson-deploy, sensor-integration, picar-x-behavior | Edge computing, CV, robotics |
 | AI/ML | rag-pipeline-python, rag-pipeline-dotnet, mcp-server-scaffold, ollama-model-workflow | RAG, MCP servers, local LLMs |
 | Coaching | architecture-review, pattern-tradeoff-analyzer, system-design-kata, dependency-mapper, code-review-coach, refactor-challenger, security-review-trainer, pr-feedback-writer, technical-debt-assessor, architecture-journal | Engineering judgment |

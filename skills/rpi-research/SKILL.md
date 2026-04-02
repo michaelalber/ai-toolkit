@@ -27,6 +27,20 @@ RPI fixes this with **Frequent Intentional Compaction**: the research phase runs
 5. Research produces OPEN QUESTIONS -- human judgment items are surfaced, not decided
 6. Research is SESSION-ISOLATED -- never research and plan in the same context window
 
+## When NOT to Use RPI
+
+RPI has overhead: three phases, three sessions, two human review gates. That overhead is worth it when a wrong assumption in planning would cost more than 30 minutes of rework. For these scenarios, skip RPI and work directly:
+
+| Scenario | Why to Skip RPI |
+|----------|----------------|
+| **Greenfield project** | No existing codebase to research |
+| **Single-file change** with clear requirements | Research scope is trivial |
+| **Bug fix** with a clear reproduction path | The failing test *is* the research |
+| **Formatting, linting, or mechanical refactor** | No design decisions; purely mechanical |
+| **You already fully understand the area** | Research would confirm what you know |
+
+**Rule of thumb:** If you can describe exactly which files change and how before starting, skip RPI. If you're guessing, use RPI.
+
 ## Domain Principles Table
 
 | # | Principle | Description | Applied As |
@@ -45,6 +59,12 @@ RPI fixes this with **Frequent Intentional Compaction**: the research phase runs
 ## Workflow
 
 ```
+PRE-RESEARCH CHECKLIST (before starting)
+    [ ] Is this brownfield? (If greenfield, skip RPI entirely)
+    [ ] Does a prior research artifact exist for this topic? Check thoughts/shared/research/
+    [ ] What is the current git state? Run: git status && git log --oneline -3
+    [ ] Record the current commit hash — add to artifact frontmatter as git_commit
+
 SCOPE
     Parse the research topic from the command argument
     Identify the codebase root and project structure
@@ -88,6 +108,13 @@ REPORT
     - Open questions needing human input
     - Reminder: "Review before proceeding to /rpi-plan"
 ```
+
+**When Research is Done** — all five must be true:
+1. Artifact written to `thoughts/shared/research/YYYY-MM-DD-topic-slug.md`
+2. All three subagent outputs are incorporated
+3. Every claim in the artifact cites a file path
+4. Open questions section is present (even if empty — note "none identified")
+5. User has been explicitly told to review before proceeding to /rpi-plan
 
 **Exit criteria:** Research artifact written, open questions surfaced, user has been prompted to review.
 
@@ -288,3 +315,73 @@ Recovery:
 | `research-synthesis` | For deeper research methodology: source credibility scoring, cross-reference matrices, structured briefings with citations. Use when research scope extends beyond the codebase (external systems, third-party libraries). |
 | `session-context` | Provides git history analysis and ADR matching to seed research with change context. Useful as a pre-step before research to understand what has changed recently in the topic area. |
 | `task-decomposition` | When the research topic is a large system, use task-decomposition first to break it into researachable sub-components, then run rpi-research on each. |
+
+## .NET/Blazor Adapter Notes
+
+When researching a .NET/Blazor codebase, extend the standard subagent prompts with these checks:
+
+**DI Registration** — always locate the service registration surface:
+- Where are services registered? (`Program.cs`, `ServiceCollectionExtensions.cs`, feature `Module.cs`)
+- Is the topic's service registered as singleton, scoped, or transient? (impacts Blazor component lifecycle)
+
+**EF Core** — identify the data access boundary:
+- Is there an `IEntityTypeConfiguration<T>` for affected entities? (`Infrastructure/Persistence/Configurations/`)
+- Are there pending migrations? (`dotnet ef migrations list`)
+- Does the research area involve owned types, value objects, or complex mapping?
+
+**Blazor Component Hierarchy** — for UI research:
+- Is the affected component a page (`@page`), layout, or reusable component?
+- Does it use `@inject`, `[Parameter]`, `[CascadingParameter]`, or `EventCallback`?
+- Is it server-side (SignalR) or WebAssembly? (affects async patterns and JS interop)
+
+**Telerik UI** — when Telerik components are present:
+- Identify which Telerik component is affected (`TelerikGrid`, `TelerikForm`, `TelerikWindow`, etc.)
+- Note the Telerik version from the project file — API changes between versions are common
+- Is there a custom Telerik theme or CSS override file?
+
+**FreeMediator Pipeline** — for CQRS research:
+- Locate pipeline behaviors (`IPipelineBehavior<,>`) — these affect all commands/queries
+- Are there validation behaviors (FluentValidation integration)?
+- Note: FreeMediator, not MediatR — the registration and pipeline API differs
+
+Always add these findings to the `## Key design patterns` section of the research artifact.
+
+## Python Adapter Notes
+
+When researching a Python codebase, extend the standard subagent prompts with these checks:
+
+**Dependency Injection** — locate the wiring surface:
+- FastAPI: Where are `Depends()` callables defined? Are they in a `dependencies.py` module,
+  inline in route files, or composed via `lifespan` context managers?
+- Is any shared state (DB session, HTTP client, cache) passed via a shared `Annotated` dependency
+  or managed with `contextlib.asynccontextmanager`?
+- > **Flask callout:** Is an application factory (`create_app()`) in use? Identify which extensions
+  > are initialized there (`db.init_app(app)`, `login_manager.init_app(app)`).
+
+**SQLAlchemy / Database boundary** — identify the data access surface:
+- What is the `Base` metadata target? (`declarative_base()` or `DeclarativeBase` subclass in SQLAlchemy 2.x)
+- Is `Session` or `AsyncSession` in use? (async requires `AsyncEngine` and `async_sessionmaker`)
+- Is the topic area using ORM-level queries or Core-level `select()` statements?
+- *If using Alembic:* Are there pending migrations? (`alembic current` vs. `alembic heads`)
+  Are there multiple heads that need merging?
+
+**API surface** — for FastAPI/Flask route research:
+- Which `APIRouter` (FastAPI) or `Blueprint` (Flask) owns the affected endpoints?
+- Trace the full `Depends()` injection chain for the affected route — all resolved dependencies
+  are potential impact areas
+- Identify the Pydantic request/response models (`BaseModel` subclasses) — field changes ripple
+  into OpenAPI schema, validation, and serialization
+
+**Pydantic Models** — schema and validation boundary:
+- Identify all `BaseModel` subclasses in the affected area
+- Note any `model_config`, `field_validator`, `model_validator`, or `computed_field` usage —
+  these add behavior beyond simple field declarations
+- Are models shared between API layer and domain logic, or are there separate schemas?
+
+**Async patterns** — for async codebases:
+- Is the codebase fully `async def` end-to-end, or mixed sync/async?
+- Look for blocking calls in async paths: `time.sleep()`, synchronous file I/O, or sync
+  SQLAlchemy sessions inside `async def` routes — these stall the event loop
+- Are background tasks using `asyncio.create_task()`, `BackgroundTasks` (FastAPI), or Celery?
+
+Always add these findings to the `## Key design patterns` section of the research artifact.

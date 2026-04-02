@@ -27,6 +27,8 @@ The plan is not the implementation. It contains change descriptions, not code. I
 5. The plan must include "What we're NOT doing" -- explicit scope boundaries prevent scope creep
 6. The plan must include a rollback procedure -- every change must be reversible
 7. NO source code in the plan -- change descriptions only (code snippets for illustration are fine)
+8. TESTS FIRST -- any phase that introduces new production behavior must have a test-writing step BEFORE the implementation step (RED before GREEN)
+9. YAGNI -- if a phase exists only because "we might need it later," remove it
 
 ## Domain Principles Table
 
@@ -66,11 +68,29 @@ QUESTION
         v
 
 DESIGN
-    Decompose into phases:
+    Write a brief Design Discussion (~10-15 lines) covering:
+    - Chosen approach and why (what alternatives exist from research, why this one)
+    - Phase breakdown rationale (how many phases, what each accomplishes)
+    - Key risks or dependencies the plan must accommodate
+    Present the Design Discussion to the user BEFORE writing the full plan.
+    Wait for feedback or approval before proceeding to WRITE.
+    (Catching an approach disagreement here costs 2 minutes; catching it during implementation costs hours.)
+
+    Then decompose into phases:
     - Each phase accomplishes one logical unit (schema change, handler, UI, tests)
     - Each phase is independently verifiable
     - Order phases by dependency (infrastructure before features, features before UI)
     - Identify the "What we're NOT doing" scope boundary
+    - For phases introducing new behavior: the first step must be "Write failing tests" (RED)
+      followed by "Implement to make tests pass" (GREEN) — never implement before tests exist
+    - Apply YAGNI: for each phase, ask "Does this solve a real requirement in scope?"
+      If the answer is "we might need it later" — remove the phase
+
+    YAGNI CHECK (before finalizing phase list):
+    1. Does every phase correspond to a stated requirement or acceptance criterion?
+    2. Are there any "nice to have" phases that don't directly deliver the feature?
+    3. Is there any infrastructure being added "just in case"?
+    If YES to 2 or 3: remove those phases and add them to "What we're NOT doing".
 
         |
         v
@@ -102,9 +122,13 @@ phase: READ | QUESTION | DESIGN | WRITE | REPORT | COMPLETE
 topic: [feature being planned]
 research_artifact: thoughts/shared/research/YYYY-MM-DD-slug.md
 plan_artifact: thoughts/shared/plans/YYYY-MM-DD-description-slug.md
+design_discussion_presented: true | false
+design_discussion_approved: true | false
 clarifying_questions_asked: true | false
 clarifying_questions_answered: true | false
 phases_designed: [count]
+yagni_check_passed: true | false
+tdd_phases_identified: [count of phases with test-first steps]
 status: in_progress | complete
 </rpi-plan-state>
 ```
@@ -290,6 +314,17 @@ Recovery:
 4. Do not try to fit everything into one plan file
 ```
 
+### When to Split a Plan (self-assessment)
+
+Ask these questions before writing. If more than one is YES, split:
+1. Will this plan take more than one working session to implement?
+2. Does this plan touch more than 3 vertical slices or feature areas?
+3. Are there phases that could be deployed independently and would deliver value on their own?
+4. Is the plan approaching 10+ phases? (10+ phases correlates with high implementation failure rate)
+5. Would a reviewer need more than 20 minutes to review the full plan?
+
+When splitting: Plan A should be the smallest independently valuable deliverable. Plan B is everything else. Name them descriptively: `2026-04-01-email-notifications-phase-a-infrastructure.md` and `2026-04-01-email-notifications-phase-b-ui.md`.
+
 ## Integration with Other Skills
 
 | Skill | Relationship |
@@ -300,3 +335,90 @@ Recovery:
 | `task-decomposition` | For very large features, use task-decomposition to break the plan into parallel workstreams that multiple implementers can execute concurrently. |
 | `ef-migration-manager` | For phases involving EF Core migrations, load this skill for migration safety checks, dry-run verification patterns, and rollback procedures. |
 | `dotnet-vertical-slice` | When planning new vertical slices in .NET, load this skill for the canonical file/folder structure and DI registration pattern. |
+| `tdd-cycle` | When planning phases that require RED-GREEN-REFACTOR discipline, load this skill to structure the test-write → implement → refactor steps within each phase. |
+
+## .NET/Blazor Adapter Notes
+
+When planning for a .NET/Blazor codebase, apply these structural rules:
+
+### Phase Boundaries for .NET
+- **One phase per vertical slice** — don't mix command handler changes with query handler changes in the same phase
+- **EF Core migrations get their own phase** — never combine a model change and a migration in the same phase; the migration phase runs after the model phase is verified
+- **DI registration in a dedicated step** — include "register new service in DI container" as an explicit step, not an afterthought. Missed DI registration is the #1 cause of "works on my machine" failures.
+- **Telerik component changes get their own phase** — Telerik components have many interdependencies; isolate them to prevent cascading failures
+
+### TDD Phase Structure for .NET
+Each phase introducing new behavior should follow this pattern:
+
+```
+#### Step 1: Write failing tests
+**File**: `tests/Unit/Features/[Feature]/[Handler]Tests.cs`
+**Changes**: Add test method `[MethodName]_[Scenario]_[ExpectedBehavior]` that
+asserts the new behavior. Test should fail (RED) at this point.
+Verification: `dotnet test --filter "FullyQualifiedName~[TestName]"` → FAIL expected
+
+#### Step 2: Implement to pass tests
+**File**: `Features/[Feature]/[Handler].cs`
+**Changes**: [implementation description]
+Verification: `dotnet test --filter "FullyQualifiedName~[TestName]"` → PASS required
+```
+
+### FreeMediator Pipeline — planning implications
+- When adding a new command handler, plan an explicit verification step: "confirm handler is discovered by assembly scanning"
+- When a new pipeline behavior is added, plan a verification step for each handler type it affects
+- Pipeline behaviors fire on ALL commands/queries — scope changes carefully; add to "What we're NOT doing" if pipeline-wide changes are out of scope
+
+## Python Adapter Notes
+
+When planning for a Python codebase, apply these structural rules:
+
+### Phase Boundaries for Python
+- **One phase per module or feature area** — don't mix route handler changes with Pydantic
+  schema changes in the same phase; schema changes have downstream ripple effects
+- **Pydantic model changes before handler changes** — a handler phase assumes the schema it
+  references is already correct; schema phase must verify first
+- *If using Alembic:* **Migrations get their own phase** — never combine a SQLAlchemy model
+  change and an Alembic revision in the same phase; the migration phase runs after the model
+  phase is verified
+- **FastAPI dependency registration in a dedicated step** — include "wire new dependency into
+  router `Depends()` chain" as an explicit step; missing `Depends()` wiring is the #1 source
+  of "works in unit tests, fails at runtime" failures in FastAPI projects
+- > **Flask callout:** Include "register Blueprint with `app.register_blueprint()`" as an
+  > explicit step in any phase that adds a new Blueprint.
+
+### TDD Phase Structure for Python
+Each phase introducing new behavior should follow this pattern:
+
+```
+#### Step 1: Write failing tests
+**File**: `tests/[feature]/test_[module].py`
+**Changes**: Add test function `test_[scenario]_[expected_behavior]` that asserts the
+new behavior. Test should fail (RED) at this point.
+Verification: `pytest tests/[feature]/test_[module].py::test_[name] -v` → FAIL expected
+
+#### Step 2: Implement to pass tests
+**File**: `src/[feature]/[module].py`
+**Changes**: [implementation description]
+Verification: `pytest tests/[feature]/test_[module].py::test_[name] -v` → PASS required
+```
+
+### Alembic Migration Phase Structure (if using Alembic)
+```
+#### Step 1: Generate migration revision
+**Command**: `alembic revision --autogenerate -m "[descriptive-name]"`
+**Action**: Review the generated migration script in `alembic/versions/` — verify only
+expected schema changes are present; delete any spurious detected changes
+Verification: `alembic check` → no pending changes beyond the new revision
+
+#### Step 2: Apply migration
+**Command**: `alembic upgrade head`
+Verification: `alembic current` shows the new revision as current head
+Rollback: `alembic downgrade -1`
+```
+
+### pytest-asyncio — planning implications
+- When adding async route handlers or async service methods, plan a verification step
+  that confirms the test is decorated with `@pytest.mark.asyncio` (or `asyncio_mode = "auto"`
+  is set in `pytest.ini` / `pyproject.toml`)
+- Async tests that accidentally run synchronously pass silently — add a verification step:
+  `pytest --co -q` to confirm the test is collected as an async test

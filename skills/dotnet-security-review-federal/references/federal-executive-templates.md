@@ -1,6 +1,6 @@
 # Federal Executive Summary Templates
 
-Manager-friendly language for federal security review reports. Tailored for DOE/LANL leadership, program managers, and federal stakeholders.
+Manager-friendly language for federal security review reports. Tailored for DOE/NNSA leadership, program managers, and federal stakeholders.
 
 ---
 
@@ -28,7 +28,7 @@ Use these to explain system categorization to non-technical leadership:
 > "A Low-impact system is one where the loss of confidentiality, integrity, or availability would have a limited adverse effect on organizational operations, assets, or individuals. This typically applies to systems with public information or limited internal functions."
 
 ### Moderate Impact
-> "A Moderate-impact system is one where security compromise would have a serious adverse effect on operations, assets, or individuals. This includes most systems handling Controlled Unclassified Information (CUI), personally identifiable information (PII), or important business functions. Most LANL business systems fall into this category."
+> "A Moderate-impact system is one where security compromise would have a serious adverse effect on operations, assets, or individuals. This includes most systems handling Controlled Unclassified Information (CUI), personally identifiable information (PII), or important business functions. Most DOE/NNSA business systems fall into this category."
 
 ### High Impact
 > "A High-impact system is one where security compromise would have a severe or catastrophic effect on operations, national security, or individuals. This includes systems handling highly sensitive data, critical infrastructure controls, or information that could cause exceptionally grave damage if compromised."

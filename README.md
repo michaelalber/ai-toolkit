@@ -41,7 +41,6 @@ Skills for .NET enterprise development patterns, migrations, and security.
 | `dotnet-security-review` | OWASP-based .NET security review with Telerik specialization and manager-friendly reporting. |
 | `dotnet-security-review-federal` | Federal compliance overlay (NIST 800-53, DOE, CUI, FIPS) extending the base security review. |
 | `minimal-api-scaffolder` | .NET 10 minimal API scaffolding with OpenAPI documentation, versioning, and security patterns. |
-| `shared-kernel-generator` | Shared kernel module generation with DI extensions, Options pattern, and permission models. |
 | `4d-schema-migration` | 4D (4th Dimension) to SQL Server/EF Core/Blazor full-stack migration specialist. |
 
 ### Edge/IoT/Robotics Suite

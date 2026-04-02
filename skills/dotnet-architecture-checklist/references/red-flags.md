@@ -133,14 +133,14 @@ grep -r "\.NewConfig()\|\.ForType<" --include="*Handler.cs" --include="*Controll
 grep -r "Task<.*Entity>\|Task<List<.*Entity>>" --include="*Handler.cs"
 ```
 
-## Shared Kernel (LANL Projects)
+## Shared Kernel
 
 ```bash
 # Duplicated entities that should come from shared kernel
-grep -r "class Person\|class Employee\|class Organization\|class Location" --include="*.cs" | grep -v "Denali\.LANL\."
+grep -r "class Person\|class Employee\|class Organization\|class Location" --include="*.cs"
 
 # Inconsistent shared package versions
-grep -r "Denali.LANL" --include="*.csproj" | grep -oE "[0-9]+\.[0-9]+\.[0-9]+" | sort -u
+grep -r "SharedKernel\|YourOrg\." --include="*.csproj" | grep -oE "[0-9]+\.[0-9]+\.[0-9]+" | sort -u
 # If multiple versions shown, needs alignment
 
 # Missing shared kernel references (check if domain entities are locally defined)

@@ -11,7 +11,10 @@ Use this template when writing plan artifacts to `thoughts/shared/plans/YYYY-MM-
 
 **Created:** YYYY-MM-DD
 **Research:** thoughts/shared/research/YYYY-MM-DD-topic-slug.md
-**Status:** ready-for-review | in-progress | complete
+**Status:** ready-for-review | approved | in-progress | complete
+**Ticket:** [Jira issue key, e.g., PROJ-123 — or "none"]
+**Branch:** [git branch at time of planning, e.g., main]
+**Git commit (at planning):** [short hash, e.g., a1b2c3d]
 
 ---
 
@@ -183,13 +186,15 @@ Use lowercase kebab-case. Be descriptive enough that the file name is self-expla
 
 ## Phase sizing guidelines
 
-| Phase size | Guidance |
-|-----------|----------|
-| ≤ 3 file changes | Good — independently verifiable, easy to review |
-| 4-6 file changes | Acceptable — may be worth splitting if the changes are logically distinct |
-| 7+ file changes | Too large — split into two phases |
+| Metric | Guidance |
+|--------|----------|
+| **File count per phase** | 3–5 files: ideal. 6–8: acceptable. 9+: split the phase. |
+| **Phase count per plan** | 3–6 phases: ideal. 7–9: review for over-engineering. 10+: high failure rate — split the plan. |
+| **Lines per phase** | ≤ 100 lines in the plan. Phases longer than 100 lines are too complex to execute reliably. |
+| **1 file change** | Still a valid phase if it's a significant change (e.g., major refactor of a core handler). |
+| **Single atomic refactor** | May touch many files (rename, extract interface) — one large phase is acceptable if it is truly atomic. |
 
-Exception: A single refactor touching many files (e.g., rename, extract interface) may be one large phase if it is truly atomic.
+**When to split a plan:** If the total plan exceeds 6 phases or 500 lines, split into Plan A (foundation, independently deployable) and Plan B (extension). Plans with 10+ phases have significantly higher implementation failure rates.
 
 ## Verification command reference
 

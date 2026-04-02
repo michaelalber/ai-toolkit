@@ -2,7 +2,7 @@
 
 ## FreeMediator vs MediatR
 
-**FreeMediator is the preferred CQRS library** for Denali projects:
+**FreeMediator is the preferred CQRS library** for .NET projects:
 - Apache 2.0 license (no commercial restrictions)
 - API-compatible with MediatR
 - Same `IRequest<T>`, `IRequestHandler<TRequest, TResponse>` interfaces

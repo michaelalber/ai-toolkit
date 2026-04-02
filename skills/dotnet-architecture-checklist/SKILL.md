@@ -34,7 +34,7 @@ The distinction matters: `architecture-review` builds architectural judgment. Th
 | 3 | **FreeMediator Pipeline** | FreeMediator is the preferred CQRS library (Apache 2.0). Pipeline behaviors for validation, logging, exception handling, and transactions are registered in order. MediatR usage is flagged for migration. See `references/cqrs-patterns.md` Pipeline Behaviors section. | Critical |
 | 4 | **Mapster Mapping Discipline** | `TypeAdapterConfig.GlobalSettings` is configured at startup, not per-request. Queries use `ProjectToType<>()` instead of `ToList().Adapt()`. Mapping profiles are organized by feature and centralized in dedicated config classes. See `references/cqrs-patterns.md` Mapster Checks section. | High |
 | 5 | **Blazor Hosting Model Detection** | The hosting model (Server, WASM, Interactive Auto) determines which checklist items apply. Server requires SignalR circuit management and distributed backplane checks. WASM requires IL trimming and bundle security review. Auto requires render mode boundary validation. See `references/review-checklist.md` section 2. | Critical |
-| 6 | **Shared Kernel Usage** | Projects consuming `Denali.LANL.*` shared NuGet packages must use official packages (not local copies), maintain version consistency, avoid duplicate entity definitions, and properly integrate EF Core configurations from the shared kernel. | High |
+| 6 | **Shared Kernel Usage** | Projects consuming shared NuGet packages must use official packages (not local copies), maintain version consistency, avoid duplicate entity definitions, and properly integrate EF Core configurations from the shared kernel. | High |
 | 7 | **EF Core Patterns** | DbContext must be scoped correctly for the hosting model. Connection pooling must be sized for long-lived circuits. Async must be used all the way down. N+1 query patterns must be caught. Singleton DbContext is a critical finding. See `references/review-checklist.md` section 4. | Critical |
 | 8 | **Framework Version Awareness** | The target framework version gates all recommendations. EOL frameworks (.NET Core 3.1, .NET 5, .NET 7) are flagged as critical. .NET Framework 4.x requires upgrade path assessment. Legacy project file format is flagged for SDK-style conversion. See `references/framework-detection.md`. | Critical |
 | 9 | **Anti-Corruption Layers** | Boundaries between the application and external systems (APIs, legacy databases, third-party services) must be explicit. No domain entities should leak across API boundaries. DTOs and mapping exist at every boundary. | High |
@@ -86,7 +86,7 @@ Determine the full project context before running any checklist items.
 3. **CQRS library**: Detect FreeMediator or MediatR usage. Flag MediatR for migration consideration.
 4. **Mapping library**: Detect Mapster, AutoMapper, or manual mapping.
 5. **UI framework**: Detect Telerik, MudBlazor, Radzen, or vanilla Blazor.
-6. **Shared kernel**: Check for `Denali.LANL.*` package references.
+6. **Shared kernel**: Check for shared NuGet package references.
 7. **Infrastructure**: Identify Azure, GCP, on-prem, or hybrid hosting.
 8. **Project style**: Verify SDK-style projects. Flag legacy project files.
 
@@ -95,7 +95,7 @@ Determine the full project context before running any checklist items.
 grep -r "<TargetFramework" --include="*.csproj" | grep -oE "net[0-9]+\.[0-9]+|netcoreapp[0-9]+\.[0-9]+|net4[0-9]+" | sort -u
 grep -r "FreeMediator\|MediatR\|Mapster\|AutoMapper" --include="*.csproj"
 grep -r "TelerikRootComponent\|MudThemeProvider\|RadzenLayout" --include="*.razor" | head -5
-grep -rE "Denali\.LANL\." --include="*.csproj"
+grep -rE "YourOrg\.SharedKernel\." --include="*.csproj"
 find . -name "*.csproj" -exec grep -L "Sdk=" {} \;
 ```
 
@@ -227,7 +227,7 @@ next_action: Prioritize recommendations by effort and impact
 | CQRS Library | [FreeMediator / MediatR / None] |
 | Mapping Library | [Mapster / AutoMapper / Manual / None] |
 | UI Framework | [Telerik / MudBlazor / Vanilla] |
-| Shared Kernel | [Denali.LANL.* / None] |
+| Shared Kernel | [Shared packages / None] |
 | Project Style | [SDK-style / Legacy] |
 | Projects Scanned | [count] |
 
@@ -399,7 +399,7 @@ Every recommendation must be valid for the detected target framework version. Be
 |--------------|----------------|------------------|
 | **Reviewing without framework detection** | Applying .NET 10 best practices to a .NET Framework 4.8 project produces irrelevant findings. Grading against the wrong standard erodes trust in the review. | Always run DETECT phase first. Gate every checklist item against the detected framework version. |
 | **Applying .NET 10 patterns to .NET Framework** | APIs like `IAsyncEnumerable`, Minimal APIs, `InteractiveAutoRenderMode`, and record types do not exist in .NET Framework 4.x. Recommending them without an upgrade path is unhelpful. | Detect framework version. Recommend upgrade path via `references/framework-detection.md`. Only suggest patterns available in the current version. |
-| **Ignoring shared kernel conventions** | Duplicating entities (Person, Organization, Location) that exist in `Denali.LANL.*` packages creates drift, inconsistency, and maintenance burden across the enterprise. | Check for `Denali.LANL.*` package references. Flag duplicate entity definitions. Verify version consistency across all shared packages. |
+| **Ignoring shared kernel conventions** | Duplicating entities that exist in shared kernel packages creates drift, inconsistency, and maintenance burden across the enterprise. | Check for shared kernel package references. Flag duplicate entity definitions. Verify version consistency across all shared packages. |
 | **Mixing CQRS with repository pattern** | Adding a repository layer on top of CQRS handlers creates unnecessary abstraction. Handlers already encapsulate data access. A repository between the handler and DbContext adds indirection without benefit. | Handlers access DbContext directly. If data access logic is reused, extract it to a specification or query object, not a repository. |
 | **Fat controllers with business logic** | Business logic in controllers cannot be tested without HTTP infrastructure. It violates the thin-endpoint principle and makes the CQRS pipeline irrelevant. | Controllers call only `mediator.Send()`. All business logic lives in handlers. Validation lives in pipeline behaviors. |
 | **Grading without evidence** | Subjective assessments ("the code looks messy") are not findings. Without file paths, line numbers, or pattern matches, findings cannot be verified or acted upon. | Every finding must include a specific file location, evidence string, and checklist section reference. |
@@ -476,7 +476,7 @@ The project uses `.NET 8+` Interactive Auto but components do not explicitly dec
 
 - **`dotnet-security-review`** -- When the checklist identifies security findings (hardcoded secrets, missing auth attributes, WASM secret exposure, CORS misconfiguration), reference this skill for deeper security analysis. The checklist catches surface-level security patterns; `dotnet-security-review` provides comprehensive security posture assessment.
 
-- **`dotnet-security-review-federal`** -- For LANL projects using `Denali.LANL.*` shared packages, reference this skill when the checklist identifies security findings that may have federal compliance implications.
+- **`dotnet-security-review-federal`** -- For projects with federal compliance requirements, reference this skill when the checklist identifies security findings that may have federal compliance implications.
 
 ## Reference Files
 

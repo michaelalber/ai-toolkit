@@ -20,13 +20,16 @@ The Implement phase is deliberately mechanical. The research and planning phases
 This is not a limitation -- it is the goal. Mechanical execution is fast, predictable, and recoverable. Creative implementation is slow, unpredictable, and prone to scope drift.
 
 **Non-Negotiable Constraints:**
-1. Read the ENTIRE plan before making any changes -- understand all phases and their dependencies
-2. Execute phases IN ORDER -- never reorder, skip, or parallelize phases
-3. Run verification steps after EVERY phase -- a failed verification stops everything
-4. Update checkboxes in the plan file after completing each item -- this is the resumption protocol
-5. If something is not in the plan, STOP and tell the user -- do not invent solutions
-6. Write progress notes before context fills -- proactive checkpoint management
-7. The plan is the spec -- if the plan is wrong, fix the plan (via /rpi-iterate), not the implementation
+1. The plan MUST have status `approved` before any changes are made -- stop and tell the user if it does not
+2. Run the baseline test suite BEFORE any changes -- a failing baseline means you cannot distinguish pre-existing failures from yours
+3. Read the ENTIRE plan before making any changes -- understand all phases and their dependencies
+4. Execute phases IN ORDER -- never reorder, skip, or parallelize phases
+5. Run verification steps after EVERY phase -- a failed verification stops everything
+6. Update checkboxes in the plan file after completing each item -- this is the resumption protocol
+7. If something is not in the plan, STOP and tell the user -- do not invent solutions
+8. Write progress notes before context fills -- proactive checkpoint management
+9. The plan is the spec -- if the plan is wrong, fix the plan (via /rpi-iterate), not the implementation
+10. ONE commit per phase -- never mega-commit all phases at the end
 
 ## Domain Principles Table
 
@@ -46,6 +49,16 @@ This is not a limitation -- it is the goal. Mechanical execution is fast, predic
 ## Workflow
 
 ```
+PRE-IMPLEMENTATION CHECKS (before making any changes)
+    [ ] Plan status is "approved" — check the plan file's Status field.
+        If status is "ready-for-review" or "in-progress" (not yet approved by human):
+        STOP. Tell user: "The plan has not been approved. Please review and set status
+        to 'approved' before running /rpi-implement."
+    [ ] Run the baseline test suite to confirm a clean starting state:
+        dotnet test (or project equivalent)
+        If tests fail before any changes: STOP. Report failures to user.
+        Do NOT proceed — you cannot distinguish your failures from pre-existing ones.
+
 READ
     Read the entire plan file completely.
     Note: which phases exist, their order, their dependencies, the rollback plan.
@@ -268,16 +281,18 @@ Stopping here. Please investigate and let me know how to proceed.
 
 | # | Anti-Pattern | Why It Fails | Correct Approach |
 |---|-------------|-------------|-----------------|
-| 1 | **Starting without reading full plan** | Phase dependencies are invisible; Phase 1 may create a conflict with Phase 3 | Read all phases, notes, and rollback plan before making any changes |
-| 2 | **Skipping verification steps** | Failures accumulate silently across phases; debugging becomes a multi-phase archaeology project | Run every verification command in every phase's success criteria |
-| 3 | **Continuing after verification failure** | Subsequent phases may compound the failure; rollback becomes harder | Stop immediately on failure; show error; report to user |
-| 4 | **Inventing what's not in the plan** | Diverges from the reviewed spec; introduces unreviewed logic | Stop and report: "The plan doesn't cover X" -- use /rpi-iterate to update |
-| 5 | **Batching checkbox updates** | A context reset between batch and update leaves an inaccurate progress state | Update each checkbox as the item completes, not as a group |
-| 6 | **Waiting until context is full** | No time to write a proper progress note; resumption is manual | Write progress note when context is 70-80% full; proactive, not reactive |
-| 7 | **Fixing test failures without stopping** | The fix may be wrong or may compensate for an actual plan gap | Show the failure to the user; fix only if clearly within plan scope |
-| 8 | **Reordering phases "for efficiency"** | Phase ordering in the plan reflects dependencies; reordering breaks them | Execute phases exactly as numbered |
-| 9 | **Not writing final report** | User has no summary of what changed; makes PR description and rollback harder | Always write final report with files changed and verification status |
-| 10 | **Treating progress notes as optional** | Without notes, a context reset means the user manually re-determines completion state | Progress notes are mandatory before context resets and at completion |
+| 1 | **Starting without approved plan** | Executing a plan that hasn't been human-reviewed means executing unvalidated decisions | Check plan status field; stop if not `approved` |
+| 2 | **Skipping baseline test run** | Cannot distinguish pre-existing test failures from failures you introduced | Always run tests before the first change; a dirty baseline is a stop signal |
+| 3 | **Starting without reading full plan** | Phase dependencies are invisible; Phase 1 may create a conflict with Phase 3 | Read all phases, notes, and rollback plan before making any changes |
+| 4 | **Skipping verification steps** | Failures accumulate silently across phases; debugging becomes a multi-phase archaeology project | Run every verification command in every phase's success criteria |
+| 5 | **Continuing after verification failure** | Subsequent phases may compound the failure; rollback becomes harder | Stop immediately on failure; show error; report to user |
+| 6 | **Inventing what's not in the plan** | Diverges from the reviewed spec; introduces unreviewed logic | Stop and report: "The plan doesn't cover X" -- use /rpi-iterate to update |
+| 7 | **Batching checkbox updates** | A context reset between batch and update leaves an inaccurate progress state | Update each checkbox as the item completes, not as a group |
+| 8 | **Waiting until context is full** | No time to write a proper progress note; resumption is manual | Write progress note when context is 70-80% full; proactive, not reactive |
+| 9 | **Fixing test failures without stopping** | The fix may be wrong or may compensate for an actual plan gap | Show the failure to the user; fix only if clearly within plan scope |
+| 10 | **Reordering phases "for efficiency"** | Phase ordering in the plan reflects dependencies; reordering breaks them | Execute phases exactly as numbered |
+| 11 | **Not writing final report** | User has no summary of what changed; makes PR description and rollback harder | Always write final report with files changed and verification status |
+| 12 | **Mega-commits (all phases in one commit)** | Loses phase-by-phase recovery points; makes bisect and rollback much harder | Commit after each phase's verification passes; one commit per phase |
 
 ## Error Recovery
 
@@ -334,3 +349,79 @@ Recovery:
 | `ef-migration-manager` | When phases involve EF Core migrations, load this skill for migration execution safety, dry-run verification, and rollback commands. |
 | `tdd-cycle` | If the plan includes writing tests before implementation, use tdd-cycle to manage the RED-GREEN-REFACTOR sequence within each phase. |
 | `session-context` | Before resuming an interrupted implementation, load session-context to understand what changed in git since the last session. |
+
+## .NET/Blazor Adapter Notes
+
+When implementing against a .NET/Blazor codebase, apply these phase-specific rules:
+
+### EF Core Migrations — always in a dedicated phase
+```bash
+# Correct sequence for migration phases:
+dotnet ef migrations add [MigrationName] --project [DataProject] --startup-project [ApiProject]
+dotnet ef migrations script --idempotent   # review before applying
+dotnet ef database update --dry-run         # verify connection and SQL
+dotnet ef database update                   # apply
+```
+- Never apply a migration in the same phase as the model change that requires it
+- A migration phase's rollback is: `dotnet ef database update [PreviousMigration]` then `dotnet ef migrations remove`
+
+### Blazor Component Changes — verify render after each phase
+- [ ] Component renders without `@rendermode` errors (Server vs. WebAssembly mismatch)
+- [ ] No unhandled `NullReferenceException` on `OnInitializedAsync` (check `@if (model is null)` guard)
+- [ ] `EventCallback` parameters fire correctly (check parent → child wiring)
+- [ ] `StateHasChanged()` is not called inside `OnInitializedAsync` unnecessarily
+
+### Telerik Components — check before and after
+- [ ] Telerik license referenced in the project (`Telerik.UI.for.Blazor` package present)
+- [ ] Telerik CSS/JS included in `_Host.cshtml` or `App.razor`
+- [ ] For `TelerikGrid`: verify `Data`, `TItem`, and `OnRead` are consistent with data type changes
+- [ ] For `TelerikForm`: verify `Model` type and `FormItems` match updated DTO/command fields
+
+### FreeMediator / CQRS Pipeline
+- When adding a new command or query: verify it is handled (add handler before wiring up the UI)
+- When modifying a command: check pipeline behaviors — validators run before handlers
+- DI registration for new handlers is automatic with assembly scanning (verify the scan includes the new feature folder)
+
+## Python Adapter Notes
+
+When implementing against a Python codebase, apply these phase-specific rules:
+
+### Alembic Migrations — always in a dedicated phase (if using Alembic)
+```bash
+# Correct sequence for migration phases:
+alembic revision --autogenerate -m "[MigrationName]"
+# STOP: review the generated script in alembic/versions/ before proceeding
+alembic check                    # verify no spurious changes were detected
+alembic upgrade head             # apply
+alembic current                  # confirm new revision is HEAD
+```
+- Never apply a migration in the same phase as the SQLAlchemy model change that requires it
+- A migration phase's rollback is: `alembic downgrade -1` (then delete the revision file
+  from `alembic/versions/` if the revision itself is being abandoned)
+- If `alembic revision --autogenerate` produces unexpected changes, the SQLAlchemy model
+  and DB state are out of sync — stop and investigate before proceeding
+
+### FastAPI Routes — verify after each phase
+- [ ] `uvicorn app.main:app --reload` starts without import errors or startup exceptions
+- [ ] `curl http://localhost:8000/docs` renders the OpenAPI UI without errors (confirms all
+  routes are correctly registered and Pydantic schemas are valid)
+- [ ] Affected endpoint returns expected status code (not 422 Unprocessable Entity from
+  Pydantic validation failure, not 500 from unresolved `Depends()`)
+- [ ] No `RuntimeWarning: coroutine was never awaited` in server output (async leak)
+- > **Flask callout:** `flask run` starts without errors; Blueprint routes appear in
+  > `flask routes` output; `db.init_app(app)` is called before first request.
+
+### pytest Quality Checklist — run after every implementation phase
+- [ ] `pytest tests/ -v` — all pass (no unexpected failures or skips)
+- [ ] `pytest tests/ --cov=src --cov-report=term-missing` — coverage ≥ 80% for changed modules
+- [ ] `ruff check .` — 0 lint errors
+- [ ] `mypy src/` — 0 type errors (no new `# type: ignore` comments without justification)
+- [ ] `pytest --co -q` — confirm new async tests appear in collection (not silently skipped)
+
+### SQLAlchemy / Session Scope — verify per phase
+- [ ] No `Session` created outside a request context (use `Depends(get_db)` pattern in FastAPI;
+  use `with Session(engine) as session:` in scripts)
+- [ ] No `AsyncSession` used in a sync context or vice versa (mixing causes runtime errors,
+  not import errors — they surface only under load)
+- [ ] If adding a new model: `Base.metadata.create_all()` is NOT used in production paths —
+  Alembic owns schema management

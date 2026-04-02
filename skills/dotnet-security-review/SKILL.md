@@ -560,7 +560,7 @@ Always include at least 3 positive observations. Examples:
 
 - **`supply-chain-audit`**: Defer to this skill for NuGet package vulnerability scanning (OWASP A06: Vulnerable Components). It provides comprehensive CVE correlation, license compliance, and maintenance health analysis across NuGet, npm, and pip ecosystems.
 
-- **`dotnet-security-review-federal`**: When the application operates in LANL/DOE/DOD environments, apply this compliance overlay after completing the base OWASP scan. It adds NIST SP 800-53 control mapping, FIPS 140-2/3 cryptographic requirements, and CUI handling verification.
+- **`dotnet-security-review-federal`**: When the application operates in federal (DOE/DOD or equivalent) environments, apply this compliance overlay after completing the base OWASP scan. It adds NIST SP 800-53 control mapping, FIPS 140-2/3 cryptographic requirements, and CUI handling verification.
 
 - **`architecture-review`**: For system-level security concerns that go beyond code-level scanning -- network segmentation, service boundaries, trust zones, and infrastructure security. The architecture review provides the "big picture" context that individual code findings fit into.
 

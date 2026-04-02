@@ -109,10 +109,21 @@ Step 1 — Read the most recent relevant research artifact from thoughts/shared/
           → If none exists: STOP and tell user to run /rpi-research first
 Step 2 — Ask clarifying questions (scope, approach, testing, constraints)
 Step 3 — WAIT for user answers before proceeding
-Step 4 — Decompose into phases (each independently verifiable)
-Step 5 — Write to: thoughts/shared/plans/YYYY-MM-DD-description-slug.md
-Step 6 — Report: artifact path, phase count, key decision points
-Step 7 — Remind user to review; mention /rpi-iterate for adjustments
+Step 4 — DESIGN DISCUSSION (before writing the full plan):
+          Write a ~10-15 line design summary covering:
+          - Proposed phase structure (how many phases, what each does)
+          - Key technical decisions
+          - YAGNI check: does every phase solve a problem that EXISTS NOW?
+            Remove any "we might need it later" phases
+          - TDD structure: which phases write failing tests before production code?
+          Present to user and WAIT for approval — do NOT write the full plan yet
+Step 5 — Decompose into phases (each independently verifiable)
+          - EF Core migrations get their own dedicated phase
+          - Each phase starts with failing tests (RED) before implementation (GREEN)
+Step 6 — Write to: thoughts/shared/plans/YYYY-MM-DD-description-slug.md
+          Status: ready-for-review (user sets approved — required before /rpi-implement)
+Step 7 — Report: artifact path, phase count, key decision points
+Step 8 — Remind user to review and set status to `approved` before running /rpi-implement
 ```
 
 ### ITERATE Phase
@@ -120,11 +131,17 @@ Step 7 — Remind user to review; mention /rpi-iterate for adjustments
 ```
 Step 1 — Parse plan path + feedback from arguments
 Step 2 — Read the plan fully; note completed (checked) phases
-Step 3 — Assess impact: which phases need updating?
-Step 4 — If feedback requires new code areas: spawn targeted subagents only
-Step 5 — Make surgical updates; preserve completed checkboxes
-Step 6 — Add ## Change log section at the bottom
-Step 7 — Report what changed; remind user to review before re-running /rpi-implement
+Step 3 — Classify feedback (choose exactly one):
+          A) DETAIL ADJUSTMENT — surgical edit to existing phases
+          B) APPROACH CHANGE — rebuild affected phases
+          C) NEW REQUIREMENT — research delta; insert new phases with letter suffixes (Phase 2a, 2b)
+          If >50% of phases affected → archive as plan-v1.md; direct user to /rpi-plan
+Step 4 — Assess downstream impact for every changed phase
+Step 5 — If feedback requires new code areas: spawn targeted subagents only
+Step 6 — Make surgical updates; preserve completed checkboxes
+          Insert new phases with letter suffixes — NEVER renumber existing phases
+Step 7 — Add ## Change log section at the bottom
+Step 8 — Report what changed; remind user to review before re-running /rpi-implement
 ```
 
 ## Self-Check Loops
@@ -139,16 +156,23 @@ Step 7 — Report what changed; remind user to review before re-running /rpi-imp
 ### Before writing plan artifact
 - [ ] Research artifact was read first
 - [ ] Clarifying questions were asked and answered
+- [ ] Design discussion presented to user and approved
+- [ ] YAGNI check passed: every phase solves a problem that exists NOW
+- [ ] TDD structure: each phase begins with a failing test before production code
 - [ ] Every phase has automated verification steps
 - [ ] Every changed file has an exact path
 - [ ] "What we're NOT doing" section present
 - [ ] Rollback plan present
 - [ ] No source code was written -- only change descriptions
+- [ ] Status field set to `ready-for-review`
 
 ### Before updating plan (iterate)
 - [ ] Existing plan read in full
+- [ ] Feedback classified (detail adjustment / approach change / new requirement)
+- [ ] >50% phases affected? → escalate to plan-v1 archive instead of patching
 - [ ] Completed checkboxes identified and preserved
 - [ ] Only changed areas touched
+- [ ] New phases inserted with letter suffixes (not renumbered)
 - [ ] Change log added at bottom
 - [ ] Downstream phase impact assessed
 
@@ -179,6 +203,16 @@ Recovery:
 1. Write the artifact immediately with what you have
 2. Mark incomplete sections: ## INCOMPLETE -- context limit reached
 3. Tell user to start a new session and continue from the artifact
+```
+
+### Plan feedback affects >50% of phases
+```
+Symptom: Iterate impact assessment shows majority of phases need a different approach
+Recovery:
+1. Do NOT patch extensively — rename the current plan to plan-v1.md
+2. Tell user: "Feedback requires a plan rebuild. Archived as [v1 path]."
+3. Direct user to run /rpi-plan with existing research + v1 plan as context
+4. Do NOT create the new plan in this session
 ```
 
 ## AI Discipline Rules
@@ -212,6 +246,10 @@ subagents_spawned: 0
 subagents_complete: 0
 clarifying_questions_asked: false
 clarifying_questions_answered: false
+design_discussion_presented: false
+design_discussion_approved: false
+yagni_check_passed: false
+tdd_phases_identified: false
 open_questions: 0
 blockers: none
 </rpi-planner-state>
@@ -246,6 +284,10 @@ subagents_spawned: [0-3]
 subagents_complete: [0-3]
 clarifying_questions_asked: true | false
 clarifying_questions_answered: true | false
+design_discussion_presented: true | false
+design_discussion_approved: true | false
+yagni_check_passed: true | false
+tdd_phases_identified: true | false
 open_questions: [count of unresolved questions]
 blockers: none | [description]
 </rpi-planner-state>
@@ -255,6 +297,6 @@ blockers: none | [description]
 
 **RESEARCH complete:** Artifact written, all three subagent outputs incorporated, open questions listed, user reminded to review.
 
-**PLAN complete:** Clarifying questions asked and answered, plan artifact written with per-phase verification steps and rollback plan, user reminded to review.
+**PLAN complete:** Clarifying questions asked and answered; design discussion presented and approved; YAGNI check passed; TDD phase structure identified; plan artifact written with per-phase verification steps and rollback plan; status set to `ready-for-review`; user reminded to set status to `approved` before running /rpi-implement.
 
-**ITERATE complete:** Targeted updates applied, completed checkboxes preserved, change log added, user reminded to review.
+**ITERATE complete:** Feedback classified; if >50% phases affected, plan archived as v1 and user directed to /rpi-plan; otherwise targeted updates applied, completed checkboxes preserved, new phases inserted with letter suffixes, change log added, user reminded to review.

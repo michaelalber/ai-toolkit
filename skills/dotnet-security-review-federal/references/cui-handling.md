@@ -8,7 +8,7 @@ Guidance for handling Controlled Unclassified Information (CUI) in .NET applicat
 
 **Controlled Unclassified Information (CUI)** is information that requires safeguarding or dissemination controls pursuant to and consistent with applicable law, regulations, and government-wide policies but is not classified.
 
-### Common CUI Categories in DOE/LANL
+### Common CUI Categories in DOE/NNSA
 
 | Category | Marking | Examples |
 |----------|---------|----------|

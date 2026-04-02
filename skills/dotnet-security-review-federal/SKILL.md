@@ -1,16 +1,16 @@
 ---
 name: dotnet-security-review-federal
 description: >
-  Conducts security reviews of .NET applications for LANL/DOE/DOD environments.
+  Conducts security reviews of .NET applications for federal/DOE/DOD environments.
   Extends the base dotnet-security-review with NIST SP 800-53 control mapping,
   DOE Order 205.1B compliance, FIPS 140-2/3 cryptographic requirements, and CUI
   handling. Generates federal-compliant reports with impact levels and POA&M-ready
   findings. Trigger phrases: "federal security review", "NIST compliance",
   "DOE security", "FISMA", "CUI", "FIPS audit", "federal compliance",
-  "LANL security", "ATO review", "POA&M generation".
+  "federal agency security", "ATO review", "POA&M generation".
 ---
 
-# .NET Security Review -- Federal/LANL Edition
+# .NET Security Review -- Federal Edition
 
 > "Security is not a product, but a process. It is not a technology problem --
 > it is a people and management problem."
@@ -252,7 +252,7 @@ Apply DOE-specific requirements that exceed standard NIST baselines.
 - Verify DOE-specific authentication parameters (15+ char passwords, 3 attempt lockout)
 - Verify DOE session timeout requirements (15 min Moderate, 10 min High)
 - Assess DOE audit requirements (3-year retention, comprehensive event coverage)
-- Check network zone awareness (Yellow/Green/Turquoise/Red for LANL)
+- Check network zone awareness (e.g., Yellow/Green/Turquoise/Red for DOE sites)
 - Verify privileged access management with separation of duties
 - Check for DOE incident response integration (CAT 1-4 categorization)
 - Assess secure SDLC compliance (threat modeling, SAST/DAST, hardened configs)
@@ -261,7 +261,7 @@ Apply DOE-specific requirements that exceed standard NIST baselines.
 **Search patterns:**
 ```bash
 # Check for DOE-specific patterns
-grep -rn "NNSA\|DOE\|LANL\|Laboratory" --include="*.cs" --include="*.config" --include="*.md"
+grep -rn "NNSA\|DOE\|Laboratory" --include="*.cs" --include="*.config" --include="*.md"
 
 # Privileged access management
 grep -rn "ServiceAccount\|SystemAccount\|Impersonate" --include="*.cs"
@@ -279,9 +279,9 @@ grep -rn "ExpireTimeSpan\|SessionTimeout" --include="*.cs"
 grep -rn "SelfApproval\|SeparationOfDuties\|Approve.*Own" --include="*.cs"
 ```
 
-**Reference:** `references/doe-cybersecurity.md` for DOE Order 205.1B, LANL network zones, privileged access, and incident response requirements.
+**Reference:** `references/doe-cybersecurity.md` for DOE Order 205.1B, network zones, privileged access, and incident response requirements.
 
-**Exit criteria:** All DOE-specific parameters verified against DOE Order 205.1B thresholds. LANL-specific controls assessed if applicable.
+**Exit criteria:** All DOE-specific parameters verified against DOE Order 205.1B thresholds. Agency-specific controls assessed if applicable.
 
 ### Phase 6: POA&M-GENERATE
 
@@ -596,8 +596,8 @@ entire review.
 | 5 | Missing DOE-specific parameters | Reporting password requirements as "adequate" when they meet NIST (8-char) but not DOE (15-char) baselines. | Always verify against DOE Order 205.1B thresholds from `references/doe-cybersecurity.md`. |
 | 6 | Generating findings without POA&M entries | Findings that do not appear in the POA&M are invisible to the authorization process and will not be tracked or resourced. | Every finding gets a POA&M entry with ID, control, priority, and target date. |
 | 7 | Writing purely technical reports | "XSS in SearchController.cs line 47" is meaningless to an authorizing official. Federal reports must communicate risk in mission terms. | Use templates from `references/federal-executive-templates.md`. |
-| 8 | Applying federal overlays to non-federal systems | Not every .NET application needs FIPS cryptography and CUI handling. Applying federal overlays where they do not apply wastes effort and creates confusion. | Confirm the system is federal (DOE/DOD/LANL) before applying this skill. Use the base `dotnet-security-review` for non-federal systems. |
-| 9 | Assuming Moderate impact without evidence | Defaulting to Moderate because "most LANL systems are Moderate" without actually assessing data types and mission impact. | Run the impact level determination in Phase 2 with evidence from grep patterns. |
+| 8 | Applying federal overlays to non-federal systems | Not every .NET application needs FIPS cryptography and CUI handling. Applying federal overlays where they do not apply wastes effort and creates confusion. | Confirm the system is federal (DOE/DOD or equivalent) before applying this skill. Use the base `dotnet-security-review` for non-federal systems. |
+| 9 | Assuming Moderate impact without evidence | Defaulting to Moderate without actually assessing data types and mission impact. | Run the impact level determination in Phase 2 with evidence from grep patterns. |
 | 10 | Reporting Argon2/bcrypt as compliant password hashing | Argon2 and bcrypt are OWASP-recommended but are NOT FIPS-validated. Federal systems must use PBKDF2 with HMAC-SHA256. | Flag Argon2/bcrypt as FIPS non-compliant. Recommend PBKDF2-SHA256 with 600K+ iterations. |
 
 ---
