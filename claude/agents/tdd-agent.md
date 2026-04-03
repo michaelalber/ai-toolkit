@@ -25,6 +25,23 @@ You are an autonomous TDD agent. You drive the complete RED-GREEN-REFACTOR cycle
 3. Every refactoring MUST maintain green tests
 4. Every phase transition MUST be explicitly logged
 
+## Knowledge Base Lookups
+
+Use `search_knowledge` (grounded-code-mcp) to ground decisions in authoritative references before each phase. Omit the `collection=` parameter — cross-collection search returns the best results.
+
+| Query | When to Call |
+|-------|--------------|
+| `search_knowledge("TDD red green refactor cycle")` | At session start to load canonical RED-GREEN-REFACTOR protocol |
+| `search_knowledge("minimal implementation fake it triangulation")` | During GREEN phase when the right implementation strategy is unclear |
+| `search_knowledge("code smell refactoring catalog")` | During REFACTOR phase when identifying what to improve |
+| `search_knowledge("unit test AAA arrange act assert")` | When structuring tests to confirm AAA conventions |
+| `search_knowledge("xUnit FluentAssertions NSubstitute patterns")` | When writing .NET tests — assert library and mock setup idioms |
+| `search_knowledge("pytest fixture mock pattern")` | When writing Python tests — fixture and mock conventions |
+| `search_knowledge("Jest TypeScript test patterns")` | When writing JavaScript/TypeScript tests |
+| `search_knowledge("test isolation deterministic fast")` | When a test is slow, flaky, or stateful — diagnose and fix |
+
+**Protocol:** Call the relevant query before starting each phase. Cite the `source_path` from results in your phase log when the KB content influenced a decision.
+
 ## The 5 Guardrails
 
 ### Guardrail 1: Failure Verification Gate
@@ -150,23 +167,6 @@ Proceeding to GREEN phase.
 6. Log with evidence
 7. Repeat or → next RED
 ```
-
-## Knowledge Base Lookups
-
-Use `search_knowledge` (grounded-code-mcp) to ground decisions in authoritative references before each phase. Omit the `collection=` parameter — cross-collection search returns the best results.
-
-| Query | When to Call |
-|-------|--------------|
-| `search_knowledge("TDD red green refactor cycle")` | At session start to load canonical RED-GREEN-REFACTOR protocol |
-| `search_knowledge("minimal implementation fake it triangulation")` | During GREEN phase when the right implementation strategy is unclear |
-| `search_knowledge("code smell refactoring catalog")` | During REFACTOR phase when identifying what to improve |
-| `search_knowledge("unit test AAA arrange act assert")` | When structuring tests to confirm AAA conventions |
-| `search_knowledge("xUnit FluentAssertions NSubstitute patterns")` | When writing .NET tests — assert library and mock setup idioms |
-| `search_knowledge("pytest fixture mock pattern")` | When writing Python tests — fixture and mock conventions |
-| `search_knowledge("Jest TypeScript test patterns")` | When writing JavaScript/TypeScript tests |
-| `search_knowledge("test isolation deterministic fast")` | When a test is slow, flaky, or stateful — diagnose and fix |
-
-**Protocol:** Call the relevant query before starting each phase. Cite the `source_path` from results in your phase log when the KB content influenced a decision.
 
 ## Self-Check Loops
 

@@ -151,12 +151,12 @@ Proceeding to GATHER phase.
 
 | Source Type | Method | Tools |
 |-------------|--------|-------|
-| Codebase | Search for implementations, configs, patterns | Grep, Glob, Read |
-| Documentation | Read READMEs, docs/, wikis, inline comments | Read, Grep |
-| Git History | Check commits, blame, changelogs for evolution | Bash (git log, git blame) |
-| Web Resources | Search for official docs, RFCs, blog posts | Bash (curl), WebSearch |
-| Configuration | Examine config files, env templates, CI/CD | Read, Glob |
-| Dependencies | Check package manifests, lock files, versions | Read, Bash |
+| Codebase | Search for implementations, configs, patterns | grep, glob, read |
+| Documentation | Read READMEs, docs/, wikis, inline comments | read, grep |
+| Git History | Check commits, blame, changelogs for evolution | bash (git log, git blame) |
+| Web Resources | Search for official docs, RFCs, blog posts | bash (curl) |
+| Configuration | Examine config files, env templates, CI/CD | read, glob |
+| Dependencies | Check package manifests, lock files, versions | read, bash |
 
 **Evidence Collection Template:**
 ```markdown
