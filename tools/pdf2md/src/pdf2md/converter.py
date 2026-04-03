@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 import sys
 from pathlib import Path
 from typing import Literal
@@ -35,75 +36,22 @@ def _parse_page_range(page_range: str, total_pages: int) -> list[int]:
     return sorted(pages)
 
 
-def _convert_single(config: ConversionConfig) -> None:
-    from pdf2md.extractor import extract_pages
-    from pdf2md.heading_detector import compute_document_stats, annotate_headings
-    from pdf2md.code_detector import annotate_code_blocks
-    from pdf2md.table_detector import extract_tables
-    from pdf2md.image_extractor import extract_images
-    from pdf2md.cleaner import clean_pages
-    from pdf2md.markdown_builder import build_markdown
+def _build_front_matter(source_path: Path, total_pages: int) -> str:
+    from datetime import datetime, timezone
 
-    if config.verbose:
-        console.print(f"[bold cyan]Opening[/] {config.input_path}")
-
-    try:
-        import fitz  # type: ignore[import-untyped]
-        doc = fitz.open(str(config.input_path))
-    except Exception as exc:
-        console.print(f"[bold red]Error[/] opening {config.input_path}: {exc}", style="red")
-        sys.exit(1)
-
-    if doc.needs_pass:
-        console.print(f"[yellow]Skipping[/] {config.input_path}: password-protected PDF")
-        doc.close()
-        return
-
-    total_pages = doc.page_count
-    page_indices = (
-        _parse_page_range(config.page_range, total_pages)
-        if config.page_range
-        else list(range(total_pages))
+    timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    return (
+        "---\n"
+        f"source: {source_path.name}\n"
+        f"pages: {total_pages}\n"
+        f"extracted_at: {timestamp}\n"
+        f"tool: pdf2md/0.1.0\n"
+        "---\n\n"
     )
-
-    pages = extract_pages(doc, page_indices, verbose=config.verbose)
-    doc.close()
-
-    stats = compute_document_stats(pages)
-    annotate_headings(pages, stats)
-
-    if not config.no_code_blocks:
-        annotate_code_blocks(pages)
-
-    if not config.no_tables:
-        extract_tables(config.input_path, pages, page_indices, verbose=config.verbose)
-
-    if not config.no_images:
-        image_dir = config.output_path.parent / f"{config.output_path.stem}_images"
-        extract_images(config.input_path, pages, image_dir, config.image_format, verbose=config.verbose)
-
-    pages = clean_pages(pages)
-
-    markdown = build_markdown(
-        pages=pages,
-        source_path=config.input_path,
-        total_pages=total_pages,
-        include_metadata=config.metadata,
-    )
-
-    if config.chunk_by_heading:
-        _write_chunks(markdown, config.output_path)
-    else:
-        config.output_path.parent.mkdir(parents=True, exist_ok=True)
-        config.output_path.write_text(markdown, encoding="utf-8")
-        if config.verbose:
-            console.print(f"[bold green]Written[/] {config.output_path}")
 
 
 def _write_chunks(markdown: str, base_output: Path) -> None:
     """Split markdown at H1 boundaries and write one file per chunk."""
-    import re
-
     base_output.parent.mkdir(parents=True, exist_ok=True)
     chunks: list[tuple[str, str]] = []
     current_title = "preamble"
@@ -113,7 +61,7 @@ def _write_chunks(markdown: str, base_output: Path) -> None:
         if line.startswith("# ") and current_lines:
             chunks.append((current_title, "".join(current_lines)))
             current_title = re.sub(r"[^\w\s-]", "", line[2:].strip()).lower()
-            current_title = re.sub(r"[\s]+", "-", current_title)
+            current_title = re.sub(r"\s+", "-", current_title)
             current_lines = [line]
         else:
             current_lines.append(line)
@@ -124,6 +72,62 @@ def _write_chunks(markdown: str, base_output: Path) -> None:
     for slug, content in chunks:
         out = base_output.parent / f"{base_output.stem}_{slug}.md"
         out.write_text(content, encoding="utf-8")
+
+
+def _get_total_pages(pdf_path: Path) -> int | None:
+    """Return the page count of a PDF, or None on error."""
+    try:
+        import fitz  # type: ignore[import-untyped]
+
+        doc = fitz.open(str(pdf_path))
+        count = doc.page_count
+        doc.close()
+        return count
+    except Exception:
+        return None
+
+
+def _is_password_protected(pdf_path: Path) -> bool:
+    try:
+        import fitz  # type: ignore[import-untyped]
+
+        doc = fitz.open(str(pdf_path))
+        protected = bool(doc.needs_pass)
+        doc.close()
+        return protected
+    except Exception:
+        return False
+
+
+def _convert_single(config: ConversionConfig) -> None:
+    from pdf2md.engines import select_engine
+
+    if _is_password_protected(config.input_path):
+        console.print(
+            f"[yellow]Skipping[/] {config.input_path}: password-protected PDF"
+        )
+        return
+
+    total_pages = _get_total_pages(config.input_path)
+    if total_pages is None:
+        console.print(
+            f"[bold red]Error[/] reading {config.input_path}", style="red"
+        )
+        sys.exit(1)
+
+    engine = select_engine(config.engine, config.input_path)
+    markdown = engine.convert(config)
+
+    if config.metadata:
+        markdown = _build_front_matter(config.input_path, total_pages) + markdown
+
+    if config.chunk_by_heading:
+        _write_chunks(markdown, config.output_path)
+    else:
+        config.output_path.parent.mkdir(parents=True, exist_ok=True)
+        config.output_path.write_text(markdown, encoding="utf-8")
+        if config.verbose:
+            console.print(f"[bold green]Written[/] {config.output_path}")
 
 
 def run(
@@ -137,6 +141,7 @@ def run(
     chunk_by_heading: bool,
     metadata: bool,
     verbose: bool,
+    engine: Literal["auto", "fast", "docling"],
 ) -> None:
     if input_path.is_dir():
         pdf_files = sorted(input_path.glob("*.pdf"))
@@ -159,6 +164,7 @@ def run(
                 chunk_by_heading=chunk_by_heading,
                 metadata=metadata,
                 verbose=verbose,
+                engine=engine,
             )
             _convert_single(cfg)
     else:
@@ -174,5 +180,6 @@ def run(
             chunk_by_heading=chunk_by_heading,
             metadata=metadata,
             verbose=verbose,
+            engine=engine,
         )
         _convert_single(cfg)

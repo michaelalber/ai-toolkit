@@ -73,6 +73,19 @@ def convert(
         bool,
         typer.Option("--verbose/--quiet", help="Show per-page progress."),
     ] = False,
+    engine: Annotated[
+        str,
+        typer.Option(
+            "--engine",
+            help=(
+                "Extraction engine. "
+                "'auto' samples the PDF to choose automatically; "
+                "'fast' uses PyMuPDF+pdfplumber (lightweight, digital PDFs); "
+                "'docling' uses Docling ML pipeline (scanned/complex PDFs, requires pip install pdf2md[docling])."
+            ),
+            show_default=True,
+        ),
+    ] = "auto",
     version: Annotated[
         Optional[bool],
         typer.Option(
@@ -88,6 +101,10 @@ def convert(
         typer.echo(f"Error: --image-format must be 'png' or 'jpg', got '{image_format}'.", err=True)
         raise typer.Exit(code=1)
 
+    if engine not in ("auto", "fast", "docling"):
+        typer.echo(f"Error: --engine must be 'auto', 'fast', or 'docling', got '{engine}'.", err=True)
+        raise typer.Exit(code=1)
+
     from pdf2md.converter import run
 
     run(
@@ -101,4 +118,5 @@ def convert(
         chunk_by_heading=chunk_by_heading,
         metadata=metadata,
         verbose=verbose,
+        engine=engine,  # type: ignore[arg-type]
     )

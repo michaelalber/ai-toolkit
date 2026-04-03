@@ -61,3 +61,4 @@ class ConversionConfig:
     chunk_by_heading: bool = False
     metadata: bool = False
     verbose: bool = False
+    engine: Literal["auto", "fast", "docling"] = "auto"
