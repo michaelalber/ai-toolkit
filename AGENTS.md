@@ -4,7 +4,7 @@ Project instructions for AI coding agents (Claude Code, OpenCode, GitHub Copilot
 
 ## Project Overview
 
-AI Toolkit -- a collection of 51 skills and 18 autonomous agents for AI-assisted software development. Supports Claude Code and OpenCode.
+AI Toolkit -- a collection of 52 skills and 18 autonomous agents for AI-assisted software development. Supports Claude Code and OpenCode.
 
 ## Repository Structure
 

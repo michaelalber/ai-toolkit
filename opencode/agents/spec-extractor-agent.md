@@ -1,6 +1,6 @@
 ---
 description: Autonomous codebase analysis agent that extracts commands, conventions, and boundaries from an existing codebase and produces a draft AI agent spec pre-filled with discovered information. Run this before an agent-spec-writer session when you have existing code. Triggers on "extract spec from codebase", "analyze codebase for spec", "generate agent spec from code", "spec extractor", "draft spec from existing code".
-mode: subagent
+mode: primary
 tools:
   read: true
   edit: false
