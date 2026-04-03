@@ -186,7 +186,7 @@ STRONG: "An agent that autonomously runs linting and the test suite after every
 Build the seven PRD sections:
 
 1. **Commands**: Exact executable commands with flags. Extract from existing code if available; never guess.
-2. **Testing**: Framework location, coverage expectations, test procedures.
+2. **Testing**: Framework location, coverage expectations, test procedures. Also ask: "Does this project enforce test-first development?" If the answer is yes (or if CLAUDE.md contains terms like "tests first", "TDD", "Red-Green-Refactor", "failing test"), the GUARDRAILS Never tier MUST include: `🚫 Never generate implementation code without a failing test first`. For GitHub Spec Kit `tasks.md`, encode this as ordered task pairs: `[T.test] Write failing test → [T.impl] Implement to pass`.
 3. **Project Structure**: Directory hierarchy the agent will navigate.
 4. **Code Style**: Actual code examples showing preferred patterns.
 5. **Git Workflow**: Branch naming, commit format, PR requirements.
@@ -283,6 +283,11 @@ Use the KB-returned content as the authoritative template. Key differences from 
 - `plan.md` includes `research.md`, `data-model.md`, `contracts/`, and `quickstart.md` as companion outputs of `/speckit.plan`
 - `tasks.md` uses `[ID] [P?] [Story] Description` format organized by user story — not generic phase-based task lists
 - Files live in `specs/[###-feature-name]/` — not `.specify/`
+- **TDD task ordering**: if the project enforces test-first development, each implementation task MUST be preceded by its test task within the same user story. Never list `[impl]` before `[test]` for the same deliverable:
+  ```
+  - [T1.1] [P] Write failing test for <feature>   ← test task first
+  - [T1.2] Implement <feature> to pass T1.1        ← impl task follows
+  ```
 
 See [Spec Formats](references/spec-formats.md) for the complete KB-grounded templates in all five target formats.
 
@@ -298,6 +303,10 @@ See [Spec Formats](references/spec-formats.md) for the complete KB-grounded temp
 - [ ] QoS & Constraints section addressed (even if empty by explicit decision)
 - [ ] Three-tier boundary table populated in all three tiers
 - [ ] "Never" tier has at least two explicit hard stops
+- [ ] TDD gate: if project enforces test-first, Never tier contains
+     "🚫 Never generate implementation code without a failing test first"
+- [ ] For github-spec-kit + TDD projects: tasks.md orders test tasks before
+     implementation tasks ([T.test] → [T.impl]) per user story
 - [ ] At least one measurable success criterion per goal
 - [ ] Self-check loop defined
 - [ ] Spec fits the target format's required sections
