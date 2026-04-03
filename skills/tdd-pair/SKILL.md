@@ -442,6 +442,73 @@ The AI must:
 - Recognize when to back off
 - Celebrate progress
 
+## Error Recovery
+
+### Tests Won't Run
+
+```
+Problem: Test suite errors on setup or syntax
+Actions:
+1. Switch roles temporarily — AI diagnoses infrastructure, human observes
+2. Fix environment before resuming TDD work
+3. Do NOT write new tests until suite runs cleanly
+4. Resume at the phase that was interrupted
+```
+
+### Tests Fail During Pair Session
+
+```
+Problem: Previously passing tests now fail unexpectedly
+Actions:
+1. Stop — identify which change caused the regression
+2. AI navigator: read the failure message, trace to the cause
+3. If in REFACTOR: revert immediately, do not try to fix inline
+4. If in GREEN: the implementation broke something — narrow scope
+5. Restore green before adding any new behavior
+```
+
+### State Confusion (Who Writes What)
+
+```
+Problem: Unclear whose turn it is or what phase we're in
+Actions:
+1. Run the full test suite — output tells you the phase
+   - All pass → REFACTOR or new RED
+   - One fails → GREEN
+2. Check the most recent <tdd-pair-state> block
+3. Re-announce the phase and whose turn it is before continuing
+```
+
+### Partner Disagreement on Approach
+
+```
+Problem: Human and AI disagree on implementation or test design
+Actions:
+1. AI defers to human on requirements and business logic — always
+2. AI may advocate on TDD discipline (test-first, minimal impl)
+3. If human wants to skip a phase, AI explains the tradeoff once, then follows the human's lead
+4. Never block progress over TDD purity in pair mode
+```
+
+### Lost Context Mid-Session
+
+```
+Problem: Session interrupted, state block missing or stale
+Actions:
+1. Ask the human to describe what was last completed
+2. Run the test suite to establish current phase
+3. Read the most recently touched test and implementation files
+4. Reconstruct <tdd-pair-state> from evidence before continuing
+```
+
+## Integration with Other Skills
+
+- **`tdd-cycle`** — Provides the phase state machine and transition rules used in every pairing mode
+- **`tdd-implementer`** — Invoked when it is the AI's turn to write implementation code in ping-pong mode
+- **`tdd-refactor`** — Invoked during the shared REFACTOR step at the end of each ping-pong round
+- **`tdd-verify`** — Run after the session to audit TDD compliance and generate a scorecard
+- **`tdd-agent`** — Alternative to this skill; use when the AI should drive all phases autonomously rather than collaborating
+
 ## Stack-Specific Guidance
 
 See reference files for pairing-specific patterns:

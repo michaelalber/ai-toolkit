@@ -328,6 +328,14 @@ See reference files for language-specific patterns:
 - [Refactoring Catalog](references/refactoring-catalog.md) - Comprehensive refactoring list
 - [Code Smells](references/code-smells.md) - Detailed smell descriptions
 
+## Integration with Other Skills
+
+- **`tdd-cycle`** — Invokes this skill after GREEN is confirmed; transitions back to RED when REFACTOR is complete
+- **`tdd-agent`** — Calls this skill during the REFACTOR phase of its autonomous cycle
+- **`tdd-pair`** — Both partners use this skill together during the shared REFACTOR step in ping-pong rounds
+- **`tdd-implementer`** — Precedes this skill; the GREEN phase produces working but potentially unclean code that this skill improves
+- **`tdd-verify`** — Can audit whether refactorings preserved behavioral tests or inadvertently introduced implementation coupling
+
 ## Common Refactoring Errors
 
 | Error | Why It's Wrong | Correct Approach |
