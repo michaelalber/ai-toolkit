@@ -235,6 +235,31 @@ In face-to-face conversation, tone of voice, facial expressions, and body langua
 - "To clarify my earlier comment:" when adding nuance
 - Read your comment from the author's perspective before posting. If you were tired and stressed, how would this land?
 
+### Idiomatic Language and Technical Jargon
+
+Engineering teams are international. Many review participants are reading in their second or third language. Idioms, metaphors, and culturally specific shorthand that feel effortless to the writer can be opaque or misleading to international colleagues.
+
+**Common engineering idioms that confuse international readers:**
+
+| Idiom | Why it is unclear | Plain alternative |
+|-------|------------------|-------------------|
+| "This smells" / "code smell" | Requires knowing the Martin Fowler / XP definition | "This structure will cause problems when [specific scenario]" |
+| "Bikeshedding" | Named after Parkinson's 1957 essay — not widely known outside English-language engineering culture | "This is a minor stylistic point — the more important issues are [X and Y]" |
+| "Yak shaving" | Very idiomatic — MIT Media Lab origin, not universally known | "This introduces unrelated changes — consider splitting into a separate PR" |
+| "Footgun" | Requires knowing the compound idiom "shoot yourself in the foot" | "This API is easy to misuse in a way that causes [silent data loss / crashes / etc.]" |
+| "Magic" / "magical" | Vague — could mean opaque, implicit, or surprising | "The logic is implicit here — it is not clear how [X] produces [Y] without reading the internals" |
+| "Golden hammer" | Requires knowing the anti-pattern name | "This pattern works well for [A], but this problem looks more like [B] — a different approach might fit better" |
+| "Rubber duck" | "Have you rubber-ducked this?" — requires knowing the debugging metaphor | "Walking through the logic step-by-step might surface the issue" |
+| "Ball of mud" | Architectural anti-pattern name | "This module has grown without a clear structure — related concerns are scattered across it" |
+
+**The translation test:** Before posting a comment with an idiom, ask: "If a colleague reading English as their second language parsed every word of this literally, would they understand what I mean and what to do about it?" If not, rewrite.
+
+**What to keep:** Widely adopted technical terms used precisely — "null pointer", "race condition", "deadlock", "O(n) complexity", "idempotent" — are part of engineering vocabulary and do not need translation. The concern is with *metaphorical* language, not *technical* language.
+
+**What the coach flags:** When the user writes a comment containing an idiom, the coach identifies it, explains why it might not land, and asks the user to rewrite it in plain language. The rewrite demonstrates that the underlying concern was specific and actionable — or reveals that it was not.
+
+---
+
 ### Power Dynamics in Review
 
 The same words carry different weight depending on who says them:

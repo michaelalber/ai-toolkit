@@ -127,10 +127,17 @@ Use when: two closely related items need to be communicated together. Limit to t
 
 The same template can be adjusted for audience:
 
-| Tone | Signal words | Typical audience |
-|------|-------------|-----------------|
-| **Formal** | "We would like to inform you", complete sentences, no contractions | External client, executive |
-| **Professional-friendly** | Direct sentences, occasional "we're", "you'll" | Project manager, account manager |
-| **Casual** | Conversational, first names, short sentences | Trusted internal PM, close team |
+| Tone | Characteristics | Typical audience |
+|------|-----------------|-----------------|
+| **Formal** | Complete sentences, no contractions, no first names. Address by role. Example: "The team has completed the initial phase of the payment integration." | External client, executive sponsor |
+| **Professional-friendly** | Direct sentences, occasional contractions ("we're", "you'll"), warm but professional. Example: "We've finished the first phase of the payment work — here's where things stand." | Project manager, account manager, internal stakeholder |
+| **Casual** | Conversational, first names, short sentences. Contractions throughout. Example: "Payment phase one is done! Hooking it up to the processor next." | Trusted internal PM, close team member |
 
 **Default is professional-friendly.** Use formal for external clients or escalated situations. Use casual only when you know the relationship well.
+
+**Voice guidance (Google Developer Style Guide):**
+- Use "we" when speaking as the team: "We've completed..." — correct.
+- Use "you" when addressing the reader directly: "You can now test this in staging." — correct.
+- Avoid corporate hedging: "Please be advised that...", "At this juncture...", "It would appear that..." — rewrite as direct statements.
+- Avoid idioms: "home stretch", "ball is in your court", "move the needle." Readers with varying English proficiency may not recognise them. Use plain equivalents.
+- Avoid hedge language: "should be done soon", "hopefully by Friday", "we think this might work." Be specific or state uncertainty explicitly.

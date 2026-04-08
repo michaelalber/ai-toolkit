@@ -56,6 +56,7 @@ These principles govern every interaction in a feedback writing coaching session
 | 8 | **Author's Context Matters** | A junior engineer's first PR warrants more explanation and gentler framing than a staff engineer's routine commit. The same issue requires different communication depending on who you are talking to. | MEDIUM -- vary scenario context |
 | 9 | **Tone Matches Severity** | Urgent tone for urgent problems. Casual tone for casual observations. A security vulnerability discovered in a production-bound PR warrants "Blocking: this must be fixed before merge because..." A naming inconsistency warrants "Nit: consider renaming this for consistency with..." | HARD -- score tone-severity alignment |
 | 10 | **Questions Over Statements** | "Why did you choose X?" is more effective than "X is the wrong choice." Questions open dialogue. Statements close it. Even when you know the answer, a well-placed question helps the author discover the issue themselves, which produces deeper understanding. | MEDIUM -- encourage question framing for non-blocking items |
+| 11 | **Global Readability** | Engineering teams are international. Idioms, metaphors, and culturally specific shorthand that feel natural to the writer can be opaque to a colleague reading in their second or third language. "This smells", "yak shaving", "bikeshedding", and "footgun" carry meaning only to readers who already know the reference. Say what you mean in plain language. | MEDIUM -- flag idiomatic review language and provide plain-language rewrites |
 
 
 ## Workflow
@@ -500,6 +501,27 @@ These are feedback communication anti-patterns the coach must recognize and addr
 **Why it is harmful**: Nits are safe. They are objective, low-stakes, and unlikely to cause conflict. Finding a missing semicolon feels productive. Meanwhile, the SQL injection on line 37 ships to production. This pattern often emerges from reviewers who are uncomfortable giving critical feedback on logic or design because those conversations are harder.
 
 **Coach response**: Show the severity distribution. "You wrote 6 comments, all nits. The code has 2 blocking issues (a race condition and an unvalidated input) and 1 suggestion-level concern (error handling). Your review would result in better formatting around a function that corrupts data under concurrent access. Which matters more?"
+
+### Jargon-Loaded Feedback
+
+**Behavior**: The reviewer uses engineering idioms, metaphors, or culturally specific shorthand without explanation. "This smells." "Classic bikeshedding." "That's a footgun." "You're yak-shaving here." "This is very magical."
+
+**Why it is harmful**: These phrases carry meaning only to readers who already know the reference. A colleague reading in their second language — or a developer who simply has not encountered the term — cannot act on feedback they cannot parse. The author's response is often to nod and move on rather than admit confusion, which means the feedback produces no change. At worst, the author misinterprets the concern entirely.
+
+**Coach response**: Identify the idiom and ask the user to translate it. "'This smells' means something to you — what specifically do you smell, and why does it matter? Rewrite the comment so someone unfamiliar with code smell terminology would still understand the concern." Common translations:
+
+| Idiomatic | Plain equivalent |
+|-----------|-----------------|
+| "This smells" / "code smell" | "This structure will create problems when X" — describe the specific problem |
+| "Bikeshedding" | "This is a minor stylistic point — the substantive issues are elsewhere" |
+| "Yak shaving" | "This change introduces unrelated complexity that should be a separate PR" |
+| "Footgun" | "This API is easy to use incorrectly in a way that causes [specific harm]" |
+| "This feels magical" | "It is not clear how this produces the result — the logic is implicit and hard to follow" |
+| "Golden hammer" | "We are applying this pattern to a problem it is not well-suited for" |
+
+**Key principle**: If the idiom cannot be translated into a specific technical concern, it is not a review comment — it is a feeling. Feelings are not actionable.
+
+---
 
 ### Approval Without Reading
 

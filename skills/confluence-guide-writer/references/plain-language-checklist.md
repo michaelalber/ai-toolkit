@@ -12,6 +12,8 @@ Fix all failures before marking the DRAFT phase complete.
 - [ ] All system terms translated to audience vocabulary (see vocabulary table from ANALYZE phase)
 - [ ] UI element names match what appears on screen (button labels, menu names, field names)
 - [ ] Consistent terminology throughout — one term per concept, used the same way every time
+- [ ] No idioms or culturally specific phrases ("home stretch", "ball is in your court", "moving the needle") — use plain equivalents
+- [ ] All link text is descriptive — no "click here", "read more", "here", or "this page"
 
 ## Sentences
 
@@ -23,6 +25,10 @@ Fix all failures before marking the DRAFT phase complete.
 - [ ] No buried verbs: "make a decision" → "decide", "provide assistance" → "help"
 - [ ] No "please" in instructions — adds length without adding meaning
 - [ ] Conditions appear before instructions: "If X, do Y" — not "Do Y if X"
+- [ ] No hedging language: "should work", "might be available", "you may want to consider" — be specific or state the uncertainty directly
+- [ ] Present tense in introductions and descriptions: "This guide walks you through..." not "This guide will walk you through..."
+- [ ] No pre-announcing: do not say "In this section I will explain X" — just explain X
+- [ ] Reader addressed as "you" — no "the user", "users", or "one" when the reader is meant
 
 ## Structure
 
@@ -101,3 +107,10 @@ Fix all failures before marking the DRAFT phase complete.
 | Condition after action | "Click **Forgot Password** if you lost access" | "If you lost access, click **Forgot Password**" |
 | Explanation in how-to step | "Click **Approve**. The system uses a queue-based workflow that..." | "Click **Approve**. To learn how approval works, see [Understanding Approvals](link)." |
 | Title case headings | "How to Submit a Reimbursement Request" | "How to submit a reimbursement request" |
+| Future tense intro | "This guide will walk you through..." | "This guide walks you through..." |
+| Future tense outcome | "By the end, you will be able to export..." | "By the end, you can export..." |
+| Pre-announcing | "In this section, I will explain how to configure..." | Remove — just explain. Or: "Configure [feature] as follows." |
+| Third person distance | "The user should click **Submit**" | "Click **Submit**" |
+| Weak link text | "For more information, [click here](link)" | "See [Export options reference](link)" |
+| Idiom | "We're in the home stretch" | "This is the final step." |
+| Hedge language | "This should usually complete in a few seconds" | "This completes in under five seconds." or "Completion time varies — typically under five seconds." |

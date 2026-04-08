@@ -90,7 +90,7 @@ The [result] will [appear/update/send] within [timeframe if known].
 # Getting Started with [Feature Name]
 
 Welcome to [Feature Name]. This tutorial walks you through [what the user
-accomplishes]. By the end, you will [concrete, measurable outcome].
+accomplishes]. By the end, you can [concrete, measurable outcome].
 
 **Time required:** approximately [N] minutes.
 
@@ -105,7 +105,7 @@ accomplishes]. By the end, you will [concrete, measurable outcome].
 
 ## Part 1: [First milestone title]
 
-In this part, you will [what the user sets up or learns].
+In this part, you [what the user sets up or learns].
 
 ### 1.1 [First action]
 
@@ -126,7 +126,7 @@ like — describe the UI state].
 
 ## Part 2: [Second milestone title]
 
-In this part, you will [what the user sets up or learns].
+In this part, you [what the user sets up or learns].
 
 ### 2.1 [First action]
 
@@ -235,16 +235,16 @@ This page lists all [fields / options / statuses / values] available in
 # [Section Name] Guide
 
 [2–4 sentence intro. Describe who this guide is for and what business outcome
-they achieve. Do NOT describe technical features. Example: "This guide helps
-[team/role] complete [business tasks] using [product name]. Use these pages to
-[what they will be able to do when they have read the guides]."]
+they achieve. Do NOT describe technical features. Use present tense and address
+the reader as "you". Example: "This guide helps [team/role] complete [business
+tasks] using [product name]. Use these pages to [what the reader can do]."]
 
 ---
 
 ## In this section
 
-| Page | What you will learn |
-|------|---------------------|
+| Page | What it covers |
+|------|----------------|
 | [Getting Started with X](link) | Set up your account and complete your first [task] |
 | [How to do Y](link) | [One-sentence description of the task and outcome] |
 | [How to do Z](link) | [One-sentence description] |

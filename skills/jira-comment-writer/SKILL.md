@@ -17,6 +17,8 @@ A comment on a Jira issue is not a status log for engineers — it is a signal t
 
 This skill bridges the gap between technical work and stakeholder communication. You describe what you did in whatever terms come naturally — technical is fine. The skill turns that into a comment your PM or client can read, understand, and act on in thirty seconds.
 
+**Voice and tone target (Google Developer Style Guide):** Write like a knowledgeable colleague writing to another professional — conversational, friendly, and respectful, without being stiff or overly casual. Avoid jargon, hedging language ("it would appear", "hopefully", "at this point in time"), and culturally specific idioms ("home stretch", "ball in your court", "move the needle"). Simple and consistent writing also makes comments more accessible to readers with varying levels of English proficiency.
+
 **Three things every stakeholder comment must answer:**
 1. **What happened?** — Progress made, blocker encountered, decision taken
 2. **What does it mean?** — Impact on the overall goal, timeline, or scope
@@ -38,6 +40,8 @@ This skill bridges the gap between technical work and stakeholder communication.
 | 5 | **Name the next action explicitly** | "Work continues" is not an action. "Estimated completion by Friday" or "Waiting on your approval to proceed" is. |
 | 6 | **Match tone to audience** | A formal client comment differs from an update to a friendly PM. Ask when unsure; default to professional-friendly. |
 | 7 | **Never alarm, never hide** | Frame bad news clearly and factually. Don't soften it into invisibility. Don't dramatize it into crisis. |
+| 8 | **No hedging** | Hedging ("it should be done soon", "we think this might work", "hopefully Friday") signals uncertainty and erodes trust. If you're uncertain, say so explicitly: "We expect completion by Friday, but this depends on [specific condition]." Precision beats false confidence and vague reassurance equally. |
+| 9 | **Global readability** | Write for readers with varying levels of English proficiency. Avoid idioms: "We're in the home stretch" → "We're nearly finished." "The ball is in your court" → "Your input is needed to proceed." "Move the needle" → "Make measurable progress." Plain language is both clearer and more inclusive. |
 
 ## Workflow
 
@@ -244,6 +248,8 @@ The user owns the content. The skill owns the translation. If the user says "we 
 
 "Formal" and "casual" are ends of a spectrum. Most comments live in the professional-friendly middle. Read the audience cue the user gives, and calibrate accordingly. When in doubt, default to professional-friendly: complete sentences, no contractions, respectful but not stiff.
 
+The target register across all tones is **conversational, friendly, and respectful** (Google Style Guide). Do not aim for corporate formality ("Please be advised that...") or breezy informality ("Hey, quick update!"). Aim for the register of a knowledgeable colleague writing a clear, direct email. The comment should be easy to read at a glance without feeling terse or dismissive.
+
 ## Anti-Patterns
 
 | Anti-Pattern | Why It Fails | What to Do Instead |
@@ -254,6 +260,9 @@ The user owns the content. The skill owns the translation. If the user says "we 
 | **Over-reassurance** | "Everything is on track and going great!" when a blocker exists | Be honest: "One item is taking longer than expected — the rest of the work remains on track" |
 | **Decision buried in prose** | The stakeholder misses that they need to do something | Put decision requests at the top or in bold: "**Action needed:** Please confirm which approach you'd prefer before we proceed." |
 | **Too long** | Long comments get skimmed; the important part gets missed | Aim for 3–5 sentences. If more is genuinely needed, use bullet points with a one-line summary at the top. |
+| **Hedge language** | "Hopefully we'll be done soon", "It should work", "We think Friday is possible" — these undermine credibility | Be precise or explicit about uncertainty: "On track for Friday" or "Timeline is uncertain — depends on vendor response, expected Wednesday" |
+| **Idioms and culturally specific phrases** | "We're in the home stretch", "ball is in your court", "move the needle" — unclear to international readers | Use plain equivalents: "nearly done", "your input is needed", "make measurable progress" |
+| **Corporate formality** | "Please be advised that at this juncture the team has encountered an impediment" | Write naturally: "The team has hit a blocker." Conversational clarity beats formal distance every time. |
 
 ## Error Recovery
 

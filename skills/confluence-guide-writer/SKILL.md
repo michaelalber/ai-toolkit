@@ -22,6 +22,8 @@ This skill transforms technical source material — Confluence spec pages, archi
 
 **The fundamental principle:** What the system *does* matters to engineers. What the user *achieves* matters to the audience of these guides. Every sentence must be written from the perspective of what the reader needs to do, not how the system is built.
 
+**Voice and tone (Google Developer Style Guide):** Write like a knowledgeable guide explaining something to a capable person who is new to this system. Conversational, friendly, and respectful — not stiff, not patronising, not overly casual. Address the reader directly using "you" and "your." Use "we" only when referring to the organisation or product team. Avoid idioms, cultural references, and hedging language — guides are read by people with varying levels of English proficiency and varying contexts. Present tense is preferred: write "This guide walks you through..." not "This guide will walk you through..."
+
 **Non-Negotiable Constraints:**
 
 1. **Audience before accuracy** — Technically correct but incomprehensible documentation is useless. Write for the reader's vocabulary, not the system's vocabulary.
@@ -52,6 +54,8 @@ This skill transforms technical source material — Confluence spec pages, archi
 | 8 | **No Dead Ends** | Every guide ends with a "Next Steps" or "Related Pages" section. Readers who complete one task frequently need to complete a related task. Dead-end guides force readers to navigate away and lose context. | End every guide with 2-3 links to related pages: the next logical task, the parent guide section, or a reference page. |
 | 9 | **Plain Language Mandatory** | Write at a Grade 8 reading level for end-user guides. Use active voice. Short sentences (under 20 words). One idea per sentence. Avoid: passive voice, nominalization ("the configuration of" → "configuring"), jargon, and acronyms without expansion. | Run the draft through the Plain Language checklist in `references/plain-language-checklist.md` before finalizing. |
 | 10 | **Change-Aware Writing** | User guides go stale the moment the product changes. Write guides that are easy to update: use step numbers instead of "above", use consistent terminology so find-and-replace works, and note version-specific behavior explicitly. | At the top of each guide, note the version or date when the guide was last verified. In the source reference panel, note the commit or Confluence version the guide was generated from. |
+| 11 | **Second Person Throughout** | Address the reader as "you" and "your" in all guides. Avoid "the user", "users", or "one" — these create distance. Use "we" only when the organisation or team is the subject. Imperative mood for instructions: "Click **Save**" not "The user should click Save" or "You will need to click Save." | Scan every page before finalising: replace all "the user" with "you." Check that every instruction uses imperative mood. |
+| 12 | **Descriptive Link Text** | Link text must describe the destination, not the action of clicking. Readers using screen readers hear link text in isolation; "click here" and "read more" are meaningless. | Write "See [How to reset your password](link)" not "[Click here](link) to reset your password." Write "[Export options reference](link)" not "[this page](link)." The destination must be clear from the link text alone. |
 
 ## Knowledge Base Lookups
 
@@ -210,12 +214,17 @@ Before pushing to Confluence, validate every page.
 
 - [ ] Title is a verb phrase in sentence case matching the task
 - [ ] Intro paragraph states what the user achieves (not how the system works)
+- [ ] Intro uses present tense: "This guide walks you through..." not "This guide will walk you through..."
+- [ ] Reader is addressed as "you" throughout — no "the user", "users", or "one"
+- [ ] All instructions use imperative mood: "Click **Save**" not "You should click Save"
 - [ ] Every step is actionable (where to click, what to enter, what to expect)
 - [ ] Conditions appear before instructions ("If X, do Y" — not "Do Y if X")
 - [ ] No "please" in any instruction
 - [ ] Every UI element has a screenshot placeholder
 - [ ] No explanatory prose embedded inside how-to steps (explanation belongs on a separate page)
 - [ ] Technical jargon is translated to audience vocabulary
+- [ ] No idioms or culturally specific phrases
+- [ ] All link text is descriptive — no "click here", "read more", "this page", or "here"
 - [ ] Warning panels cover all irreversible or permission-gated actions
 - [ ] Next Steps section links to at least 2 related pages
 - [ ] Source Reference panel is present with source page/file links
@@ -326,8 +335,9 @@ next_action: Session complete
 ```markdown
 # How to [accomplish the task]
 
-[One to three sentence introduction. State what the user will be able to do after
-following this guide. Do NOT explain how the system works internally.]
+[One to three sentences. State what the reader can do after following this guide.
+Use present tense. Address the reader as "you". Do NOT explain how the system
+works internally.]
 
 ---
 
@@ -391,8 +401,8 @@ This guide was generated from:
 ```markdown
 # Getting Started with [Feature/System]
 
-Welcome to [Feature/System]. This tutorial will walk you through [what the user
-will set up or accomplish]. By the end, you will be able to [concrete outcome].
+Welcome to [Feature/System]. This tutorial walks you through [what the user
+sets up or accomplishes]. By the end, you can [concrete outcome].
 
 **This tutorial takes approximately [N] minutes.**
 
@@ -638,6 +648,10 @@ RIGHT: Every page ends with a collapsed note panel:
 | **Version Blindness** | Publishing guides with no indication of when they were written or what version they apply to. | Features change. A guide that was accurate in v1.2 is wrong in v2.0. Readers have no way to know if the guide applies to their version. | Note the version or date in the source reference panel and in the intro paragraph if version-specific. |
 | **Explanation as How-To** | Writing "How the system processes requests" when the user needs "How to submit a request". | Explanation guides serve stakeholder curiosity. How-to guides serve user tasks. Mixing them produces neither effectively. | Separate explanation content onto its own page type. Keep how-to pages purely task-focused. |
 | **No Warning Panels** | Documenting irreversible or high-consequence actions (delete, deactivate, submit final) without warning callouts. | Users make mistakes that cannot be undone. They lose data, lock accounts, or submit incorrect information with no chance to correct it. | Add a warning panel before any step that is irreversible or has significant business impact. |
+| **Weak Link Text** | Links labelled "click here", "read more", "this page", or "here". Example: "For more information, [click here](link)." | Screen reader users hear link text in isolation — "click here" is meaningless. Sighted users scanning for navigation also rely on link text to understand the destination. SEO also suffers. | Use descriptive link text that names the destination: "See [How to export a report](link)" or "Refer to the [Export options reference](link)." |
+| **Third Person Distance** | Writing "the user should click Submit" or "users are required to enter their name" instead of addressing the reader directly. | Third person creates unnecessary distance and cognitive overhead — the reader has to map "the user" to themselves. It also reads as bureaucratic rather than helpful. | Always address the reader as "you": "Click **Submit**" or "Enter your name in the **Name** field." |
+| **Future Tense in Introductions** | "This guide will walk you through..." / "You will learn how to..." / "In this tutorial, we will cover..." | Future tense in documentation adds words without adding information. Documentation describes what something does, not what it is about to do. Future tense also makes guides sound like meeting agendas rather than reference material. | Use present tense: "This guide walks you through..." / "By the end, you can [concrete outcome]." |
+| **Pre-Announcing** | "In this section, I will explain how to configure the notification settings." | Telling readers what you are about to say wastes words and delays the information they came for. The heading already signals the topic. | Remove the announcement and give the information directly. If a transition sentence is needed, summarise the content, don't preview it. |
 
 ## Error Recovery
 
