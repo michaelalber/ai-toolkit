@@ -410,6 +410,23 @@ def test_add_5_and_6(self):
 [Supporting details, code snippets, etc.]
 ```
 
+## State Block
+
+Maintain state across conversation turns during a verification session:
+
+```
+<tdd-verify-state>
+scope: [repo path | branch | commit range | "pending"]
+commits_analyzed: [N | "none yet"]
+current_category: [test-first | behavioral | minimal-impl | refactor | coverage | "complete"]
+score_so_far: [e.g., "12/20 — 3 categories complete"]
+anti_patterns_found: [comma-separated list or "none"]
+findings_pending_review: [N items]
+last_action: [what was just done]
+next_action: [what should happen next]
+</tdd-verify-state>
+```
+
 ## AI Discipline Rules
 
 ### CRITICAL: Evidence-Based Verification
@@ -439,6 +456,14 @@ Separate intentional choices from mistakes:
 - Some code may intentionally skip tests
 - Some tests may be exploratory
 - Ask before assuming violations
+
+## Integration with Other Skills
+
+- **`tdd-cycle`** — Use this skill to audit a session orchestrated by tdd-cycle; commit history from a full cycle provides the richest evidence
+- **`tdd-agent`** — Run tdd-verify after an autonomous tdd-agent session to confirm the agent followed TDD discipline
+- **`tdd-pair`** — Run tdd-verify at the end of a pair session to score compliance and surface improvement areas
+- **`tdd-refactor`** — If tdd-verify finds implementation-coupled tests, invoke tdd-refactor to decouple them safely
+- **`tdd-implementer`** — If tdd-verify finds over-engineering or over-mocking, trace findings back to the GREEN phase for root-cause
 
 ## Stack-Specific Guidance
 

@@ -270,13 +270,15 @@ def divide(a, b):
 
 ### Scenario: Test Requires Database Operation
 
+Test the observable outcome (the user can be retrieved), not the internal call:
+
 ```python
-# Test (with mock)
-def test_save_user(mock_db):
-    repo = UserRepository(mock_db)
+# Test (with in-memory fake — tests behavior, not implementation)
+def test_saved_user_can_be_retrieved():
+    repo = UserRepository(InMemoryDatabase())
     user = User("alice")
     repo.save(user)
-    mock_db.insert.assert_called_once_with("users", user)
+    assert repo.find_by_name("alice") == user
 
 # Minimal implementation
 class UserRepository:
@@ -285,7 +287,20 @@ class UserRepository:
 
     def save(self, user):
         self.db.insert("users", user)
+
+    def find_by_name(self, name):
+        return self.db.find("users", name=name)
 ```
+
+**Why not mock.assert_called_once_with?** Verifying the internal call is Over-Mocking — it tests implementation details, not behavior. If you rename `insert` to `upsert`, the test breaks even though behavior is unchanged. Test what the system produces, not how it produces it.
+
+## Integration with Other Skills
+
+- **`tdd-cycle`** — Orchestrates when this skill is invoked; confirms a failing test exists before handing off to GREEN
+- **`tdd-agent`** — Calls this skill during its autonomous GREEN phase
+- **`tdd-pair`** — Calls this skill when it is the AI's turn to implement in ping-pong mode
+- **`tdd-refactor`** — Invoked immediately after GREEN is complete; receives code that is working but possibly unclean
+- **`tdd-verify`** — Can audit the output of this skill to check for over-engineering or implementation-coupled patterns
 
 ## When to Ask for Help
 

@@ -165,8 +165,18 @@ Proceeding to EXTRACT phase.
 6. Identify what directories/files the agent's domain touches (scope)
 7. Identify what directories/files the agent's domain should NOT touch
 8. Extract any existing three-tier boundaries from instruction files
-9. Log boundary findings with citations
-10. Only then → DRAFT
+9. Grep CLAUDE.md / AGENTS.md / CONTRIBUTING.md for test-first / TDD mandates:
+   Search terms: "test first", "tests first", "TDD", "Red-Green", "failing test",
+   "never generate production", "red-green-refactor", "test before"
+   If found → surface in Never tier with source citation:
+     "🚫 Never generate implementation code without a failing test first
+      (source: CLAUDE.md)"
+   If not found and agent domain involves code generation → mark as:
+     "[NEEDS INPUT: does this project enforce test-first development?
+      Check CLAUDE.md, AGENTS.md, or CONTRIBUTING.md — if yes, add
+      'Never generate implementation without a failing test' to Never tier]"
+10. Log boundary findings with citations
+11. Only then → DRAFT
 ```
 
 **Boundary Detection Sources:**
@@ -174,6 +184,7 @@ Proceeding to EXTRACT phase.
 | Source | What It Reveals |
 |--------|----------------|
 | `CLAUDE.md` / `AGENTS.md` | Explicit agent boundaries for this project |
+| `CLAUDE.md` TDD rules | Test-first mandates → surface in Never tier |
 | `.gitignore` | What must never be committed (infer Never tier) |
 | `.env.example` | Secrets pattern — infer "Never commit .env" rule |
 | CI branch protection | Push restrictions — infer Ask First or Never tier |
@@ -215,8 +226,12 @@ Before presenting the draft:
 - [ ] Scope reflects the agent's stated domain
 - [ ] Never tier has at minimum secrets prohibition
      (inferred from .env.example presence or .gitignore patterns)
+- [ ] TDD check: if CLAUDE.md / AGENTS.md contains test-first mandate,
+     Never tier includes "Never generate implementation without a failing test"
 - [ ] If format is github-spec-kit: KB lookup was performed before drafting and
      the directory structure matches `specs/[###-feature-name]/` (NOT `.specify/`)
+- [ ] If format is github-spec-kit and project enforces TDD: tasks.md pairs
+     test tasks before implementation tasks ([test] → [impl] ordering)
 ```
 
 ### Phase 5: GAP — Report What Needs Human Input
@@ -253,6 +268,8 @@ Before presenting the draft:
 
 ### BOUNDARY Phase Self-Check
 - [ ] CLAUDE.md / AGENTS.md read for existing boundaries
+- [ ] CLAUDE.md / AGENTS.md / CONTRIBUTING.md grepped for TDD / test-first mandate
+- [ ] TDD Never rule surfaced if found; marked [NEEDS INPUT] if agent generates code and mandate not found
 - [ ] .gitignore read for commit prohibitions
 - [ ] .env.example presence checked (implies secrets Never rule)
 - [ ] Protected branch configuration checked

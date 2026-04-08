@@ -394,6 +394,14 @@ When in doubt:
 - One refactoring at a time
 - More iterations over fewer
 
+## Integration with Other Skills
+
+- **`tdd-cycle`** — Orchestrates the phase state machine; invoke at session start to configure mode (autonomous vs. pair) and manage transitions
+- **`tdd-implementer`** — Called during GREEN phase for implementation strategy selection (Fake It / Obvious / Triangulation)
+- **`tdd-refactor`** — Called during REFACTOR phase for smell identification and safe step-by-step improvement
+- **`tdd-verify`** — Run after the session to audit TDD compliance, score commit history, and identify anti-patterns
+- **`tdd-pair`** — Alternative to this skill; use when a human partner drives and the AI navigates rather than the AI driving autonomously
+
 ## Error Recovery
 
 ### Tests Won't Run
