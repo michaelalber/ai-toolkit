@@ -26,7 +26,87 @@
 
 ---
 
+## Knowledge Grounding (grounded-code-mcp)
+
+A local RAG server is available via the `grounded-code-mcp` MCP. It contains vetted,
+authoritative documentation that defines the engineering standards, APIs, and practices
+you must follow. **This is the authoritative source — prefer it over training data.**
+
+### Collection Map
+
+**Do NOT call `list_collections`.** Use this table directly.
+
+**IMPORTANT — `collection=` parameter:** Pass only the suffix below. The server prepends `grounded_` automatically.
+
+| Full name | Pass as `collection=` | What lives here |
+|---|---|---|
+| `grounded_internal` | `"internal"` | Engineering standards: XP, TDD, CI/CD, DDD, Clean Architecture, OWASP, NIST AI |
+| `grounded_patterns` | `"patterns"` | Design patterns: GoF, CQRS, DDD, Clean Architecture, DI, MADR |
+| `grounded_architecture` | `"architecture"` | Software architecture: DDIA, SRE, 12-Factor, AOSA, C4, arc42, distributed systems |
+| `grounded_systems_thinking` | `"systems_thinking"` | Systems thinking: Meadows leverage points, feedback loops, chaos engineering |
+| `grounded_dotnet` | `"dotnet"` | .NET/C#, EF Core, ASP.NET Core, DI, migration guides |
+| `grounded_python` | `"python"` | Python 3.13, FastAPI, FastMCP, Pydantic v2, pytest, Flask, cosmicpython |
+| `grounded_databases` | `"databases"` | SQL, PostgreSQL indexing, relational theory |
+| `grounded_edge_ai` | `"edge_ai"` | AI/ML engineering, RAG, embeddings, NLP, AI agents |
+| `grounded_automation` | `"automation"` | Raspberry Pi, PLC, MODBUS, OPC UA, NIST 800-82, robotics |
+| `grounded_4d_legacy` | `"4d_legacy"` | 4D v18/v20 — source reference for 4D → .NET migration |
+| `grounded_php` | `"php"` | PHP manual, Laravel 5.5 / 6.x / 12.x |
+| `grounded_javascript` | `"javascript"` | JS/TS: Definitive Guide, TypeScript Handbook, Vue 2/3, ECMAScript 2024 |
+| `grounded_ui_ux` | `"ui_ux"` | UI/UX: Laws of UX, Nielsen heuristics, WCAG 2.2, ARIA patterns, GOV.UK Design System, USWDS |
+| `grounded_gov` | `"gov"` | Federal/government: NIST 800-53/171/218, DOE, Zero Trust, AI RMF, CUI |
+| `grounded_robotics` | `"robotics"` | Physical AI / embodied AI: ROS 2, MuJoCo, Isaac Lab, LeRobot, Spinning Up in Deep RL, VLA models |
+
+### Canonical Engineering Standards
+
+`internal/xp-and-continuous-delivery-practices.md` is the **authoritative engineering standard**. Search it before any non-trivial code generation.
+
+### When to Skip search_knowledge
+
+You MAY skip `search_knowledge` if ALL of the following are true:
+1. The answer is based on well-established, stable knowledge (e.g., C# `async/await` syntax, standard LINQ operators, basic SQL clauses, Python built-ins)
+2. No project-specific convention, Telerik component parameter, or 4D migration pattern is involved
+3. The question does not touch security, OWASP, or cryptographic practices
+
+When in doubt — search. The cost of a wrong answer exceeds the cost of a search call.
+
+**Mandatory search triggers** — call `search_knowledge` before answering questions about:
+- XP, TDD, CI/CD, DDD, Clean Architecture, refactoring, pair programming
+- API usage, library functions, or framework behavior
+- Language idioms: .NET/C#, Python, PHP, JavaScript/TypeScript, SQL
+- Security, OWASP, threat modeling
+- AI/ML pipelines, RAG, embeddings
+- Industrial automation, PLC, Raspberry Pi, sensor integration
+- 4D language or 4D-to-.NET migration — **always search `4d_legacy` first**
+- Software architecture decisions, distributed systems, scalability, SRE, SLOs — **search `architecture`**
+- Systems thinking, feedback loops, leverage points, chaos engineering — **search `systems_thinking`**
+- UI design, UX patterns, accessibility, WCAG, ARIA, usability, form design — **search `ui_ux`**
+- Robotics, ROS 2, physical AI, embodied AI, VLA models, RL for robotics, sim-to-real, MuJoCo, Isaac Lab — **search `robotics`**
+- Any topic where you would otherwise rely on training data alone
+
+### Workflow — mandatory
+
+1. Identify collection(s) from the table above
+2. `search_knowledge(query, collection)` — 2–6 content words, no filler
+3. For code: also call `search_code_examples(query, language)`
+4. Cite the source path in your response
+5. If the KB returns nothing useful, say so — do not silently fall back to training data
+
+### MCP Tool Signatures
+
+```
+search_knowledge(query: str, collection: str | None = None, n_results: int = 5, min_score: float = 0.5)
+search_code_examples(query: str, language: str | None = None, n_results: int = 5)
+list_sources(collection: str | None = None)
+get_source_info(source_path: str)
+```
+
+**Rules:** Never pass `null` explicitly. `collection=` takes the bare suffix only. Do not repeat the same query — it returns empty results.
+
+---
+
 ## AI Agent Obligations
+
+Search `grounded_internal` for the full rationale. Apply these unconditionally:
 
 - **Tests first, always.** Never generate production code without a failing test. Test files are created before or alongside production files, never after.
 - **Red-Green-Refactor.** Green = minimum code to pass. Refactor after green, never before.
