@@ -1,33 +1,23 @@
 {
   "$schema": "https://opencode.ai/config.json",
 
-  // Default model — adjust to your preferred provider/model
-  "model": "github-copilot/claude-sonnet-4.6",
-
   // ---------------------------------------------------------------------------
   // Agent Configuration
-  // build/plan → Claude Sonnet 4.6 — best reasoning for code generation
-  // general    → Claude Sonnet 4.6 — strong Q&A and technical guidance
-  // explore    → Claude Haiku 4.5 — fastest scan, lowest cost, minimal footprint
   // ---------------------------------------------------------------------------
   "agent": {
     "build": {
-      "model": "github-copilot/claude-sonnet-4.6",
       "temperature": 0.2 //,
       //"prompt": "MANDATORY FIRST STEP: Before writing any code or answering any technical question, call `search_knowledge` on the grounded-code-mcp MCP server. Use collection \"internal\" for TDD/XP standards, \"dotnet_csharp\" for .NET/C#, \"python\" for Python, \"patterns\" for design patterns. Also call `search_code_examples` for implementation patterns. See AGENTS.md for the full collection map and workflow. Do NOT skip this step."
     },
     "plan": {
-      "model": "github-copilot/claude-sonnet-4.6",
       "temperature": 0.1 //,
       //"prompt": "MANDATORY FIRST STEP: Before planning any implementation, call `search_knowledge` on the grounded-code-mcp MCP server. Use collection \"internal\" for TDD/XP/architecture standards, \"patterns\" for design patterns. See AGENTS.md for the full collection map and workflow. Do NOT skip this step."
     },
     "general": {
-      "model": "github-copilot/claude-sonnet-4.6",
       "temperature": 0.3 //,
       //"prompt": "MANDATORY FIRST STEP: Before answering technical questions or writing code, call `search_knowledge` on the grounded-code-mcp MCP server. Use collection \"internal\" for engineering standards, \"dotnet_csharp\" for .NET/C#, \"python\" for Python, \"patterns\" for design patterns. Also call `search_code_examples` for implementation patterns. See AGENTS.md for the full collection map and workflow. Do NOT skip this step."
     },
     "explore": {
-      "model": "github-copilot/claude-haiku-4.5",
       "temperature": 0.1
     }
   },
