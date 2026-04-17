@@ -143,6 +143,15 @@ See `references/plan-artifact-template.md` for the complete template.
 ```markdown
 # [Feature Title] — Implementation Plan
 
+**Created:** YYYY-MM-DD
+**Research:** thoughts/shared/research/YYYY-MM-DD-topic-slug.md
+**Status:** ready-for-review | approved | in-progress | complete
+**Ticket:** [Jira issue key, e.g., PROJ-123 — or "none"]
+**Branch:** [git branch at time of planning, e.g., main]
+**Git commit (at planning):** [short hash, e.g., a1b2c3d]
+
+---
+
 ## Overview
 [What we're doing and why, 2-3 sentences]
 
