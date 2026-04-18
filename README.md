@@ -283,29 +283,68 @@ Use spec-extractor-agent to extract an agent spec from this description
 Use rpi-planner to turn this research artifact into an implementation plan
 ```
 
+## Project Templates
+
+The `project-templates/` directory contains per-project context files based on the [Four Prompt Disciplines & Five Primitives framework](https://natesnewsletter.substack.com/). Copy the relevant files into your own project root to give AI agents the context they need to operate effectively across sessions.
+
+> These are **project-level** files. They supplement your global `CLAUDE.md` / `AGENTS.md` — they do not replace them. Global standards (coding style, security rules, quality gates) stay in the global files. Project-specific context goes here.
+
+| File | Discipline | Purpose | When to use |
+|------|-----------|---------|-------------|
+| `CLAUDE.md` | Context Engineering | Project context for Claude Code: stack, architecture, key files, persistent decisions, boot ritual | Every project using Claude Code |
+| `AGENTS.md` | Context Engineering | Same as above for OpenCode | Every project using OpenCode |
+| `intent.md` | Intent Engineering | What the agent optimizes for: goals, values, tradeoff hierarchy, agent architecture selection | Every project |
+| `constraints.md` | Specification Engineering | Musts, must-nots, preferences, escalation triggers, code quality gates | Every project |
+| `evals.md` | Specification Engineering | Test cases, CI gate definitions, taste rules, rejection log | Every project |
+| `domain-memory.md` | Agent Harness State | Dark factory backlog, worker boot ritual, progress log | Dark factory / multi-session work only |
+| `design.md` | Context Engineering | Design system tokens, component hierarchy, interaction patterns | UI-heavy projects only |
+
+**Minimum set for a coding harness:** `CLAUDE.md` (or `AGENTS.md`) + `intent.md` + `constraints.md` + `evals.md`.
+**Add for dark factory:** `domain-memory.md`.
+**Add for UI-heavy projects:** `design.md`.
+
+Specs (problem statements, acceptance criteria, decomposition) live in **Jira / Confluence** — not in a local file.
+
 ## Repository Structure
 
 ```
 ai-toolkit/
-├── skills/                     # 53 shareable skills
+├── skills/                     # Shareable skills
 │   ├── <skill-name>/
-│   │   ├── SKILL.md            # Main skill definition with frontmatter
+│   │   ├── SKILL.md            # Skill definition with frontmatter
 │   │   └── references/         # Supporting documentation
-│   │       ├── reference1.md
-│   │       └── reference2.md
 │   └── ...
-├── claude/agents/              # 20 Claude Code agent definitions
-│   └── <agent-name>.md
-├── opencode/agents/            # 19 OpenCode agent definitions
-│   └── <agent-name>.md
+├── claude/
+│   ├── agents/                 # Claude Code agent definitions
+│   │   └── <agent-name>.md
+│   └── global/                 # Global Claude Code files (installed to ~/.claude/)
+│       ├── CLAUDE.md           # Global context and standards
+│       └── settings.local.json
+├── opencode/
+│   ├── agents/                 # OpenCode agent definitions
+│   │   └── <agent-name>.md
+│   └── global/                 # Global OpenCode files (installed to ~/.config/opencode/)
+│       ├── AGENTS.md           # Global context and standards
+│       └── opencode.json
+├── project-templates/          # Per-project context files — copy to your project root
+│   ├── CLAUDE.md               # Project-level context for Claude Code
+│   ├── AGENTS.md               # Project-level context for OpenCode
+│   ├── intent.md               # Agent intent: goals, values, tradeoff hierarchy
+│   ├── constraints.md          # Musts, must-nots, preferences, escalation triggers
+│   ├── evals.md                # Test cases, CI gate, taste rules
+│   ├── domain-memory.md        # Dark factory backlog and progress log
+│   └── design.md               # Design system reference (UI-heavy projects)
 ├── scripts/                    # Install scripts (Bash + PowerShell)
 │   ├── install-claude.sh
 │   ├── install-claude.ps1
 │   ├── install-opencode.sh
 │   └── install-opencode.ps1
 ├── docs/                       # Supplementary documentation
-├── AGENTS.md                   # Universal agent instructions
-├── CLAUDE.md                   # Claude Code-specific pointer
+├── AGENTS.md                   # This project's OpenCode context (project-level)
+├── CLAUDE.md                   # This project's Claude Code context (project-level)
+├── intent.md                   # This project's agent intent and architecture
+├── constraints.md              # This project's agent constraints and quality gates
+├── evals.md                    # This project's eval definitions and taste rules
 ├── DEVELOPER.md                # Developer setup and tooling guide
 └── README.md
 ```

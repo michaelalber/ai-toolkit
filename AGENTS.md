@@ -10,18 +10,48 @@ AI Toolkit -- a collection of 53 skills and 20 autonomous agents for AI-assisted
 
 ```
 ai-toolkit/
-├── skills/                     # 53 shareable skills
+├── skills/                     # Shareable skills
 │   └── <skill-name>/
 │       ├── SKILL.md            # Skill definition (frontmatter + 10 sections)
 │       └── references/         # Supporting docs, code examples, checklists
-├── claude/agents/              # 20 Claude Code agent definitions
-│   └── <agent-name>.md
-├── opencode/agents/            # 19 OpenCode agent definitions
-│   └── <agent-name>.md
-├── AGENTS.md                   # This file (universal agent instructions)
-├── CLAUDE.md                   # Claude Code-specific pointer
+├── claude/
+│   ├── agents/                 # Claude Code agent definitions
+│   │   └── <agent-name>.md
+│   └── global/                 # Global Claude Code files — installed to ~/.claude/
+│       ├── CLAUDE.md           # Global context and standards for all projects
+│       └── settings.local.json
+├── opencode/
+│   ├── agents/                 # OpenCode agent definitions
+│   │   └── <agent-name>.md
+│   └── global/                 # Global OpenCode files — installed to ~/.config/opencode/
+│       ├── AGENTS.md           # Global context and standards for all projects
+│       └── opencode.json
+├── project-templates/          # Per-project context files — copy to your project root
+│   ├── CLAUDE.md               # Project-level context for Claude Code
+│   ├── AGENTS.md               # Project-level context for OpenCode
+│   ├── intent.md               # Agent intent: goals, values, tradeoff hierarchy
+│   ├── constraints.md          # Musts, must-nots, preferences, escalation triggers
+│   ├── evals.md                # Test cases, CI gate, taste rules
+│   ├── domain-memory.md        # Dark factory backlog and progress log
+│   └── design.md               # Design system reference (UI-heavy projects)
+├── AGENTS.md                   # This project's OpenCode context (project-level)
+├── CLAUDE.md                   # This project's Claude Code context (project-level)
+├── intent.md                   # This project's agent intent
+├── constraints.md              # This project's agent constraints
+├── evals.md                    # This project's eval definitions
 └── README.md
 ```
+
+## File Architecture Notes
+
+This project uses two levels of context files:
+
+| Level | Claude Code | OpenCode | Purpose |
+|-------|-------------|----------|---------|
+| **Global** | `claude/global/CLAUDE.md` | `opencode/global/AGENTS.md` | Universal standards applied to every project |
+| **Project** | `CLAUDE.md` (root) | `AGENTS.md` (root) | Context specific to this repository |
+
+Global files are installed once to `~/.claude/` and `~/.config/opencode/`. Project-level files live in the repo root and are read alongside the global files — they do not replace them.
 
 ## Skill Conventions
 
