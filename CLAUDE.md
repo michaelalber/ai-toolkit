@@ -4,8 +4,8 @@ See [AGENTS.md](AGENTS.md) for full project conventions, skill structure, and ag
 
 ## Quick Reference
 
-- **52 skills** in `skills/<name>/SKILL.md` -- each with `references/` directory
-- **18 agents** in `claude/agents/<name>.md` (Claude Code) and `opencode/agents/<name>.md` (OpenCode)
+- **53 skills** in `skills/<name>/SKILL.md` -- each with `references/` directory
+- **20 agents** in `claude/agents/<name>.md` (Claude Code) | **19 agents** in `opencode/agents/<name>.md` (OpenCode)
 - **Gold standard skill template**: `skills/architecture-review/SKILL.md`
 - **Skill format**: 10 mandatory sections (Title, Philosophy, Principles, Workflow, State Block, Templates, Rules, Anti-Patterns, Error Recovery, Integration)
 - **Agent format**: 10 mandatory sections (Title, Philosophy, Guardrails, Protocol, Self-Check, Error Recovery, Rules, Session Template, State Block, Completion)

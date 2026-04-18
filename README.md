@@ -100,16 +100,37 @@ Skills that provide domain knowledge and execution protocols for autonomous agen
 | `session-context` | Git change summarization, ADR relevance matching, pattern applicability | context-builder-agent |
 | `task-decomposition` | Goal breakdown heuristics, dependency DAGs, sub-agent assignment protocols | task-decomposition-agent |
 
+### Agent Design Suite
+
+Skills for designing, specifying, and extracting AI agent definitions.
+
+| Skill | Description |
+|-------|-------------|
+| `agent-spec-writer` | Interactive spec design for AI agents from first principles. Guides through capability mapping, guardrail definition, and state block authoring. |
+
+### RPI Workflow Suite
+
+Skills for the Research-Plan-Implement parallel workflow using session isolation and specialized subagents.
+
+| Skill | Description |
+|-------|-------------|
+| `rpi-research` | Research phase -- parallel codebase exploration using subagents to gather context before planning. |
+| `rpi-plan` | Plan phase -- converts a research artifact into a phased implementation plan with discrete, testable steps. |
+| `rpi-implement` | Implement phase -- executes a phased implementation plan mechanically, one step at a time. |
+| `rpi-iterate` | Iterate phase -- surgically updates an existing implementation plan based on new discoveries or scope changes. |
+
 ### Other Skills
 
 | Skill | Description |
 |-------|-------------|
 | `python-arch-review` | Python architecture review with TDD, YAGNI, and code quality gates. |
 | `jira-review` | Jira ticket review with complexity scoring and requirements extraction. |
+| `jira-comment-writer` | Plain-language Jira comment drafter for project managers and clients. Translates technical updates into stakeholder-friendly language. |
+| `confluence-guide-writer` | Reads Confluence spec pages and/or source code and generates well-formatted technical guides. |
 
 ## Agents
 
-Autonomous agents that make decisions and take actions independently. Each agent has both Claude Code and OpenCode versions.
+Autonomous agents that make decisions and take actions independently. Each agent has both Claude Code and OpenCode versions unless noted.
 
 ### Development Workflow
 
@@ -120,6 +141,8 @@ Autonomous agents that make decisions and take actions independently. Each agent
 | `test-generation-agent` | Autonomous test generation -- analyzes code, identifies gaps, generates tests with TDD patterns. | tdd-implementer, tdd-cycle, dotnet-vertical-slice, test-scaffold |
 | `documentation-agent` | Autonomous documentation sync -- detects staleness, generates XML docs, updates READMEs. | architecture-journal, doc-sync |
 | `dependency-audit-agent` | Autonomous dependency auditing -- vulnerability scanning, license compliance, upgrade paths. | dependency-mapper, technical-debt-assessor, supply-chain-audit |
+| `spec-extractor-agent` | Extracts structured agent specifications from natural-language descriptions or existing code. | agent-spec-writer |
+| `confluence-guide-writer` | Reads Confluence spec pages and/or source code and generates well-formatted technical guides. *(Claude Code only)* | confluence-guide-writer |
 
 ### DevOps / Infrastructure
 
@@ -142,6 +165,18 @@ Autonomous agents that make decisions and take actions independently. Each agent
 |-------|-------------|--------|
 | `research-agent` | Autonomous research -- multi-source investigation, credibility scoring, and structured briefings. | rag-pipeline-python, research-synthesis |
 | `context-builder-agent` | Autonomous context assembly -- git change summarization, ADR matching, dependency mapping. | architecture-journal, dependency-mapper, session-context |
+
+### RPI Workflow Subagents
+
+Specialized subagents that execute individual phases of the Research-Plan-Implement workflow.
+
+| Agent | Description |
+|-------|-------------|
+| `rpi-planner` | Converts a research artifact into a phased, testable implementation plan. |
+| `rpi-implement` | Executes a single implementation phase mechanically from a plan artifact. |
+| `rpi-code-analyzer` | Analyzes code structure and patterns during the research phase. |
+| `rpi-file-locator` | Locates relevant files and entry points during the research phase. |
+| `rpi-pattern-finder` | Identifies existing patterns and conventions during the research phase. |
 
 ### Meta / Orchestration
 
@@ -226,6 +261,13 @@ Skills are invoked automatically based on context or triggered with slash comman
 /dotnet-security-review-federal # Federal compliance overlay
 /legacy-migration-analyzer      # .NET Framework migration analysis
 /4d-schema-migration            # 4D to SQL Server migration
+/agent-spec-writer              # Design an AI agent spec interactively
+/rpi-research                   # Research phase of RPI workflow
+/rpi-plan                       # Plan phase of RPI workflow
+/rpi-implement                  # Implement phase of RPI workflow
+/rpi-iterate                    # Update an existing implementation plan
+/confluence-guide-writer        # Generate a guide from Confluence or source code
+/jira-comment-writer            # Draft a stakeholder-friendly Jira comment
 ```
 
 Agents are invoked as subagents:
@@ -235,23 +277,34 @@ Use tdd-agent to implement a Calculator.add method
 Use code-review-agent to review the latest changes
 Use migration-orchestrator to plan the EF Core migration
 Use research-agent to investigate WebSocket vs SSE for real-time updates
+Use spec-extractor-agent to extract an agent spec from this description
+Use rpi-planner to turn this research artifact into an implementation plan
 ```
 
 ## Repository Structure
 
 ```
 ai-toolkit/
-├── skills/                     # Shareable skills (47 total)
+├── skills/                     # 53 shareable skills
 │   ├── <skill-name>/
 │   │   ├── SKILL.md            # Main skill definition with frontmatter
 │   │   └── references/         # Supporting documentation
 │   │       ├── reference1.md
 │   │       └── reference2.md
 │   └── ...
-├── claude/agents/              # Claude Code agent definitions (13 agents)
+├── claude/agents/              # 20 Claude Code agent definitions
 │   └── <agent-name>.md
-├── opencode/agents/            # OpenCode agent definitions (13 agents)
+├── opencode/agents/            # 19 OpenCode agent definitions
 │   └── <agent-name>.md
+├── scripts/                    # Install scripts (Bash + PowerShell)
+│   ├── install-claude.sh
+│   ├── install-claude.ps1
+│   ├── install-opencode.sh
+│   └── install-opencode.ps1
+├── docs/                       # Supplementary documentation
+├── AGENTS.md                   # Universal agent instructions
+├── CLAUDE.md                   # Claude Code-specific pointer
+├── DEVELOPER.md                # Developer setup and tooling guide
 └── README.md
 ```
 

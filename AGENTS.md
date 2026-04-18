@@ -4,19 +4,19 @@ Project instructions for AI coding agents (Claude Code, OpenCode, GitHub Copilot
 
 ## Project Overview
 
-AI Toolkit -- a collection of 53 skills and 19 autonomous agents for AI-assisted software development. Supports Claude Code and OpenCode.
+AI Toolkit -- a collection of 53 skills and 20 autonomous agents for AI-assisted software development. Supports Claude Code and OpenCode.
 
 ## Repository Structure
 
 ```
 ai-toolkit/
-├── skills/                     # 47 shareable skills
+├── skills/                     # 53 shareable skills
 │   └── <skill-name>/
 │       ├── SKILL.md            # Skill definition (frontmatter + 10 sections)
 │       └── references/         # Supporting docs, code examples, checklists
-├── claude/agents/              # 13 Claude Code agent definitions
+├── claude/agents/              # 20 Claude Code agent definitions
 │   └── <agent-name>.md
-├── opencode/agents/            # 13 OpenCode agent definitions
+├── opencode/agents/            # 19 OpenCode agent definitions
 │   └── <agent-name>.md
 ├── AGENTS.md                   # This file (universal agent instructions)
 ├── CLAUDE.md                   # Claude Code-specific pointer
@@ -126,3 +126,4 @@ Key difference: Claude uses `skills:` array in frontmatter; OpenCode uses `skill
 | Agent Support | automated-code-review, test-scaffold, doc-sync, supply-chain-audit, environment-health, model-optimization, anomaly-detection, fleet-management, research-synthesis, session-context, task-decomposition | Domain knowledge for agents |
 | Agent Design | agent-spec-writer | Spec design and extraction for AI agents |
 | RPI Workflow | rpi-research, rpi-plan, rpi-implement, rpi-iterate | Research-Plan-Implement with session isolation and parallel subagents |
+| Other | python-arch-review, jira-review, jira-comment-writer, confluence-guide-writer | Language/tool-specific reviews and documentation generation |
