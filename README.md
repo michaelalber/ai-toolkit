@@ -189,15 +189,15 @@ Specialized subagents that execute individual phases of the Research-Plan-Implem
 ### Claude Code
 
 ```bash
-# Skills
-mkdir -p ~/.claude/skills
-ln -sf /path/to/ai-toolkit/skills/* ~/.claude/skills/
-rm -f ~/.claude/skills/README.md
+bash scripts/install-claude.sh
+```
 
-# Agents
-mkdir -p ~/.claude/agents
-ln -sf /path/to/ai-toolkit/claude/agents/*.md ~/.claude/agents/
-rm -f ~/.claude/agents/README.md
+Copies all agents to `~/.claude/agents/` and all skills to `~/.claude/skills/`.
+
+**Windows (PowerShell):**
+
+```powershell
+.\scripts\install-claude.ps1
 ```
 
 **Verification:** Open Claude Code, type `/` to see available slash commands, or run `/agents` to see installed agents.
@@ -205,16 +205,18 @@ rm -f ~/.claude/agents/README.md
 ### OpenCode
 
 ```bash
-# Skills (OpenCode also searches ~/.claude/skills/)
-mkdir -p ~/.config/opencode/skills
-ln -sf /path/to/ai-toolkit/skills/* ~/.config/opencode/skills/
-rm -f ~/.config/opencode/skills/README.md
-
-# Agents
-mkdir -p ~/.config/opencode/agents
-ln -sf /path/to/ai-toolkit/opencode/agents/*.md ~/.config/opencode/agents/
-rm -f ~/.config/opencode/agents/README.md
+bash scripts/install-opencode.sh
 ```
+
+Copies all agents to `~/.config/opencode/agents/` and all skills to `~/.config/opencode/skills/`.
+
+**Windows (PowerShell):**
+
+```powershell
+.\scripts\install-opencode.ps1
+```
+
+**Verification:** Open OpenCode, type `/` to see available slash commands, or press `Tab` to cycle through available agents.
 
 OpenCode searches for skills in these locations (in order):
 
