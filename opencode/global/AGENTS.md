@@ -2,6 +2,8 @@
 
 ## Security Scanning (Snyk)
 
+> **Optional** — requires Snyk CLI + MCP tool. Remove this section if you don't use Snyk.
+
 - Always run `snyk_code_scan` for new first-party code generated in a Snyk-supported language.
 - If security issues are found in newly introduced or modified code or dependencies, fix them using the Snyk results context.
 - Rescan after fixing to confirm the issues are resolved and no new ones were introduced.
@@ -14,6 +16,21 @@
 - Correctness first, performance second, cleverness never
 - Explicit over implicit; readable over terse
 - Leave the codebase cleaner than you found it
+
+---
+
+## Prompting Patterns
+
+Prefix triggers that change how the model reasons:
+
+| Prefix | Effect |
+|---|---|
+| `think:` | Reason through before answering |
+| `think hard:` | Deep analysis — requirements, edge cases, alternatives |
+| `think step:` | Numbered step-by-step breakdown |
+
+**Escape hatch** — when a task cannot be completed accurately:
+> `[CANNOT COMPLETE]: <one sentence reason>` — then complete what's possible with `# VERIFY:` comments on uncertain parts.
 
 ---
 
@@ -95,6 +112,8 @@ All practices align with [OWASP Top 10 (2025)](https://owasp.org/Top10/2025/).
 
 ## Jira Issue Management
 
+> **Optional** — adapt to your issue tracker (Linear, GitHub Issues, YouTrack, etc.) or remove this section entirely.
+
 **Never autonomously move a Jira issue to `Done` or `Closed`.**
 
 | Status | When to use |
@@ -116,20 +135,7 @@ All practices align with [OWASP Top 10 (2025)](https://owasp.org/Top10/2025/).
 
 ### Accuracy Over Completion
 
-Never invent libraries, function signatures, or syntax. If uncertain, say so explicitly.
-
-**Escape Hatch** — if you cannot complete accurately:
-> **"[CANNOT COMPLETE]: \<one sentence reason\>"**
-
-Then: complete the parts you can (flagging gaps), or provide a skeleton with `# VERIFY:` comments, or state what information you need.
-
-### Chain of Thought Triggers
-
-| Trigger | Effect |
-|---|---|
-| `think:` | Reason through before answering |
-| `think hard:` | Deep analysis — requirements, edge cases, alternatives |
-| `think step:` | Numbered step-by-step breakdown |
+Never invent libraries, function signatures, or syntax. If uncertain, say so explicitly. See **Prompting Patterns** above for the `[CANNOT COMPLETE]` escape hatch and `think:` triggers.
 
 **Local model addendum:** When running on a local Ollama model — prioritize clarity over completeness. A shorter correct answer beats a longer partially-hallucinated one. Do not infer unstated requirements. Write `# VERIFY: [what to check]` rather than guessing function signatures.
 

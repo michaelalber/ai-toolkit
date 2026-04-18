@@ -122,7 +122,7 @@
     //   "enabled": true
     // },
     // grounded-code-mcp — local RAG server for engineering standards
-    // See: https://github.com/YOUR_USERNAME/grounded-code-mcp
+    // See: https://github.com/michaelalber/grounded-code-mcp
     //"grounded-code-mcp": {
     //  "type": "local",
     //  "command": ["grounded-code-mcp", "serve"],
@@ -138,8 +138,8 @@
 
   // ---------------------------------------------------------------------------
   // Providers
-  // Ollama — local inference. All models sized for 6GB VRAM (RTX 3060 Mobile).
-  // Adjust context limits to match your hardware.
+  // Ollama — local inference. Context limits are set conservatively here for a 6GB VRAM GPU.
+  // Adjust num_ctx and output limits to match your hardware — higher VRAM allows larger context windows.
   // ---------------------------------------------------------------------------
   "provider": {
     //  "ollama": {

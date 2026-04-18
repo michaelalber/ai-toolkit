@@ -1,4 +1,5 @@
 <!--# BEGIN SNYK GLOBAL RULE -->
+<!--# Optional — requires Snyk CLI + MCP tool. Remove this block if you don't use Snyk. -->
 ---
 alwaysApply: true
 always_on: true
@@ -27,6 +28,21 @@ description: Snyk Security At Inception
 
 ---
 
+## Prompting Patterns
+
+Prefix triggers that change how Claude reasons:
+
+| Prefix | Effect |
+|---|---|
+| `think:` | Reason through before answering |
+| `think hard:` | Deep analysis — requirements, edge cases, alternatives |
+| `think step:` | Numbered step-by-step breakdown |
+
+**Escape hatch** — when a task cannot be completed accurately:
+> `[CANNOT COMPLETE]: <one sentence reason>` — then complete what's possible with `# VERIFY:` comments on uncertain parts.
+
+---
+
 ## Context Management
 
 - Load the minimum tokens needed; retrieve "just in time" via tools rather than pre-loading
@@ -37,6 +53,8 @@ description: Snyk Security At Inception
 ---
 
 ## Knowledge Grounding (grounded-code-mcp)
+
+> **Optional** — requires [grounded-code-mcp](https://github.com/michaelalber/grounded-code-mcp) running locally. Remove this section if you haven't set up a local RAG server.
 
 A local RAG server is available via the `grounded-code-mcp` MCP. It contains vetted,
 authoritative documentation that defines the engineering standards, APIs, and practices
@@ -185,6 +203,8 @@ All practices align with [OWASP Top 10 (2025)](https://owasp.org/Top10/2025/).
 
 ## Jira Issue Management
 
+> **Optional** — adapt to your issue tracker (Linear, GitHub Issues, YouTrack, etc.) or remove this section entirely.
+
 **Never autonomously move a Jira issue to `Done` or `Closed`.**
 
 | Status | When to use |
@@ -206,20 +226,7 @@ All practices align with [OWASP Top 10 (2025)](https://owasp.org/Top10/2025/).
 
 ### Accuracy Over Completion
 
-Never invent libraries, function signatures, or syntax. If uncertain, say so explicitly.
-
-**Escape Hatch** — if you cannot complete accurately:
-> **"[CANNOT COMPLETE]: \<one sentence reason\>"**
-
-Then: complete the parts you can (flagging gaps), or provide a skeleton with `# VERIFY:` comments, or state what information you need.
-
-### Chain of Thought Triggers
-
-| Trigger | Effect |
-|---|---|
-| `think:` | Reason through before answering |
-| `think hard:` | Deep analysis — requirements, edge cases, alternatives |
-| `think step:` | Numbered step-by-step breakdown |
+Never invent libraries, function signatures, or syntax. If uncertain, say so explicitly. See **Prompting Patterns** above for the `[CANNOT COMPLETE]` escape hatch and `think:` triggers.
 
 **Local model addendum:** When running on a local Ollama model — prioritize clarity over completeness. A shorter correct answer beats a longer partially-hallucinated one. Do not infer unstated requirements. Write `# VERIFY: [what to check]` rather than guessing function signatures.
 
