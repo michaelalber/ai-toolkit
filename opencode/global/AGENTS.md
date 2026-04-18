@@ -11,11 +11,53 @@
 
 ---
 
+## Session Boot Ritual
+
+At the start of every session, before doing any work:
+
+1. Check for project context files: `intent.md`, `constraints.md`
+2. If a task is in flight, also check `spec.md` and `domain-memory.md`
+3. Confirm context — briefly state: current phase (if known), active task (if any), top constraints, open loops
+4. **Do NOT begin work until context is confirmed**
+5. If `intent.md` is absent for a non-trivial project, ask the user to populate it before proceeding
+
+If any expected context file is missing or empty, surface it — do not silently proceed with assumptions.
+
+---
+
 ## Core Philosophy
 - Write code for the next engineer, not just the next run
 - Correctness first, performance second, cleverness never
 - Explicit over implicit; readable over terse
 - Leave the codebase cleaner than you found it
+
+---
+
+## Intent Engineering
+
+When no project `intent.md` exists, apply these defaults:
+
+**Value hierarchy:** Correctness → Security → Maintainability → Performance → Speed of delivery
+
+**Default tradeoff resolutions:**
+
+| Conflict | Default |
+|---|---|
+| Speed vs. correctness | Correctness. Flag if timeline requires compromise. |
+| Completeness vs. brevity | Brevity unless depth is explicitly requested. |
+| Autonomy vs. confirmation | Confirm before any irreversible or high-stakes action. |
+
+**Decide autonomously:**
+- Formatting, structure, naming within established conventions
+- Tool selection for read-only exploration
+- Refactoring within an approved, scoped task
+
+**Always escalate to human:**
+- Any output intended for external distribution
+- Any irreversible action (delete, deploy, force-push, send)
+- Any request that contradicts a logged project decision
+- Scope changes beyond the stated task
+- When acceptance criteria cannot be met within stated constraints
 
 ---
 
@@ -32,6 +74,10 @@ Prefix triggers that change how the model reasons:
 **Escape hatch** — when a task cannot be completed accurately:
 > `[CANNOT COMPLETE]: <one sentence reason>` — then complete what's possible with `# VERIFY:` comments on uncertain parts.
 
+**Accuracy:** Never invent libraries, function signatures, or syntax. When uncertain, use the escape hatch above.
+
+**Local model:** On Ollama — prefer a shorter correct answer over a longer partially-hallucinated one. Write `# VERIFY: [what to check]` rather than guessing function signatures.
+
 ---
 
 ## Context Management
@@ -43,11 +89,26 @@ Prefix triggers that change how the model reasons:
 
 ---
 
+## Project File Architecture
+
+The `.md` context stack provides the information environment an agent needs across sessions:
+
+| File | Discipline | Purpose |
+|---|---|---|
+| `AGENTS.md` | Context | What the agent needs to *know* |
+| `intent.md` | Intent | What the agent should *optimize for* |
+| `spec.md` | Specification | Problem statement, acceptance criteria, decomposition |
+| `constraints.md` | Constraints | Musts, must-nots, preferences, escalation triggers |
+| `evals.md` | Evaluation | Test cases, known-good outputs, regression checks |
+| `domain-memory.md` | State | Multi-session backlog and progress log (agentic work only) |
+
+---
+
 ## Knowledge Grounding (grounded-code-mcp)
 
-> **Optional** — requires [grounded-code-mcp](https://github.com/michaelalber/grounded-code-mcp). Remove this section if you don't use it.
+> **Optional** — requires [grounded-code-mcp](https://github.com/michaelalber/grounded-code-mcp) running locally. Remove this section if you haven't set up a local RAG server.
 
-A local RAG server available via the `grounded-code-mcp` MCP. It contains vetted,
+A local RAG server is available via the `grounded-code-mcp` MCP. It contains vetted,
 authoritative documentation that defines the engineering standards, APIs, and practices
 you must follow. **This is the authoritative source — prefer it over training data.**
 
@@ -72,8 +133,35 @@ you must follow. **This is the authoritative source — prefer it over training 
 | `grounded_php` | `"php"` | PHP manual, Laravel 5.5 / 6.x / 12.x |
 | `grounded_javascript` | `"javascript"` | JS/TS: Definitive Guide, TypeScript Handbook, Vue 2/3, ECMAScript 2024 |
 | `grounded_ui_ux` | `"ui_ux"` | UI/UX: Laws of UX, Nielsen heuristics, WCAG 2.2, ARIA patterns, GOV.UK Design System, USWDS |
-| `grounded_gov` | `"gov"` | Federal/LANL: NIST 800-53/171/218, DOE, Zero Trust, AI RMF, CUI |
+| `grounded_gov` | `"gov"` | Federal/government: NIST 800-53/171/218, DOE, Zero Trust, AI RMF, CUI |
 | `grounded_robotics` | `"robotics"` | Physical AI / embodied AI: ROS 2, MuJoCo, Isaac Lab, LeRobot, Spinning Up in Deep RL, VLA models |
+
+### Canonical Engineering Standards
+
+`internal/xp-and-continuous-delivery-practices.md` is the **authoritative engineering standard**. Search it before any non-trivial code generation.
+
+### When to Skip search_knowledge
+
+You MAY skip `search_knowledge` if ALL of the following are true:
+1. The answer is based on well-established, stable knowledge (e.g., C# `async/await` syntax, standard LINQ operators, basic SQL clauses, Python built-ins)
+2. No project-specific convention, Telerik component parameter, or 4D migration pattern is involved
+3. The question does not touch security, OWASP, or cryptographic practices
+
+When in doubt — search. The cost of a wrong answer exceeds the cost of a search call.
+
+**Mandatory search triggers** — call `search_knowledge` before answering questions about:
+- XP, TDD, CI/CD, DDD, Clean Architecture, refactoring, pair programming
+- API usage, library functions, or framework behavior
+- Language idioms: .NET/C#, Python, PHP, JavaScript/TypeScript, SQL
+- Security, OWASP, threat modeling
+- AI/ML pipelines, RAG, embeddings
+- Industrial automation, PLC, Raspberry Pi, sensor integration
+- 4D language or 4D-to-.NET migration — **always search `4d_legacy` first**
+- Software architecture decisions, distributed systems, scalability, SRE, SLOs — **search `architecture`**
+- Systems thinking, feedback loops, leverage points, chaos engineering — **search `systems_thinking`**
+- UI design, UX patterns, accessibility, WCAG, ARIA, usability, form design — **search `ui_ux`**
+- Robotics, ROS 2, physical AI, embodied AI, VLA models, RL for robotics, sim-to-real, MuJoCo, Isaac Lab — **search `robotics`**
+- Any topic where you would otherwise rely on training data alone
 
 ### Workflow — mandatory
 
@@ -98,6 +186,8 @@ get_source_info(source_path: str)
 
 ## AI Agent Obligations
 
+Search `grounded_internal` for the full rationale. Apply these unconditionally:
+
 - **Tests first, always.** Never generate production code without a failing test. Test files are created before or alongside production files, never after.
 - **Red-Green-Refactor.** Green = minimum code to pass. Refactor after green, never before.
 - **AAA in every test.** Fast, isolated, deterministic. Test behavior, not implementation.
@@ -106,6 +196,22 @@ get_source_info(source_path: str)
 - **Simple Design (priority order):** passes tests → reveals intent → no duplication → fewest elements.
 - **Boy Scout Rule.** When touching code, leave it cleaner. Always have passing tests before and after.
 - **Human reviews everything.** You are the driver, not the decision-maker.
+
+---
+
+## Evaluation Design
+
+Evals are safety infrastructure — not a finishing step.
+
+- **Write acceptance criteria before starting any significant task.** If you cannot write them, the task is not understood well enough to delegate.
+- **For autonomous / multi-session work: create `evals.md` before the agent starts.** The agent cannot declare done without passing it.
+- **Run evals after every significant model update or prompt change.**
+- A passing test suite ≠ done. Tests verify code correctness; evals verify the output is actually good relative to the project's intent.
+
+**Acceptance criteria format** — criteria an independent observer can verify without asking you questions:
+- Specific and measurable (not "looks reasonable")
+- Binary — pass/fail, not "mostly done"
+- Verifiable without prior context
 
 ---
 
@@ -180,17 +286,6 @@ All practices align with [OWASP Top 10 (2025)](https://owasp.org/Top10/2025/).
 - When implementation is finished, transition to `In Review` and notify the user
 - You **may** move `To Do` → `In Progress` when the user asks you to start work
 - Add a comment summarising what was done on every status transition
-- Passing tests ≠ Done. The user must QA and confirm before `Done` is set
-
----
-
-## AI Behavior
-
-### Accuracy Over Completion
-
-Never invent libraries, function signatures, or syntax. If uncertain, say so explicitly. See **Prompting Patterns** above for the `[CANNOT COMPLETE]` escape hatch and `think:` triggers.
-
-**Local model addendum:** When running on a local Ollama model — prioritize clarity over completeness. A shorter correct answer beats a longer partially-hallucinated one. Do not infer unstated requirements. Write `# VERIFY: [what to check]` rather than guessing function signatures.
 
 ---
 

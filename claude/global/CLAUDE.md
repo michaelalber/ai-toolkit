@@ -20,11 +20,53 @@ description: Snyk Security At Inception
 
 # Global Development Rules
 
+## Session Boot Ritual
+
+At the start of every session, before doing any work:
+
+1. Check for project context files: `intent.md`, `constraints.md`
+2. If a task is in flight, also check `spec.md` and `domain-memory.md`
+3. Confirm context — briefly state: current phase (if known), active task (if any), top constraints, open loops
+4. **Do NOT begin work until context is confirmed**
+5. If `intent.md` is absent for a non-trivial project, ask the user to populate it before proceeding
+
+If any expected context file is missing or empty, surface it — do not silently proceed with assumptions.
+
+---
+
 ## Core Philosophy
 - Write code for the next engineer, not just the next run
 - Correctness first, performance second, cleverness never
 - Explicit over implicit; readable over terse
 - Leave the codebase cleaner than you found it
+
+---
+
+## Intent Engineering
+
+When no project `intent.md` exists, apply these defaults:
+
+**Value hierarchy:** Correctness → Security → Maintainability → Performance → Speed of delivery
+
+**Default tradeoff resolutions:**
+
+| Conflict | Default |
+|---|---|
+| Speed vs. correctness | Correctness. Flag if timeline requires compromise. |
+| Completeness vs. brevity | Brevity unless depth is explicitly requested. |
+| Autonomy vs. confirmation | Confirm before any irreversible or high-stakes action. |
+
+**Decide autonomously:**
+- Formatting, structure, naming within established conventions
+- Tool selection for read-only exploration
+- Refactoring within an approved, scoped task
+
+**Always escalate to human:**
+- Any output intended for external distribution
+- Any irreversible action (delete, deploy, force-push, send)
+- Any request that contradicts a logged project decision
+- Scope changes beyond the stated task
+- When acceptance criteria cannot be met within stated constraints
 
 ---
 
@@ -41,6 +83,10 @@ Prefix triggers that change how Claude reasons:
 **Escape hatch** — when a task cannot be completed accurately:
 > `[CANNOT COMPLETE]: <one sentence reason>` — then complete what's possible with `# VERIFY:` comments on uncertain parts.
 
+**Accuracy:** Never invent libraries, function signatures, or syntax. When uncertain, use the escape hatch above.
+
+**Local model:** On Ollama — prefer a shorter correct answer over a longer partially-hallucinated one. Write `# VERIFY: [what to check]` rather than guessing function signatures.
+
 ---
 
 ## Context Management
@@ -49,6 +95,21 @@ Prefix triggers that change how Claude reasons:
 - After a subtask completes, discard intermediate noise — summarize progress, continue with the summary
 - For long tasks: maintain a `NOTES.md` scratchpad (current objective, decisions, open questions, next steps)
 - After a context reset, re-read the five most recently touched files and the scratchpad before continuing
+
+---
+
+## Project File Architecture
+
+The `.md` context stack provides the information environment an agent needs across sessions:
+
+| File | Discipline | Purpose |
+|---|---|---|
+| `CLAUDE.md` | Context | What the agent needs to *know* |
+| `intent.md` | Intent | What the agent should *optimize for* |
+| `spec.md` | Specification | Problem statement, acceptance criteria, decomposition |
+| `constraints.md` | Constraints | Musts, must-nots, preferences, escalation triggers |
+| `evals.md` | Evaluation | Test cases, known-good outputs, regression checks |
+| `domain-memory.md` | State | Multi-session backlog and progress log (agentic work only) |
 
 ---
 
@@ -147,6 +208,22 @@ Search `grounded_internal` for the full rationale. Apply these unconditionally:
 
 ---
 
+## Evaluation Design
+
+Evals are safety infrastructure — not a finishing step.
+
+- **Write acceptance criteria before starting any significant task.** If you cannot write them, the task is not understood well enough to delegate.
+- **For autonomous / multi-session work: create `evals.md` before the agent starts.** The agent cannot declare done without passing it.
+- **Run evals after every significant model update or prompt change.**
+- A passing test suite ≠ done. Tests verify code correctness; evals verify the output is actually good relative to the project's intent.
+
+**Acceptance criteria format** — criteria an independent observer can verify without asking you questions:
+- Specific and measurable (not "looks reasonable")
+- Binary — pass/fail, not "mostly done"
+- Verifiable without prior context
+
+---
+
 ## Security-By-Design
 
 All practices align with [OWASP Top 10 (2025)](https://owasp.org/Top10/2025/).
@@ -218,17 +295,6 @@ All practices align with [OWASP Top 10 (2025)](https://owasp.org/Top10/2025/).
 - When implementation is finished, transition to `In Review` and notify the user
 - You **may** move `To Do` → `In Progress` when the user asks you to start work
 - Add a comment summarising what was done on every status transition
-- Passing tests ≠ Done. The user must QA and confirm before `Done` is set
-
----
-
-## AI Behavior
-
-### Accuracy Over Completion
-
-Never invent libraries, function signatures, or syntax. If uncertain, say so explicitly. See **Prompting Patterns** above for the `[CANNOT COMPLETE]` escape hatch and `think:` triggers.
-
-**Local model addendum:** When running on a local Ollama model — prioritize clarity over completeness. A shorter correct answer beats a longer partially-hallucinated one. Do not infer unstated requirements. Write `# VERIFY: [what to check]` rather than guessing function signatures.
 
 ---
 
