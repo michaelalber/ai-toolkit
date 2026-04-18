@@ -25,7 +25,7 @@ description: Snyk Security At Inception
 At the start of every session, before doing any work:
 
 1. Check for project context files: `intent.md`, `constraints.md`
-2. If a task is in flight, also check `spec.md` and `domain-memory.md`
+2. If a task is in flight, check the Jira issue or Confluence page for the spec, and `domain-memory.md`
 3. Confirm context — briefly state: current phase (if known), active task (if any), top constraints, open loops
 4. **Do NOT begin work until context is confirmed**
 5. If `intent.md` is absent for a non-trivial project, ask the user to populate it before proceeding
@@ -106,7 +106,7 @@ The `.md` context stack provides the information environment an agent needs acro
 |---|---|---|
 | `CLAUDE.md` | Context | What the agent needs to *know* |
 | `intent.md` | Intent | What the agent should *optimize for* |
-| `spec.md` | Specification | Problem statement, acceptance criteria, decomposition |
+| Jira / Confluence | Specification | Problem statement, acceptance criteria, decomposition — linked from the Jira issue or Confluence page |
 | `constraints.md` | Constraints | Musts, must-nots, preferences, escalation triggers |
 | `evals.md` | Evaluation | Test cases, known-good outputs, regression checks |
 | `domain-memory.md` | State | Multi-session backlog and progress log (agentic work only) |
