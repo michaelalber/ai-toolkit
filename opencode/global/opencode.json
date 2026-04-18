@@ -105,6 +105,18 @@
       // --- SSH directory (OWASP T3) ---
       "**/.ssh/**": "deny",
 
+      // --- Cloud provider credentials (OWASP T3) ---
+      "**/.aws/credentials": "deny",
+      "**/.aws/config": "ask",
+      "**/.kube/config": "deny",
+      "**/kubeconfig": "deny",
+      "**/.azure/msal_token_cache.json": "deny",
+
+      // --- Infrastructure state files (OWASP T3) ---
+      // Terraform state routinely contains plaintext DB passwords and API keys from resource outputs.
+      "**/*.tfstate": "deny",
+      "**/terraform.tfstate.backup": "deny",
+
       // --- .NET connection strings (OWASP T3) ---
       // Separate pattern for files explicitly named after connection strings —
       // higher risk than general appsettings.
@@ -158,6 +170,14 @@
       "chmod 777*": "deny",
       "chown*": "deny",
 
+      // Inline code execution — deny to prevent prompt-injection payload delivery (OWASP T11).
+      // These bypass the file-based review path where the user can inspect code before running.
+      "python -c *": "deny",
+      "python3 -c *": "deny",
+      "node -e *": "deny",
+      "bash -c *": "deny",
+      "sh -c *": "deny",
+
       // Safe read-only git operations — no approval needed.
       "git status*": "allow",
       "git log*": "allow",
@@ -166,7 +186,11 @@
       "git branch --list*": "allow",
       "git branch -a*": "allow",
       "git branch -r*": "allow",
-      "git show*": "allow"
+      "git show*": "allow",
+
+      // Destructive git operations — cannot be undone on shared remotes (OWASP T2).
+      "git push --force*": "deny",
+      "git push -f*": "deny"
     },
 
     "external_directory": "ask",
