@@ -1,8 +1,14 @@
 {
   "$schema": "https://opencode.ai/config.json",
 
+  // Snapshot preserves session history outside the agent's write scope.
+  // Supports audit trail requirements (OWASP T8 - Repudiation & Untraceability).
+  "snapshot": true,
+
   // ---------------------------------------------------------------------------
   // Agent Configuration
+  // No model pins — select per-session via /models or set OPENCODE_MODEL env var.
+  // Ollama models remain available on-demand via /models for any agent.
   // ---------------------------------------------------------------------------
   "agent": {
     "build": {
@@ -21,17 +27,45 @@
 
   // ---------------------------------------------------------------------------
   // Permissions
+  // Pattern matching uses simple glob prefix matching — shell metacharacters
+  // (pipes, semicolons, &&) are NOT parsed. Defense against pipe-to-shell attacks
+  // relies on "bash": "*": "ask" as the catch-all, requiring manual approval.
+  //
+  // OWASP threat mapping:
+  //   T2  Tool Misuse          — bash catch-all "ask", explicit sudo/su deny
+  //   T3  Privilege Compromise — sudo/su deny, no root execution
+  //   T8  Repudiation          — snapshot: true (session history preserved)
+  //   T11 RCE & Code Attacks   — bash catch-all "ask", plan/explore bash deny
+  //   T17 Supply Chain         — pinned model versions, reviewed MCP connections
   // ---------------------------------------------------------------------------
   "permission": {
     "read": {
       "*": "allow",
+
+      // Allowed .NET config — safe for the agent to read for architecture context.
+      // These rarely contain raw secrets in modern projects (user-secrets / env vars handle that).
       ".env.example": "allow",
+      "**/appsettings.json": "allow",
+      "**/appsettings.Development.json": "allow",
+      "**/appsettings.Staging.json": "ask",
+      "**/launchSettings.json": "allow",
+
+      // Require explicit approval for production config — may contain environment-specific
+      // connection strings or feature flags with operational impact (OWASP T3).
+      "**/appsettings.Production.json": "ask",
+      "**/appsettings.Release.json": "ask",
+      "**/web.config": "ask",
+      "**/app.config": "ask",
+
+      // --- Secrets and credentials (OWASP T3) ---
       "**/.env": "deny",
       "**/.env.*": "deny",
       "**/secrets.*": "deny",
       "**/*.secret": "deny",
       "**/*.secrets": "deny",
       "**/.secret*": "deny",
+
+      // --- Private keys and certificates (OWASP T3) ---
       "**/*.pem": "deny",
       "**/*.key": "deny",
       "**/*.p12": "deny",
@@ -42,29 +76,50 @@
       "**/id_ed25519*": "deny",
       "**/id_ecdsa*": "deny",
       "**/id_dsa*": "deny",
+
+      // --- Cloud and service credentials (OWASP T3) ---
       "**/master.key": "deny",
       "**/credentials.json": "deny",
       "**/service-account*.json": "deny",
       "**/*.boto": "deny",
       "**/token.json": "deny",
+
+      // --- Auth and tool credentials (OWASP T3) ---
       "**/.htpasswd": "deny",
       "**/.netrc": "deny",
       "**/.npmrc": "deny",
       "**/.pypirc": "deny",
       "**/.dockerconfigjson": "deny",
+
+      // --- Password and key stores (OWASP T3) ---
       "**/*.kdbx": "deny",
       "**/*.kdb": "deny",
       "**/*.gpg": "deny",
       "**/*.asc": "deny",
+
+      // --- IaC secrets (OWASP T3) ---
       "**/*.tfvars": "deny",
       "**/.vault-token": "deny",
       "**/vault-token": "deny",
+
+      // --- SSH directory (OWASP T3) ---
       "**/.ssh/**": "deny",
-      "**/appsettings.json": "deny",
-      "**/appsettings.*.json": "deny",
-      "**/web.config": "deny",
-      "**/app.config": "deny"
+
+      // --- .NET connection strings (OWASP T3) ---
+      // Separate pattern for files explicitly named after connection strings —
+      // higher risk than general appsettings.
+      "**/connectionstrings.json": "deny",
+      "**/*connectionstrings*.json": "deny",
+      "**/AppSettingsSecrets.config": "deny",
+      "**/ConnectionStrings.config": "deny",
+
+      // --- Database and backup files (OWASP T3, T11) ---
+      "**/*.bak": "deny",
+      "**/*.sql.bak": "deny",
+      "**/*.mdf": "deny",
+      "**/*.ldf": "deny"
     },
+
     "glob": "allow",
     "grep": "allow",
     "list": "allow",
@@ -73,17 +128,37 @@
     "codesearch": "allow",
     "websearch": "allow",
     "webfetch": "ask",
+    "skill": "allow",
+
     "edit": "ask",
+
+    // bash: catch-all "ask" is the primary RCE defense (OWASP T2, T11).
+    // Note: OpenCode pattern matching uses simple glob prefix — pipe/semicolon
+    // metacharacters are NOT evaluated. Pipe-to-shell defense depends entirely
+    // on the "ask" approval prompt and user review.
+    //
+    // sudo/su: explicit deny — privilege escalation from a coding agent session
+    // must never be permitted, even accidentally (OWASP T3).
     "bash": {
       "*": "ask",
+      "sudo *": "deny",
+      "su *": "deny",
+      "su": "deny",
+
+      // Destructive filesystem / disk operations — explicit deny prevents accidental approval (OWASP T2, T11).
       "rm -rf*": "deny",
-      "sudo rm*": "deny",
       "dd*": "deny",
       "mkfs*": "deny",
       "shred*": "deny",
+
+      // Arbitrary downloads — supply chain risk (OWASP T17).
       "wget*": "deny",
+
+      // Permission / ownership escalation — deny to prevent privilege creep (OWASP T3).
       "chmod 777*": "deny",
       "chown*": "deny",
+
+      // Safe read-only git operations — no approval needed.
       "git status*": "allow",
       "git log*": "allow",
       "git diff*": "allow",
@@ -93,14 +168,16 @@
       "git branch -r*": "allow",
       "git show*": "allow"
     },
+
     "external_directory": "ask",
-    "doom_loop": "ask",
-    "skill": "allow"
+
+    // doom_loop: "ask" prevents runaway autonomous execution (OWASP T4 Resource Overload).
+    "doom_loop": "ask"
   },
 
   // ---------------------------------------------------------------------------
   // MCP Servers
-  // Replace YOUR_USERNAME with your actual username where applicable.
+  // Each MCP connection is an extension of the agent's trust boundary (OWASP T16).
   // ---------------------------------------------------------------------------
   "mcp": {
     // Snyk — security scanning. Install: npm install -g snyk
@@ -116,11 +193,11 @@
     //  "enabled": true
     //},
     // Atlassian (Jira/Confluence) — replace with your own MCP endpoint, or disable
-    // "atlassian": {
-    //   "type": "remote",
-    //   "url": "YOUR_ATLASSIAN_MCP_URL",
-    //   "enabled": true
-    // },
+    //"atlassian": {
+    //  "type": "remote",
+    //  "url": "YOUR_ATLASSIAN_MCP_URL",
+    //  "enabled": true
+    //},
     // grounded-code-mcp — local RAG server for engineering standards
     // See: https://github.com/michaelalber/grounded-code-mcp
     //"grounded-code-mcp": {
