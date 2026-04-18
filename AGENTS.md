@@ -1,57 +1,112 @@
-# AGENTS.md
+# AI Toolkit — Project Context
+<!-- ⚠ PROJECT-LEVEL FILE — NOT GLOBAL
+     This is the project-level AGENTS.md for OpenCode.
+     It supplements your global opencode/global/AGENTS.md — it does NOT replace it.
+     Global standards (coding style, security rules, quality gates) live in the global file.
+     This file contains only what is specific to THIS repository.
 
-Project instructions for AI coding agents (Claude Code, OpenCode, GitHub Copilot, Cursor, Windsurf, etc.).
+     DISCIPLINE 2: Context Engineering — scoped to this project.
+     Tells the agent everything it needs to KNOW about this repo.
+
+     RELATED FILES:
+       intent.md       — what the agent should optimize for (goals, values, tradeoff hierarchy)
+       constraints.md  — musts, must-nots, preferences, escalation triggers
+       evals.md        — test cases and CI gate definitions -->
+
+---
 
 ## Project Overview
 
-AI Toolkit -- a collection of 53 skills and 20 autonomous agents for AI-assisted software development. Supports Claude Code and OpenCode.
+- **Name:** AI Toolkit
+- **Purpose:** A collection of 53+ shareable skills and autonomous agents for AI-assisted software development. Supports Claude Code and OpenCode.
+- **Phase:** Maintain — stable toolkit; work consists of adding new skills/agents, fixing existing ones, and keeping platform parity.
+- **Jira project key:** N/A — task specs are tracked in conversation context or ad hoc
+- **Definition of success:** Every skill and agent installs cleanly, follows the 10-section template exactly, and works out of the box without requiring external documentation.
 
-## Repository Structure
+---
 
-```
-ai-toolkit/
-├── skills/                     # Shareable skills
-│   └── <skill-name>/
-│       ├── SKILL.md            # Skill definition (frontmatter + 10 sections)
-│       └── references/         # Supporting docs, code examples, checklists
-├── claude/
-│   ├── agents/                 # Claude Code agent definitions
-│   │   └── <agent-name>.md
-│   └── global/                 # Global Claude Code files — installed to ~/.claude/
-│       ├── CLAUDE.md           # Global context and standards for all projects
-│       └── settings.local.json
-├── opencode/
-│   ├── agents/                 # OpenCode agent definitions
-│   │   └── <agent-name>.md
-│   └── global/                 # Global OpenCode files — installed to ~/.config/opencode/
-│       ├── AGENTS.md           # Global context and standards for all projects
-│       └── opencode.json
-├── project-templates/          # Per-project context files — copy to your project root
-│   ├── CLAUDE.md               # Project-level context for Claude Code
-│   ├── AGENTS.md               # Project-level context for OpenCode
-│   ├── intent.md               # Agent intent: goals, values, tradeoff hierarchy
-│   ├── constraints.md          # Musts, must-nots, preferences, escalation triggers
-│   ├── evals.md                # Test cases, CI gate, taste rules
-│   ├── domain-memory.md        # Dark factory backlog and progress log
-│   └── design.md               # Design system reference (UI-heavy projects)
-├── AGENTS.md                   # This project's OpenCode context (project-level)
-├── CLAUDE.md                   # This project's Claude Code context (project-level)
-├── intent.md                   # This project's agent intent
-├── constraints.md              # This project's agent constraints
-├── evals.md                    # This project's eval definitions
-└── README.md
-```
+## Technology Stack
 
-## File Architecture Notes
+- **Content format:** Markdown + YAML frontmatter — no compiled language, no build system
+- **Agent platforms:** Claude Code (claude.ai/code) and OpenCode
+- **Global install targets:** `~/.claude/` (Claude Code) and `~/.config/opencode/` (OpenCode)
+- **Package manager:** None for skills/agents; `bun` used in `opencode/global/` for OpenCode config dependencies
 
-This project uses two levels of context files:
+---
 
-| Level | Claude Code | OpenCode | Purpose |
-|-------|-------------|----------|---------|
-| **Global** | `claude/global/CLAUDE.md` | `opencode/global/AGENTS.md` | Universal standards applied to every project |
-| **Project** | `CLAUDE.md` (root) | `AGENTS.md` (root) | Context specific to this repository |
+## Architecture
 
-Global files are installed once to `~/.claude/` and `~/.config/opencode/`. Project-level files live in the repo root and are read alongside the global files — they do not replace them.
+- **Pattern:** Flat directories by domain — skills, agents, global config, and project templates are siblings, not layers
+- **Two-level context stack:**
+  - `claude/global/CLAUDE.md` + `opencode/global/AGENTS.md` — universal standards, installed once globally
+  - `CLAUDE.md` (root) + `AGENTS.md` (root) — this repo's context only
+- **Key directories:**
+  - `skills/<name>/` — skill definition (`SKILL.md`) + supporting docs (`references/`)
+  - `claude/agents/` — Claude Code agent definitions (`.md` with `skills:` frontmatter array)
+  - `opencode/agents/` — OpenCode agent definitions (`.md` with boolean tool flags + `skill()` body calls)
+  - `claude/global/` — global Claude Code files installed to `~/.claude/`
+  - `opencode/global/` — global OpenCode files installed to `~/.config/opencode/`
+  - `project-templates/` — context file templates users copy into their own project roots
+- **Non-obvious constraints:** `claude/global/` and `opencode/global/` files affect every project on the user's machine — changes require explicit human approval before committing
+
+---
+
+## Key Files
+
+| File | Why It Matters |
+|---|---|
+| `skills/architecture-review/SKILL.md` | Gold standard for the 10-section skill template |
+| `project-templates/AGENTS.md` | Template pattern this file follows |
+| `claude/global/CLAUDE.md` | Global Claude Code standards — do not duplicate here |
+| `opencode/global/AGENTS.md` | Global OpenCode standards — do not duplicate here |
+| `intent.md` | Goals, values, tradeoff hierarchy, and persistent decisions for this repo |
+| `constraints.md` | Contribution constraints — read before any task |
+
+---
+
+## Persistent Decisions
+
+| Date | Decision | Rationale |
+|---|---|---|
+| 2026-03-01 | 10-section template for skills and agents | Enforces completeness; gold standard is `skills/architecture-review/SKILL.md` |
+| 2026-03-01 | Claude Code uses `skills:` frontmatter array; OpenCode uses `skill()` body calls | Platform format requirements differ; behavior must be identical |
+| 2026-04-18 | Specs live in Jira / Confluence, not local `spec.md` | Professional dev workflow; `spec.md` creates stale duplicates |
+| 2026-04-18 | `project-templates/` renamed from `templates/` | "project-templates" makes the scope explicit — these are not global files |
+| 2026-04-18 | Global files live in `claude/global/` and `opencode/global/` | Separates global standards from project-level context; aligns with install script targets |
+
+---
+
+## Open Loops
+
+- [ ] Skill count (currently 53) — update this file and README when skills are added or removed
+- [ ] Agent count parity — Claude Code (20) vs. OpenCode (19); identify and add the missing OpenCode agent
+
+---
+
+## Team
+
+| Name | Role | Notes |
+|---|---|---|
+| Michael K. Alber | Owner / Primary contributor | Reviews all changes to global files and project-templates |
+
+---
+
+## Available Tools
+
+- `grounded-code-mcp` — local knowledge base; preferred over training data for language idioms, security patterns, and framework APIs
+
+---
+
+## Project Boot Ritual
+
+At the start of every session:
+
+1. Read this file (`AGENTS.md`), `intent.md`, and `constraints.md`.
+2. Check the active task context (Jira issue or conversation) for the current spec and acceptance criteria.
+3. Confirm context — state: current phase, active task (if any), top 3 constraints, open loops.
+4. Do NOT begin work until context is confirmed.
+
+---
 
 ## Skill Conventions
 
@@ -85,6 +140,8 @@ Gold standard template: `skills/architecture-review/SKILL.md`
 ### References Directory
 
 Each `references/` directory contains 2-5 supporting files: code examples, decision matrices, checklists, configuration templates.
+
+---
 
 ## Agent Conventions
 
@@ -122,7 +179,7 @@ tools:
 
 Key difference: Claude uses `skills:` array in frontmatter; OpenCode uses `skill({ name: "..." })` calls in the body.
 
-### 10 Mandatory Agent Sections
+### 10 Mandatory Agent Sections (in order)
 
 1. Title + Epigraph
 2. Core Philosophy
@@ -135,6 +192,8 @@ Key difference: Claude uses `skills:` array in frontmatter; OpenCode uses `skill
 9. State Block (unique XML tag per agent, e.g., `<tdd-state>`, `<code-review-state>`)
 10. Completion Criteria
 
+---
+
 ## Editing Guidelines
 
 - Follow the 10-section template when creating or modifying skills.
@@ -143,6 +202,8 @@ Key difference: Claude uses `skills:` array in frontmatter; OpenCode uses `skill
 - State block XML tags must be unique across all skills and agents.
 - Frontmatter `description` fields must include trigger phrases for slash-command discovery.
 - In Python code examples, avoid PyTorch evaluation mode calls that trigger security hooks. Use `model.train(False)` instead.
+
+---
 
 ## Skill Suites
 

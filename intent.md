@@ -84,17 +84,17 @@ A good output for this project:
 
 ## Persistent Decisions
 
-| Date | Decision | Rationale |
-|---|---|---|
-| 2026-03-01 | 10-section template for skills and agents | Enforces completeness; gold standard is `skills/architecture-review/SKILL.md` |
-| 2026-03-01 | Claude Code uses `skills:` frontmatter array; OpenCode uses `skill()` table calls in body | Platform format requirements differ; behavior must be identical |
-| 2026-04-18 | Specs live in Jira / Confluence, not local spec.md | Professional dev workflow; spec.md creates stale duplicates |
-| 2026-04-18 | `project-templates/` renamed from `templates/` | "project-templates" makes the scope explicit — these are not global files |
-| 2026-04-18 | Global files live in `claude/global/` and `opencode/global/` | Separates global standards from project-level context; aligns with install script targets |
+<!-- Architectural and product decisions that are settled — agent must not re-litigate them.
+     Canonical list lives in AGENTS.md. Add entries there; cross-reference here only if
+     a decision directly affects intent or tradeoff resolution. -->
+
+See `AGENTS.md` § Persistent Decisions.
 
 ---
 
 ## Open Loops
 
-- [ ] Skill count (currently 53) — update AGENTS.md and README when new skills are added
-- [ ] Agent count parity — Claude Code (20) vs. OpenCode (19); identify and add the missing OpenCode agent
+<!-- Unresolved questions the agent should surface proactively.
+     Canonical list lives in AGENTS.md. -->
+
+See `AGENTS.md` § Open Loops.

@@ -83,6 +83,40 @@
 
 ---
 
+## Proactive Action Rules
+
+<!-- For scheduled or autonomous agents only — delete this section if the agent is human-triggered.
+     Defines what the agent may do autonomously on each run vs. what requires human confirmation.
+     The agent MUST NOT act autonomously on irreversible actions without an explicit trigger defined here. -->
+
+- **Autonomous (safe to execute without confirmation):**
+  - [e.g., Read files, run tests, update backlog status]
+  - [e.g., Append progress log entries]
+  - [PROJECT-SPECIFIC AUTONOMOUS ACTION]
+
+- **Requires human confirmation (irreversible or high-stakes):**
+  - [e.g., Deploy to staging or production]
+  - [e.g., Send external communications]
+  - [e.g., Delete or overwrite data]
+  - [PROJECT-SPECIFIC CONFIRMATION-REQUIRED ACTION]
+
+---
+
+## Rules of Engagement
+
+- Work on **ONE item per run only** — never attempt multiple backlog items in a single run.
+- Never mark ✅ Passing unless the Pass Condition in the backlog is verifiably met.
+- If blocked, mark ⏸ Blocked, explain why in the Notes column, and surface to the human before exiting.
+- **No regressions** — end every run with all previously-passing items still passing.
+- Update the backlog status table and append a progress log entry before exiting.
+- Leave the codebase in a clean, fully passing test state at the end of every run.
+
+> At project scale, consider a planner/executor split: a planner agent reads the full backlog,
+> selects and decomposes the next task, and spawns short-lived executor agents per subtask.
+> The planner holds project context; executors hold only task context.
+
+---
+
 ## Progress Log
 
 <!-- Append after every run. Never delete entries.
