@@ -107,6 +107,7 @@ Skills for designing, specifying, and extracting AI agent definitions.
 | Skill | Description |
 |-------|-------------|
 | `agent-spec-writer` | Interactive spec design for AI agents from first principles. Guides through capability mapping, guardrail definition, and state block authoring. |
+| `skill-creator` | Creates, revises, and scores SKILL.md definitions against the 10-section gold standard. Three modes: CREATE, REVISE, SCORE. |
 
 ### RPI Workflow Suite
 
@@ -142,7 +143,7 @@ Autonomous agents that make decisions and take actions independently. Each agent
 | `documentation-agent` | Autonomous documentation sync -- detects staleness, generates XML docs, updates READMEs. | architecture-journal, doc-sync |
 | `dependency-audit-agent` | Autonomous dependency auditing -- vulnerability scanning, license compliance, upgrade paths. | dependency-mapper, technical-debt-assessor, supply-chain-audit |
 | `spec-extractor-agent` | Extracts structured agent specifications from natural-language descriptions or existing code. | agent-spec-writer |
-| `confluence-guide-writer` | Reads Confluence spec pages and/or source code and generates well-formatted technical guides. *(Claude Code only)* | confluence-guide-writer |
+| `confluence-guide-writer` | Reads Confluence spec pages and/or source code and generates well-formatted technical guides. | confluence-guide-writer |
 
 ### DevOps / Infrastructure
 
@@ -270,6 +271,7 @@ Skills are invoked automatically based on context or triggered with slash comman
 /rpi-iterate                    # Update an existing implementation plan
 /confluence-guide-writer        # Generate a guide from Confluence or source code
 /jira-comment-writer            # Draft a stakeholder-friendly Jira comment
+/skill-creator                  # Create, revise, or score a SKILL.md definition
 ```
 
 Agents are invoked as subagents:
