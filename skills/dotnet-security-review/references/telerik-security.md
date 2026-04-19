@@ -18,7 +18,7 @@ Telerik has **multiple UI product lines** with different security profiles:
 
 ---
 
-## Part 1: Telerik UI for Blazor (.NET 9+)
+## Part 1: Telerik UI for Blazor (.NET 10+)
 
 Telerik UI for Blazor uses native Blazor components without jQuery dependencies. Different security model than legacy products.
 

@@ -3,7 +3,7 @@
 ## 0. Framework & Dependencies Pre-Check
 
 ### Target Framework
-- [ ] Using .NET 10 LTS (preferred) or .NET 8 LTS?
+- [ ] Using .NET 10 LTS?
 - [ ] No .NET Framework 4.x projects without upgrade plan?
 - [ ] No EOL frameworks (netcoreapp3.1, net5, net7)?
 - [ ] SDK-style project files (not legacy)?
