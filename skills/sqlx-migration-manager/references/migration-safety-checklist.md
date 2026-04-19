@@ -1,0 +1,196 @@
+# SQLx Migration Safety Checklist
+
+Pre-apply and post-apply checklists for SQLx database migrations.
+Use before every `sqlx migrate run` in staging or production.
+
+---
+
+## Pre-Apply Checklist
+
+### 1. Migration File Review
+
+- [ ] Migration file has been read completely (not just skimmed)
+- [ ] Migration name is descriptive (`add_user_email_index`, not `migration_001`)
+- [ ] SQL syntax is correct (tested on development database)
+- [ ] No typos in table or column names
+
+### 2. Data Loss Assessment
+
+- [ ] No `DROP TABLE` without explicit confirmation
+- [ ] No `DROP COLUMN` without explicit confirmation
+- [ ] No `TRUNCATE` without explicit confirmation
+- [ ] No column type changes that could truncate data (e.g., `VARCHAR(255)` → `VARCHAR(50)`)
+- [ ] No `NOT NULL` constraint added to a column with existing NULL values
+
+**If any data loss risk exists:**
+- [ ] Recent backup verified
+- [ ] Data loss is intentional and approved
+- [ ] Rollback plan accounts for data loss (data cannot be recovered from rollback alone)
+
+### 3. Locking Risk Assessment
+
+| Operation | PostgreSQL Locking | MySQL Locking |
+|-----------|-------------------|---------------|
+| `ADD COLUMN` (nullable, no default) | No table rewrite | No table rewrite |
+| `ADD COLUMN` (with DEFAULT) | No rewrite (PG 11+) | Table rewrite |
+| `ADD COLUMN NOT NULL` (no default) | Requires backfill | Table rewrite |
+| `DROP COLUMN` | Fast | Table rewrite |
+| `CREATE INDEX` | Blocks writes | Blocks writes |
+| `CREATE INDEX CONCURRENTLY` | Non-blocking | N/A |
+| `ALTER COLUMN TYPE` | Table rewrite | Table rewrite |
+| `ADD CONSTRAINT` | Brief lock | Table rewrite |
+
+- [ ] Locking behavior identified for each DDL operation
+- [ ] For table rewrites: estimated time calculated based on table size
+- [ ] For production: zero-downtime approach confirmed (or maintenance window scheduled)
+
+### 4. Rollback Plan
+
+- [ ] Rollback SQL written and reviewed
+- [ ] Rollback tested on development database
+- [ ] Rollback is feasible (not blocked by data loss)
+- [ ] Rollback time estimated
+
+### 5. Offline Cache Plan
+
+- [ ] `sqlx prepare` will be run immediately after `sqlx migrate run`
+- [ ] Updated `.sqlx/` directory will be committed with the migration
+
+---
+
+## Apply Sequence
+
+```bash
+# 1. Verify current migration state
+sqlx migrate info
+
+# 2. Apply the migration
+sqlx migrate run
+
+# 3. Verify migration was applied
+sqlx migrate info
+
+# 4. Verify application builds
+cargo build
+
+# 5. Regenerate offline cache
+sqlx prepare
+
+# 6. Verify offline build works
+SQLX_OFFLINE=true cargo build
+
+# 7. Commit migration + cache
+git add migrations/ .sqlx/
+git commit -m "feat: [migration description]"
+```
+
+---
+
+## Post-Apply Checklist
+
+- [ ] `sqlx migrate info` shows migration as applied with correct checksum
+- [ ] `cargo build` succeeds (no compile errors from schema changes)
+- [ ] `SQLX_OFFLINE=true cargo build` succeeds (offline cache is valid)
+- [ ] Application starts without errors
+- [ ] Affected queries return expected results (smoke test)
+- [ ] `.sqlx/` directory committed with updated cache
+
+---
+
+## Rollback Sequence
+
+```bash
+# 1. Revert the last migration
+sqlx migrate revert
+
+# 2. Verify rollback
+sqlx migrate info
+
+# 3. Regenerate offline cache for the previous schema
+sqlx prepare
+
+# 4. Verify build
+SQLX_OFFLINE=true cargo build
+
+# 5. Commit the reverted cache
+git add .sqlx/
+git commit -m "revert: [migration description]"
+```
+
+---
+
+## Environment-Specific Notes
+
+### Development
+- Run `sqlx migrate run` freely
+- Test rollback with `sqlx migrate revert` after every apply
+- Always run `sqlx prepare` after schema changes
+
+### Staging
+- Apply migrations before deploying new code
+- Verify application starts with new schema before promoting to production
+- Keep staging schema in sync with production
+
+### Production
+- Apply migrations during low-traffic periods (unless zero-downtime verified)
+- Have rollback plan ready before applying
+- Monitor application logs for 15 minutes after migration
+- Do NOT apply migrations and code changes simultaneously — apply migration first, then deploy code
+
+---
+
+## sqlx migrate Commands Reference
+
+```bash
+# Create a new migration file
+sqlx migrate add <name>
+# Creates: migrations/<timestamp>_<name>.sql
+
+# Apply all pending migrations
+sqlx migrate run
+
+# Revert the last applied migration
+sqlx migrate revert
+
+# Show migration status
+sqlx migrate info
+
+# Regenerate offline query cache
+sqlx prepare
+
+# Verify offline cache is valid
+SQLX_OFFLINE=true cargo build
+
+# Run with specific database URL
+DATABASE_URL=postgres://... sqlx migrate run
+```
+
+---
+
+## `.sqlx/` Directory Management
+
+The `.sqlx/` directory contains the offline query cache. It must be:
+
+1. **Committed to git** — CI uses `SQLX_OFFLINE=true` to avoid requiring a database
+2. **Regenerated after every migration** — stale cache causes compile errors
+3. **Not manually edited** — always regenerated by `sqlx prepare`
+
+```bash
+# Check if cache is stale
+SQLX_OFFLINE=true cargo build
+# If this fails, run: sqlx prepare
+
+# Force cache regeneration
+sqlx prepare --force
+```
+
+### `.gitignore` Note
+
+Do NOT add `.sqlx/` to `.gitignore`. It must be committed.
+
+```gitignore
+# WRONG — do not add this:
+# .sqlx/
+
+# CORRECT — commit .sqlx/ to git
+```

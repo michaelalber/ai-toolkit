@@ -606,5 +606,6 @@ The questioning patterns and evaluation frameworks in this skill are technology-
 For technology-specific architecture concerns:
 - .NET/C# architectures: Cross-reference with `dotnet-vertical-slice` for structural patterns and `ef-migration-manager` for data access architecture
 - Python architectures: Cross-reference with `python-arch-review` for code quality gates (note: that skill is a process tool; this skill is a learning tool); use `python-feature-slice` for vertical slice structural patterns and `fastapi-scaffolder` for API layer architecture concerns
+- Rust architectures: Cross-reference with `rust-architecture-checklist` for ownership/borrowing patterns and module structure; use `axum-scaffolder` for API layer architecture and `rust-feature-slice` for vertical slice structural patterns
 - Containerized/edge deployments: Cross-reference with `jetson-deploy` or `edge-cv-pipeline` for deployment architecture concerns
 - Event-driven/messaging architectures: The failure mode and coupling questions in this skill are especially important -- message ordering, exactly-once delivery, dead letter queues, and poison messages are common architectural vulnerabilities
