@@ -1,6 +1,10 @@
 ---
 name: sensor-integration
-description: Build sensor data pipelines with I2C, SPI, UART, and GPIO protocols. Use when integrating sensors with Raspberry Pi, Jetson, or other SBCs for data collection, calibration, and anomaly detection.
+description: >
+  Build sensor data pipelines with I2C, SPI, UART, and GPIO protocols. Use when
+  integrating sensors with Raspberry Pi, Jetson, or other SBCs for data collection,
+  calibration, and anomaly detection. Do NOT use when there is no physical sensor
+  hardware involved; Do NOT use when the goal is cloud telemetry ingestion.
 ---
 
 # Sensor Integration Pipeline

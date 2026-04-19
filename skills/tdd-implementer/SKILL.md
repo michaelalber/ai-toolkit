@@ -1,6 +1,10 @@
 ---
 name: tdd-implementer
-description: Implement minimal code to make failing tests pass (GREEN phase). Use when you have a failing test and need to write just enough code to make it pass.
+description: >
+  Implement minimal code to make failing tests pass (GREEN phase). Use when you have
+  a failing test and need to write just enough code to make it pass.
+  Do NOT use when no failing test exists; do NOT use for refactoring — use
+  tdd-refactor instead.
 ---
 
 # TDD Implementer (GREEN Phase)

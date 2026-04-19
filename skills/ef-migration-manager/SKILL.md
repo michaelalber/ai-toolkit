@@ -1,6 +1,10 @@
 ---
 name: ef-migration-manager
-description: EF Core migration lifecycle with safety checks and rollback planning. Use when creating, reviewing, or applying database migrations in .NET projects.
+description: >
+  EF Core migration lifecycle with safety checks and rollback planning. Use when
+  creating, reviewing, or applying database migrations in .NET projects.
+  Do NOT use when the goal is initial schema design or ad-hoc SQL management;
+  Do NOT use when the project uses Dapper or raw SQL without an EF Core DbContext.
 ---
 
 # EF Core Migration Manager

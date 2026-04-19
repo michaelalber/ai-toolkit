@@ -1,6 +1,11 @@
 ---
 name: jetson-deploy
-description: Deploy and optimize applications on Jetson Orin Nano with TensorRT. Use when setting up Jetson environments, converting models to TensorRT, managing power modes, and containerizing edge AI applications.
+description: >
+  Deploy and optimize applications on Jetson Orin Nano with TensorRT. Use when
+  setting up Jetson environments, converting models to TensorRT, managing power
+  modes, and containerizing edge AI applications. Do NOT use when the target hardware
+  is not a Jetson device; Do NOT use when deploying to Raspberry Pi — use
+  edge-cv-pipeline and sensor-integration instead.
 ---
 
 # Jetson Orin Nano Deployment & TensorRT Optimization

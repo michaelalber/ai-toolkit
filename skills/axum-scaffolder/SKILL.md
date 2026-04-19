@@ -9,6 +9,8 @@ description: >
   JWT authentication in Axum.
   Triggers on: "scaffold axum", "create axum endpoint", "axum router", "add axum route",
   "rust rest api", "axum api", "axum openapi", "axum jwt", "axum middleware".
+  Do NOT use when the existing codebase uses Actix-web — scaffolding Axum into
+  an Actix project requires manual integration not covered here.
 ---
 
 # Axum Scaffolder

@@ -10,6 +10,8 @@ description: >
   scan for CVEs in Rust dependencies, or audit unsafe blocks for security implications.
   Triggers on: "rust security review", "audit rust code security", "cargo audit",
   "rust vulnerabilities", "unsafe audit rust", "OWASP rust", "rust security scan".
+  Do NOT use when the goal is architectural review — use rust-architecture-checklist
+  for ownership patterns, module structure, and API design.
 ---
 
 # Rust Security Review (OWASP Baseline)

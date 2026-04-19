@@ -1,6 +1,11 @@
 ---
 name: picar-x-behavior
-description: Build composable robot behaviors for SunFounder Picar-X. Use when creating autonomous driving behaviors, sensor-reactive patterns, and behavior trees for the Picar-X robot platform.
+description: >
+  Build composable robot behaviors for SunFounder Picar-X. Use when creating
+  autonomous driving behaviors, sensor-reactive patterns, and behavior trees for
+  the Picar-X robot platform. Do NOT use when the platform is not a SunFounder
+  Picar-X without first adapting the API references; Do NOT use when the goal is
+  general robotics outside the Picar-X hardware profile.
 ---
 
 # Picar-X Behavior Composer

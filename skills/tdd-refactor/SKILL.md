@@ -1,6 +1,10 @@
 ---
 name: tdd-refactor
-description: Safely refactor code while keeping tests green (REFACTOR phase). Use when tests pass and you want to improve code structure without changing behavior.
+description: >
+  Safely refactor code while keeping tests green (REFACTOR phase). Use when tests
+  pass and you want to improve code structure without changing behavior.
+  Do NOT use when tests are red; do NOT use to fix bugs or add new behavior —
+  return to RED phase first.
 ---
 
 # TDD Refactor (REFACTOR Phase)

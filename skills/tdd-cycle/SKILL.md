@@ -1,6 +1,10 @@
 ---
 name: tdd-cycle
-description: Orchestrate RED-GREEN-REFACTOR TDD phases. Use when starting TDD, managing phase transitions, or maintaining TDD discipline across a development session.
+description: >
+  Orchestrate RED-GREEN-REFACTOR TDD phases. Use when starting TDD, managing phase
+  transitions, or maintaining TDD discipline across a development session.
+  Do NOT use when TDD discipline is optional or exploratory; do NOT use when a
+  failing test does not yet exist — create the test first.
 ---
 
 # TDD Cycle Orchestrator

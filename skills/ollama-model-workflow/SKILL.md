@@ -1,6 +1,10 @@
 ---
 name: ollama-model-workflow
-description: Local LLM management with Ollama, Modelfile creation, and benchmarking. Use when pulling models, creating custom Modelfiles, or evaluating model performance locally.
+description: >
+  Local LLM management with Ollama, Modelfile creation, and benchmarking. Use when
+  pulling models, creating custom Modelfiles, or evaluating model performance locally.
+  Do NOT use when the target runtime is a cloud provider API (OpenAI, Anthropic,
+  Azure OpenAI); do NOT use when VRAM is unavailable on the target machine.
 ---
 
 # Ollama Model Workflow

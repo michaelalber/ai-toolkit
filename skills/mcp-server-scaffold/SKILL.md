@@ -1,6 +1,10 @@
 ---
 name: mcp-server-scaffold
-description: Custom MCP server creation with FastMCP pattern and testing. Use when building MCP servers to expose tools, resources, or prompts to AI assistants.
+description: >
+  Custom MCP server creation with FastMCP pattern and testing. Use when building
+  MCP servers to expose tools, resources, or prompts to AI assistants.
+  Do NOT use when the integration is synchronous REST-only; Do NOT use when the
+  tool surface is a single function that does not benefit from the MCP protocol.
 ---
 
 # MCP Server Scaffold

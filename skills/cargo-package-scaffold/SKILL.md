@@ -7,6 +7,9 @@ description: >
   Triggers on: "scaffold cargo crate", "create rust crate", "new rust library",
   "publish to crates.io", "cargo package", "rust ci pipeline", "cargo workspace",
   "rust crate metadata", "cargo publish workflow".
+  Do NOT use when the crate is internal-only and not intended for crates.io
+  publication; Do NOT use when the target is a binary application — this skill
+  targets library crates.
 ---
 
 # Cargo Package Scaffold

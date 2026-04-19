@@ -1,6 +1,11 @@
 ---
 name: tdd-pair
-description: AI as TDD pair programmer with role-based collaboration. Use when you want to collaborate on TDD with the AI taking a specific role (driver, navigator, or alternating).
+description: >
+  AI as TDD pair programmer with role-based collaboration. Use when you want to
+  collaborate on TDD with the AI taking a specific role (driver, navigator, or
+  alternating).
+  Do NOT use when the goal is autonomous solo work; Do NOT use when no human
+  partner is actively present in the session.
 ---
 
 # TDD Pair Programming

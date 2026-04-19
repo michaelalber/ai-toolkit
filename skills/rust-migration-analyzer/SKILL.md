@@ -10,6 +10,9 @@ description: >
   sync-to-async migrations.
   Triggers on: "rust migration", "c to rust", "c++ to rust", "rust edition upgrade",
   "modernize rust", "rust legacy migration", "rust rewrite", "cargo fix edition".
+  Do NOT use when you want to execute the migration — this skill produces an
+  assessment artifact only; Do NOT use when the codebase is already on current
+  stable Rust with no legacy patterns.
 ---
 
 # Rust Migration Analyzer

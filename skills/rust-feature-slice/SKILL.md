@@ -9,6 +9,8 @@ description: >
   by feature rather than technical layer.
   Triggers on: "scaffold rust feature", "axum feature folder", "rust vertical slice",
   "add rust endpoint", "rust service layer", "rust feature module", "rust cqrs".
+  Do NOT use when designing microservice boundaries or inter-process architecture
+  — this skill scopes to module organization within a single Rust binary.
 ---
 
 # Rust Feature Slice Architecture

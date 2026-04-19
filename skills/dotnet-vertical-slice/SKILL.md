@@ -1,6 +1,13 @@
 ---
 name: dotnet-vertical-slice
-description: Scaffold vertical slice architecture with CQRS + FreeMediator, including optional Telerik Blazor UI generation. Use when creating feature-based .NET projects with command/query separation and pipeline behaviors. Triggers on "scaffold feature", "create slice", "new feature", "generate cqrs", "add command", "add query", "create handler", "vertical slice".
+description: >
+  Scaffold vertical slice architecture with CQRS + FreeMediator, including optional
+  Telerik Blazor UI generation. Use when creating feature-based .NET projects with
+  command/query separation and pipeline behaviors. Triggers on "scaffold feature",
+  "create slice", "new feature", "generate cqrs", "add command", "add query",
+  "create handler", "vertical slice".
+  Do NOT use when the project uses layer-based (N-tier) architecture — this skill
+  enforces feature folder structure and will conflict with existing layer conventions.
 ---
 
 # Vertical Slice Architecture with CQRS + FreeMediator

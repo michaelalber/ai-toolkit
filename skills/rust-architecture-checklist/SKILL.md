@@ -9,6 +9,8 @@ description: >
   Triggers on phrases like "review rust project", "rust architecture checklist",
   "audit rust code", "check rust patterns", "evaluate rust codebase", "rust code review",
   "clippy review", "rust ownership review".
+  Do NOT use when a security review is the goal — use rust-security-review;
+  this checklist covers correctness and structure, not security implications.
 ---
 
 # Rust Architecture Checklist
