@@ -18,7 +18,7 @@
 ## Project Overview
 
 - **Name:** AI Toolkit
-- **Purpose:** A collection of 53+ shareable skills and autonomous agents for AI-assisted software development. Supports Claude Code and OpenCode.
+- **Purpose:** A collection of 61+ shareable skills and autonomous agents for AI-assisted software development. Supports Claude Code and OpenCode.
 - **Phase:** Maintain — stable toolkit; work consists of adding new skills/agents, fixing existing ones, and keeping platform parity.
 - **Jira project key:** N/A — task specs are tracked in conversation context or ad hoc
 - **Definition of success:** Every skill and agent installs cleanly, follows the 10-section template exactly, and works out of the box without requiring external documentation.
@@ -78,8 +78,8 @@
 
 ## Open Loops
 
-- [ ] Skill count (currently 53) — update this file and README when skills are added or removed
-- [ ] Agent count parity — Claude Code (20) vs. OpenCode (19); identify and add the missing OpenCode agent
+- [ ] Skill count (currently 61) — update this file and README when skills are added or removed
+- [ ] Agent count parity — Claude Code (28) vs. OpenCode (27); identify and add the missing OpenCode agent
 
 ---
 
@@ -217,4 +217,5 @@ Key difference: Claude uses `skills:` array in frontmatter; OpenCode uses `skill
 | Agent Support | automated-code-review, test-scaffold, doc-sync, supply-chain-audit, environment-health, model-optimization, anomaly-detection, fleet-management, research-synthesis, session-context, task-decomposition | Domain knowledge for agents |
 | Agent Design | agent-spec-writer | Spec design and extraction for AI agents |
 | RPI Workflow | rpi-research, rpi-plan, rpi-implement, rpi-iterate | Research-Plan-Implement with session isolation and parallel subagents |
+| Python | python-security-review, python-security-review-federal, python-feature-slice, alembic-migration-manager, python-modernization-analyzer, fastapi-scaffolder, pypi-package-scaffold | Python patterns, migrations, security, packaging |
 | Other | python-arch-review, jira-review, jira-comment-writer, confluence-guide-writer | Language/tool-specific reviews and documentation generation |
