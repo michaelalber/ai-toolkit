@@ -144,6 +144,10 @@ you must follow. **This is the authoritative source — prefer it over training 
 | `grounded_ui_ux` | `"ui_ux"` | UI/UX: Laws of UX, Nielsen heuristics, WCAG 2.2, ARIA patterns, GOV.UK Design System, USWDS |
 | `grounded_gov` | `"gov"` | Federal/government: NIST 800-53/171/218, DOE, Zero Trust, AI RMF, CUI |
 | `grounded_robotics` | `"robotics"` | Physical AI / embodied AI: ROS 2, MuJoCo, Isaac Lab, LeRobot, Spinning Up in Deep RL, VLA models |
+| `grounded_rust` | `"rust"` | Rust language: ownership/borrowing/lifetimes, async/Tokio, Cargo, error handling, Axum, Clippy, ecosystem crates |
+| `grounded_langsmith` | `"langsmith"` | LangSmith: tracing, evaluation, datasets, experiments, annotation, prompt engineering |
+| `grounded_langchain` | `"langchain"` | LangChain: LCEL, chains, agents, retrievers, RAG patterns, core concepts |
+| `grounded_langgraph` | `"langgraph"` | LangGraph: state machines, agent graphs, multi-agent orchestration |
 
 ### Canonical Engineering Standards
 
@@ -161,7 +165,7 @@ When in doubt — search. The cost of a wrong answer exceeds the cost of a searc
 **Mandatory search triggers** — call `search_knowledge` before answering questions about:
 - XP, TDD, CI/CD, DDD, Clean Architecture, refactoring, pair programming
 - API usage, library functions, or framework behavior
-- Language idioms: .NET/C#, Python, PHP, JavaScript/TypeScript, SQL
+- Language idioms: .NET/C#, Python, PHP, JavaScript/TypeScript, SQL, Rust
 - Security, OWASP, threat modeling
 - AI/ML pipelines, RAG, embeddings
 - Industrial automation, PLC, Raspberry Pi, sensor integration
@@ -170,6 +174,10 @@ When in doubt — search. The cost of a wrong answer exceeds the cost of a searc
 - Systems thinking, feedback loops, leverage points, chaos engineering — **search `systems_thinking`**
 - UI design, UX patterns, accessibility, WCAG, ARIA, usability, form design — **search `ui_ux`**
 - Robotics, ROS 2, physical AI, embodied AI, VLA models, RL for robotics, sim-to-real, MuJoCo, Isaac Lab — **search `robotics`**
+- Rust ownership, lifetimes, traits, async, Tokio, Cargo, error handling, unsafe, ecosystem crates — **search `rust`**
+- LangSmith tracing, evaluation, datasets, experiments, prompt engineering — **search `langsmith`**
+- LangChain LCEL, chains, agents, retrievers, RAG patterns — **search `langchain`**
+- LangGraph state machines, agent graphs, multi-agent orchestration — **search `langgraph`**
 - Any topic where you would otherwise rely on training data alone
 
 ### Workflow — mandatory
