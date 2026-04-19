@@ -123,6 +123,86 @@ Use when: two closely related items need to be communicated together. Limit to t
 
 ---
 
+## Client — Formal
+
+Use when: the reader is an external client or executive sponsor. No contractions, complete sentences, no first names.
+
+```
+**[Topic] — Update**
+
+[One sentence: what was completed or the current status, stated factually.]
+[One sentence: any impact on scope, timeline, or the stakeholder's obligations.]
+[One sentence: next milestone, expected date, and who owns it.]
+```
+
+**Example:**
+
+> **Payment Integration — Update**
+>
+> The initial phase of the payment integration has been completed and deployed to the test environment.
+> This work does not affect the project timeline — delivery remains on schedule for the agreed date.
+> The team will proceed with final validation testing this week. A confirmation will be provided once testing is complete.
+
+---
+
+## Client — Friendly
+
+Use when: the reader is a client contact you have an established, warm relationship with. Conversational but still professional.
+
+```
+**[Topic] — Update**
+
+[One to two sentences: what happened, in plain language, with the outcome stated clearly.]
+[One sentence: timeline or next step, with enough detail to be useful.]
+```
+
+**Example:**
+
+> **Payment Integration — Update**
+>
+> Good news — the first phase of the payment work is done and live in our test environment.
+> We're running final checks this week and expect to share a full update by Friday.
+
+---
+
+## PM — Formal
+
+Use when: the reader is an internal or external project manager who needs a structured, professional update.
+
+```
+**[Status type] — [Topic]**
+
+[One sentence: status summary.]
+[One to two sentences: detail on what changed, any impact on scope or timeline.]
+[One sentence: next action and owner.]
+```
+
+**Example:**
+
+> **Update — Report Export Feature**
+>
+> Development is progressing on schedule.
+> The export logic is complete; the team is now integrating it with the file storage layer. No scope changes have been identified.
+> Next step: integration testing, owned by the dev team. Estimated completion: end of sprint.
+
+---
+
+## PM — Friendly
+
+Use when: the reader is a project manager with an informal working relationship. Direct, warm, no jargon.
+
+```
+[One or two sentences: what happened and current state, conversationally.]
+[One sentence: next step, clearly owned.]
+```
+
+**Example:**
+
+> Export feature is nearly done — just hooking up the file storage piece now.
+> We're aiming to have it wrapped up by end of sprint; I'll ping you when it's ready to test.
+
+---
+
 ## Tone Variants
 
 The same template can be adjusted for audience:

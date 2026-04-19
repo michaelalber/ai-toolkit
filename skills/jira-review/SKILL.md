@@ -14,6 +14,21 @@ Before writing a single line of code, we must understand what we're building and
 3. **Ensure testability** - Clear acceptance criteria enable TDD from the start
 4. **Align expectations** - Questions asked now prevent misunderstandings later
 
+## Domain Principles Table
+
+| # | Principle | Description | Applied As |
+|---|-----------|-------------|------------|
+| 1 | **Completeness Before Clarity** | A vague issue blocks implementation regardless of how well-written it is. Missing acceptance criteria is a harder blocker than unclear prose. | Flag missing acceptance criteria before assessing description quality. |
+| 2 | **Ambiguity Is Blocking** | Ambiguous requirements produce wrong implementations. Any requirement that admits two interpretations will result in the wrong one being chosen. | Any requirement that admits two interpretations must be flagged as a blocker, not a suggestion. |
+| 3 | **Complexity Is Measurable** | Implementation complexity can be estimated from signal density, not intuition. Signals include: new integrations, cross-service changes, undecided technical approaches, external dependencies. | Apply the complexity scoring formula from `references/complexity-scoring.md`. Do not guess complexity. |
+| 4 | **Testability Is a Gate** | An issue without acceptance criteria cannot be verified as done. TDD cannot start without a testable criterion. If you cannot write the first test from the AC, the AC is not ready. | No issue passes review without at least one acceptance criterion that can be expressed as a test. |
+| 5 | **Size Predicts Risk** | Large issues (high complexity score) correlate with planning failures, scope drift, and missed dependencies. High-complexity issues rarely survive implementation unchanged. | Flag issues scoring ≥ 8 for decomposition before sprint commitment. |
+| 6 | **Context Reduces Rework** | Missing context forces implementers to make assumptions. Every assumption the implementer must make is a potential rework event. | Every gap in the issue that requires the implementer to assume something is a required clarification. |
+| 7 | **Dependencies Must Be Explicit** | Undeclared dependencies cause cascading delays. A feature that cannot be completed until another team ships will slip; the earlier this is surfaced, the smaller the impact. | Flag any issue that implies another issue's completion or another team's delivery without linking it explicitly. |
+| 8 | **Reproducibility Is Non-Negotiable** | A bug report that cannot be reproduced cannot be fixed. Developers who cannot reproduce a bug make changes that may not fix it and may introduce regressions. | Any bug issue missing reproduction steps fails review unconditionally. |
+| 9 | **UI Issues Require Visuals** | Describing a visual problem in text produces ambiguous fixes. "The button looks wrong" is not actionable. A screenshot with markup is. | Flag any UI/UX issue lacking screenshots, annotated mockups, or Figma links. |
+| 10 | **Estimates Are Evidence-Based** | Story point estimates without complexity signals are fiction. Accurate estimates require measurable inputs. | Require complexity scoring before accepting an estimate. Reject point assignments made without supporting signal evidence. |
+
 ## Auto-Trigger Behavior
 
 This skill activates automatically when the following MCP tools are invoked:
@@ -233,13 +248,40 @@ When gaps are identified, generate targeted questions using the templates in `re
 
 ## AI Discipline Rules
 
-To ensure consistent, high-quality reviews:
+### CRITICAL: Flag Gaps by Name, Not Category
 
-1. **Never assume** - If information is missing, flag it; don't fill gaps with assumptions
-2. **Quote the source** - Reference specific text from the issue when scoring
-3. **Be conservative** - When uncertain about complexity, err on the higher side
-4. **Separate facts from interpretation** - Clearly distinguish what's stated vs. inferred
-5. **Respect the process** - Always complete the full review before any implementation
+A vague flag ("this issue is unclear") gives the product owner nothing actionable. A specific
+flag ("Missing: acceptance criteria — the description says 'fix the login page' but does not
+state what 'fixed' means") is actionable.
+
+```
+WRONG: "This issue is too vague to implement."
+       (Product owner does not know what to add)
+
+RIGHT: "Missing: acceptance criteria.
+        The description says 'fix the login page' but does not state:
+        - What 'fixed' means (what is currently wrong?)
+        - Which users are affected (all? specific roles?)
+        - What the success condition looks like
+        Please add acceptance criteria before this issue is sprint-ready."
+```
+
+### CRITICAL: Complexity Scores Require Evidence
+
+Recommending a complexity score without listing the signals that produced it is guesswork.
+The score must be derivable from the signals you name.
+
+```
+WRONG: "This issue has a complexity score of 8 — it looks quite large."
+
+RIGHT: "Complexity score: 8 (HIGH). Signals detected:
+        - API changes: 2 endpoints modified (Scope Breadth: 3/5)
+        - New database table: 1 (Scope Breadth contribution)
+        - Auth change: session model affected (Technical Uncertainty: 4/5)
+        - External dependency: mobile team must ship push notification support first
+          (Dependencies: 5/5)
+        Recommend decomposition before sprint commitment."
+```
 
 ## Integration Points
 

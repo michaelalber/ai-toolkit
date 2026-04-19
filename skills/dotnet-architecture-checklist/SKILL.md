@@ -331,12 +331,17 @@ next_action: Session complete
 
 ### CRITICAL: Always Detect Framework First
 
-Before running any checklist item, determine the target framework version. A checklist item that references `IAsyncEnumerable` is irrelevant to a .NET Framework 4.8 project. A recommendation to use `InteractiveAutoRenderMode` is invalid for .NET 6.
+Before running any checklist item, determine the target framework version. Recommending
+`InteractiveAutoRenderMode` to a .NET 6 project produces invalid findings.
 
-1. Scan all `.csproj` files for `<TargetFramework>` and `<TargetFrameworks>`
-2. Record the framework version in the state block
-3. Gate all subsequent checklist items against the detected version
-4. If mixed frameworks are detected, note which items apply to which projects
+```bash
+# WRONG: running checklist without detecting the framework
+grep -r "IAsyncEnumerable" --include="*.cs"  # irrelevant on .NET Framework 4.8
+
+# RIGHT: detect framework first, then gate all checklist items against it
+grep -r "<TargetFramework>\|<TargetFrameworks>" --include="*.csproj"
+# Record result in state block, then only check APIs available in that version
+```
 
 If the framework cannot be determined, ASK the user. Never assume .NET 10.
 
@@ -384,6 +389,57 @@ If the codebase uses vertical slices with CQRS, never recommend repository patte
 1. Detect the predominant pattern: vertical slices (`Features/` folders) vs layers (`Controllers/`, `Services/`, `Repositories/`)
 2. Tailor all recommendations to the detected style
 3. If recommending a style change, flag it as a separate migration initiative with effort estimate
+
+### CRITICAL: No Shared Base Handlers
+
+Handler inheritance creates hidden coupling and shared mutable state between unrelated features.
+
+```csharp
+// WRONG: abstract base class with shared state — all handlers coupled
+public abstract class BaseHandler<TRequest, TResponse>
+{
+    protected readonly AppDbContext _db;
+    protected readonly ICurrentUser _user;
+    protected BaseHandler(AppDbContext db, ICurrentUser user) { ... }
+}
+public class CreateOrderHandler : BaseHandler<CreateOrderCommand, Result> { ... }
+public class CancelOrderHandler : BaseHandler<CancelOrderCommand, Result> { ... }
+
+// RIGHT: each handler is independent and sealed
+public sealed class CreateOrderHandler : IRequestHandler<CreateOrderCommand, Result>
+{
+    private readonly AppDbContext _db;
+    public CreateOrderHandler(AppDbContext db) { _db = db; }
+    public async Task<Result> Handle(CreateOrderCommand cmd, CancellationToken ct) { ... }
+}
+```
+
+### CRITICAL: Endpoints Must Be Thin
+
+An endpoint that contains validation logic, business rules, or persistence calls is
+untestable, unmaintainable, and defeats the purpose of the CQRS pipeline.
+
+```csharp
+// WRONG: fat endpoint — validation, business logic, and persistence all inline
+app.MapPost("/orders", async (CreateOrderRequest req, AppDbContext db) =>
+{
+    if (string.IsNullOrEmpty(req.CustomerId)) return Results.BadRequest("CustomerId required");
+    var existing = await db.Orders.Where(o => o.CustomerId == req.CustomerId).ToListAsync();
+    if (existing.Count >= 10) return Results.BadRequest("Order limit reached");
+    var order = new Order { CustomerId = req.CustomerId, /* ... */ };
+    db.Orders.Add(order);
+    await db.SaveChangesAsync();
+    return Results.Created($"/orders/{order.Id}", order);
+});
+
+// RIGHT: thin endpoint — ≤ 5 lines, delegates to FreeMediator
+app.MapPost("/orders", async (CreateOrderCommand cmd, ISender sender) =>
+{
+    var result = await sender.Send(cmd);
+    return result.IsSuccess ? Results.Created($"/orders/{result.Value}", result.Value)
+                            : Results.BadRequest(result.Error);
+});
+```
 
 ### HIGH: Version-Gate All Recommendations
 

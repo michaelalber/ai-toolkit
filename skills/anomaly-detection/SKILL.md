@@ -471,6 +471,61 @@ blockers: [any issues]
 | Suppressing repeated alerts silently | Hides escalating problems; repeated anomalies may indicate worsening failure | Log all suppressions with rationale; escalate if pattern persists |
 | Using training data with anomalies | Contaminated baseline produces thresholds that miss real anomalies | Curate baseline data carefully; validate stationarity and distribution |
 
+## AI Discipline Rules
+
+### CRITICAL: Baseline Before Detection
+
+Calling `detect_anomaly()` on a stream without an established baseline produces
+meaningless results. Every threshold in the detector is derived from baseline statistics.
+
+```
+WRONG: readings = get_sensor_readings()
+       result = detect_anomaly(readings[-1], config={})
+       # config is empty; thresholds are undefined
+
+RIGHT: baseline = establish_baseline(readings, min_samples=100)
+       # Only proceed if baseline is established
+       config = configure_detectors(baseline)
+       result = detect_anomaly(readings[-1], config)
+```
+
+### CRITICAL: Multiple Methods Must Agree
+
+A single Z-score threshold breach is insufficient evidence for an anomaly. Requiring
+consensus from ≥ 2 independent methods eliminates the majority of false positives
+from non-normal distributions and outlier contamination in the baseline.
+
+```
+WRONG: if abs(z_score) > 3.0:
+           raise_alert(sensor_id, value)
+       # Single-method verdict — false positive rate is high
+
+RIGHT: results = detect_anomaly(value, config)
+       consensus = results["consensus"]
+       if consensus["votes_anomaly"] >= 2:  # ≥ 2 methods agree
+           raise_alert(sensor_id, value, evidence=consensus)
+```
+
+### CRITICAL: Distinguish Fault from Signal
+
+A sensor reporting a null, zero, or flatline reading may be broken, not detecting
+a real environmental event. Run a fault filter before anomaly scoring — applying
+statistical outlier detection to a broken sensor produces misleading severity labels.
+
+```
+WRONG: if detect_anomaly(value, config)["consensus"]["is_anomaly"]:
+           classify_and_alert(value)
+       # If value=0.0 due to sensor power loss, this fires a SPIKE alert
+
+RIGHT: fault = check_sensor_fault(value)  # null, out-of-range, flatline
+       if fault.is_faulty:
+           raise_sensor_fault_alert(sensor_id, fault)
+       else:
+           result = detect_anomaly(value, config)
+           if result["consensus"]["is_anomaly"]:
+               classify_and_alert(value)
+```
+
 ## Integration with Other Skills
 
 - **`sensor-integration`** -- Use for physical sensor setup, protocol configuration, and calibration procedures. Anomaly detection begins after `sensor-integration` has established a calibrated data pipeline.

@@ -277,35 +277,66 @@ blockers: none
 
 ### CRITICAL: Never Publish Without Tests
 
-Before ANY `dotnet nuget push` command:
-1. Verify a test project exists alongside the source project
-2. Run `dotnet test` and confirm all tests pass
-3. Confirm public API members have corresponding test coverage
-4. If no tests exist, STOP and write tests first
+Before ANY `dotnet nuget push` command, verify a test project exists and all tests pass.
+
+```bash
+# WRONG: pushing without running tests
+dotnet pack --configuration Release
+dotnet nuget push bin/Release/*.nupkg --source nuget.org --api-key $KEY
+
+# RIGHT: run tests first; only push if they pass
+dotnet test --configuration Release
+dotnet pack --configuration Release
+dotnet nuget push bin/Release/*.nupkg --source nuget.org --api-key $KEY
+```
 
 Publishing untested code to a feed is irrecoverable damage to consumers.
 
 ### CRITICAL: Always Validate Package Metadata
 
-Before ANY `dotnet pack` command:
-1. Verify `PackageId` is set and follows naming conventions (Company.Product.Feature)
-2. Verify `Version` follows SemVer 2.0.0
-3. Verify `Description` is present and meaningful (not placeholder text)
-4. Verify `PackageLicenseExpression` or `PackageLicenseFile` is set
-5. Verify `PackageReadmeFile` points to an existing file
-6. Verify `RepositoryUrl` is set and accessible
+Before ANY `dotnet pack` command, verify all required NuGet metadata fields are present.
+
+```xml
+<!-- WRONG: missing required metadata — package will fail validation or be undiscoverable -->
+<PropertyGroup>
+  <PackageId>Acme.Widgets</PackageId>
+  <Version>1.0.0</Version>
+  <!-- No Description, Authors, PackageLicenseExpression, PackageReadmeFile -->
+</PropertyGroup>
+
+<!-- RIGHT: all required fields present -->
+<PropertyGroup>
+  <PackageId>Acme.Widgets</PackageId>
+  <Version>1.0.0</Version>
+  <Description>Provides reusable widget components for Acme applications.</Description>
+  <Authors>Acme Corp</Authors>
+  <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  <PackageReadmeFile>README.md</PackageReadmeFile>
+  <RepositoryUrl>https://github.com/acme/widgets</RepositoryUrl>
+</PropertyGroup>
+```
 
 Missing metadata degrades discoverability and trust.
 
 ### CRITICAL: Never Skip Multi-Target Verification
 
-When the package targets multiple frameworks:
-1. Run tests on EVERY target framework, not just the default
-2. Use `dotnet test --framework <tfm>` for each target if CI does not cover all
-3. Watch for API differences between frameworks (e.g., `netstandard2.0` lacks newer APIs)
-4. Verify conditional compilation directives (`#if NET8_0_OR_GREATER`) compile correctly
+When the package claims multi-framework compatibility, the `.csproj` must declare all
+target frameworks and CI must build and test each one.
 
-A package that fails on one of its declared targets is broken.
+```xml
+<!-- WRONG: single target while documentation claims netstandard2.0 support -->
+<PropertyGroup>
+  <TargetFramework>net10.0</TargetFramework>
+</PropertyGroup>
+
+<!-- RIGHT: multi-target with build matrix confirming both TFMs compile -->
+<PropertyGroup>
+  <TargetFrameworks>net10.0;netstandard2.0</TargetFrameworks>
+</PropertyGroup>
+```
+
+Verify each TFM individually: `dotnet test --framework net10.0` then
+`dotnet test --framework netstandard2.0`. A package that fails on one declared target is broken.
 
 ### CRITICAL: Always Review Public API Surface
 

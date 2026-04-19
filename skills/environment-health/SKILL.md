@@ -394,6 +394,53 @@ blockers: none
 | Skipping dependency order on restart | Dependent services fail to connect during startup | Start dependencies first, wait for health, then start dependents |
 | Killing processes by PID without identifying them | May kill the wrong process; PID reuse is real | Verify process identity with `ps -p PID -o comm=` before killing |
 
+## AI Discipline Rules
+
+### CRITICAL: Probe Before Diagnosing
+
+Run `docker inspect` and read its output before forming any diagnosis. Assumptions
+about container state that are not verified from actual output produce wrong diagnoses.
+
+```
+WRONG: Assuming a container is unhealthy because the service is slow,
+       then restarting it without reading docker inspect output.
+
+RIGHT: docker inspect <id> --format='{{json .State.Health}}'
+       Parse the State.Health.Status field.
+       Only form a diagnosis from what the output shows.
+```
+
+### CRITICAL: Never Modify Production Resources
+
+Always confirm the target environment before running any mutating command. Restarting
+or reconfiguring a production container from a dev context is irreversible in its impact.
+
+```
+WRONG: Running docker restart <container> after seeing errors,
+       without confirming that DOCKER_HOST and container labels
+       indicate a local dev environment.
+
+RIGHT: Verify DOCKER_HOST is pointing to local daemon.
+       Check container labels: docker inspect <id> --format='{{json .Config.Labels}}'
+       Confirm environment label matches dev before any mutating command.
+```
+
+### CRITICAL: Verify After Every Remediation
+
+Re-run the same probe that detected the problem after applying a fix. Reporting "fixed"
+based solely on the remediation command succeeding — without re-probing — is a false positive.
+
+```
+WRONG: Running docker start <container> and reporting "container is healthy"
+       without re-checking its health status.
+
+RIGHT: docker start <container>
+       # Wait for health check to run
+       sleep 5
+       docker inspect <container> --format='{{.State.Health.Status}}'
+       # Only report healthy if output shows "healthy"
+```
+
 ## Error Recovery
 
 ### Docker Daemon Not Running
