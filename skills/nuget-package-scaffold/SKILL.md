@@ -26,7 +26,7 @@ This skill scaffolds production-ready NuGet packages with proper metadata, testi
 |-----------|-------------|----------|
 | **Semantic Versioning** | Follow SemVer 2.0.0 strictly: MAJOR.MINOR.PATCH with clear meaning | Critical |
 | **API Surface Minimization** | Expose only what consumers need; use `internal` by default, `public` by design | Critical |
-| **Multi-Targeting** | Target multiple TFMs (net8.0, net9.0, net10.0) to maximize consumer reach | High |
+| **Multi-Targeting** | Target net10.0 as the primary TFM; add netstandard2.0 only when broad compatibility is required | High |
 | **Documentation** | Include XML doc comments on all public APIs; ship a README in the package | High |
 | **Deterministic Builds** | Enable deterministic compilation and Source Link for reproducibility | High |
 | **Strong Naming** | Sign assemblies when targeting consumers that require strong-named dependencies | Medium |
@@ -108,13 +108,9 @@ Checklist of required metadata properties:
 ### Step 3: Multi-Target Framework Decision Tree
 
 ```
-Does the package use APIs introduced after .NET 8?
-├── YES → Which version introduced the API?
-│         ├── .NET 9  → TargetFrameworks: net9.0;net10.0
-│         └── .NET 10 → TargetFrameworks: net10.0
-└── NO  → Does the package use .NET Standard compatible APIs only?
-          ├── YES → TargetFrameworks: netstandard2.0;net8.0;net9.0;net10.0
-          └── NO  → TargetFrameworks: net8.0;net9.0;net10.0
+Does the package need to support pre-.NET 10 consumers?
+├── YES → TargetFrameworks: netstandard2.0;net10.0
+└── NO  → TargetFrameworks: net10.0
 ```
 
 ### Step 4: Test
@@ -181,7 +177,7 @@ blockers: [issues]
 <nuget-scaffold-state>
 step: configure
 package_name: Acme.Utilities.Json
-target_frameworks: net8.0;net9.0;net10.0
+target_frameworks: net10.0
 version: 1.0.0
 publish_target: nuget.org
 last_action: Created solution structure and test project

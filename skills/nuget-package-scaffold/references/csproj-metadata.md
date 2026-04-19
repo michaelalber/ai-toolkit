@@ -33,7 +33,7 @@ These properties must be set before any package is published. Omitting them resu
 
 | Property | Description | Recommended Value |
 |----------|-------------|-------------------|
-| `TargetFrameworks` | Semicolon-separated target framework monikers | `net8.0;net9.0;net10.0` |
+| `TargetFrameworks` | Semicolon-separated target framework monikers | `net10.0` |
 | `Nullable` | Enable nullable reference type analysis | `enable` |
 | `ImplicitUsings` | Enable implicit global usings | `enable` |
 | `LangVersion` | C# language version | `latest` |
@@ -49,7 +49,7 @@ These properties must be set before any package is published. Omitting them resu
 ```xml
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+    <TargetFrameworks>net10.0</TargetFrameworks>
   </PropertyGroup>
 </Project>
 ```
@@ -61,7 +61,7 @@ When you need to support older .NET Framework consumers or Xamarin:
 ```xml
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net8.0;net9.0;net10.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net10.0</TargetFrameworks>
   </PropertyGroup>
 
   <!-- Polyfills for netstandard2.0 -->
@@ -96,8 +96,8 @@ public static class StringExtensions
   <PackageReference Include="System.Memory" Version="4.5.5" />
 </ItemGroup>
 
-<ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
-  <!-- net8.0 includes System.Memory in-box -->
+<ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+  <!-- net10.0 includes System.Memory in-box -->
 </ItemGroup>
 ```
 
@@ -270,7 +270,7 @@ The `PackageLicenseUrl` property is deprecated and should not be used for new pa
     <Copyright>Copyright 2025 Acme Inc.</Copyright>
 
     <!-- Target Frameworks -->
-    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+    <TargetFrameworks>net10.0</TargetFrameworks>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>latest</LangVersion>
@@ -336,7 +336,7 @@ A .NET tool is a special kind of NuGet package that contains a console applicati
 
     <!-- Tool-Specific Properties -->
     <OutputType>Exe</OutputType>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>acme-codegen</ToolCommandName>
 
