@@ -153,6 +153,47 @@
     // must never be permitted, even accidentally (OWASP T3).
     "bash": {
       "*": "ask",
+
+      // --- Allowed dev tooling (synced with claude/global/settings.local.json) ---
+      // Compilers / build tools / debuggers
+      "gcc*": "allow",
+      "g++*": "allow",
+      "make*": "allow",
+      "gdb*": "allow",
+
+      // Local LLM runtime
+      "ollama*": "allow",
+
+      // Read-only system inspection
+      "systemctl status*": "allow",
+      "systemctl cat*": "allow",
+      "nvidia-smi*": "allow",
+      "env*": "allow",
+      "echo*": "allow",
+      "find*": "allow",
+      "grep*": "allow",
+      "dpkg -l*": "allow",
+      "snap list*": "allow",
+      "flatpak list*": "allow",
+
+      // OpenCode introspection / read-only operations
+      "opencode --help*": "allow",
+      "opencode --version*": "allow",
+      "opencode models list*": "allow",
+      "opencode run*": "allow",
+      "opencode debug config*": "allow",
+
+      // Package / MCP tooling
+      "grounded-code-mcp ingest*": "allow",
+      "pipx run*": "allow",
+
+      // Narrow sudo exceptions — MUST appear before "sudo *" deny below so the
+      // more-specific pattern wins. Each exception is intentional and scoped.
+      "sudo systemctl stop*": "allow",
+      "sudo systemctl start*": "allow",
+      "sudo -u ollama ls*": "allow",
+
+      // --- Privilege escalation denies (OWASP T3) ---
       "sudo *": "deny",
       "su *": "deny",
       "su": "deny",
