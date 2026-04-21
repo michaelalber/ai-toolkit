@@ -106,7 +106,7 @@ Skills for designing, specifying, and extracting AI agent definitions.
 
 | Skill | Description |
 |-------|-------------|
-| `agent-spec-writer` | Interactive spec design for AI agents from first principles. Guides through capability mapping, guardrail definition, and state block authoring. |
+| `spec-coach` | Interactive spec design coach from first principles. Guides through vision, PRD structure, INVEST story quality, specification by example, and three-tier guardrails. |
 | `skill-creator` | Creates, revises, and scores SKILL.md definitions against the 10-section gold standard. Three modes: CREATE, REVISE, SCORE. |
 
 ### RPI Workflow Suite
@@ -142,7 +142,7 @@ Autonomous agents that make decisions and take actions independently. Each agent
 | `test-generation-agent` | Autonomous test generation -- analyzes code, identifies gaps, generates tests with TDD patterns. | tdd-implementer, tdd-cycle, dotnet-vertical-slice, test-scaffold |
 | `documentation-agent` | Autonomous documentation sync -- detects staleness, generates XML docs, updates READMEs. | architecture-journal, doc-sync |
 | `dependency-audit-agent` | Autonomous dependency auditing -- vulnerability scanning, license compliance, upgrade paths. | dependency-mapper, technical-debt-assessor, supply-chain-audit |
-| `spec-extractor-agent` | Extracts structured agent specifications from natural-language descriptions or existing code. | agent-spec-writer |
+| `spec-extractor-agent` | Extracts structured agent specifications from natural-language descriptions or existing code. | spec-coach |
 | `confluence-guide-writer` | Reads Confluence spec pages and/or source code and generates well-formatted technical guides. | confluence-guide-writer |
 
 ### DevOps / Infrastructure
@@ -264,7 +264,7 @@ Skills are invoked automatically based on context or triggered with slash comman
 /dotnet-security-review-federal # Federal compliance overlay
 /legacy-migration-analyzer      # .NET Framework migration analysis
 /4d-schema-migration            # 4D to SQL Server migration
-/agent-spec-writer              # Design an AI agent spec interactively
+/spec-coach                     # Design a spec interactively (agents, skills, PRDs, Spec Kit)
 /rpi-research                   # Research phase of RPI workflow
 /rpi-plan                       # Plan phase of RPI workflow
 /rpi-implement                  # Implement phase of RPI workflow

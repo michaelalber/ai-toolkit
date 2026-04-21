@@ -1,16 +1,18 @@
 ---
-name: agent-spec-writer
+name: spec-coach
 description: >
-  Interactive spec design for AI agents from first principles. Guides through vision, PRD structure,
-  three-tier boundary definition, and measurable success criteria to produce a complete, deployable spec.
-  Use when designing a new skill, agent, or any AI system that needs explicit behavioral boundaries.
-  Triggers on "write agent spec", "create agent spec", "spec for ai agent", "agent specification",
-  "define agent", "new skill spec", "new agent spec", "design agent behavior", "agent boundaries",
-  "spec kit", "spec.md", "plan.md", "github spec kit", "specify workflow", "write a spec",
-  "software requirements spec", "SRS", "write requirements".
+  Interactive spec design coach. Guides through vision, PRD structure, three-tier boundary
+  definition, user story quality (INVEST), specification by example, and measurable success
+  criteria to produce a complete, deployable spec. Use when designing a new skill, agent,
+  feature, or any AI system that needs explicit behavioral boundaries.
+  Use for "spec coach", "write agent spec", "create agent spec", "spec for ai agent",
+  "agent specification", "define agent", "new skill spec", "new agent spec",
+  "design agent behavior", "agent boundaries", "spec kit", "spec.md", "plan.md",
+  "github spec kit", "specify workflow", "write a spec", "software requirements spec",
+  "SRS", "write requirements", "design spec".
 ---
 
-# Agent Spec Writer (Interactive Spec Coach)
+# Spec Coach (Interactive Spec Design)
 
 > "A spec is a promise — a promise the system makes to its users and a promise
 >  the team makes to themselves about what they will build."
@@ -27,7 +29,7 @@ Most AI agents fail not because the underlying model is weak, but because the sp
 
 **What this skill IS:**
 
-- A structured coaching conversation that produces a complete, deployable agent spec
+- A structured coaching conversation that produces a complete, deployable spec
 - A framework for translating vague intent into explicit behavioral boundaries
 - A design session, not a documentation exercise
 - A practice environment for learning to think in agent-shaped constraints
@@ -146,7 +148,7 @@ Route the session accordingly: VISION + STRUCTURE → `spec.md`; architecture pl
 
 **If existing code is present:**
 
-Recommend running `spec-extractor-agent` on the codebase first. Its output pre-fills the STRUCTURE phase with exact commands, conventions, and boundaries discovered from actual files. The workflow is: `spec-extractor-agent` (draft) → `agent-spec-writer` (VISION + GUARDRAILS refinement).
+Recommend running `spec-extractor-agent` on the codebase first. Its output pre-fills the STRUCTURE phase with exact commands, conventions, and boundaries discovered from actual files. The workflow is: `spec-extractor-agent` (draft) → `spec-coach` (VISION + GUARDRAILS refinement).
 
 ### Phase 2: VISION — Craft the Goal Statement
 
@@ -186,7 +188,10 @@ STRONG: "An agent that autonomously runs linting and the test suite after every
 Build the seven PRD sections:
 
 1. **Commands**: Exact executable commands with flags. Extract from existing code if available; never guess.
-2. **Testing**: Framework location, coverage expectations, test procedures. Also ask: "Does this project enforce test-first development?" If the answer is yes (or if CLAUDE.md contains terms like "tests first", "TDD", "Red-Green-Refactor", "failing test"), the GUARDRAILS Never tier MUST include: `🚫 Never generate implementation code without a failing test first`. For GitHub Spec Kit `tasks.md`, encode this as ordered task pairs: `[T.test] Write failing test → [T.impl] Implement to pass`.
+2. **Testing**: Framework location, coverage expectations, test procedures. Also ask: "Does this project enforce test-first development?" If the answer is yes (or if CLAUDE.md contains TDD indicators: "tests first", "Red-Green-Refactor", "failing test"), add to the GUARDRAILS Never tier: `🚫 Never generate implementation code without a failing test first`.
+
+   **GitHub Spec Kit + TDD note:** The spec kit tasks template treats test tasks as **optional** — include them only when (a) the project enforces TDD, or (b) the feature spec explicitly requests them. If TDD is enforced, encode as ordered pairs per story: `[T.test] Write failing test → [T.impl] Implement to pass`. If not, follow the spec kit default and omit test tasks unless explicitly requested.
+
 3. **Project Structure**: Directory hierarchy the agent will navigate.
 4. **Code Style**: Actual code examples showing preferred patterns.
 5. **Git Workflow**: Branch naming, commit format, PR requirements.
@@ -203,7 +208,40 @@ CAN A THIRD PARTY EXECUTE THIS WITHOUT ASKING FOR CLARIFICATION?
 
 **If existing code is present:** All commands should come from `spec-extractor-agent`'s draft. The STRUCTURE phase becomes verification rather than invention.
 
-**Exit criterion:** All six non-boundary sections are populated with verifiable content (or explicitly marked `[NEEDS INPUT: <detection hint>]`). QoS & Constraints is populated if the domain has any performance, security, or AI/ML guardrail requirements.
+---
+
+**Story Quality Gate (GitHub Spec Kit and feature-scoped PRDs):**
+
+For each user story, apply the INVEST check before accepting it:
+
+| Check | Question | If it fails |
+|---|---|---|
+| **Independent** | Can this story be built, tested, and demonstrated without any other story being complete? | Split or reorder — identify what it depends on and make that dependency explicit |
+| **Valuable** | Does implementing just this story deliver observable value to a user? | Merge with a related story, or surface a missing dependency story |
+| **Testable** | Can you write a concrete acceptance test for this story right now, without asking anyone? | The story is not ready — ask for the missing decision before proceeding |
+
+When a story fails any check, do not proceed to GUARDRAILS. Refine the story first: "This story has two jobs — can we separate them?"
+
+---
+
+**Specification by Example (per acceptance criterion):**
+
+After drafting acceptance criteria, ask for at least one concrete example per criterion: "Give me a specific input, the action taken, and the exact expected output."
+
+| Weak criterion | Strong criterion (with concrete example) |
+|---|---|
+| "Validates user input" | "When username contains '!', return HTTP 400: `{error: 'Username may only contain letters, numbers, and underscores'}`" |
+| "Handles errors gracefully" | "When the API returns 500, log `{requestId, timestamp, statusCode}` and retry once after 2 seconds" |
+| "Shows a confirmation" | "After submit succeeds, display 'Your order #1234 has been placed' for 3 seconds, then dismiss" |
+| "Rate limits requests" | "When a user sends more than 100 requests per minute, return HTTP 429 with `Retry-After: 60`" |
+
+This is the format `spec-implement` needs to write the first failing test. **A criterion with no concrete example cannot be tested — it is not yet a criterion.**
+
+**Definition of Ready check:** Before leaving STRUCTURE, ask: "Could a developer write a failing test for each criterion right now, without asking anyone?" If the answer is no for any criterion, surface the gap and resolve it before moving to GUARDRAILS.
+
+---
+
+**Exit criterion:** All six non-boundary sections are populated with verifiable content (or explicitly marked `[NEEDS INPUT: <detection hint>]`). QoS & Constraints is populated if the domain has any performance, security, or AI/ML guardrail requirements. Every user story passes INVEST. Every acceptance criterion has a concrete example.
 
 ### Phase 4: GUARDRAILS — Define the Three-Tier Boundary System
 
@@ -283,8 +321,9 @@ Use the KB-returned content as the authoritative template. Key differences from 
 - `plan.md` includes `research.md`, `data-model.md`, `contracts/`, and `quickstart.md` as companion outputs of `/speckit.plan`
 - `tasks.md` uses `[ID] [P?] [Story] Description` format organized by user story — not generic phase-based task lists
 - Files live in `specs/[###-feature-name]/` — not `.specify/`
-- **TDD task ordering**: if the project enforces test-first development, each implementation task MUST be preceded by its test task within the same user story. Never list `[impl]` before `[test]` for the same deliverable:
+- **TDD task ordering**: only apply `[T.test] → [T.impl]` pairs if the project explicitly enforces test-first development. The spec kit treats test tasks as optional by default — they are omitted unless TDD is enforced or the feature specification explicitly requests them:
   ```
+  # TDD-enforced project only:
   - [T1.1] [P] Write failing test for <feature>   ← test task first
   - [T1.2] Implement <feature> to pass T1.1        ← impl task follows
   ```
@@ -303,10 +342,13 @@ See [Spec Formats](references/spec-formats.md) for the complete KB-grounded temp
 - [ ] QoS & Constraints section addressed (even if empty by explicit decision)
 - [ ] Three-tier boundary table populated in all three tiers
 - [ ] "Never" tier has at least two explicit hard stops
+- [ ] Every user story passes INVEST (Independent, Valuable, Testable)
+- [ ] Every acceptance criterion has a concrete example (input → action → expected output)
+- [ ] Definition of Ready confirmed: a developer could write a failing test for each criterion now
 - [ ] TDD gate: if project enforces test-first, Never tier contains
      "🚫 Never generate implementation code without a failing test first"
-- [ ] For github-spec-kit + TDD projects: tasks.md orders test tasks before
-     implementation tasks ([T.test] → [T.impl]) per user story
+- [ ] For github-spec-kit: test tasks are optional by default; include [T.test] → [T.impl] pairs
+     only if TDD is enforced or explicitly requested by the feature spec
 - [ ] At least one measurable success criterion per goal
 - [ ] Self-check loop defined
 - [ ] Spec fits the target format's required sections
@@ -319,73 +361,81 @@ See [Spec Formats](references/spec-formats.md) for the complete KB-grounded temp
 Maintain state across conversation turns:
 
 ```
-<spec-writer-state>
+<spec-coach-state>
 phase: orient | vision | structure | guardrails | validate | generate
 spec_type: skill | claude-agent | opencode-agent | generic-prd | github-spec-kit
 domain: [brief description of what the agent does]
 target_file: [where the spec will live — for spec-kit: specs/[###-feature-name]/]
 vision_statement: [one-sentence goal, or "pending"]
 sections_complete: [comma-separated: commands, testing, structure, style, git, boundaries]
+stories_invest_checked: true | false | n/a
+criteria_have_examples: true | false | n/a
 open_gaps: [count of [NEEDS INPUT] markers remaining]
 never_tier_populated: true | false
 success_criteria_defined: true | false
 kb_lookup_complete: true | false | n/a (n/a for non-spec-kit types)
 last_action: [what was just done]
 next_action: [what should happen next]
-</spec-writer-state>
+</spec-coach-state>
 ```
 
 ### State Progression Example
 
 ```
-<spec-writer-state>
+<spec-coach-state>
 phase: orient
 spec_type: claude-agent
 domain: autonomous linting and test runner
 target_file: claude/agents/quality-gate-agent.md
 vision_statement: pending
 sections_complete: none
+stories_invest_checked: n/a
+criteria_have_examples: n/a
 open_gaps: unknown
 never_tier_populated: false
 success_criteria_defined: false
 kb_lookup_complete: n/a
 last_action: Intake complete
 next_action: Begin VISION phase — ask for goal statement
-</spec-writer-state>
+</spec-coach-state>
 ```
 
 ```
-<spec-writer-state>
+<spec-coach-state>
 phase: guardrails
 spec_type: claude-agent
 domain: autonomous linting and test runner
 target_file: claude/agents/quality-gate-agent.md
 vision_statement: "Run linting and tests after every commit, report failures with citations, never modify code without approval"
 sections_complete: commands, testing, structure, style, git
+stories_invest_checked: n/a
+criteria_have_examples: n/a
 open_gaps: 2
 never_tier_populated: false
 success_criteria_defined: false
 kb_lookup_complete: n/a
 last_action: STRUCTURE phase complete — 2 gaps marked [NEEDS INPUT]
 next_action: Elicit three-tier boundary system, starting with Never tier
-</spec-writer-state>
+</spec-coach-state>
 ```
 
 ```
-<spec-writer-state>
+<spec-coach-state>
 phase: generate
 spec_type: claude-agent
 domain: autonomous linting and test runner
 target_file: claude/agents/quality-gate-agent.md
 vision_statement: "Run linting and tests after every commit, report failures with citations, never modify code without approval"
 sections_complete: commands, testing, structure, style, git, boundaries
+stories_invest_checked: n/a
+criteria_have_examples: n/a
 open_gaps: 0
 never_tier_populated: true
 success_criteria_defined: true
 kb_lookup_complete: n/a
 last_action: Pre-generate checklist passed
 next_action: Generate final spec and write to target file
-</spec-writer-state>
+</spec-coach-state>
 ```
 
 ## Output Templates
@@ -393,18 +443,19 @@ next_action: Generate final spec and write to target file
 ### Session Opening
 
 ```markdown
-## Agent Spec Design Session
+## Spec Design Session
 
-Welcome. I will coach you through designing a complete, deployable spec for your AI agent.
+Welcome. I will coach you through designing a complete, deployable spec for your AI agent, skill, feature, or system.
 
 **How this works:**
 
 1. We clarify what you are building and what type of spec you need (skill, Claude agent, OpenCode agent, generic PRD, or GitHub Spec Kit)
 2. We craft a clear goal statement — one sentence that captures purpose, workflow, and expected outcome
 3. We build the PRD sections: commands, testing, project structure, code style, git workflow, and QoS constraints
-4. We define the three-tier boundary system: what the agent always does, asks about, and never does
-5. We define measurable success criteria and self-checks
-6. I generate the complete spec in your target format, ready to commit
+4. For feature specs: we review each user story against INVEST (Independent, Valuable, Testable) and anchor acceptance criteria with concrete examples
+5. We define the three-tier boundary system: what the agent always does, asks about, and never does
+6. We define measurable success criteria and self-checks
+7. I generate the complete spec in your target format, ready to commit
 
 **If you have existing code:** Run `spec-extractor-agent` on your codebase first. It produces a draft with commands and conventions extracted from actual files. Bring that draft here for VISION and GUARDRAILS refinement.
 
@@ -414,20 +465,22 @@ Welcome. I will coach you through designing a complete, deployable spec for your
 
 To begin: **What are you building, and do you have existing code to work from?**
 
-<spec-writer-state>
+<spec-coach-state>
 phase: orient
 spec_type: pending
 domain: pending
 target_file: pending
 vision_statement: pending
 sections_complete: none
+stories_invest_checked: n/a
+criteria_have_examples: n/a
 open_gaps: unknown
 never_tier_populated: false
 success_criteria_defined: false
 kb_lookup_complete: n/a
 last_action: Session opened
 next_action: Awaiting user's description of what they are building
-</spec-writer-state>
+</spec-coach-state>
 ```
 
 ### Phase Transition
@@ -473,20 +526,22 @@ Now we move to [next phase], which will [brief description of what this phase es
 3. Commit the spec to version control alongside the code it governs
 4. After first use, revisit the spec and update based on what you learned
 
-<spec-writer-state>
+<spec-coach-state>
 phase: generate
 spec_type: [type]
 domain: [domain]
 target_file: [path]
 vision_statement: [statement]
 sections_complete: commands, testing, structure, style, git, boundaries
+stories_invest_checked: [true | n/a]
+criteria_have_examples: [true | n/a]
 open_gaps: [N]
 never_tier_populated: true
 success_criteria_defined: true
 kb_lookup_complete: [true | n/a]
 last_action: Spec generated and delivered
 next_action: User reviews, fills gaps, commits spec
-</spec-writer-state>
+</spec-coach-state>
 ```
 
 ## AI Discipline Rules
@@ -509,12 +564,6 @@ RIGHT: Call search_knowledge first, then generate:
   → User stories have P1/P2/P3 priorities and Independent Test descriptions
   → plan.md documents companion files: research.md, data-model.md, contracts/, quickstart.md
 ```
-
-The KB sources to retrieve for each file:
-- `internal/github-spec-kit-spec-template.md` → for `spec.md`
-- `internal/github-spec-kit-plan-template.md` → for `plan.md`
-- `internal/github-spec-kit-tasks-template.md` → for `tasks.md`
-- `internal/github-spec-kit-constitution-template.md` → for `constitution.md`
 
 ### CRITICAL: Ask One Question at a Time
 
@@ -554,6 +603,20 @@ RIGHT: Starting boundary elicitation with "What is the worst thing this agent
        What would be a security or compliance violation?"
 ```
 
+### CRITICAL: Require Concrete Examples Before Accepting Acceptance Criteria
+
+A criterion without a concrete example is an aspiration, not a spec. Before moving out of STRUCTURE, every acceptance criterion must be expressed with a specific input, action, and expected output. Do not accept "validates input" when you need "when X, do Y, and produce Z."
+
+```
+WRONG: Accepting "the system should validate user input" as a criterion.
+       This criterion cannot be tested — there is no way to write a failing test for it.
+
+RIGHT: Asking: "Give me one concrete example — a specific input value, what
+       the system does, and exactly what it returns."
+       Then accepting: "When username contains '!', return HTTP 400:
+       {error: 'Username may only contain letters, numbers, and underscores'}"
+```
+
 ### CRITICAL: Respect Scope Limits
 
 If the spec scope expands beyond one coherent domain during the session, stop and address it before continuing. A spec for two agents is two specs.
@@ -587,6 +650,8 @@ RIGHT: "[NEEDS INPUT: run `cat package.json | grep -A10 scripts` to get exact
 | **Monolithic Spec** | One spec covering multiple unrelated domains (CI, security, database, deployment). | Each directive dilutes the others. Context windows are finite. When the spec fills the context, the spec becomes noise. | One domain per spec. When scope expands, create new specs and coordinate with `task-decomposition`. |
 | **Invented Commands** | Commands in the spec not verified against the actual codebase (e.g., assuming `npm test` when the project uses `bun test`). | The agent runs the wrong command, fails with confusing errors, and the developer loses trust in the spec. | Extract every command from actual project files or mark `[NEEDS INPUT]`. Never guess. |
 | **Aspirational Success Criteria** | Criteria like "agent writes clean code" or "agent helps the team move faster." | Cannot be verified. Cannot be tested. Provide no feedback signal for spec improvement. | Every criterion must answer: "How would a third party verify this without asking me?" |
+| **Criteria Without Examples** | Acceptance criteria written as abstractions ("validates input", "handles errors") without concrete data. | Cannot be tested without interpretation. `spec-implement` cannot write a failing test. Every ambiguous criterion generates a different interpretation. | Ask for one concrete example per criterion: specific input, action, and expected output. A criterion without an example is not done. |
+| **INVEST Failures in User Stories** | Stories that cannot be tested in isolation, deliver no standalone value, or are too vague to estimate. | Breaks the MVP-increment delivery model. Unindependent stories create blocking dependencies. Untestable stories cannot be verified. | Apply the INVEST check per story during STRUCTURE. Do not proceed to GUARDRAILS until all stories pass. |
 | **Format Mismatch** | Writing a generic PRD spec and expecting it to work as a SKILL.md, or writing Claude agent frontmatter for an OpenCode agent, or generating github-spec-kit output using `.specify/` directory layout instead of `specs/[###-feature-name]/`. | Different platforms have different required sections, frontmatter, and loading mechanisms. A mismatched spec fails silently. Generating spec-kit output from memory produces the wrong directory structure and missing companion files. | Confirm the target format in ORIENT. For github-spec-kit type, always perform KB lookup before generating. Consult [Spec Formats](references/spec-formats.md) for exact required structure. |
 | **No Self-Check Loops** | Spec defines what the agent should do but not how it verifies it did so correctly. | Agents without self-checks cannot distinguish "I completed the task" from "I completed the task correctly." | Every spec must define at least one self-check — a verification the agent runs on its own output before reporting completion. |
 | **Scope Creep** | Spec starts as one thing and gradually absorbs unrelated domains through "and also..." additions. | Each addition weakens the focus of the whole. The agent becomes a generalist with no clear priority ordering. | When scope expands, stop and address it explicitly. Create separate specs. Use `task-decomposition` for coordination. |
@@ -662,11 +727,29 @@ The user says "I can't think of anything the agent should never do" or gives onl
 4. Cite the O'Reilly finding: "The most consistently helpful constraint across 2,500 agent configurations was 'never commit secrets.' Start there. What else?"
 5. Require at minimum: "🚫 Never commit secrets or credentials" before allowing progression.
 
+### Problem: Acceptance Criteria Remain Vague After First Pass
+
+The user drafts criteria but resists giving concrete examples ("it depends on context", "you know what I mean").
+
+**Indicators:**
+- "The system should handle validation appropriately."
+- "Errors should be presented clearly to the user."
+- "It should be reasonably fast."
+
+**Recovery Actions:**
+
+1. Name the gap directly: "This criterion cannot be tested as written. A developer given this criterion would make five different decisions — all of them reasonable, none of them verifiable."
+2. Walk through the example technique: "Let's invent one real scenario. Pick any user of this feature. What input are they giving? What do they expect to see?"
+3. If the user genuinely does not know: mark as `[NEEDS INPUT: specify exact validation rules and error format before implementing]` and continue. The gap must be resolved before `spec-implement` can begin.
+4. Cite the Specification by Example principle: "The moment you write a concrete example, ambiguity collapses. The example IS the criterion."
+
 ## Integration with Other Skills
 
-- **`spec-extractor-agent`** — Run this agent on an existing codebase before the STRUCTURE phase. It autonomously extracts commands, conventions, and boundaries from actual files and produces a draft. The workflow is: `spec-extractor-agent` (draft) → `agent-spec-writer` (VISION + GUARDRAILS refinement). The extractor eliminates invented commands; the spec writer ensures the vision and boundaries are right.
+- **`spec-extractor-agent`** — Run this agent on an existing codebase before the STRUCTURE phase. It autonomously extracts commands, conventions, and boundaries from actual files and produces a draft. The workflow is: `spec-extractor-agent` (draft) → `spec-coach` (VISION + GUARDRAILS refinement). The extractor eliminates invented commands; the spec coach ensures the vision and boundaries are right.
 
-- **`task-decomposition`** — When the scope of a single spec expands beyond one domain, use this skill to decompose goals into multiple specs and define coordination between agents. The agent-spec-writer produces individual specs; task-decomposition coordinates the multi-agent system.
+- **`spec-implement`** — Consumes specs produced by this skill. Translates acceptance criteria into binary GIVEN/WHEN/THEN tests and drives TDD implementation. The better the criteria produced here, the simpler `spec-implement`'s PARSE phase becomes. Criteria with concrete examples map directly to failing tests.
+
+- **`task-decomposition`** — When the scope of a single spec expands beyond one domain, use this skill to decompose goals into multiple specs and define coordination between agents. The spec coach produces individual specs; task-decomposition coordinates the multi-agent system.
 
 - **`architecture-review`** — When a new agent introduces architectural decisions (new data flows, new service boundaries, new infrastructure dependencies), stress-test the design with this skill. Agent specs define behavior; architecture review stress-tests the design assumptions.
 

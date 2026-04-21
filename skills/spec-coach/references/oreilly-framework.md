@@ -11,7 +11,7 @@ Start with a concise goal statement rather than exhaustive upfront specification
 
 **The insight:** "Plan first in read-only mode, then execute and iterate continuously." This matches the use of Plan Mode in tools like Claude Code — restrict the agent to analysis before generation, allowing you to refine the spec before implementation begins.
 
-**Applied in agent-spec-writer:** The VISION phase enforces a one-sentence goal statement with a three-test review (valuable, sufficient, verifiable) before any PRD sections are written.
+**Applied in spec-coach:** The VISION phase enforces a one-sentence goal statement with a three-test review (valuable, sufficient, verifiable) before any PRD sections are written.
 
 **Vision statement tests:**
 
@@ -40,7 +40,7 @@ Organize specs as formal product requirement documents with six essential sectio
 
 **The O'Reilly finding:** "Never commit secrets" was the most consistently helpful constraint across 2,500+ agent configurations. Not because it is clever — because it is **specific, verifiable, and bounded**. Every constraint in your spec should meet the same bar.
 
-**Applied in agent-spec-writer:** The STRUCTURE phase builds all six sections with the Specificity Test: "Can a third party execute this without asking for clarification?"
+**Applied in spec-coach:** The STRUCTURE phase builds all six sections with the Specificity Test: "Can a third party execute this without asking for clarification?"
 
 ---
 
@@ -66,7 +66,7 @@ ONE DOMAIN = ONE COHERENT WORKFLOW
 ONE WORKFLOW = ONE CLEAR ENTRY POINT AND EXIT CRITERION
 ```
 
-**Applied in agent-spec-writer:** The ORIENT phase detects scope creep. The Scope Limits rule halts the session when a single spec attempts to cover multiple unrelated domains.
+**Applied in spec-coach:** The ORIENT phase detects scope creep. The Scope Limits rule halts the session when a single spec attempts to cover multiple unrelated domains.
 
 **When to split a spec:**
 - Two different entry points (e.g., triggered by commit vs. triggered by PR creation)
@@ -94,7 +94,7 @@ Layer in quality control mechanisms at three levels.
 
 **The exec-in-the-loop principle:** "Your role remains as 'the exec in the loop' — the spec empowers but you maintain ultimate oversight." The three-tier system is how you implement this: Always tier automates the routine; Ask First tier preserves your oversight for consequential actions; Never tier is the non-negotiable floor.
 
-**Applied in agent-spec-writer:** The GUARDRAILS phase elicits all three tiers in Never-first order. The VALIDATE phase ties success criteria to conformance tests.
+**Applied in spec-coach:** The GUARDRAILS phase elicits all three tiers in Never-first order. The VALIDATE phase ties success criteria to conformance tests.
 
 ---
 
@@ -124,7 +124,7 @@ Treat spec development as continuous, not one-time.
 - New capabilities added to the underlying model
 - Changes to the codebase's structure or conventions
 
-**Applied in agent-spec-writer:** Principle 8 (The Spec Evolves) encodes this into the skill's domain principles. The GENERATE phase output includes explicit "next steps" for first-use revision.
+**Applied in spec-coach:** Principle 8 (The Spec Evolves) encodes this into the skill's domain principles. The GENERATE phase output includes explicit "next steps" for first-use revision.
 
 ---
 

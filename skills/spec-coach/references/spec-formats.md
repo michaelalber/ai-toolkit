@@ -1,6 +1,6 @@
 # Spec Format Templates
 
-Complete templates for all five target formats. Use these during the GENERATE phase of `agent-spec-writer`.
+Complete templates for all five target formats. Use these during the GENERATE phase of `spec-coach`.
 
 ---
 
