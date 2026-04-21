@@ -365,7 +365,7 @@ Recovery:
 
 ## Integration with Other Skills
 
-- **`agent-spec-writer`** — For creating agent definitions, not skill definitions. When the user wants a new agent (a `.md` file in `claude/agents/` or `opencode/agents/`), use `agent-spec-writer` instead of this skill.
+- **`spec-coach`** — For creating agent definitions, PRDs, or GitHub Spec Kit files. When the user wants a new agent (a `.md` file in `claude/agents/` or `opencode/agents/`) or any interactive spec design session, use `spec-coach` instead of this skill.
 - **`architecture-review`** — The gold standard for skill structure. Always load and read before scaffolding or revising. See `skills/architecture-review/SKILL.md`.
 - **`automated-code-review`** — Use after creating or revising a skill to perform a quality check on the new content against project conventions.
 - **`session-context`** — Use at the start of a revision session to understand what has changed in the skills suite since the last session before making any modifications.

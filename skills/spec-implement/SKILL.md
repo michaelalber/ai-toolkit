@@ -34,7 +34,7 @@ The skill exists because most spec-to-code failures happen before implementation
 
 **What this skill is NOT:**
 
-- A spec writer — it reads and parses specs, it does not produce them (use `agent-spec-writer` for that)
+- A spec writer — it reads and parses specs, it does not produce them (use `spec-coach` for that)
 - A planning tool for brownfield changes — if you need to understand existing code first, use `/rpi-research`
 - A substitute for `tdd-cycle` — this skill *orchestrates* TDD; `tdd-cycle` manages the phase transitions within each RED-GREEN-REFACTOR iteration
 - A code generator that skips tests — tests come first, always, every time
@@ -73,6 +73,8 @@ Use `search_knowledge` (grounded-code-mcp) to ground decisions in authoritative 
 
 **Protocol:** Search at phase transitions where grounding matters. Cite the source path in your response.
 
+**Local reference:** `references/bdd-given-when-then.md` — binary verifiability rules, conversion examples, dependency sequencing, and the Criteria Manifest format. Read this during PARSE when formalizing criteria.
+
 ---
 
 ## Workflow
@@ -80,6 +82,14 @@ Use `search_knowledge` (grounded-code-mcp) to ground decisions in authoritative 
 ```
 PARSE
     Read the full spec (or user-supplied requirements).
+
+    If the spec is a GitHub Spec Kit `spec.md`, look for companion files in the same directory:
+      → `plan.md`      — read for architecture approach and technical decisions (shapes test structure)
+      → `data-model.md`— read for entity definitions (informs entity test setup and field assertions)
+      → `contracts/`   — read for API contracts (maps directly to endpoint criteria)
+      → `research.md`  — read for technical background (surfaces implementation constraints)
+    Log which companion files were found and what criteria they contribute.
+
     Extract every requirement, user story, or acceptance criterion.
     For each, convert to binary form: GIVEN [context] WHEN [action] THEN [observable outcome].
     Flag anything that cannot be made binary as an ambiguity.
@@ -571,7 +581,7 @@ During IMPLEMENT, the agent discovers the codebase has complex existing behavior
 
 | Skill | Relationship |
 |-------|-------------|
-| `agent-spec-writer` | Produces specs that this skill consumes. The spec writer designs behavioral boundaries; spec-implement translates those boundaries into tests and code. Run `agent-spec-writer` first on greenfield AI features, then hand the output to this skill. |
+| `spec-coach` | Produces specs that this skill consumes. The spec coach designs behavioral boundaries and anchors acceptance criteria with concrete examples (input → action → expected output). Run `spec-coach` first on greenfield features, then hand the output to this skill. Criteria produced with `spec-coach`'s Specification by Example guidance map directly to the GIVEN/WHEN/THEN format needed in PARSE. |
 | `tdd-cycle` | Manages the RED-GREEN-REFACTOR phase transitions within each criterion's implementation. Load `tdd-cycle` when the implementation of a single criterion becomes complex enough to need explicit phase tracking. This skill orchestrates *across* criteria; `tdd-cycle` orchestrates *within* each criterion. |
 | `rpi-research` | When spec-implement discovers unexpected complexity in the existing codebase, switch to `rpi-research` to understand what exists before continuing. Research produces an artifact; bring that artifact back to spec-implement to resume. |
 | `rpi-plan` | When a spec is large enough (10+ criteria with significant dependencies) that a formal phased plan is warranted, produce a plan artifact with `rpi-plan` and execute it with `rpi-implement` instead. Use spec-implement for well-scoped features; use RPI for large multi-phase changes. |
