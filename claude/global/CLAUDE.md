@@ -277,6 +277,38 @@ All practices align with [OWASP Top 10 (2025)](https://owasp.org/Top10/2025/).
 
 ---
 
+## Clean Architecture & SOLID
+
+These are tools, not mandates. Apply them when problem complexity justifies the structure. If adding a layer, interface, or abstraction makes the code *harder* to follow, you are over-engineering — stop.
+
+### When to apply Clean Architecture
+
+Apply when the feature or system has:
+- **Non-trivial domain logic** that must be testable independently of infrastructure (DB, HTTP, file system)
+- **Multiple delivery mechanisms** sharing the same domain logic (API + background worker, CLI + API)
+- **Clear team or module boundaries** that require enforced contracts between layers
+
+Skip when:
+- The feature is CRUD with no business rules beyond input validation
+- A single class or function clearly expresses the intent — extra layers just move the problem
+- The code is a script, prototype, or utility
+
+### When to apply SOLID principles
+
+| Principle | Apply when | Skip when |
+|---|---|---|
+| **SRP** | A class has ≥2 distinct, independently changing reasons | Both changes always co-occur — splitting adds noise |
+| **OCP** | You have verified extension points with real, existing variants | There is only one concrete behavior — don't speculate |
+| **LSP** | Always — violating LSP is a correctness defect, not a style choice | Never skip |
+| **ISP** | Consumers only use part of an interface and it causes real friction | All consumers use the full contract |
+| **DIP** | Decoupling from infrastructure is needed for testability | One implementation exists with no imminent alternatives (see YAGNI) |
+
+### Decision gate
+
+> Apply a Clean Architecture layer or SOLID principle only when NOT applying it would make the code **harder to understand, test, or change**. If you are adding structure speculatively because it "feels correct," stop — and flag it to the user.
+
+---
+
 ## Git Hygiene
 
 - Commits must be atomic — one logical change per commit
