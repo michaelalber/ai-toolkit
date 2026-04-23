@@ -277,6 +277,61 @@ All practices align with [OWASP Top 10 (2025)](https://owasp.org/Top10/2025/).
 
 ---
 
+## Vertical Slice, Clean Architecture & SOLID
+
+### Vertical Slice Architecture — the default
+
+**VSA is the default.** Organize code by feature — each slice owns its full stack (request, handler, service, persistence, tests). This is the right choice for most teams and most applications.
+
+```
+features/
+  create-order/
+    CreateOrderCommand   ← handler, validator, tests co-located
+  get-order/
+    GetOrderQuery        ← handler, tests co-located
+```
+
+Why VSA:
+- Feature cohesion — everything for a feature is co-located: easy to find, change, or delete
+- Changes are localized — modifying one feature doesn't ripple through unrelated layers
+- Well-suited to AI-assisted development: each slice is independently generatable and testable without cross-layer reasoning
+- Low ceremony for small teams; scales up with CQRS when complexity warrants it
+
+**Prefer VSA unless you have a specific reason to add enforced layer boundaries.**
+
+### Clean Architecture — the escalation path
+
+Add enforced layer boundaries (Onion / Hexagonal) only when the system has:
+- **Non-trivial domain logic** that must be tested independently of infrastructure (DB, HTTP, file system)
+- **Multiple delivery mechanisms** sharing the same domain logic (API + background worker, CLI + API)
+- **Team or module boundaries** that require enforced contracts at compile time
+
+Skip when:
+- The feature is CRUD with no business rules beyond input validation
+- The team is small (≤ ~8 engineers) and VSA provides sufficient structure
+- A single class or function clearly expresses the intent — extra layers just move the problem
+- The code is a script, prototype, or utility
+
+> **Decision gate:** Add a Clean Architecture layer only when NOT adding it would make the domain logic materially harder to isolate, test, or evolve. When in doubt, stay in the slice.
+
+### SOLID — intuitions, not rules
+
+SOLID principles are useful intuitions that become harmful when applied mechanically. Modern infrastructure (TestContainers, in-process databases, fast CI) has made several of the original rationales obsolete.
+
+| Principle | Apply when | Skip when |
+|---|---|---|
+| **SRP** | A class has ≥2 distinct, independently-changing reasons | Changes always co-occur — splitting adds noise |
+| **OCP** | Extension points are verified by real, existing variants today | Only one concrete behavior exists — don't speculate |
+| **LSP** | Always — violating LSP is a correctness defect, not a style choice | Never skip |
+| **ISP** | Consumers use only part of an interface and it causes real friction | All consumers use the full contract |
+| **DIP** | Infrastructure must be swapped at runtime, or domain must be tested in isolation from a DB that can't be faked cheaply | A single implementation exists and TestContainers / in-memory DB make integration testing straightforward |
+
+**DIP in the modern era:** The classic justification — "abstract your repository so tests can swap the implementation" — is largely obsolete. A test running against SQLite in-process or a Testcontainers-managed Postgres is faster, more realistic, and requires zero abstraction overhead. Introduce `IRepository<T>` only when multiple real implementations exist, or the domain must be tested truly infrastructure-free.
+
+**OCP in the modern era:** Designed for slow-compiler, limited-refactoring workflows. With modern IDEs and fast CI, modifying existing code is cheap. Add extension points when the second real variant arrives — not before.
+
+---
+
 ## Git Hygiene
 
 - Commits must be atomic — one logical change per commit
