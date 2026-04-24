@@ -2,13 +2,15 @@
 
 A collection of AI coding agent skills and autonomous subagents for AI-assisted software development workflows.
 
-Supports [Claude Code](https://claude.ai/code) and [OpenCode](https://opencode.ai/).
+Supports [Claude Code](https://claude.ai/code), [OpenCode](https://opencode.ai/), and [Pi](https://pi.dev).
 
 ## Setup
 
 **Claude Code**: The included [`CLAUDE.md`](CLAUDE.md) provides project conventions. It references [`AGENTS.md`](AGENTS.md) which contains the full skill and agent structure guidelines.
 
 **OpenCode**: The included [`AGENTS.md`](AGENTS.md) is automatically recognized. Skills and agents use the same conventions across both platforms.
+
+**Pi**: The included [`AGENTS.md`](AGENTS.md) is auto-discovered by Pi from the project root and parent directories. Copy [`pi/global/AGENTS.md`](pi/global/AGENTS.md) to `~/.pi/agent/` for global standards. Copy [`pi/global/SYSTEM.md`](pi/global/SYSTEM.md) to your project root to customize Pi's system prompt per-project.
 
 **Other AI Tools** (Cursor, Windsurf, GitHub Copilot, etc.): [`AGENTS.md`](AGENTS.md) follows the emerging standard for universal agent instructions. Most tools will pick it up automatically from the project root.
 
@@ -230,6 +232,18 @@ OpenCode searches for skills in these locations (in order):
 
 **Verification:** Open OpenCode, type `/` to see available slash commands, or press `Tab` to cycle through available agents.
 
+### Pi
+
+```bash
+bash scripts/install-pi.sh
+```
+
+Copies `AGENTS.md` to `~/.pi/agent/`. Pi auto-discovers it globally alongside any project-level `AGENTS.md`.
+
+**System prompt customization:** Copy `pi/global/SYSTEM.md` to your project root — Pi reads it to replace or append to the default system prompt.
+
+**Verification:** Pi loads `AGENTS.md` automatically at session start. Run `pi --version` to confirm Pi is installed.
+
 ### OpenCode vs Claude Code Agents
 
 | Feature | Claude Code | OpenCode |
@@ -328,6 +342,11 @@ ai-toolkit/
 │   └── global/                 # Global OpenCode files (installed to ~/.config/opencode/)
 │       ├── AGENTS.md           # Global context and standards
 │       └── opencode.json
+├── pi/
+│   └── global/                 # Global Pi files (installed to ~/.pi/agent/)
+│       ├── AGENTS.md           # Global context and standards
+│       ├── SYSTEM.md           # Per-project system prompt template (copy to project root)
+│       └── README.md           # Install instructions
 ├── project-templates/          # Per-project context files — copy to your project root
 │   ├── CLAUDE.md               # Project-level context for Claude Code
 │   ├── AGENTS.md               # Project-level context for OpenCode
