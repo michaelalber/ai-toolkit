@@ -10,11 +10,15 @@
 
 ```bash
 # Copy to OpenCode's global config directory
-cp AGENTS.md ~/.opencode/AGENTS.md
-cp opencode.json ~/.opencode/opencode.json
+cp AGENTS.md ~/.config/opencode/AGENTS.md
+cp opencode.json ~/.config/opencode/opencode.json
+
+# Copy commands (user-invoked slash commands)
+mkdir -p ~/.config/opencode/commands
+cp -r ../../opencode/commands/* ~/.config/opencode/commands/
 ```
 
-Then edit both files — replace `YOUR_USERNAME` with your actual username.
+Then edit `opencode.json` — replace `YOUR_USERNAME` with your actual username.
 
 ## What's in AGENTS.md
 
