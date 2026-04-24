@@ -193,7 +193,7 @@ Type `/` in your agent to see the full list of available slash commands.
 
 ## Project Templates
 
-The `project-templates/` directory contains per-project context files. Copy the relevant files into your own project root to give AI agents the context they need across sessions.
+The `project-templates/` directory contains per-project context files based on the **Four Prompt Disciplines & Five Primitives** framework by [Nate B. Jones](https://natesnewsletter.substack.com/). Copy the relevant files into your own project root — see [`project-templates/README.md`](project-templates/README.md) for the full guide including agent architecture selection.
 
 > These are **project-level** files. They supplement your global config — they do not replace it. Global standards stay in the global files; project-specific context goes here.
 
