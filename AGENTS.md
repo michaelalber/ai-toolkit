@@ -38,7 +38,7 @@
 
 - **Pattern:** Flat directories by domain — skills, agents, global config, and project templates are siblings, not layers
 - **Two-level context stack:**
-  - `claude/global/CLAUDE.md` + `opencode/global/AGENTS.md` — universal standards, installed once globally
+  - `claude/global/CLAUDE.md` + `opencode/global/AGENTS.md` + `pi/global/AGENTS.md` — universal standards, installed once globally
   - `CLAUDE.md` (root) + `AGENTS.md` (root) — this repo's context only
 - **Key directories:**
   - `skills/<name>/` — skill definition (`SKILL.md`) + supporting docs (`references/`)
@@ -46,8 +46,9 @@
   - `opencode/agents/` — OpenCode agent definitions (`.md` with boolean tool flags + `skill()` body calls)
   - `claude/global/` — global Claude Code files installed to `~/.claude/`
   - `opencode/global/` — global OpenCode files installed to `~/.config/opencode/`
+  - `pi/global/` — global Pi files installed to `~/.pi/agent/`; `SYSTEM.md` is a per-project template
   - `project-templates/` — context file templates users copy into their own project roots
-- **Non-obvious constraints:** `claude/global/` and `opencode/global/` files affect every project on the user's machine — changes require explicit human approval before committing
+- **Non-obvious constraints:** `claude/global/`, `opencode/global/`, and `pi/global/` files affect every project on the user's machine — changes require explicit human approval before committing
 
 ---
 
@@ -59,6 +60,8 @@
 | `project-templates/AGENTS.md` | Template pattern this file follows |
 | `claude/global/CLAUDE.md` | Global Claude Code standards — do not duplicate here |
 | `opencode/global/AGENTS.md` | Global OpenCode standards — do not duplicate here |
+| `pi/global/AGENTS.md` | Global Pi standards — do not duplicate here |
+| `pi/global/SYSTEM.md` | Per-project Pi system prompt template — users copy to project root |
 | `intent.md` | Goals, values, tradeoff hierarchy, and persistent decisions for this repo |
 | `constraints.md` | Contribution constraints — read before any task |
 
@@ -73,6 +76,7 @@
 | 2026-04-18 | Specs live in Jira / Confluence, not local `spec.md` | Professional dev workflow; `spec.md` creates stale duplicates |
 | 2026-04-18 | `project-templates/` renamed from `templates/` | "project-templates" makes the scope explicit — these are not global files |
 | 2026-04-18 | Global files live in `claude/global/` and `opencode/global/` | Separates global standards from project-level context; aligns with install script targets |
+| 2026-04-24 | Pi global files live in `pi/global/`; AGENTS.md installs to `~/.pi/agent/`; SYSTEM.md is a per-project template | Pi's `SYSTEM.md` is project-scoped (not a global config file); keeping it in `pi/global/` as a user-copyable template matches Pi's per-project design |
 
 ---
 
