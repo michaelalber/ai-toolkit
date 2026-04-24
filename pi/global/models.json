@@ -24,8 +24,16 @@
           "maxTokens": 2048
         },
         {
-          "id": "devstral:24b",
-          "name": "Devstral 24B",
+          "id": "phi4-reasoning:14b",
+          "name": "Phi-4 Reasoning 14B",
+          "input": ["text"],
+          "contextWindow": 32768,
+          "maxTokens": 2048,
+          "reasoning": true
+        },
+        {
+          "id": "devstral-small-2:24b",
+          "name": "Devstral Small 2 24B",
           "input": ["text"],
           "contextWindow": 131072,
           "maxTokens": 4096

@@ -30,8 +30,8 @@ export OLLAMA_KEEP_ALIVE=30m
 ollama serve &
 
 # Pull your model
-ollama pull qwen2.5-coder:7b    # 7B — 8 GB VRAM
-ollama pull devstral:24b         # 20B+ — 16–24 GB VRAM
+ollama pull qwen2.5-coder:7b        # 7B — 8 GB VRAM
+ollama pull devstral-small-2:24b    # 20B+ — 16–24 GB VRAM
 ```
 
 **Why `OLLAMA_KV_CACHE_TYPE=q8_0`?** It halves KV cache VRAM, letting you run a 32K context window on 8 GB instead of needing 16 GB. Without it you're stuck at Ollama's 4K default — too small for reliable tool calling.
@@ -150,9 +150,9 @@ Pi's Session Boot ritual (in `AGENTS-lite.md`) checks for `intent.md` and `const
 |-------|------|-----------------|---------|-------------|----------|
 | `qwen2.5-coder:7b` | 7B | ~5.5 GB | 32K | Good | Code edits, targeted changes |
 | `granite3.3:8b` | 7B | ~6.0 GB | 32K | Excellent | Agentic, tool-heavy workflows |
-| `devstral:24b` | 20B+ | ~15 GB | 128K | Excellent | Multi-step agentic workflows |
+| `phi4-reasoning:14b` | 14B | ~9 GB | 32K | Good | Reasoning tasks (set `"reasoning": true` in models.json) |
+| `devstral-small-2:24b` | 20B+ | ~15 GB | 128K | Excellent | Multi-step agentic workflows |
 | `qwen2.5-coder:32b` | 20B+ | ~20 GB | 128K | Excellent | Best code quality locally |
-| `phi4-reasoning:14b` | 14B | ~9 GB | 32K | Good | Reasoning tasks (add `"reasoning": true` in models.json) |
 
 **Minimum for reliable tool calling: 7B (8B recommended).** Models under 7B have <60% tool selection accuracy — not suitable for agentic coding.
 
