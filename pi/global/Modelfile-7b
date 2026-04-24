@@ -1,0 +1,37 @@
+# Ollama Modelfile — 7B coding agent
+#
+# Usage:
+#   ollama create my-coder-7b -f Modelfile-7b
+#   pi --model ollama/my-coder-7b
+#
+# Swap the FROM line for any 7B–8B model:
+#   qwen2.5-coder:7b  (best code quality sub-10B)
+#   granite3.3:8b     (designed for agentic/tool-heavy workflows)
+#   llama3.1:8b       (broad community testing, proven stability)
+#
+# VRAM: ~5.5 GB at Q4_K_M + 32K KV cache with OLLAMA_KV_CACHE_TYPE=q8_0
+# Env:  export OLLAMA_KV_CACHE_TYPE=q8_0 before starting ollama serve
+
+FROM qwen2.5-coder:7b
+
+# num_ctx MUST be set here — Ollama default is 4096 which is too small
+# for tool schemas + system prompt + conversation. 32768 is the minimum
+# for reliable tool calling.
+PARAMETER num_ctx 32768
+
+# Cap output to prevent context exhaustion in long tool chains
+PARAMETER num_predict 2048
+
+# Low temperature for deterministic code output
+PARAMETER temperature 0.1
+PARAMETER repeat_penalty 1.1
+
+# Minimal system block — Pi's AGENTS.md is the authoritative source.
+# This fallback activates only when AGENTS.md is not loaded.
+SYSTEM """
+You are a coding agent in a terminal IDE.
+- Use tools. Read files before editing.
+- Be surgical. Change only what is needed.
+- One step at a time. Report result, then continue.
+- Never invent APIs or file paths you are not certain exist.
+"""

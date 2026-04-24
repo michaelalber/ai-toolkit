@@ -10,7 +10,7 @@ Supports [Claude Code](https://claude.ai/code), [OpenCode](https://opencode.ai/)
 
 **OpenCode**: The included [`AGENTS.md`](AGENTS.md) is automatically recognized. Skills and agents use the same conventions across both platforms.
 
-**Pi**: The included [`AGENTS.md`](AGENTS.md) is auto-discovered by Pi from the project root and parent directories. Copy [`pi/global/AGENTS.md`](pi/global/AGENTS.md) to `~/.pi/agent/` for global standards. Copy [`pi/global/SYSTEM.md`](pi/global/SYSTEM.md) to your project root to customize Pi's system prompt per-project.
+**Pi** (privacy-first, local inference via Ollama): Pi runs entirely on local models — zero API cost, fully offline. See [`pi/global/README.md`](pi/global/README.md) for the full Ollama setup guide including model selection, context window configuration, and compaction tuning. Quick start: `bash scripts/install-pi.sh` (7B-safe default) or `bash scripts/install-pi.sh --full` (20B models).
 
 **Other AI Tools** (Cursor, Windsurf, GitHub Copilot, etc.): [`AGENTS.md`](AGENTS.md) follows the emerging standard for universal agent instructions. Most tools will pick it up automatically from the project root.
 
@@ -232,17 +232,20 @@ OpenCode searches for skills in these locations (in order):
 
 **Verification:** Open OpenCode, type `/` to see available slash commands, or press `Tab` to cycle through available agents.
 
-### Pi
+### Pi (Ollama / Local Models)
 
 ```bash
-bash scripts/install-pi.sh
+bash scripts/install-pi.sh           # 7B-safe default (AGENTS-lite.md)
+bash scripts/install-pi.sh --full    # 20B variant (AGENTS.md)
 ```
 
-Copies `AGENTS.md` to `~/.pi/agent/`. Pi auto-discovers it globally alongside any project-level `AGENTS.md`.
+Installs `AGENTS.md`, `models.json`, and `settings.json` to `~/.pi/agent/`. The 7B-safe default works for all Ollama models; `--full` adds 20B-tier rules as a project overlay.
 
-**System prompt customization:** Copy `pi/global/SYSTEM.md` to your project root — Pi reads it to replace or append to the default system prompt.
+**Ollama setup:** Pi needs a custom Modelfile to set `num_ctx 32768` — Ollama's 4K default breaks tool calling. See [`pi/global/README.md`](pi/global/README.md) for the full guide.
 
-**Verification:** Pi loads `AGENTS.md` automatically at session start. Run `pi --version` to confirm Pi is installed.
+**Model switching:** Use `/model` (`Ctrl+L`) or `Ctrl+P` mid-session — no restart or reinstall needed.
+
+**Verification:** Run `pi --model ollama/my-coder-7b` and type `/model` to confirm the model appears.
 
 ### OpenCode vs Claude Code Agents
 
@@ -344,9 +347,14 @@ ai-toolkit/
 │       └── opencode.json
 ├── pi/
 │   └── global/                 # Global Pi files (installed to ~/.pi/agent/)
-│       ├── AGENTS.md           # Global context and standards
-│       ├── SYSTEM.md           # Per-project system prompt template (copy to project root)
-│       └── README.md           # Install instructions
+│       ├── AGENTS-lite.md      # 7B-safe global baseline (~25 rules) — default install
+│       ├── AGENTS.md           # 20B project overlay (~50 rules) — copy to project root
+│       ├── SYSTEM.md           # Per-project system prompt template (two variants: 7B / 20B)
+│       ├── models.json         # Ollama provider config with recommended models
+│       ├── settings.json       # Compaction tuned for local context windows
+│       ├── Modelfile-7b        # Ollama Modelfile for 7B models (sets num_ctx 32768)
+│       ├── Modelfile-20b       # Ollama Modelfile for 20B+ models (sets num_ctx 65536)
+│       └── README.md           # Full Pi + Ollama setup guide
 ├── project-templates/          # Per-project context files — copy to your project root
 │   ├── CLAUDE.md               # Project-level context for Claude Code
 │   ├── AGENTS.md               # Project-level context for OpenCode
