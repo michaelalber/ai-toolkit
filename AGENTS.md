@@ -44,7 +44,10 @@
   - `skills/<name>/` — skill definition (`SKILL.md`) + supporting docs (`references/`)
   - `claude/agents/` — Claude Code agent definitions (`.md` with `skills:` frontmatter array)
   - `opencode/agents/` — OpenCode agent definitions (`.md` with boolean tool flags + `skill()` body calls)
+  - `claude/commands/` — Claude Code user-invoked slash commands with shell injection
+  - `opencode/commands/` — OpenCode command equivalents with agent routing and subtask isolation
   - `claude/global/` — global Claude Code files installed to `~/.claude/`
+  - `claude/global/settings.json` — hooks: PreToolUse credential stop, PostToolUse build/lint gates
   - `opencode/global/` — global OpenCode files installed to `~/.config/opencode/`
   - `pi/global/` — global Pi files installed to `~/.pi/agent/`; `SYSTEM.md` is a per-project template
   - `project-templates/` — context file templates users copy into their own project roots
@@ -77,6 +80,8 @@
 | 2026-04-18 | `project-templates/` renamed from `templates/` | "project-templates" makes the scope explicit — these are not global files |
 | 2026-04-18 | Global files live in `claude/global/` and `opencode/global/` | Separates global standards from project-level context; aligns with install script targets |
 | 2026-04-24 | Pi global files live in `pi/global/`; AGENTS.md installs to `~/.pi/agent/`; SYSTEM.md is a per-project template | Pi's `SYSTEM.md` is project-scoped (not a global config file); keeping it in `pi/global/` as a user-copyable template matches Pi's per-project design |
+| 2026-04-24 | Commands layer added alongside agents | Commands are user-invoked (typed as `/command-name`); skills are model-invoked (autonomous). Different primitives, same platform directory scope. |
+| 2026-04-24 | Hooks in `settings.json`, permissions in `settings.local.json` | Separation of concerns — deterministic enforcement (hooks) vs. interactive approval (permissions). Keep in separate files. |
 
 ---
 
@@ -84,6 +89,7 @@
 
 - [ ] Skill count (currently 71) — update this file and README when skills are added or removed
 - [ ] Agent count parity — Claude Code (35) vs. OpenCode (33); identify and add the missing OpenCode agent
+- [x] Commands layer — `claude/commands/` (8 commands) and `opencode/commands/` (8 commands) — added 2026-04-24
 
 ---
 
