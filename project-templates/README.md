@@ -24,7 +24,8 @@ Disciplines 1–3 are table stakes. Discipline 4 is what enables autonomous, mul
 | File | Discipline | Purpose | Required |
 |------|-----------|---------|---------|
 | `CLAUDE.md` | Context | Project context for Claude Code: stack, architecture, key files, boot ritual | Every project using Claude Code |
-| `AGENTS.md` | Context | Same as above for OpenCode / Pi | Every project using OpenCode or Pi |
+| `AGENTS.md` | Context | Same as above for OpenCode / Pi — auto-discovered from project root | Every project using OpenCode or Pi |
+| `SYSTEM.md` | Prompt | Pi-specific: replaces or appends to Pi's default system prompt. Two variants in one file — delete the one you don't need. Copy from `pi/global/SYSTEM.md`. | Pi projects only |
 | `intent.md` | Intent | What the agent optimizes for: goal, value hierarchy, tradeoff rules, decision boundaries | Every project |
 | `constraints.md` | Specification | Musts, must-nots, preferences, escalation triggers | Every project |
 | `evals.md` | Specification | Test cases, CI gate definitions, taste rules, rejection log | Every project |
@@ -32,6 +33,8 @@ Disciplines 1–3 are table stakes. Discipline 4 is what enables autonomous, mul
 | `design.md` | Context | Design system tokens, component hierarchy, interaction patterns | UI-heavy projects only |
 
 **Minimum viable set:** `CLAUDE.md` (or `AGENTS.md`) + `intent.md` + `constraints.md` + `evals.md`.
+
+**Pi minimum set:** `AGENTS.md` + `SYSTEM.md` + `intent.md` + `constraints.md` + `evals.md`. For 7B models, keep all files lean — strip comment blocks before committing; every token loads on session boot.
 
 Specs (problem statements, acceptance criteria, task decomposition) live in **Jira / Confluence** — not in a local file. Link to the relevant issue or page from `CLAUDE.md`.
 
