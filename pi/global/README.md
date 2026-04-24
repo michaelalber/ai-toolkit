@@ -1,121 +1,202 @@
-# Pi Global Config
+# Pi + Ollama Setup Guide
 
-## What this is
+Pi ([pi.dev](https://pi.dev)) is a minimal, privacy-first terminal coding agent. Unlike Claude Code (Anthropic subscription) or OpenCode (cloud providers), Pi's sweet spot is **local inference via Ollama** — zero API cost, fully offline, no data leaves your machine.
 
-`AGENTS.md` is Pi's global instruction file. Pi loads it automatically from `~/.pi/agent/` at the start of each session, along with any `AGENTS.md` found in the current directory and parent directories.
-
-`SYSTEM.md` is a per-project file that replaces or appends to Pi's default system prompt. Copy it into your project root — Pi picks it up automatically.
-
-## Installation
-
-```bash
-# Copy to Pi's global agent directory
-cp AGENTS.md ~/.pi/agent/AGENTS.md
-```
-
-Or use the install script from the repo root:
-
-```bash
-bash scripts/install-pi.sh
-```
-
-For per-project system prompt customization:
-
-```bash
-# Copy to your project root
-cp SYSTEM.md /path/to/your-project/SYSTEM.md
-```
-
-Then edit `SYSTEM.md` — remove sections you don't use (every token counts).
-
-## What's in AGENTS.md
-
-- **Session Boot Ritual** — context confirmation gate before any work begins
-- **Core Philosophy** — engineering values baked into every session
-- **Intent Engineering** — universal value hierarchy, tradeoff defaults, escalation boundaries
-- **Prompting Patterns** — prefix triggers (`think:`, `think hard:`, `think step:`) and the `[CANNOT COMPLETE]` escape hatch
-- **Context Management** — just-in-time loading, NOTES.md scratchpad
-- **Project File Architecture** — the `.md` context stack for non-trivial projects
-- **AI Agent Obligations** — TDD discipline enforced via prompt
-- **Evaluation Design** — acceptance criteria and evals as safety infrastructure
-- **Security-By-Design** — OWASP-aligned guardrails
-- **Code Quality Gates** — cyclomatic complexity, coverage targets
-- **Language Standards** — .NET, Python, TypeScript invariants
-- **Optional sections** — Snyk (marked inline; remove if unused)
-
-## What's in SYSTEM.md
-
-A concise system prompt template covering session boot, engineering principles, coding discipline, security guardrails, and escalation rules. Customize for your project and place in the project root.
-
-Pi reads `SYSTEM.md` per-project, making it useful for:
-- Injecting project-specific identity ("You are working on a medical records API — apply HIPAA guardrails")
-- Overriding default Pi behavior for a specific codebase
-- Adding project-specific escalation rules
+This guide configures Pi for the best local experience at two model tiers: 7B (8 GB VRAM) and 20B (16–24 GB VRAM).
 
 ---
 
-## Pi AGENTS.md Loading Order
+## Quick Start
 
-Pi discovers and merges `AGENTS.md` files from multiple locations (most specific wins on conflicts):
+```bash
+# From the ai-toolkit repo root
+bash scripts/install-pi.sh          # 7B-safe default
+bash scripts/install-pi.sh --full   # 20B variant
+```
 
-| Priority | Location |
-|----------|----------|
-| 1 (highest) | Current working directory |
-| 2 | Parent directories (walking up) |
-| 3 (lowest) | `~/.pi/agent/` (global) |
-
-This means global standards in `~/.pi/agent/AGENTS.md` apply everywhere, and project-level `AGENTS.md` files can override or extend them without touching the global file.
+Then follow the five steps below.
 
 ---
 
-## The Four Disciplines & Five Primitives
+## Step 1 — Install Ollama and Pull a Model
 
-The global instruction file implements Disciplines 1–3 of a four-level prompt engineering framework. Discipline 4 requires project-level files.
+```bash
+# Install Ollama (Linux/macOS)
+curl -fsSL https://ollama.com/install.sh | sh
 
-| # | Discipline | What it does | Where it lives |
-|---|---|---|---|
-| 1 | Prompt Craft | Clear instructions, output format, chain-of-thought | Your prompt |
-| 2 | Context Engineering | Information environment the agent operates in | `AGENTS.md` |
-| 3 | Intent Engineering | What the agent should optimize for | `intent.md` |
-| 4 | Specification Engineering | Autonomous execution blueprint | `spec.md`, `constraints.md`, `evals.md` |
+# Required: enable KV cache quantization before starting the server
+export OLLAMA_KV_CACHE_TYPE=q8_0
+export OLLAMA_KEEP_ALIVE=30m
+ollama serve &
 
-### Project File Architecture
-
-For non-trivial or multi-session projects, drop these files into the project root:
-
-```
-project/
-├── AGENTS.md          ← Project-level context (Pi auto-discovers this)
-├── SYSTEM.md          ← Pi system prompt override (Pi-specific)
-├── intent.md          ← Discipline 3: what the agent optimizes for
-├── constraints.md     ← Discipline 4: musts, must-nots, preferences, escalation triggers
-├── evals.md           ← Discipline 4: test cases, known-good outputs, regression checks
-└── domain-memory.md   ← Agent state: backlog + progress log (multi-session only)
+# Pull your model
+ollama pull qwen2.5-coder:7b    # 7B — 8 GB VRAM
+ollama pull devstral:24b         # 20B+ — 16–24 GB VRAM
 ```
 
-**Minimum set for a coding harness:** `AGENTS.md` + `intent.md` + `constraints.md` + `evals.md`.
+**Why `OLLAMA_KV_CACHE_TYPE=q8_0`?** It halves KV cache VRAM, letting you run a 32K context window on 8 GB instead of needing 16 GB. Without it you're stuck at Ollama's 4K default — too small for reliable tool calling.
+
+To persist via systemd:
+
+```bash
+sudo systemctl edit ollama
+# Add under [Service]:
+# Environment="OLLAMA_KV_CACHE_TYPE=q8_0"
+# Environment="OLLAMA_KEEP_ALIVE=30m"
+sudo systemctl restart ollama
+```
 
 ---
 
-## Optional Dependencies
+## Step 2 — Create a Custom Model with the Right Context Window
 
-| Section | What you need |
-|---|---|
-| Snyk security scanning | [Snyk CLI](https://docs.snyk.io/snyk-cli/install-or-update-the-snyk-cli) |
-| grounded-code-mcp (RAG grounding) | [grounded-code-mcp](https://github.com/michaelalber/grounded-code-mcp) running locally |
+**This step is critical.** Ollama's default context is 4,096 tokens. Pi injects tool schemas + system prompt + conversation history on every request — this saturates 4K before you type a single prompt. Tool calls silently fail.
 
-Remove any section you don't use — it costs tokens every session.
+```bash
+# 7B model with 32K context
+ollama create my-coder-7b -f pi/global/Modelfile-7b
 
-## Key Learnable Tricks
+# 20B+ model with 64K context
+ollama create my-coder-20b -f pi/global/Modelfile-20b
+```
 
-**Chain-of-thought triggers** — prefix your prompt to change how Pi reasons:
-- `think: <question>` — reasons before answering
-- `think hard: <question>` — deep analysis with edge cases
-- `think step: <question>` — numbered breakdown
+The Modelfiles set `num_ctx`, cap output tokens, and tune temperature for code. Edit the `FROM` line to swap models.
 
-**Escape hatch** — when Pi can't complete accurately, it responds:
-> `[CANNOT COMPLETE]: <reason>` then a skeleton with `# VERIFY:` comments
+---
 
-**NOTES.md scratchpad** — for long tasks, tell Pi to maintain a `NOTES.md` with current objective, decisions, and next steps. After a context reset, it re-reads the scratchpad before continuing.
+## Step 3 — Configure Pi's Model Provider
 
-**AI-Generated markers** — generated code is wrapped in `<AI-Generated START>` / `<AI-Generated END>` so you can always identify it in diffs.
+The install script copies `models.json` to `~/.pi/agent/models.json`. Pi reads this at startup and via the `/model` command (reloads dynamically — no restart needed).
+
+Edit `~/.pi/agent/models.json` to match the models you actually pulled:
+
+```json
+{
+  "providers": {
+    "ollama": {
+      "baseUrl": "http://localhost:11434/v1",
+      "api": "openai-completions",
+      "apiKey": "ollama",
+      "compat": {
+        "supportsDeveloperRole": false,
+        "supportsReasoningEffort": false
+      },
+      "models": [
+        {
+          "id": "my-coder-7b",
+          "name": "Qwen 2.5 Coder 7B",
+          "input": ["text"],
+          "contextWindow": 32768,
+          "maxTokens": 2048
+        }
+      ]
+    }
+  }
+}
+```
+
+Use the model `id` you gave `ollama create` (e.g., `my-coder-7b`), not the base model name.
+
+---
+
+## Step 4 — Install AGENTS.md and settings.json
+
+`install-pi.sh` handles this. What gets installed:
+
+| File | Destination | Purpose |
+|------|-------------|---------|
+| `AGENTS-lite.md` (default) or `AGENTS.md` (--full) | `~/.pi/agent/AGENTS.md` | Global coding rules |
+| `models.json` | `~/.pi/agent/models.json` | Ollama provider config |
+| `settings.json` | `~/.pi/agent/settings.json` | Compaction tuned for local models |
+
+**Why custom `settings.json`?** Pi's default compaction settings (`reserveTokens: 16384`, `keepRecentTokens: 20000`) were designed for cloud models with 200K+ context windows. On a 32K window they exceed the total available context — compaction triggers immediately and loops. The included settings correct this:
+
+| Model tier | reserveTokens | keepRecentTokens |
+|------------|---------------|-----------------|
+| 7B (32K ctx) | 2,048 | 8,192 |
+| 20B (128K ctx) | 4,096 | 24,576 |
+
+For 20B models, manually update `~/.pi/agent/settings.json` to the 20B values above.
+
+---
+
+## Step 5 — Per-Project System Prompt (Optional)
+
+Copy `pi/global/SYSTEM.md` to your project root. Pi reads it to replace or append to the default system prompt. **Delete the variant you don't need** — every token costs.
+
+```bash
+cp pi/global/SYSTEM.md /path/to/your-project/SYSTEM.md
+# Then edit: delete the 7B or 20B section
+```
+
+---
+
+## Model Selection
+
+| Model | Tier | VRAM (Q4 + 32K) | Context | Tool Calling | Best for |
+|-------|------|-----------------|---------|-------------|----------|
+| `qwen2.5-coder:7b` | 7B | ~5.5 GB | 32K | Good | Code edits, targeted changes |
+| `granite3.3:8b` | 7B | ~6.0 GB | 32K | Excellent | Agentic, tool-heavy workflows |
+| `devstral:24b` | 20B+ | ~15 GB | 128K | Excellent | Multi-step agentic workflows |
+| `qwen2.5-coder:32b` | 20B+ | ~20 GB | 128K | Excellent | Best code quality locally |
+| `phi4-reasoning:14b` | 14B | ~9 GB | 32K | Good | Reasoning tasks (add `"reasoning": true` in models.json) |
+
+**Minimum for reliable tool calling: 7B (8B recommended).** Models under 7B have <60% tool selection accuracy — not suitable for agentic coding.
+
+---
+
+## Layered AGENTS.md Architecture
+
+Pi merges `AGENTS.md` files from three locations (global → parent dirs → current dir). This toolkit uses this to layer instructions by model tier:
+
+```
+~/.pi/agent/AGENTS.md        ← Global baseline (AGENTS-lite.md)
+                                ~25 rules, 7B-safe, always loaded
+
+./AGENTS.md (project root)   ← Project overlay (AGENTS.md)
+                                ~50 rules, 20B-tier, merged on top
+```
+
+**7B workflow:** Install the lite version globally. Use only the global file.
+
+**20B workflow:** Install the lite version globally. Copy `AGENTS.md` to your project root — Pi merges both automatically.
+
+**Switching models mid-session:** Use Pi's `/model` command (`Ctrl+L`) or `Ctrl+P` to cycle favorites. AGENTS.md is loaded once at session start and does not reload when you switch models. The lite global file is safe for any model size.
+
+---
+
+## VRAM Quick Reference
+
+For Q4_K_M models with `OLLAMA_KV_CACHE_TYPE=q8_0`. Includes ~0.8 GB overhead.
+
+| Context | 7B model | 14B model | 24B model |
+|---------|----------|-----------|-----------|
+| 8K | ~5.2 GB | ~9.5 GB | ~15.5 GB |
+| 32K | ~5.9 GB | ~10.5 GB | ~17.0 GB |
+| 64K | ~7.0 GB | ~12.5 GB | ~20.0 GB |
+
+`q8_0` KV cache roughly doubles your usable context at the same VRAM budget compared to FP16.
+
+---
+
+## Pi File Reference
+
+| File | Location | Purpose |
+|------|----------|---------|
+| `AGENTS.md` | `~/.pi/agent/` or project root | Agent instructions (merged from all levels) |
+| `SYSTEM.md` | Project root | Replaces or appends to Pi's default system prompt |
+| `models.json` | `~/.pi/agent/` or `.pi/` | Provider and model definitions |
+| `settings.json` | `~/.pi/agent/` or `.pi/` | Compaction, thinking level, default model |
+| `Modelfile-*` | (copy to use with `ollama create`) | Context window and parameter templates |
+
+---
+
+## Troubleshooting
+
+| Symptom | Cause | Fix |
+|---------|-------|-----|
+| Tool calls silently fail | Ollama 4K context overflows on first request | Use Modelfile with `num_ctx 32768` |
+| `max_tokens` error | `maxTokens` in models.json too high for model | Set `maxTokens: 2048` for 7B |
+| Compaction loops immediately | Default `reserveTokens` exceeds context window | Use the included `settings.json` |
+| Model not found in `/model` | `id` in models.json doesn't match `ollama create` name | Use the custom model name, not the base model id |
+| Streaming stops mid-output | `num_predict` cap hit | Increase in Modelfile |

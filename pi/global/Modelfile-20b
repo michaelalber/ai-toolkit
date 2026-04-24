@@ -1,0 +1,33 @@
+# Ollama Modelfile — 20B+ coding agent
+#
+# Usage:
+#   ollama create my-coder-20b -f Modelfile-20b
+#   pi --model ollama/my-coder-20b
+#
+# Swap the FROM line for any 20B–32B model:
+#   devstral:24b          (agentic software engineering focus, 128K ctx)
+#   qwen2.5-coder:32b     (top code quality, 128K ctx)
+#   phi4-reasoning:14b    (reasoning model, add "reasoning": true in models.json)
+#
+# VRAM: ~14–18 GB at Q4_K_M + 64K KV cache
+# Env:  export OLLAMA_KV_CACHE_TYPE=q8_0 before starting ollama serve
+
+FROM devstral:24b
+
+# 64K is a practical minimum for multi-step agentic workflows on 20B models.
+# Increase to 131072 if VRAM allows (requires ~28+ GB total).
+PARAMETER num_ctx 65536
+
+PARAMETER num_predict 4096
+PARAMETER temperature 0.1
+PARAMETER repeat_penalty 1.05
+
+# Minimal fallback system block — Pi's AGENTS.md is the authoritative source.
+SYSTEM """
+You are an AI coding agent in a terminal IDE.
+- Use available tools. Read files before editing or referencing them.
+- Write the test before production code. Implement minimum to pass.
+- Be surgical — change only what is needed.
+- One step at a time. Complete a step, report the result, then continue.
+- Never invent library names, function signatures, or file paths.
+"""

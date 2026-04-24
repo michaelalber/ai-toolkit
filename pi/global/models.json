@@ -1,0 +1,43 @@
+{
+  "providers": {
+    "ollama": {
+      "baseUrl": "http://localhost:11434/v1",
+      "api": "openai-completions",
+      "apiKey": "ollama",
+      "compat": {
+        "supportsDeveloperRole": false,
+        "supportsReasoningEffort": false
+      },
+      "models": [
+        {
+          "id": "qwen2.5-coder:7b",
+          "name": "Qwen 2.5 Coder 7B",
+          "input": ["text"],
+          "contextWindow": 32768,
+          "maxTokens": 2048
+        },
+        {
+          "id": "granite3.3:8b",
+          "name": "Granite 3.3 8B",
+          "input": ["text"],
+          "contextWindow": 32768,
+          "maxTokens": 2048
+        },
+        {
+          "id": "devstral:24b",
+          "name": "Devstral 24B",
+          "input": ["text"],
+          "contextWindow": 131072,
+          "maxTokens": 4096
+        },
+        {
+          "id": "qwen2.5-coder:32b",
+          "name": "Qwen 2.5 Coder 32B",
+          "input": ["text"],
+          "contextWindow": 131072,
+          "maxTokens": 4096
+        }
+      ]
+    }
+  }
+}
