@@ -173,21 +173,31 @@ Autonomous agents that make decisions and take actions independently. Each agent
 
 ## Usage
 
-Skills are invoked with slash commands; agents as subagents:
+There are two ways to invoke capabilities — **commands** (user-typed) and **skills/agents** (model-invoked):
+
+**Commands** (`claude/commands/`, `opencode/commands/`) — type `/` to trigger; inject live shell state before the model acts:
 
 ```
-/tdd-cycle                    # Start a TDD session
-/architecture-review          # Challenge a design with Socratic questioning
-/dotnet-vertical-slice        # Scaffold a vertical slice feature
-/rpi-research                 # Research phase of RPI workflow
+/tdd-cycle                    # Injects dotnet test output, then runs the TDD cycle
+/code-review                  # Injects git diff, then reviews changes
+/security-review src/          # OWASP review scoped to a path
+/arch-review OrderService      # Socratic challenge of a component
+/new-feature CreateInvoice     # Scaffold a vertical slice feature
+/migrate AddInvoiceTable       # EF Core migration with safety checks
+/research "WebSocket vs SSE"   # Multi-source research briefing
+/context-prime                 # Prime session from git state and recent work
+```
 
+**Skills and agents** — invoked autonomously by the model or referenced in a prompt:
+
+```
 Use tdd-agent to implement a Calculator.add method
 Use code-review-agent to review the latest changes
 Use migration-orchestrator to plan the EF Core migration
 Use research-agent to investigate WebSocket vs SSE for real-time updates
 ```
 
-Type `/` in your agent to see the full list of available slash commands.
+Type `/` in your agent to see the full list of available commands.
 
 ---
 
@@ -219,10 +229,17 @@ ai-toolkit/
 ├── skills/                     # Shareable skills (SKILL.md + references/)
 ├── claude/
 │   ├── agents/                 # Claude Code agent definitions
+│   ├── commands/               # User-invoked slash commands with shell injection
 │   └── global/                 # Global config → ~/.claude/
+│       ├── CLAUDE.md           # Global instructions (every project)
+│       ├── settings.json       # Hooks: credential stop + post-write build/lint gates
+│       └── settings.local.json # Permissions: bash allow/deny, read allow/deny
 ├── opencode/
 │   ├── agents/                 # OpenCode agent definitions
+│   ├── commands/               # User-invoked commands with agent routing
 │   └── global/                 # Global config → ~/.config/opencode/
+│       ├── AGENTS.md           # Global instructions (every project)
+│       └── opencode.json       # Providers, MCP servers, permissions, temperatures
 ├── pi/
 │   └── global/                 # Global config → ~/.pi/agent/  (Ollama setup guide inside)
 ├── project-templates/          # Per-project context files — copy to your project root

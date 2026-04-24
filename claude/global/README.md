@@ -4,6 +4,7 @@
 
 `CLAUDE.md` is Claude Code's global instruction file. It applies to **every project** you open — Claude reads it automatically at the start of each session.
 
+`settings.json` installs deterministic hooks (credential stop, post-write build/lint gates).
 `settings.local.json` controls Claude Code's permissions and tool allowlist.
 
 ## Installation
@@ -11,10 +12,15 @@
 ```bash
 # Copy to Claude's global config directory
 cp CLAUDE.md ~/.claude/CLAUDE.md
+cp settings.json ~/.claude/settings.json
 cp settings.local.json ~/.claude/settings.local.json
+
+# Copy commands (user-invoked slash commands)
+mkdir -p ~/.claude/commands
+cp -r ../../claude/commands/* ~/.claude/commands/
 ```
 
-Then edit both files — replace `YOUR_USERNAME` with your actual username.
+Then edit `settings.local.json` — replace `YOUR_USERNAME` with your actual username.
 
 ## What's in CLAUDE.md
 
