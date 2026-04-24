@@ -2,23 +2,42 @@
 
 A collection of AI coding agent skills and autonomous subagents for AI-assisted software development workflows.
 
-Supports [Claude Code](https://claude.ai/code), [OpenCode](https://opencode.ai/), and [Pi](https://pi.dev).
+## Platforms
 
-## Setup
+| Platform | Provider | Privacy | Best for |
+|----------|----------|---------|----------|
+| **[Claude Code](https://claude.ai/code)** | Anthropic subscription | Cloud | Best reasoning, MCP ecosystem, Claude-native workflows |
+| **[OpenCode](https://opencode.ai/)** | Any cloud provider (Anthropic, OpenAI, Google, Mistral…) | Cloud | Provider flexibility, multi-model teams |
+| **[Pi](https://pi.dev)** | Ollama local models (7B–32B) | Fully offline | Zero API cost, privacy-first, air-gapped use |
 
-**Claude Code**: The included [`CLAUDE.md`](CLAUDE.md) provides project conventions. It references [`AGENTS.md`](AGENTS.md) which contains the full skill and agent structure guidelines.
+### Claude Code
+```bash
+bash scripts/install-claude.sh     # macOS / Linux
+.\scripts\install-claude.ps1       # Windows
+```
+Copies agents to `~/.claude/agents/` and skills to `~/.claude/skills/`. See [`claude/global/README.md`](claude/global/README.md) for global config setup.
 
-**OpenCode**: The included [`AGENTS.md`](AGENTS.md) is automatically recognized. Skills and agents use the same conventions across both platforms.
+### OpenCode
+```bash
+bash scripts/install-opencode.sh   # macOS / Linux
+.\scripts\install-opencode.ps1     # Windows
+```
+Copies agents to `~/.config/opencode/agents/` and skills to `~/.config/opencode/skills/`. See [`opencode/global/README.md`](opencode/global/README.md) for provider config and Ollama tuning.
 
-**Pi** (privacy-first, local inference via Ollama): Pi runs entirely on local models — zero API cost, fully offline. See [`pi/global/README.md`](pi/global/README.md) for the full Ollama setup guide including model selection, context window configuration, and compaction tuning. Quick start: `bash scripts/install-pi.sh` (7B-safe default) or `bash scripts/install-pi.sh --full` (20B models).
+### Pi (Ollama / Local Models)
+```bash
+bash scripts/install-pi.sh         # 7B-safe default
+bash scripts/install-pi.sh --full  # 20B variant
+```
+Installs `AGENTS.md`, `models.json`, and `settings.json` to `~/.pi/agent/`. See [`pi/global/README.md`](pi/global/README.md) for the full Ollama setup guide — model selection, Modelfile context window config, and compaction tuning.
 
-**Other AI Tools** (Cursor, Windsurf, GitHub Copilot, etc.): [`AGENTS.md`](AGENTS.md) follows the emerging standard for universal agent instructions. Most tools will pick it up automatically from the project root.
+**Other AI Tools** (Cursor, Windsurf, GitHub Copilot, etc.): [`AGENTS.md`](AGENTS.md) follows the emerging universal agent instructions standard and is auto-discovered from the project root.
+
+---
 
 ## Skills
 
 ### TDD Suite
-
-A comprehensive set of skills for Test-Driven Development with AI assistance. Based on Kent Beck's TDD principles and the 12 Test Desiderata.
 
 | Skill | Description |
 |-------|-------------|
@@ -30,8 +49,6 @@ A comprehensive set of skills for Test-Driven Development with AI assistance. Ba
 | `tdd-verify` | Audits code for TDD compliance. Detects anti-patterns, scores test quality, and generates compliance reports. |
 
 ### Enterprise .NET Suite
-
-Skills for .NET enterprise development patterns, migrations, and security.
 
 | Skill | Description |
 |-------|-------------|
@@ -45,9 +62,7 @@ Skills for .NET enterprise development patterns, migrations, and security.
 | `minimal-api-scaffolder` | .NET 10 minimal API scaffolding with OpenAPI documentation, versioning, and security patterns. |
 | `4d-schema-migration` | 4D (4th Dimension) to SQL Server/EF Core/Blazor full-stack migration specialist. |
 
-### Edge/IoT/Robotics Suite
-
-Skills for edge computing, computer vision, sensor integration, and robotics.
+### Edge / IoT / Robotics Suite
 
 | Skill | Description |
 |-------|-------------|
@@ -56,9 +71,7 @@ Skills for edge computing, computer vision, sensor integration, and robotics.
 | `sensor-integration` | Sensor data pipeline with I2C, SPI, UART, and GPIO protocols. Calibration and anomaly detection. |
 | `picar-x-behavior` | Composable robot behaviors for SunFounder Picar-X. Subsumption architecture and behavior trees. |
 
-### AI/ML Bridge Suite
-
-Skills for RAG pipelines, MCP servers, and local LLM management.
+### AI / ML Bridge Suite
 
 | Skill | Description |
 |-------|-------------|
@@ -68,8 +81,6 @@ Skills for RAG pipelines, MCP servers, and local LLM management.
 | `ollama-model-workflow` | Local LLM management with Modelfile configuration, quantization, and benchmarking. |
 
 ### Coaching & Learning Suite
-
-Skills for developing software engineering judgment through deliberate practice, Socratic questioning, and compressed feedback loops.
 
 | Skill | Description |
 |-------|-------------|
@@ -85,8 +96,6 @@ Skills for developing software engineering judgment through deliberate practice,
 | `architecture-journal` | Lightweight ADR templates with retrospective prompts at 30/90/180 days for converting experience into expertise. |
 
 ### Agent Support Suite
-
-Skills that provide domain knowledge and execution protocols for autonomous agents.
 
 | Skill | Description | Used By |
 |-------|-------------|---------|
@@ -104,16 +113,12 @@ Skills that provide domain knowledge and execution protocols for autonomous agen
 
 ### Agent Design Suite
 
-Skills for designing, specifying, and extracting AI agent definitions.
-
 | Skill | Description |
 |-------|-------------|
 | `spec-coach` | Interactive spec design coach from first principles. Guides through vision, PRD structure, INVEST story quality, specification by example, and three-tier guardrails. |
 | `skill-creator` | Creates, revises, and scores SKILL.md definitions against the 10-section gold standard. Three modes: CREATE, REVISE, SCORE. |
 
 ### RPI Workflow Suite
-
-Skills for the Research-Plan-Implement parallel workflow using session isolation and specialized subagents.
 
 | Skill | Description |
 |-------|-------------|
@@ -131,11 +136,13 @@ Skills for the Research-Plan-Implement parallel workflow using session isolation
 | `jira-comment-writer` | Plain-language Jira comment drafter for project managers and clients. Translates technical updates into stakeholder-friendly language. |
 | `confluence-guide-writer` | Reads Confluence spec pages and/or source code and generates well-formatted technical guides. |
 
+---
+
 ## Agents
 
 Autonomous agents that make decisions and take actions independently. Each agent has both Claude Code and OpenCode versions unless noted.
 
-### Development Workflow
+### Development & DevOps
 
 | Agent | Description | Skills |
 |-------|-------------|--------|
@@ -146,237 +153,88 @@ Autonomous agents that make decisions and take actions independently. Each agent
 | `dependency-audit-agent` | Autonomous dependency auditing -- vulnerability scanning, license compliance, upgrade paths. | dependency-mapper, technical-debt-assessor, supply-chain-audit |
 | `spec-extractor-agent` | Extracts structured agent specifications from natural-language descriptions or existing code. | spec-coach |
 | `confluence-guide-writer` | Reads Confluence spec pages and/or source code and generates well-formatted technical guides. | confluence-guide-writer |
-
-### DevOps / Infrastructure
-
-| Agent | Description | Skills |
-|-------|-------------|--------|
 | `migration-orchestrator` | Semi-autonomous migration orchestration -- EF Core and .NET Framework migrations with approval gates. | ef-migration-manager, legacy-migration-analyzer |
 | `environment-health-agent` | Autonomous environment health monitoring -- Docker, services, connections, and recovery. | environment-health |
+| `task-decomposition-agent` | Meta-orchestrator -- decomposes complex goals into sub-tasks and assigns to specialized agents. | task-decomposition |
 
-### Edge AI / IoT
+### Edge AI / IoT / Knowledge
 
 | Agent | Description | Skills |
 |-------|-------------|--------|
 | `model-optimization-agent` | Autonomous model optimization -- quantization, format conversion, and benchmarking for edge. | edge-cv-pipeline, jetson-deploy, model-optimization |
 | `sensor-anomaly-agent` | Autonomous sensor anomaly detection -- statistical outliers, drift monitoring, recalibration. | sensor-integration, anomaly-detection |
 | `fleet-deployment-agent` | Semi-autonomous fleet deployment -- canary, staged rollout, health gates, and rollback. | jetson-deploy, fleet-management |
-
-### Knowledge / RAG
-
-| Agent | Description | Skills |
-|-------|-------------|--------|
 | `research-agent` | Autonomous research -- multi-source investigation, credibility scoring, and structured briefings. | rag-pipeline-python, research-synthesis |
 | `context-builder-agent` | Autonomous context assembly -- git change summarization, ADR matching, dependency mapping. | architecture-journal, dependency-mapper, session-context |
 
-### RPI Workflow Subagents
+> RPI workflow subagents (`rpi-planner`, `rpi-implement`, `rpi-code-analyzer`, `rpi-file-locator`, `rpi-pattern-finder`) are spawned automatically by the RPI skills — they are not invoked directly.
 
-Specialized subagents that execute individual phases of the Research-Plan-Implement workflow.
-
-| Agent | Description |
-|-------|-------------|
-| `rpi-planner` | Converts a research artifact into a phased, testable implementation plan. |
-| `rpi-implement` | Executes a single implementation phase mechanically from a plan artifact. |
-| `rpi-code-analyzer` | Analyzes code structure and patterns during the research phase. |
-| `rpi-file-locator` | Locates relevant files and entry points during the research phase. |
-| `rpi-pattern-finder` | Identifies existing patterns and conventions during the research phase. |
-
-### Meta / Orchestration
-
-| Agent | Description | Skills |
-|-------|-------------|--------|
-| `task-decomposition-agent` | Meta-orchestrator -- decomposes complex goals into sub-tasks and assigns to specialized agents. | task-decomposition |
-
-## Installation
-
-### Claude Code
-
-```bash
-bash scripts/install-claude.sh
-```
-
-Copies all agents to `~/.claude/agents/` and all skills to `~/.claude/skills/`.
-
-**Windows (PowerShell):**
-
-```powershell
-.\scripts\install-claude.ps1
-```
-
-**Verification:** Open Claude Code, type `/` to see available slash commands, or run `/agents` to see installed agents.
-
-### OpenCode
-
-```bash
-bash scripts/install-opencode.sh
-```
-
-Copies all agents to `~/.config/opencode/agents/` and all skills to `~/.config/opencode/skills/`.
-
-**Windows (PowerShell):**
-
-```powershell
-.\scripts\install-opencode.ps1
-```
-
-**Verification:** Open OpenCode, type `/` to see available slash commands, or press `Tab` to cycle through available agents.
-
-OpenCode searches for skills in these locations (in order):
-
-| Location | Path |
-|----------|------|
-| Project-local (OpenCode) | `.opencode/skills/<name>/SKILL.md` |
-| Project-local (Claude) | `.claude/skills/<name>/SKILL.md` |
-| Global (OpenCode) | `~/.config/opencode/skills/<name>/SKILL.md` |
-| Global (Claude) | `~/.claude/skills/<name>/SKILL.md` |
-
-**Verification:** Open OpenCode, type `/` to see available slash commands, or press `Tab` to cycle through available agents.
-
-### Pi (Ollama / Local Models)
-
-```bash
-bash scripts/install-pi.sh           # 7B-safe default (AGENTS-lite.md)
-bash scripts/install-pi.sh --full    # 20B variant (AGENTS.md)
-```
-
-Installs `AGENTS.md`, `models.json`, and `settings.json` to `~/.pi/agent/`. The 7B-safe default works for all Ollama models; `--full` adds 20B-tier rules as a project overlay.
-
-**Ollama setup:** Pi needs a custom Modelfile to set `num_ctx 32768` — Ollama's 4K default breaks tool calling. See [`pi/global/README.md`](pi/global/README.md) for the full guide.
-
-**Model switching:** Use `/model` (`Ctrl+L`) or `Ctrl+P` mid-session — no restart or reinstall needed.
-
-**Verification:** Run `pi --model ollama/my-coder-7b` and type `/model` to confirm the model appears.
-
-### OpenCode vs Claude Code Agents
-
-| Feature | Claude Code | OpenCode |
-|---------|-------------|----------|
-| Agent location | `~/.claude/agents/` | `~/.config/opencode/agents/` |
-| Tools format | `tools: Read, Edit, Write...` | `tools:` with `read: true` style |
-| Skill injection | `skills: [name, ...]` in frontmatter | On-demand via `skill` tool |
-| Mode field | N/A | `mode: subagent` |
+---
 
 ## Usage
 
-Skills are invoked automatically based on context or triggered with slash commands:
+Skills are invoked with slash commands; agents as subagents:
 
 ```
-/tdd-cycle                      # Start a TDD session
-/tdd-agent                      # Autonomous TDD mode
-/tdd-pair                       # Collaborative TDD
-/tdd-verify                     # Audit TDD compliance
-/dotnet-vertical-slice          # Scaffold a vertical slice feature
-/ef-migration-manager           # Manage EF Core migrations safely
-/edge-cv-pipeline               # Build an edge CV pipeline
-/rag-pipeline-python            # Scaffold a RAG pipeline (Python)
-/rag-pipeline-dotnet            # Scaffold a RAG pipeline (.NET)
-/mcp-server-scaffold            # Create a custom MCP server
-/ollama-model-workflow          # Manage local LLMs with Ollama
-/architecture-review            # Challenge a design with Socratic questioning
-/code-review-coach              # Practice deliberate code review
-/pattern-tradeoff-analyzer      # Analyze pattern tradeoffs
-/security-review-trainer        # Progressive security challenges
-/architecture-journal           # Record and review architecture decisions
-/dotnet-security-review         # OWASP security review for .NET
-/dotnet-security-review-federal # Federal compliance overlay
-/legacy-migration-analyzer      # .NET Framework migration analysis
-/4d-schema-migration            # 4D to SQL Server migration
-/spec-coach                     # Design a spec interactively (agents, skills, PRDs, Spec Kit)
-/rpi-research                   # Research phase of RPI workflow
-/rpi-plan                       # Plan phase of RPI workflow
-/rpi-implement                  # Implement phase of RPI workflow
-/rpi-iterate                    # Update an existing implementation plan
-/confluence-guide-writer        # Generate a guide from Confluence or source code
-/jira-comment-writer            # Draft a stakeholder-friendly Jira comment
-/skill-creator                  # Create, revise, or score a SKILL.md definition
-```
+/tdd-cycle                    # Start a TDD session
+/architecture-review          # Challenge a design with Socratic questioning
+/dotnet-vertical-slice        # Scaffold a vertical slice feature
+/rpi-research                 # Research phase of RPI workflow
 
-Agents are invoked as subagents:
-
-```
 Use tdd-agent to implement a Calculator.add method
 Use code-review-agent to review the latest changes
 Use migration-orchestrator to plan the EF Core migration
 Use research-agent to investigate WebSocket vs SSE for real-time updates
-Use spec-extractor-agent to extract an agent spec from this description
-Use rpi-planner to turn this research artifact into an implementation plan
 ```
+
+Type `/` in your agent to see the full list of available slash commands.
+
+---
 
 ## Project Templates
 
-The `project-templates/` directory contains per-project context files based on the [Four Prompt Disciplines & Five Primitives framework](https://natesnewsletter.substack.com/). Copy the relevant files into your own project root to give AI agents the context they need to operate effectively across sessions.
+The `project-templates/` directory contains per-project context files. Copy the relevant files into your own project root to give AI agents the context they need across sessions.
 
-> These are **project-level** files. They supplement your global `CLAUDE.md` / `AGENTS.md` — they do not replace them. Global standards (coding style, security rules, quality gates) stay in the global files. Project-specific context goes here.
+> These are **project-level** files. They supplement your global config — they do not replace it. Global standards stay in the global files; project-specific context goes here.
 
-| File | Discipline | Purpose | When to use |
-|------|-----------|---------|-------------|
-| `CLAUDE.md` | Context Engineering | Project context for Claude Code: stack, architecture, key files, persistent decisions, boot ritual | Every project using Claude Code |
-| `AGENTS.md` | Context Engineering | Same as above for OpenCode | Every project using OpenCode |
-| `intent.md` | Intent Engineering | What the agent optimizes for: goals, values, tradeoff hierarchy, agent architecture selection | Every project |
-| `constraints.md` | Specification Engineering | Musts, must-nots, preferences, escalation triggers, code quality gates | Every project |
-| `evals.md` | Specification Engineering | Test cases, CI gate definitions, taste rules, rejection log | Every project |
-| `domain-memory.md` | Agent Harness State | Dark factory backlog, worker boot ritual, progress log | Dark factory / multi-session work only |
-| `design.md` | Context Engineering | Design system tokens, component hierarchy, interaction patterns | UI-heavy projects only |
+| File | Purpose | When to use |
+|------|---------|-------------|
+| `CLAUDE.md` / `AGENTS.md` | Project context: stack, architecture, key files, boot ritual | Every project |
+| `intent.md` | What the agent optimizes for: goals, values, tradeoff hierarchy | Every project |
+| `constraints.md` | Musts, must-nots, preferences, escalation triggers | Every project |
+| `evals.md` | Test cases, CI gate definitions, taste rules, rejection log | Every project |
+| `domain-memory.md` | Dark factory backlog and progress log | Multi-session agentic work only |
+| `design.md` | Design system tokens, component hierarchy, interaction patterns | UI-heavy projects only |
 
-**Minimum set for a coding harness:** `CLAUDE.md` (or `AGENTS.md`) + `intent.md` + `constraints.md` + `evals.md`.
-**Add for dark factory:** `domain-memory.md`.
-**Add for UI-heavy projects:** `design.md`.
+**Minimum set:** `CLAUDE.md` (or `AGENTS.md`) + `intent.md` + `constraints.md` + `evals.md`.
 
 Specs (problem statements, acceptance criteria, decomposition) live in **Jira / Confluence** — not in a local file.
+
+---
 
 ## Repository Structure
 
 ```
 ai-toolkit/
-├── skills/                     # Shareable skills
-│   ├── <skill-name>/
-│   │   ├── SKILL.md            # Skill definition with frontmatter
-│   │   └── references/         # Supporting documentation
-│   └── ...
+├── skills/                     # Shareable skills (SKILL.md + references/)
 ├── claude/
 │   ├── agents/                 # Claude Code agent definitions
-│   │   └── <agent-name>.md
-│   └── global/                 # Global Claude Code files (installed to ~/.claude/)
-│       ├── CLAUDE.md           # Global context and standards
-│       └── settings.local.json
+│   └── global/                 # Global config → ~/.claude/
 ├── opencode/
 │   ├── agents/                 # OpenCode agent definitions
-│   │   └── <agent-name>.md
-│   └── global/                 # Global OpenCode files (installed to ~/.config/opencode/)
-│       ├── AGENTS.md           # Global context and standards
-│       └── opencode.json
+│   └── global/                 # Global config → ~/.config/opencode/
 ├── pi/
-│   └── global/                 # Global Pi files (installed to ~/.pi/agent/)
-│       ├── AGENTS-lite.md      # 7B-safe global baseline (~25 rules) — default install
-│       ├── AGENTS.md           # 20B project overlay (~50 rules) — copy to project root
-│       ├── SYSTEM.md           # Per-project system prompt template (two variants: 7B / 20B)
-│       ├── models.json         # Ollama provider config with recommended models
-│       ├── settings.json       # Compaction tuned for local context windows
-│       ├── Modelfile-7b        # Ollama Modelfile for 7B models (sets num_ctx 32768)
-│       ├── Modelfile-20b       # Ollama Modelfile for 20B+ models (sets num_ctx 65536)
-│       └── README.md           # Full Pi + Ollama setup guide
+│   └── global/                 # Global config → ~/.pi/agent/  (Ollama setup guide inside)
 ├── project-templates/          # Per-project context files — copy to your project root
-│   ├── CLAUDE.md               # Project-level context for Claude Code
-│   ├── AGENTS.md               # Project-level context for OpenCode
-│   ├── intent.md               # Agent intent: goals, values, tradeoff hierarchy
-│   ├── constraints.md          # Musts, must-nots, preferences, escalation triggers
-│   ├── evals.md                # Test cases, CI gate, taste rules
-│   ├── domain-memory.md        # Dark factory backlog and progress log
-│   └── design.md               # Design system reference (UI-heavy projects)
 ├── scripts/                    # Install scripts (Bash + PowerShell)
-│   ├── install-claude.sh
-│   ├── install-claude.ps1
-│   ├── install-opencode.sh
-│   └── install-opencode.ps1
 ├── docs/                       # Supplementary documentation
-├── AGENTS.md                   # This project's OpenCode context (project-level)
-├── CLAUDE.md                   # This project's Claude Code context (project-level)
-├── intent.md                   # This project's agent intent and architecture
-├── constraints.md              # This project's agent constraints and quality gates
-├── evals.md                    # This project's eval definitions and taste rules
-├── DEVELOPER.md                # Developer setup and tooling guide
-└── README.md
+├── AGENTS.md                   # This project's OpenCode context
+├── CLAUDE.md                   # This project's Claude Code context
+├── intent.md / constraints.md / evals.md
+└── DEVELOPER.md
 ```
+
+---
 
 ## Author
 
