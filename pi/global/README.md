@@ -120,14 +120,27 @@ For 20B models, manually update `~/.pi/agent/settings.json` to the 20B values ab
 
 ---
 
-## Step 5 — Per-Project System Prompt (Optional)
+## Step 5 — Per-Project Context Stack
 
-Copy `pi/global/SYSTEM.md` to your project root. Pi reads it to replace or append to the default system prompt. **Delete the variant you don't need** — every token costs.
+Pi reads the following files from the project root automatically. Copy and fill in the ones that apply:
 
 ```bash
+# Pi-specific system prompt (required — delete the 7B or 20B variant you don't need)
 cp pi/global/SYSTEM.md /path/to/your-project/SYSTEM.md
-# Then edit: delete the 7B or 20B section
+
+# Project context stack (from project-templates/ — see project-templates/README.md)
+cp project-templates/AGENTS.md      /path/to/your-project/AGENTS.md
+cp project-templates/intent.md      /path/to/your-project/intent.md
+cp project-templates/constraints.md /path/to/your-project/constraints.md
+cp project-templates/evals.md       /path/to/your-project/evals.md
+
+# Multi-session / dark factory work only
+cp project-templates/domain-memory.md /path/to/your-project/domain-memory.md
 ```
+
+Pi's Session Boot ritual (in `AGENTS-lite.md`) checks for `intent.md` and `constraints.md` by name — fill them in or the agent will ask on every session start.
+
+**7B token budget:** Strip all comment blocks from these files before committing. Every token in every file loads on session boot. Lean files = more context left for actual work.
 
 ---
 
