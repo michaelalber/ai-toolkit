@@ -30,6 +30,12 @@
       "Bash(grounded-code-mcp ingest:*)",
       "Bash(/home/YOUR_USERNAME/.local/bin/grounded-code-mcp ingest:*)",
       "Bash(pipx run:*)",
+      "Bash(dotnet build:*)",
+      "Bash(dotnet test:*)",
+      "Bash(dotnet restore:*)",
+      "Bash(dotnet tool list:*)",
+      "Bash(dotnet --version:*)",
+      "Bash(dotnet ef migrations list:*)",
       "Read(/tmp/**)",
       "Read(/home/YOUR_USERNAME/**)",
       "WebSearch",
@@ -81,8 +87,8 @@
       "Read(**/.vault-token)",
       "Read(**/vault-token)",
       "Read(**/.ssh/**)",
-      "Read(**/appsettings.json)",
-      "Read(**/appsettings.*.json)",
+      "Read(**/appsettings.Production.json)",
+      "Read(**/appsettings.Release.json)",
       "Read(**/web.config)",
       "Read(**/app.config)"
     ]

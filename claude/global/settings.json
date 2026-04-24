@@ -1,0 +1,44 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write(*)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "file=\"$CLAUDE_TOOL_INPUT_FILE\"; if [ -f \"$file\" ]; then grep -iE '(password|passwd|secret|api.?key|token|connectionstring|bearer|private.?key)\\s*[=:][[:space:]]*[\"'\\''`][^\"'\\''`]{6}' \"$file\" 2>/dev/null && echo '⛔ CREDENTIAL PATTERN DETECTED — review before proceeding' && exit 2 || exit 0; fi"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write(*.cs)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "dotnet build --no-restore 2>&1 | tail -15"
+          }
+        ]
+      },
+      {
+        "matcher": "Write(*.py)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "ruff check \"$CLAUDE_TOOL_INPUT_FILE\" 2>&1 | head -20"
+          }
+        ]
+      },
+      {
+        "matcher": "Write(*.csproj)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "dotnet restore 2>&1 | tail -10"
+          }
+        ]
+      }
+    ]
+  }
+}

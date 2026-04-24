@@ -202,6 +202,13 @@
       // Arbitrary downloads — supply chain risk (OWASP T17).
       "wget*": "deny",
 
+      // Arbitrary file downloads via curl — supply chain risk (OWASP T17).
+      // Note: OpenCode glob matching does not parse pipe metacharacters — defense
+      // against "curl ... | bash" relies on "bash -c *": deny above.
+      "curl -o*": "deny",
+      "curl --output*": "deny",
+      "curl -O*": "deny",
+
       // Permission / ownership escalation — deny to prevent privilege creep (OWASP T3).
       "chmod 777*": "deny",
       "chown*": "deny",
@@ -213,6 +220,16 @@
       "node -e *": "deny",
       "bash -c *": "deny",
       "sh -c *": "deny",
+
+      // .NET dev tooling — build and test are safe to auto-allow.
+      // dotnet run intentionally excluded — it executes application code.
+      // Synced with claude/global/settings.local.json allow list.
+      "dotnet build*": "allow",
+      "dotnet test*": "allow",
+      "dotnet restore*": "allow",
+      "dotnet tool list*": "allow",
+      "dotnet --version*": "allow",
+      "dotnet ef migrations list*": "allow",
 
       // Safe read-only git operations — no approval needed.
       "git status*": "allow",
@@ -227,6 +244,12 @@
       // Destructive git operations — cannot be undone on shared remotes (OWASP T2).
       "git push --force*": "deny",
       "git push -f*": "deny"
+
+      // Deliberately omitted from allow list (fall through to "ask"):
+      // git add, git commit, git push, git merge, git rebase, git stash
+      // Rationale: these mutate history or remote state — explicit approval at each
+      // step is the intended behavior, not an oversight. Synced with
+      // claude/global/settings.local.json.
     },
 
     "external_directory": "ask",
