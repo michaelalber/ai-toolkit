@@ -137,6 +137,8 @@ you must follow. **This is the authoritative source — prefer it over training 
 | `grounded_langsmith` | `"langsmith"` | LangSmith: tracing, evaluation, datasets, experiments, annotation, prompt engineering |
 | `grounded_langchain` | `"langchain"` | LangChain: LCEL, chains, agents, retrievers, RAG patterns, core concepts |
 | `grounded_langgraph` | `"langgraph"` | LangGraph: state machines, agent graphs, multi-agent orchestration |
+| `grounded_ssis` | `"ssis"` | SQL Server Integration Services: packages, control flow, data flow, SSIS Catalog, expressions, deployment, Script Task/Component |
+| `grounded_api_design` | `"api_design"` | REST API design: Zalando guidelines, Google AIP, Microsoft REST API guidelines (Azure + Graph) |
 
 ### Canonical Engineering Standards
 
@@ -167,6 +169,11 @@ When in doubt — search. The cost of a wrong answer exceeds the cost of a searc
 - LangSmith tracing, evaluation, datasets, experiments, prompt engineering — **search `langsmith`**
 - LangChain LCEL, chains, agents, retrievers, RAG patterns — **search `langchain`**
 - LangGraph state machines, agent graphs, multi-agent orchestration — **search `langgraph`**
+- SSIS packages, control flow tasks, data flow components, SSIS Catalog, expressions, deployment — **search `ssis`**
+- REST API design, resource modelling, versioning, error contracts, pagination, HTTP semantics — **search `api_design`**
+- OWASP security cheat sheets (SQL injection, XSS, auth, session, crypto, input validation) — **search `internal`**
+- Code smells, refactoring techniques (extract method, move field, replace conditional, etc.) — **search `patterns`**
+- Code review discipline, what reviewers look for, CL preparation — **search `internal`**
 - Any topic where you would otherwise rely on training data alone
 
 ### Workflow — mandatory
