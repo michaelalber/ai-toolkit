@@ -1,5 +1,5 @@
 ---
-description: EF Core migration lifecycle with safety checks. Usage: /migrate <MigrationName>
+description: Runs the EF Core migration lifecycle with safety checks, rollback planning, and schema validation. Use when creating or applying EF Core migrations in .NET projects. Usage: /migrate <MigrationName>
 allowed-tools: Bash(dotnet ef:*), Bash(dotnet build:*), Read
 ---
 

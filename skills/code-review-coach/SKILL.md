@@ -1,6 +1,6 @@
 ---
 name: code-review-coach
-description: Deliberate practice for code review — review code yourself first, then compare against expert analysis with category-based scoring. Use to sharpen review skills, calibrate severity judgment, and build systematic review habits.
+description: Deliberate practice for code review — review code yourself first, then compare against expert analysis with category-based scoring. Use when practicing code review skills, improving review quality, calibrating finding severity, or building more systematic review habits through deliberate practice.
 ---
 
 # Code Review Coach

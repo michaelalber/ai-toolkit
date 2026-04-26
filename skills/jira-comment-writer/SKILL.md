@@ -2,8 +2,8 @@
 name: jira-comment-writer
 description: >
   Plain-language Jira comment drafter for project managers and clients. Translates
-  technical progress, blockers, and decisions into clear, jargon-free updates. Use
-  when adding a comment to a Jira issue that a non-technical stakeholder will read.
+  technical progress, blockers, and decisions into clear, jargon-free updates.
+  Use when adding a comment to a Jira issue that a non-technical stakeholder will read.
   Do NOT use when the audience is engineers or technical peers — use pr-feedback-writer
   instead; this skill targets non-technical stakeholders only.
 ---

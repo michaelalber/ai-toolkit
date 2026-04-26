@@ -1,5 +1,5 @@
 ---
-description: Prime session context from git state, ADRs, and open work.
+description: Primes session context by summarizing recent git changes, matching ADRs to current work, and surfacing open loops. Use when starting a new coding session, onboarding to a codebase, or asked to "prime context" or "catch me up".
 allowed-tools: Bash(git log:*), Bash(git diff:*), Bash(git status:*), Read
 ---
 

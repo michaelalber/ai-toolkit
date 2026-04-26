@@ -1,5 +1,5 @@
 ---
-description: Scaffold a new vertical slice feature with CQRS + FreeMediator. Usage: /new-feature <FeatureName>
+description: Scaffolds a new vertical slice feature with CQRS + FreeMediator, generating command, query, handler, and validation files. Use when adding a new feature to a .NET vertical slice project. Usage: /new-feature <FeatureName>
 allowed-tools: Read, Write, Edit, Bash(dotnet build:*)
 ---
 

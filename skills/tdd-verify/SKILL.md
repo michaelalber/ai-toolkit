@@ -1,8 +1,8 @@
 ---
 name: tdd-verify
 description: >
-  Verify AI-generated code follows TDD discipline. Use to audit commits, check
-  coverage quality, detect TDD anti-patterns, and generate compliance scorecards.
+  Verify AI-generated code follows TDD discipline. Use when auditing commits for TDD discipline,
+  checking test coverage quality, detecting TDD anti-patterns, or generating compliance scorecards.
   Do NOT use when reviewing legacy code written before TDD was applied without
   first establishing a baseline; Do NOT use when you have not reviewed project history.
 ---

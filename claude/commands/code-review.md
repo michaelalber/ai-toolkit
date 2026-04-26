@@ -1,5 +1,5 @@
 ---
-description: Code review of staged or branch changes. Injects git diff before reviewing.
+description: Reviews staged or branch changes for correctness, security, performance, and style, injecting live git diff before analysis. Use when reviewing changes before commit, auditing a branch before merging, or asked to review pending code changes.
 allowed-tools: Bash(git diff:*), Bash(git log:*), Read
 ---
 

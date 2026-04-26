@@ -1,6 +1,6 @@
 ---
 name: technical-debt-assessor
-description: Technical debt quantification practice — deliberate vs accidental debt, cost-to-fix vs cost-to-carry analysis, interest rate estimation, and business case building. Use to develop judgment about which debt to pay down and which to accept.
+description: Technical debt quantification practice — deliberate vs accidental debt, cost-to-fix vs cost-to-carry analysis, interest rate estimation, and business case building. Use when developing judgment about which technical debt to pay down, building a business case for improvements, or deciding whether to accept or address identified debt.
 ---
 
 # Technical Debt Assessor
