@@ -148,7 +148,6 @@ you must follow. **This is the authoritative source — prefer it over training 
 | `grounded_langsmith` | `"langsmith"` | LangSmith: tracing, evaluation, datasets, experiments, annotation, prompt engineering |
 | `grounded_langchain` | `"langchain"` | LangChain: LCEL, chains, agents, retrievers, RAG patterns, core concepts |
 | `grounded_langgraph` | `"langgraph"` | LangGraph: state machines, agent graphs, multi-agent orchestration |
-| `grounded_ssis` | `"ssis"` | SQL Server Integration Services: packages, control flow, data flow, SSIS Catalog, expressions, deployment, Script Task/Component |
 | `grounded_api_design` | `"api_design"` | REST API design: Zalando guidelines, Google AIP, Microsoft REST API guidelines (Azure + Graph) |
 
 ### Canonical Engineering Standards
@@ -180,8 +179,10 @@ When in doubt — search. The cost of a wrong answer exceeds the cost of a searc
 - LangSmith tracing, evaluation, datasets, experiments, prompt engineering — **search `langsmith`**
 - LangChain LCEL, chains, agents, retrievers, RAG patterns — **search `langchain`**
 - LangGraph state machines, agent graphs, multi-agent orchestration — **search `langgraph`**
-- SSIS packages, control flow tasks, data flow components, SSIS Catalog, expressions, deployment — **search `ssis`**
 - REST API design, resource modelling, versioning, error contracts, pagination, HTTP semantics — **search `api_design`**
+- .NET/C# platform docs, ASP.NET Core, C# language reference, Azure, .NET APIs — **use Microsoft Learn MCP**
+- Technical writing, documentation frameworks, Diátaxis, Google/GitLab style guide, Write the Docs, plain language — **search `internal`**
+- Microsoft Writing Style Guide — **use Microsoft Learn MCP**
 - OWASP security cheat sheets (SQL injection, XSS, auth, session, crypto, input validation) — **search `internal`**
 - Code smells, refactoring techniques (extract method, move field, replace conditional, etc.) — **search `patterns`**
 - Code review discipline, what reviewers look for, CL preparation — **search `internal`**
@@ -205,6 +206,26 @@ get_source_info(source_path: str)
 ```
 
 **Rules:** Never pass `null` explicitly. `collection=` takes the bare suffix only. Do not repeat the same query — it returns empty results.
+
+---
+
+## Microsoft Learn MCP
+
+> **Optional** — requires the Microsoft Learn MCP configured in Claude Code settings. Remove this section if you don't have it set up.
+
+The Microsoft Learn MCP provides live access to `learn.microsoft.com` — the authoritative source for Microsoft platform documentation. **Prefer it over `grounded_dotnet` for all official Microsoft docs.**
+
+**Use Microsoft Learn MCP for:**
+- ASP.NET Core (all versions) — reference, APIs, tutorials
+- .NET SDK, runtime, and BCL documentation
+- C# language reference and specification
+- .NET Framework documentation
+- Azure service documentation
+- Microsoft Writing Style Guide (`learn.microsoft.com/en-us/style-guide/`)
+
+**Use `grounded_dotnet` for (not in Microsoft Learn):**
+- Third-party .NET books ingested into your local knowledge base
+- Vendor component documentation (Telerik, DevExpress, etc.)
 
 ---
 
@@ -370,7 +391,7 @@ SOLID principles are useful intuitions that become harmful when applied mechanic
 
 ## .NET / C# Standards
 
-> Ground first: `search_knowledge(collection="dotnet")` + `search_code_examples(language="csharp")`.
+> For official platform docs (ASP.NET Core, C# language ref, .NET BCL, Azure): use **Microsoft Learn MCP**. For third-party books and vendor components: `search_knowledge(collection="dotnet")` + `search_code_examples(language="csharp")`.
 
 Invariants:
 - Target .NET 10 unless the project context specifies otherwise
