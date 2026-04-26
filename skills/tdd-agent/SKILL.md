@@ -31,11 +31,9 @@ Use `search_knowledge` (grounded-code-mcp) to ground decisions in authoritative 
 | `search_knowledge("C# xUnit test patterns FluentAssertions NSubstitute")` | For .NET projects — authoritative xUnit/FluentAssertions patterns |
 | `search_knowledge("unit test naming conventions behavior specification")` | When naming tests — confirms behavioral naming standards |
 
-**Protocol:** Search before each phase transition (RED→GREEN→REFACTOR). This is an autonomous agent — grounding every phase in authoritative references prevents drift. Cite the source path in phase logs.
+**Protocol:** Search before each phase transition (RED→GREEN→REFACTOR). Cite the source path in phase logs.
 
 ## Kent Beck's 12 Test Desiderata (Agent Focus)
-
-The agent must ensure tests have these properties:
 
 | Property | Agent Responsibility |
 |----------|---------------------|
@@ -67,13 +65,8 @@ RED Protocol:
 **Behavior to test**: [description]
 **Test written**: `test_name` in `file`
 
-**Verification**:
-```
-[actual test output showing failure]
-```
-
+**Verification**: [actual test output showing failure]
 **Failure reason**: [e.g., "NameError: Calculator not defined"]
-**Expected**: Yes, test fails because Calculator class doesn't exist yet
 
 Proceeding to GREEN phase.
 ```
@@ -96,16 +89,9 @@ GREEN Protocol:
 
 **Test to satisfy**: `test_name`
 **Implementation strategy**: [Fake It | Obvious | Triangulation]
+**Code written**: [implementation code]
 
-**Code written**:
-```[language]
-[implementation code]
-```
-
-**Verification**:
-```
-[actual test output showing all pass]
-```
+**Verification**: [actual test output showing all pass]
 
 All tests passing. Proceeding to REFACTOR phase.
 ```
@@ -129,125 +115,48 @@ REFACTOR Protocol:
 
 **Starting state**: All tests passing (N tests)
 **Improvement identified**: [e.g., "Extract duplicate calculation"]
+**Change made**: [brief description]
 
-**Change made**:
-[brief description]
-
-**Verification**:
-```
-[actual test output]
-```
+**Verification**: [actual test output]
 
 Refactoring complete. [Continue refactoring | Ready for next feature]
 ```
 
 ## Self-Check Loops
 
-At each phase, the agent must run verification:
+Run these checklists at each phase transition. Stop and correct if any item fails.
 
-### RED Phase Self-Check
+**RED Self-Check:**
+- [ ] Test file exists and is syntactically valid
+- [ ] Test suite runs without error
+- [ ] New test fails for the expected reason
+- [ ] Only ONE new failing test
+- [ ] Existing tests still pass
 
-```
-┌─────────────────────────────────────────────┐
-│ RED Self-Check                              │
-├─────────────────────────────────────────────┤
-│ □ Test file exists                          │
-│ □ Test is syntactically valid               │
-│ □ Test suite runs without error             │
-│ □ New test fails                            │
-│ □ Failure is for expected reason            │
-│ □ Only ONE new failing test                 │
-│ □ Existing tests still pass                 │
-└─────────────────────────────────────────────┘
-```
+**GREEN Self-Check:**
+- [ ] Implementation is minimal — no features beyond test requirements
+- [ ] All tests pass
+- [ ] No other tests broke
 
-If any check fails, stop and correct before proceeding.
-
-### GREEN Phase Self-Check
-
-```
-┌─────────────────────────────────────────────┐
-│ GREEN Self-Check                            │
-├─────────────────────────────────────────────┤
-│ □ Implementation is minimal                 │
-│ □ No features beyond test requirements      │
-│ □ Test suite runs without error             │
-│ □ All tests pass                            │
-│ □ New test passes                           │
-│ □ No other tests broke                      │
-└─────────────────────────────────────────────┘
-```
-
-### REFACTOR Phase Self-Check
-
-```
-┌─────────────────────────────────────────────┐
-│ REFACTOR Self-Check                         │
-├─────────────────────────────────────────────┤
-│ □ Started with all tests passing            │
-│ □ Made ONE small change                     │
-│ □ Test suite runs without error             │
-│ □ All tests still pass                      │
-│ □ No behavior was changed                   │
-│ □ Code is cleaner than before               │
-└─────────────────────────────────────────────┘
-```
+**REFACTOR Self-Check:**
+- [ ] Started with all tests passing
+- [ ] Made ONE small change
+- [ ] All tests still pass
+- [ ] No behavior was changed — only structure
 
 ## Guardrails
 
-### Guardrail 1: No Implementation Without Failure Proof
+**Guardrail 1 — No Implementation Without Failure Proof:** Before writing any implementation code, verify a test exists for the behavior, it was just run, output shows failure, and the failure is logged. If any item is missing, stop.
 
-Before writing ANY implementation code:
+**Guardrail 2 — Verify Before Claiming:** Never claim tests pass or fail without running them and showing actual output. Show `[actual test output] All 15 tests pass` — not "the test should now pass."
 
-```
-STOP! Verify:
-1. A test exists for this behavior
-2. The test was just run
-3. The test output shows failure
-4. The failure is logged in conversation
+**Guardrail 3 — Minimal Means Minimal:** During GREEN, ask: can I make this simpler? Am I adding anything the test doesn't require? Would a hardcoded value pass? If yes to any, simplify.
 
-If any are missing, DO NOT PROCEED.
-```
+**Guardrail 4 — Rollback on Red:** If tests fail during REFACTOR, stop, revert the change immediately, verify tests pass again, then try a smaller step. Never fix a broken refactor forward.
 
-### Guardrail 2: Verify Before Claiming
-
-Never claim tests pass/fail without evidence:
+## State Block
 
 ```
-WRONG: "The test should now pass."
-WRONG: "I believe all tests are passing."
-RIGHT: "Running tests... [actual output] All 15 tests pass."
-```
-
-### Guardrail 3: Minimal Means Minimal
-
-During GREEN, ask:
-- Can I make this simpler?
-- Am I adding anything the test doesn't require?
-- Would a hardcoded value work?
-
-If yes to any, simplify.
-
-### Guardrail 4: Rollback on Red
-
-If tests fail during REFACTOR:
-
-```
-IMMEDIATE ACTIONS:
-1. Stop refactoring
-2. Revert the change (git checkout or undo)
-3. Verify tests pass again
-4. Analyze what went wrong
-5. Try smaller step
-```
-
-Do NOT try to "fix" the refactoring. Revert first.
-
-### Guardrail 5: State Persistence
-
-Always maintain explicit state:
-
-```markdown
 <tdd-state>
 phase: [RED | GREEN | REFACTOR]
 iteration: N
@@ -262,7 +171,7 @@ last_verified: [timestamp or "just now"]
 
 ## Explicit Reasoning
 
-The agent must explain decisions at each step:
+At each decision point, log options, reasoning, and choice before acting:
 
 ```markdown
 **Decision Point**: How to implement Calculator.add(2, 3)?
@@ -271,128 +180,37 @@ The agent must explain decisions at each step:
 1. Return hardcoded 5 (Fake It)
 2. Return a + b (Obvious Implementation)
 
-**Reasoning**: This is the only test for addition. Obvious implementation
-is safe because the algorithm is trivial (single expression, no edge cases).
+**Reasoning**: Single test for addition. Obvious implementation is safe — trivial algorithm, no edge cases.
 
 **Choice**: Obvious Implementation
 ```
 
 ## Workflow Example
 
-```markdown
-## TDD Session: Calculator
+RED → GREEN → REFACTOR for `Calculator.add()` (Python):
 
-Mode: Autonomous (tdd-agent)
-Stack: Python
+**RED**: Write `test_add_two_numbers`, run pytest — `NameError: Calculator not defined`. Log failure. Update state: `phase: GREEN, iteration: 1`.
 
----
+**GREEN**: Implement `class Calculator: def add(self, a, b): return a + b`. Run pytest — 1 passed. Update state: `phase: REFACTOR`.
 
-### RED Phase — Iteration 1
+**REFACTOR**: No smells detected. Code is minimal. No refactoring needed. Update state: `phase: RED, iteration: 2`.
 
-**Behavior**: Calculator can add two numbers
-
-**Test**:
-```python
-# tests/test_calculator.py
-def test_add_two_numbers():
-    calc = Calculator()
-    assert calc.add(2, 3) == 5
-```
-
-**Verification**:
-```
-$ pytest tests/test_calculator.py -v
-E   NameError: name 'Calculator' is not defined
-```
-
-**Analysis**: Test fails as expected — Calculator class doesn't exist.
-
-<tdd-state>
-phase: GREEN
-iteration: 1
-feature: Addition
-current_test: test_add_two_numbers
-tests_passing: false
-</tdd-state>
-
----
-
-### GREEN Phase — Iteration 1
-
-**Strategy**: Obvious Implementation (addition is trivial)
-
-**Implementation**:
-```python
-# calculator.py
-class Calculator:
-    def add(self, a, b):
-        return a + b
-```
-
-**Verification**:
-```
-$ pytest tests/test_calculator.py -v
-test_calculator.py::test_add_two_numbers PASSED
-```
-
-All tests pass.
-
-<tdd-state>
-phase: REFACTOR
-iteration: 1
-tests_passing: true
-</tdd-state>
-
----
-
-### REFACTOR Phase — Iteration 1
-
-**Check**: Code is simple, no smells detected.
-
-**Decision**: No refactoring needed. Ready for next feature.
-
-<tdd-state>
-phase: RED
-iteration: 2
-</tdd-state>
-```
+Each iteration closes with an updated `<tdd-state>` block and a mandatory phase log entry.
 
 ## Output Templates
 
-See [Guardrails Reference](references/guardrails.md) for detailed templates.
+See [Guardrails Reference](references/guardrails.md) for detailed phase log templates.
 See [Autonomous Protocol](references/autonomous-protocol.md) for extended workflow examples.
 
 ## AI Discipline Rules
 
-### CRITICAL: Trust Nothing Without Verification
+**CRITICAL: Trust Nothing Without Verification** — Don't assume tests pass, don't assume tests fail, don't assume code works. Run and verify everything.
 
-- Don't assume tests pass
-- Don't assume tests fail
-- Don't assume code works
-- Run and verify everything
+**CRITICAL: Be Boringly Predictable** — Follow the protocol exactly. Log everything explicitly. Never skip steps. Never combine steps.
 
-### CRITICAL: Be Boringly Predictable
+**CRITICAL: Fail Loudly** — If something unexpected happens: stop immediately, report the anomaly, ask for guidance. Do not work around it.
 
-- Follow the protocol exactly
-- Log everything explicitly
-- Never skip steps
-- Never combine steps
-
-### CRITICAL: Fail Loudly
-
-If something unexpected happens:
-- Stop immediately
-- Report the anomaly
-- Ask for guidance if unclear
-- Don't try to work around it
-
-### CRITICAL: Prefer Smaller Steps
-
-When in doubt:
-- Smaller test
-- Simpler implementation
-- One refactoring at a time
-- More iterations over fewer
+**CRITICAL: Prefer Smaller Steps** — When in doubt: smaller test, simpler implementation, one refactoring at a time, more iterations over fewer.
 
 ## Integration with Other Skills
 
@@ -400,50 +218,14 @@ When in doubt:
 - **`tdd-implementer`** — Called during GREEN phase for implementation strategy selection (Fake It / Obvious / Triangulation)
 - **`tdd-refactor`** — Called during REFACTOR phase for smell identification and safe step-by-step improvement
 - **`tdd-verify`** — Run after the session to audit TDD compliance, score commit history, and identify anti-patterns
-- **`tdd-pair`** — Alternative to this skill; use when a human partner drives and the AI navigates rather than the AI driving autonomously
+- **`tdd-pair`** — Alternative to this skill; use when a human partner drives and the AI navigates
 
 ## Error Recovery
 
-### Tests Won't Run
+**Tests Won't Run:** Check syntax and imports in the test file. Fix infrastructure issues first. Do not write any implementation until the test suite runs cleanly.
 
-```
-Problem: Test suite errors out
-Actions:
-1. Check syntax of test file
-2. Check imports and dependencies
-3. Fix infrastructure issues
-4. Do NOT write implementation until tests run
-```
+**Wrong Test Failure:** Examine the actual error message — not the expected one. Fix the test if it has bugs. Proceed only when the failure is the expected one.
 
-### Wrong Test Failure
+**Can't Make Test Pass:** Re-read the test carefully. Check for typos in expectations. Verify setup and assertions. Ask for help if stuck — do not guess at the implementation.
 
-```
-Problem: Test fails but not for expected reason
-Actions:
-1. Examine the actual error
-2. Fix the test if it has bugs
-3. Ensure test setup is correct
-4. Only proceed when failure is expected
-```
-
-### Can't Make Test Pass
-
-```
-Problem: Implementation seems correct but test fails
-Actions:
-1. Re-read the test carefully
-2. Check for typos in test expectations
-3. Verify test setup and assertions
-4. Ask for help if stuck
-```
-
-### State Confusion
-
-```
-Problem: Unsure what phase we're in
-Actions:
-1. Run full test suite
-2. If all pass: REFACTOR or new RED
-3. If one fails: GREEN
-4. Reconstruct state block from evidence
-```
+**State Confusion:** Run the full test suite. If all pass: begin REFACTOR or new RED. If one fails: you are in GREEN. Reconstruct the state block from observed evidence.

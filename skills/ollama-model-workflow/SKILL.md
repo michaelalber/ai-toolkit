@@ -40,95 +40,41 @@ This skill manages the full lifecycle of local LLMs through Ollama: selection, p
 
 ## Workflow
 
-### Ollama Model Lifecycle
+Six-step lifecycle: **SELECT → PULL → CONFIGURE → TEST → BENCHMARK → DEPLOY**. Return to SELECT if benchmarking reveals the model doesn't meet requirements.
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                  OLLAMA MODEL WORKFLOW                          │
-│                                                                 │
-│  ┌──────────┐   ┌──────┐   ┌───────────┐   ┌──────┐           │
-│  │ 1.SELECT │──>│2.PULL│──>│3.CONFIGURE│──>│4.TEST│           │
-│  └──────────┘   └──────┘   └───────────┘   └──────┘           │
-│       │                          │               │              │
-│       │                          │               v              │
-│       │                          │         ┌───────────┐        │
-│       │                          │         │5.BENCHMARK│        │
-│       │                          │         └───────────┘        │
-│       │                          │               │              │
-│       │                          │               v              │
-│       │                          │         ┌──────────┐         │
-│       │                          └────────>│ 6.DEPLOY │         │
-│       │                                    └──────────┘         │
-│       │                                         │               │
-│       └─────────────────────────────────────────┘               │
-│                    (iterate if needed)                           │
-└─────────────────────────────────────────────────────────────────┘
-```
+### Step 1: Model Selection
 
-### Step 1: Model Selection Decision Tree
+Choose model family by task type:
 
-```
-                    ┌─────────────────┐
-                    │ What is the task?│
-                    └────────┬────────┘
-                             │
-              ┌──────────────┼──────────────┐
-              v              v              v
-         ┌────────┐    ┌─────────┐    ┌──────────┐
-         │ Coding │    │  Chat/  │    │ RAG/Tool │
-         │        │    │ General │    │   Use    │
-         └───┬────┘    └────┬────┘    └────┬─────┘
-             │              │              │
-             v              v              v
-     codellama/       llama3.1/       mistral/
-     deepseek-coder   phi3            nomic-embed
-     qwen2.5-coder    gemma2          mxbai-embed
-```
+| Task | Recommended Models |
+|------|--------------------|
+| Coding | codellama, deepseek-coder, qwen2.5-coder |
+| Chat / General | llama3.1, phi3, gemma2 |
+| RAG / Tool Use | mistral, nomic-embed, mxbai-embed |
 
-### Step 2: Quantization Decision Tree
+### Step 2: Quantization Selection
 
-```
-                ┌──────────────────────┐
-                │ Available VRAM (GB)? │
-                └──────────┬───────────┘
-                           │
-         ┌─────────┬───────┼────────┬──────────┐
-         v         v       v        v          v
-      < 4 GB    4-8 GB   8-16 GB  16-24 GB  24+ GB
-         │         │       │        │          │
-         v         v       v        v          v
-     Q4_K_M     Q4_K_M  Q5_K_M   Q8_0      FP16
-     (small     (7B     (7-13B   (7-13B    (7-13B
-      models)   models)  models)  models)   models)
-```
+Choose quantization based on available VRAM:
 
-### Steps 3-6: Detailed Phases
+| Available VRAM | Recommended Quantization |
+|----------------|--------------------------|
+| < 4 GB | Q4_K_M (small models only) |
+| 4–8 GB | Q4_K_M (7B models) |
+| 8–16 GB | Q5_K_M (7–13B models) |
+| 16–24 GB | Q8_0 (7–13B models) |
+| 24+ GB | FP16 (7–13B models) |
 
-**Step 3 - Configure Modelfile:**
-1. Choose base model with explicit tag
-2. Set PARAMETER values appropriate to task
-3. Write SYSTEM prompt constraining behavior
-4. Set TEMPLATE if using a non-default chat format
+### Steps 3–6: Configure, Test, Benchmark, Deploy
 
-**Step 4 - Test:**
-1. Run representative prompts through the model
-2. Verify output quality matches expectations
-3. Check for instruction following and format compliance
+**Configure Modelfile:** Choose base model with explicit tag. Set PARAMETER values appropriate to task. Write SYSTEM prompt constraining behavior. Set TEMPLATE if using a non-default chat format.
 
-**Step 5 - Benchmark:**
-1. Measure tokens/sec with standardized prompts
-2. Record time to first token
-3. Test at target context window size
-4. Compare against baseline or alternative models
+**Test:** Run representative prompts. Verify output quality and instruction following.
 
-**Step 6 - Deploy:**
-1. Commit Modelfile to version control
-2. Document model selection rationale
-3. Record benchmark results for future reference
+**Benchmark:** Measure tokens/sec with standardized prompts. Record time to first token. Test at target context window size. Compare against baseline or alternative models.
 
-## State Block Format
+**Deploy:** Commit Modelfile to version control. Document model selection rationale. Record benchmark results for future reference.
 
-Maintain state across conversation turns using this block:
+## State Block
 
 ```
 <ollama-state>
@@ -143,294 +89,58 @@ blockers: [issues]
 </ollama-state>
 ```
 
-**Example:**
-
-```
-<ollama-state>
-step: BENCHMARK
-model_name: llama3.1:8b-instruct-q5_K_M
-quantization: Q5_K_M
-vram_available_gb: 12
-tokens_per_second: untested
-last_action: Created Modelfile with coding-focused system prompt
-next_action: Run benchmark suite with standardized prompts
-blockers: none
-</ollama-state>
-```
-
 ## Output Templates
 
-### Model Selection Report
+| Template | Required Fields |
+|----------|----------------|
+| Model Selection Report | Task, Hardware, Resources table (VRAM/Disk/RAM available vs. required), Candidates table, Recommendation + rationale |
+| Modelfile Creation | Base model, Purpose, Parameters table with rationale column, Modelfile block, Verification checklist |
+| Benchmark Results | Date, Hardware, Quantization, Performance table (tokens/sec, TTFT, VRAM), Quality table, Comparison table |
 
-```markdown
-## Model Selection Report
-
-**Task**: [description of intended use]
-**Hardware**: [GPU model, VRAM, RAM, CPU]
-
-### Hardware Assessment
-
-| Resource | Available | Required (est.) | Status |
-|----------|-----------|-----------------|--------|
-| VRAM     | [X] GB    | [Y] GB          | OK/WARN|
-| Disk     | [X] GB    | [Y] GB          | OK/WARN|
-| RAM      | [X] GB    | [Y] GB          | OK/WARN|
-
-### Candidates
-
-| Model | Params | Quantization | VRAM Est. | Fit |
-|-------|--------|-------------|-----------|-----|
-| [name]| [size] | [quant]     | [GB]      | Y/N |
-
-### Recommendation
-
-**Selected**: [model:tag]
-**Rationale**: [why this model for this task and hardware]
-```
-
-### Modelfile Creation
-
-```markdown
-## Modelfile: [name]
-
-**Base Model**: [FROM value]
-**Purpose**: [what this configuration is for]
-
-### Parameters
-
-| Parameter | Value | Rationale |
-|-----------|-------|-----------|
-| temperature | [val] | [why] |
-| top_p | [val] | [why] |
-| num_ctx | [val] | [why] |
-
-### Modelfile
-
-\```
-FROM [model:tag]
-
-PARAMETER temperature [value]
-PARAMETER top_p [value]
-PARAMETER num_ctx [value]
-
-SYSTEM """
-[system prompt]
-"""
-\```
-
-### Verification
-
-- [ ] Model created successfully
-- [ ] Test prompt produces expected output
-- [ ] VRAM usage within budget
-```
-
-### Benchmark Results
-
-```markdown
-## Benchmark: [model name]
-
-**Date**: [date]
-**Hardware**: [specs]
-**Quantization**: [level]
-
-### Performance
-
-| Metric | Value |
-|--------|-------|
-| Tokens/sec (generation) | [X] |
-| Time to first token (ms) | [X] |
-| Total generation time (s) | [X] |
-| Context window tested | [X] |
-| VRAM usage (GB) | [X] |
-
-### Quality Assessment
-
-| Test Case | Expected | Actual | Pass |
-|-----------|----------|--------|------|
-| [case 1]  | [expected]| [actual]| Y/N |
-
-### Comparison (if applicable)
-
-| Model | Tokens/sec | Quality Score | VRAM |
-|-------|-----------|---------------|------|
-| [A]   | [X]       | [X/10]        | [X]  |
-| [B]   | [X]       | [X/10]        | [X]  |
-```
+Full templates: `references/quantization-benchmarks.md`
 
 ## AI Discipline Rules
 
-### CRITICAL: Always Check VRAM Before Pulling
+**Always Check VRAM Before Pulling:** Run `nvidia-smi --query-gpu=name,memory.total,memory.used,memory.free --format=csv,noheader,nounits` (or `system_profiler SPDisplaysDataType` on Mac M-series). Verify free VRAM exceeds model requirement plus a 1–2 GB safety margin. If VRAM is unknown, ask before proceeding — never assume.
 
-Before recommending or pulling ANY model:
+**Never Skip Benchmarking:** Every model must be benchmarked before deployment: tokens/sec with representative prompts, time to first token, quality on task-specific test cases, and VRAM usage confirmed under budget. Production surprises come from skipped benchmarks.
 
-```
-STOP! Verify:
-1. Available VRAM has been assessed (nvidia-smi, system_profiler, or user-reported)
-2. Model VRAM requirement is estimated for the chosen quantization
-3. A safety margin of at least 1-2 GB exists
-4. Disk space is sufficient for the model download
+**Always Document Modelfile Parameters:** Every PARAMETER must have an inline comment explaining the choice. Example: `PARAMETER temperature 0.3 # Low for deterministic code generation — 0.7+ caused inconsistent formatting in testing.` An undocumented parameter is a parameter that will be changed without understanding the consequences.
 
-If VRAM is unknown, ASK before proceeding.
-```
-
-Checking VRAM in Python:
-
-```python
-import subprocess
-import json
-
-def get_vram_info() -> dict:
-    """Get GPU VRAM information using nvidia-smi."""
-    try:
-        result = subprocess.run(
-            ["nvidia-smi", "--query-gpu=name,memory.total,memory.used,memory.free",
-             "--format=csv,noheader,nounits"],
-            capture_output=True, text=True, check=True
-        )
-        lines = result.stdout.strip().split("\n")
-        gpus = []
-        for line in lines:
-            name, total, used, free = [x.strip() for x in line.split(",")]
-            gpus.append({
-                "name": name,
-                "total_mb": int(total),
-                "used_mb": int(used),
-                "free_mb": int(free),
-                "free_gb": round(int(free) / 1024, 1)
-            })
-        return {"gpus": gpus}
-    except FileNotFoundError:
-        return {"error": "nvidia-smi not found. Check for Mac M-series or CPU-only setup."}
-```
-
-### CRITICAL: Never Skip Benchmarking
-
-Every model must be benchmarked before deployment:
-
-```
-MANDATORY before deployment:
-1. Tokens/sec measured with representative prompts
-2. Time to first token recorded
-3. Quality verified with task-specific test cases
-4. VRAM usage confirmed under budget
-5. Results documented in benchmark report
-
-Skipping benchmarks leads to production surprises.
-```
-
-### CRITICAL: Always Document Modelfile Parameters
-
-Every PARAMETER in a Modelfile must have a documented rationale:
-
-```
-WRONG:
-  PARAMETER temperature 0.3
-
-RIGHT:
-  # temperature 0.3: Low value chosen for deterministic code generation.
-  # Higher values (0.7+) caused inconsistent formatting in testing.
-  PARAMETER temperature 0.3
-```
-
-### CRITICAL: Never Recommend Models Without Hardware Context
-
-Before any model recommendation:
-
-```
-REQUIRED context:
-1. Target hardware (GPU model, VRAM, RAM)
-2. Task description (coding, chat, RAG, embeddings)
-3. Latency requirements (interactive vs batch)
-4. Quality requirements (precision needed)
-
-If any context is missing, ASK before recommending.
-```
+**Never Recommend Without Hardware Context:** Require before any recommendation: target hardware (GPU model, VRAM, RAM), task description, latency requirements (interactive vs. batch), quality requirements. If any are missing, ask — a recommendation without hardware context is a guess.
 
 ## Anti-Patterns
 
 | Anti-Pattern | Why It Fails | Correct Approach |
 |--------------|-------------|------------------|
-| Pulling largest model without checking VRAM | OOM crashes, swapping to disk destroys performance | Always assess VRAM first, pick the largest model that fits with margin |
-| Using default parameters for all tasks | Temperature 0.8 is wrong for code; num_ctx 2048 is wrong for RAG | Tune parameters to the specific task and document rationale |
-| Comparing models at different quantization levels | Q4_K_M vs Q8_0 comparison is meaningless for quality assessment | Compare at same quantization, then compare quantization tradeoffs separately |
-| Skipping system prompt in Modelfile | Model behaves unpredictably, inconsistent outputs | Always include a SYSTEM prompt that constrains the model role |
+| Pulling largest model without checking VRAM | OOM crashes, disk swapping destroys performance | Always assess VRAM first; pick the largest model that fits with margin |
+| Using default parameters for all tasks | temperature 0.8 is wrong for code; num_ctx 2048 is wrong for RAG | Tune parameters to the specific task and document rationale |
+| Comparing models at different quantization levels | Q4_K_M vs Q8_0 comparison conflates quality and quantization effects | Compare at same quantization; compare quantization tradeoffs separately |
+| Skipping system prompt in Modelfile | Model behaves unpredictably, inconsistent outputs | Always include a SYSTEM prompt constraining the model role |
 | Not pinning model tags | `ollama pull llama3.1` may get different versions over time | Use explicit tags like `llama3.1:8b-instruct-q5_K_M` |
-| Benchmarking with trivial prompts | "Hello world" does not represent production workload | Use representative prompts that match actual deployment scenarios |
+| Benchmarking with trivial prompts | "Hello world" doesn't represent production workload | Use representative prompts matching actual deployment scenarios |
 | Ignoring time to first token | High tokens/sec means nothing if TTFT is 5 seconds for interactive use | Measure and report TTFT alongside generation speed |
 
 ## Error Recovery
 
-### OOM (Out of Memory) Errors
+**OOM (Out of Memory):** Check actual VRAM usage with `nvidia-smi` or `ollama ps`. Reduce `num_ctx` (halving it roughly halves KV cache VRAM). Switch to smaller quantization (Q8_0 → Q5_K_M → Q4_K_M). Switch to smaller parameter count model. Check for other processes consuming VRAM on shared GPU.
 
-```
-Problem: Model fails to load or crashes during inference with OOM
-Actions:
-1. Check actual VRAM usage: nvidia-smi or ollama ps
-2. Reduce num_ctx (halving it roughly halves KV cache VRAM)
-3. Switch to a smaller quantization (Q8_0 -> Q5_K_M -> Q4_K_M)
-4. Switch to a smaller parameter count model
-5. If on shared GPU, check for other processes consuming VRAM
-```
+**Slow Inference (< 5 tok/s):** Verify model is running on GPU not CPU (`ollama ps` shows GPU%). Check if model is partially offloaded (too large for VRAM). Reduce `num_ctx`. Switch to more aggressive quantization. Check for thermal throttling. On CPU-only hardware, 1–5 tok/s for 7B models may be normal.
 
-### Slow Inference (< 5 tokens/sec)
+**Model Corruption / Bad Output:** Remove and re-pull: `ollama rm [model] && ollama pull [model]`. Check Modelfile TEMPLATE syntax matches the model's expected format. Test with base model (no Modelfile) to isolate the issue. Check server logs: `journalctl -u ollama` or `~/.ollama/logs/`.
 
-```
-Problem: Generation speed is unacceptably slow
-Actions:
-1. Verify model is running on GPU, not CPU (ollama ps shows GPU%)
-2. Check if model is partially offloaded (too large for VRAM)
-3. Reduce num_ctx to lower KV cache overhead
-4. Switch to a more aggressive quantization
-5. Check for thermal throttling on the GPU
-6. On CPU-only: expect 1-5 tok/s for 7B models, this may be normal
-```
+**Server Issues:** Check `systemctl status ollama`. Restart: `systemctl restart ollama`. Check port conflicts: `lsof -i :11434`. Review logs: `journalctl -u ollama --since "10 minutes ago"`. Verify disk space at `~/.ollama/models/`. Confirm `OLLAMA_HOST` environment variable is set correctly.
 
-### Model Corruption or Bad Output
-
-```
-Problem: Model produces garbled output, crashes, or behaves erratically
-Actions:
-1. Remove and re-pull the model: ollama rm [model] && ollama pull [model]
-2. Check Modelfile TEMPLATE syntax matches the model's expected format
-3. Verify SYSTEM prompt is not conflicting with the template
-4. Test with the base model (no Modelfile) to isolate the issue
-5. Check Ollama server logs: journalctl -u ollama or ~/.ollama/logs/
-```
-
-### Ollama Server Issues
-
-```
-Problem: Ollama server not responding, connection refused, or hanging
-Actions:
-1. Check server status: systemctl status ollama or ollama serve
-2. Restart the server: systemctl restart ollama
-3. Check port conflicts: lsof -i :11434
-4. Review logs for errors: journalctl -u ollama --since "10 minutes ago"
-5. Verify sufficient disk space for model storage (~/.ollama/models/)
-6. If using API: confirm OLLAMA_HOST environment variable is set correctly
-```
-
-### Model Pull Failures
-
-```
-Problem: Model download fails, hangs, or produces checksum errors
-Actions:
-1. Check disk space: df -h ~/.ollama/
-2. Retry the pull (network interruptions are common for large models)
-3. Check Ollama version: ollama --version (update if outdated)
-4. For checksum errors: ollama rm [model] and re-pull
-5. Behind proxy: set HTTPS_PROXY environment variable
-```
+**Pull Failures:** Check disk space: `df -h ~/.ollama/`. Retry (network interruptions are common for large models). Update Ollama version. For checksum errors: `ollama rm [model]` then re-pull. Behind proxy: set `HTTPS_PROXY` environment variable.
 
 ## Integration with Other Skills
 
-- **RAG Pipeline** (`rag-pipeline-python`): Use this skill to select and configure embedding models (e.g., `nomic-embed-text`, `mxbai-embed-large`) and generation models for RAG workflows. Benchmark embedding throughput and generation quality before integrating into the RAG pipeline.
-- **MCP Server Scaffold** (`mcp-server-scaffold`): When building MCP servers that expose LLM capabilities, use this skill to select, configure, and benchmark the backing Ollama model. Ensure the Modelfile is committed alongside the MCP server code.
-- **Jetson Deploy** (`jetson-deploy`): For edge deployment on NVIDIA Jetson, use the hardware matching guide to select appropriately sized models and quantizations that fit Jetson VRAM constraints (typically 4-16 GB shared memory).
-- **Edge CV Pipeline** (`edge-cv-pipeline`): When combining vision models with LLMs at the edge, use this skill to manage the LLM component while the edge-cv-pipeline handles the vision model. Coordinate VRAM budgets between both models.
+- **`rag-pipeline-python`** — Use this skill to select and configure embedding models (e.g., `nomic-embed-text`, `mxbai-embed-large`) and generation models for RAG workflows. Benchmark embedding throughput and generation quality before integrating.
+- **`mcp-server-scaffold`** — When building MCP servers that expose LLM capabilities, use this skill to select, configure, and benchmark the backing Ollama model. Commit the Modelfile alongside the MCP server code.
+- **`jetson-deploy`** — For edge deployment on NVIDIA Jetson, use the hardware matching guide to select models and quantizations that fit Jetson VRAM constraints (typically 4–16 GB shared memory).
+- **`edge-cv-pipeline`** — When combining vision models with LLMs at the edge, coordinate VRAM budgets between both models using this skill for the LLM component.
 
 ## Reference Files
 
-- [Modelfile Reference](references/modelfile-reference.md) - Complete Modelfile syntax, parameters, templates, and examples
-- [Quantization and Benchmarks](references/quantization-benchmarks.md) - Quantization levels, VRAM tables, benchmarking methodology, and hardware guide
+- [Modelfile Reference](references/modelfile-reference.md) — Complete Modelfile syntax, parameters, templates, and examples
+- [Quantization and Benchmarks](references/quantization-benchmarks.md) — Quantization levels, VRAM tables, benchmarking methodology, hardware guide, and report templates

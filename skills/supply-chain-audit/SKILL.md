@@ -12,21 +12,10 @@ description: Software supply chain vulnerability scanning, license compliance an
 
 Software supply chain security is not about avoiding dependencies -- it is about understanding the trust decisions you make with every `install`, `add`, or `restore` command. Every dependency is a delegation of trust: you are trusting that the package author writes secure code, that the registry has not been compromised, that no one has published a malicious version, and that the transitive dependencies you never chose are equally trustworthy.
 
-This skill provides the knowledge framework for auditing that trust. It covers three domains: vulnerability scanning (finding known-bad dependencies), license compliance (finding legally incompatible dependencies), and maintenance health (finding abandoned or declining dependencies). Together, these three domains constitute a complete supply chain audit.
-
-**What this skill is:** A reference framework for conducting dependency audits. It provides vulnerability database knowledge, scanning tool guidance, CVSS interpretation, license compatibility rules, and maintenance health heuristics. It is the knowledge layer that the dependency-audit-agent uses to make informed decisions.
-
-**What this skill is not:** A replacement for running actual scanners. This skill tells you what to look for and how to interpret results. The scanning tools themselves (dotnet list package --vulnerable, npm audit, pip-audit) do the actual work.
-
-**Why supply chain audits matter:** In 2021, the Log4Shell vulnerability (CVE-2021-44228) demonstrated that a single transitive dependency could expose hundreds of thousands of applications. The SolarWinds compromise showed that even trusted vendors can be supply chain attack vectors. The ua-parser-js incident showed that npm packages with millions of weekly downloads can be hijacked. Supply chain attacks are not theoretical -- they are the dominant attack vector for modern applications.
-
 **The three pillars of supply chain audit:**
-
-1. **Vulnerability Scanning** -- Are any of my dependencies known to be vulnerable? Which CVEs apply? Are the vulnerable code paths reachable in my application? What is the actual (not theoretical) risk?
-
-2. **License Compliance** -- Are the licenses of my dependencies compatible with my project's distribution model? Are there copyleft licenses that could require source disclosure? Are there license ambiguities that need legal review?
-
-3. **Maintenance Health** -- Are my dependencies actively maintained? Are security issues being addressed? Is the package at risk of abandonment? Are there signs of compromise or takeover?
+1. **Vulnerability Scanning** -- Are any dependencies known to be vulnerable? Which CVEs apply? Are the vulnerable code paths reachable?
+2. **License Compliance** -- Are the licenses compatible with the project's distribution model? Are there copyleft licenses that require source disclosure?
+3. **Maintenance Health** -- Are dependencies actively maintained? Are security issues being addressed? Is the package at risk of abandonment?
 
 ## Domain Principles
 
@@ -35,17 +24,15 @@ This skill provides the knowledge framework for auditing that trust. It covers t
 | 1 | **Every Dependency Is a Trust Decision** | Adding a dependency means trusting the author, the registry, the build pipeline, and every transitive dependency. Make these trust decisions explicit, not accidental. |
 | 2 | **Transitive Dependencies Are Your Dependencies** | You did not choose them, but you ship them. A vulnerability in a transitive dependency is your vulnerability. Audit the full tree, not just the top level. |
 | 3 | **CVSS Is Context-Free; Your Risk Is Not** | A CVSS 9.8 in unreachable code is less urgent than a CVSS 6.5 in a code path exposed to the internet. Always compute contextual risk, not just raw severity. |
-| 4 | **Licenses Are Legal Obligations** | License violations are not technical debt -- they are legal liability. A GPL-3.0 dependency in proprietary distributed software is not a warning; it is a compliance failure that requires remediation. |
-| 5 | **Maintenance Health Predicts Future Risk** | A package with no releases in 3 years and 200 open issues is a ticking time bomb. Even if it has no current CVEs, its inability to respond to future vulnerabilities makes it a risk. |
-| 6 | **Scanners Find Known Vulnerabilities Only** | Vulnerability scanners check against databases of known CVEs. They cannot find zero-days, logic flaws, or malicious code without a CVE. Scanning is necessary but not sufficient. |
-| 7 | **Upgrade Risk Must Be Assessed** | The fix for a vulnerable dependency is usually an upgrade, but upgrades introduce breaking changes. An upgrade that fixes a CVE but breaks the build is not a fix -- it is a different problem. Assess both risks. |
-| 8 | **Private Packages Need Extra Scrutiny** | Packages from private feeds are invisible to public vulnerability databases. They may also lack the community review that popular public packages receive. Apply additional review processes to private dependencies. |
-| 9 | **Lock Files Are Security Controls** | Lock files pin exact versions and integrity hashes. Without them, builds are non-reproducible and vulnerable to dependency confusion, version substitution, and registry compromises. Treat lock files as security-critical artifacts. |
-| 10 | **Audit Regularly, Not Once** | Dependencies change. New CVEs are published daily. Packages are abandoned, compromised, or deprecated. A clean audit today does not guarantee a clean audit next month. Automate recurring audits. |
+| 4 | **Licenses Are Legal Obligations** | A GPL-3.0 dependency in proprietary distributed software is not a warning; it is a compliance failure that requires remediation. |
+| 5 | **Maintenance Health Predicts Future Risk** | A package with no releases in 3 years and 200 open issues cannot respond to future vulnerabilities. Even with no current CVEs, it is a risk. |
+| 6 | **Scanners Find Known Vulnerabilities Only** | Scanners check against databases of known CVEs. They cannot find zero-days, logic flaws, or malicious code without a CVE. Scanning is necessary but not sufficient. |
+| 7 | **Upgrade Risk Must Be Assessed** | The fix for a vulnerable dependency is usually an upgrade, but upgrades introduce breaking changes. Assess both risks before recommending. |
+| 8 | **Private Packages Need Extra Scrutiny** | Packages from private feeds are invisible to public vulnerability databases and lack community review. Apply additional review processes. |
+| 9 | **Lock Files Are Security Controls** | Without lock files, builds are non-reproducible and vulnerable to dependency confusion, version substitution, and registry compromises. |
+| 10 | **Audit Regularly, Not Once** | Dependencies change. New CVEs are published daily. Packages are abandoned, compromised, or deprecated. Automate recurring audits. |
 
 ## Knowledge Base Lookups
-
-Use `search_knowledge` (grounded-code-mcp) to ground decisions in authoritative references.
 
 | Query | When to Call |
 |-------|--------------|
@@ -57,20 +44,13 @@ Use `search_knowledge` (grounded-code-mcp) to ground decisions in authoritative 
 | `search_knowledge("NIST 800-218 secure software supply chain")` | For federal/compliance context — SSDF supply chain controls |
 | `search_code_examples("dotnet list package vulnerable NuGet")` | Before running .NET scans — correct scanner invocation patterns |
 
-**Protocol:** Search `gov` for federal/NIST compliance context. Search `dotnet` for .NET-specific scanner guidance. Search `python` for pip-audit patterns. Always cite the source path from KB results.
+**Protocol:** Search `gov` for federal/NIST compliance context. Search `dotnet` for .NET-specific scanner guidance. Search `python` for pip-audit patterns. Cite source paths from KB results.
 
 ## Workflow
 
 ### Phase 1: Vulnerability Scan
 
 **Objective:** Identify all dependencies with known CVEs.
-
-**Steps:**
-1. Run ecosystem-specific vulnerability scanners against the project
-2. Parse scanner output for CVE identifiers, affected versions, and severity
-3. Cross-reference findings with multiple vulnerability databases for completeness
-4. Verify that the installed version falls within the affected version range
-5. Document each finding with CVE ID, CVSS score, affected package, and installed version
 
 **Scanner Commands:**
 
@@ -89,43 +69,25 @@ pip-audit --format=json
 pip-audit --fix --dry-run
 pip list --outdated --format=json
 
-# Yarn
+# Yarn / pnpm
 yarn audit --json
-yarn outdated --json
-
-# pnpm
 pnpm audit --json
 ```
 
-**Interpreting CVSS Scores:**
+**CVSS Severity:**
 
 | CVSS Range | Severity | Typical Response |
 |------------|----------|-----------------|
-| 9.0 - 10.0 | Critical | Immediate remediation. Escalate to security team. |
-| 7.0 - 8.9 | High | Remediate within current sprint. Assess exploitability. |
-| 4.0 - 6.9 | Medium | Schedule remediation. Verify reachability before prioritizing. |
-| 0.1 - 3.9 | Low | Track and remediate during maintenance cycles. |
+| 9.0–10.0 | Critical | Immediate remediation. Escalate to security team. |
+| 7.0–8.9 | High | Remediate within current sprint. Assess exploitability. |
+| 4.0–6.9 | Medium | Schedule remediation. Verify reachability before prioritizing. |
+| 0.1–3.9 | Low | Track and remediate during maintenance cycles. |
 
-**Contextual Risk Adjustment:**
-
-Raw CVSS does not account for your application's context. Adjust based on:
-
-- **Reachability:** Is the vulnerable code path invoked by your application?
-- **Exposure:** Is the application internet-facing, internal, or air-gapped?
-- **Data sensitivity:** Does the application handle PII, financial data, or credentials?
-- **Exploitability:** Does a public exploit exist? Is it weaponized?
-- **Compensating controls:** Do WAFs, network segmentation, or other controls mitigate the risk?
+**Contextual Risk Adjustment:** Adjust raw CVSS based on reachability (is the vulnerable code path invoked?), exposure (internet-facing vs. internal vs. air-gapped), data sensitivity (PII, financial, credentials), exploitability (public exploit available?), and compensating controls (WAF, network segmentation).
 
 ### Phase 2: License Compliance
 
 **Objective:** Verify all dependency licenses are compatible with the project's distribution model.
-
-**Steps:**
-1. Extract license information for all direct dependencies
-2. Classify each license by type (permissive, weak copyleft, strong copyleft, proprietary)
-3. Check compatibility against the project's own license and distribution model
-4. Flag any license that requires legal review
-5. Document each finding with package name, license type, and compliance status
 
 **License Detection Commands:**
 
@@ -138,158 +100,58 @@ npx license-checker --onlyAllow "MIT;Apache-2.0;BSD-2-Clause;BSD-3-Clause;ISC"
 pip-licenses --format=json
 pip-licenses --allow-only="MIT License;Apache Software License;BSD License"
 
-# NuGet (manual -- check .nuspec or NuGet gallery)
+# NuGet -- check .nuspec or NuGet gallery manually
 dotnet list package --format=json
-# Then check license info on nuget.org for each package
-
-# Yarn
-yarn licenses list --json
 ```
 
 **License Classification:**
 
 | Category | Licenses | Corporate Risk |
 |----------|----------|---------------|
-| Permissive | MIT, Apache-2.0, BSD-2-Clause, BSD-3-Clause, ISC, Unlicense | Low -- generally safe for all distribution models |
-| Weak Copyleft | LGPL-2.1, LGPL-3.0, MPL-2.0, EPL-2.0 | Medium -- safe for dynamic linking, restrictions on modifications to the library itself |
-| Strong Copyleft | GPL-2.0, GPL-3.0, AGPL-3.0 | High -- may require source disclosure for distributed software, AGPL extends to network use |
-| Proprietary / Custom | Commercial, EULA-based, custom terms | Requires legal review -- terms vary by vendor |
-| No License / Unknown | Unlisted, NOASSERTION | High -- no license means no permission to use. Treat as proprietary until clarified. |
+| Permissive | MIT, Apache-2.0, BSD-2-Clause, BSD-3-Clause, ISC, Unlicense | Low |
+| Weak Copyleft | LGPL-2.1, LGPL-3.0, MPL-2.0, EPL-2.0 | Medium — restrictions on modifications to the library itself |
+| Strong Copyleft | GPL-2.0, GPL-3.0, AGPL-3.0 | High — may require source disclosure; AGPL extends to network use |
+| Proprietary / Custom | Commercial, EULA-based, custom terms | Requires legal review |
+| No License / Unknown | Unlisted, NOASSERTION | High — no license means no permission to use |
 
 ### Phase 3: Maintenance Health
 
 **Objective:** Assess the ongoing viability and security responsiveness of each dependency.
 
-**Steps:**
-1. Check the last release date for each direct dependency
-2. Review the issue tracker for open security issues and response times
-3. Check for deprecation or archival notices
-4. Assess contributor activity (bus factor, corporate backing)
-5. Document health status with evidence
-
 **Health Indicators:**
 
 | Indicator | Healthy | Concerning | Critical |
 |-----------|---------|------------|----------|
-| Last release | < 6 months | 6 months - 2 years | > 2 years |
-| Open security issues | 0 | 1-2 with responses | 3+ or unresponded |
-| Contributor count | 5+ active | 2-4 active | 1 or none active |
-| Download trend | Stable or growing | Declining | Abandoned or forked |
+| Last release | < 6 months | 6 months–2 years | > 2 years |
+| Open security issues | 0 | 1–2 with responses | 3+ or unresponded |
+| Contributor count | 5+ active | 2–4 active | 1 or none active |
 | Repository status | Active | Reduced activity | Archived or deleted |
-| Deprecation notice | None | Planned | Announced or in effect |
 
 **Health Check Commands:**
 
 ```bash
-# npm -- check package metadata
-npm view <package> time --json    # release dates
-npm view <package> repository     # repo URL for manual review
+# npm
+npm view <package> time --json     # release dates
+npm view <package> repository      # repo URL for manual review
 
-# pip -- check PyPI metadata
-pip show <package>                # basic info
-pip index versions <package>      # available versions
+# pip
+pip show <package>                 # basic info
 
-# NuGet -- check nuget.org
-dotnet list package --outdated    # version comparison
-# Manual: check nuget.org/<package> for deprecation banners
+# NuGet
+dotnet list package --outdated     # version comparison
 ```
 
 ## Output Templates
 
-### Vulnerability Report
+| Template | Required Fields |
+|----------|----------------|
+| Vulnerability Report | Project, Scan Date, Scanners Used; Critical Findings table (CVE / Package / Installed / Fixed In / CVSS / Reachable / Contextual Risk); per-CVE detail (Reachability Analysis, Contextual Risk, Rationale, Remediation) |
+| License Compliance Report | Project, Distribution Model, Project License; License Summary table (License / Count / Compatibility / Action); Findings Requiring Review (Package / License / Issue / Risk / Recommendation) |
+| Maintenance Health Report | Project, Direct Dependencies count; Health Summary table (Status / Count / Packages); per-concern detail (Last Release, Open Issues, Contributors, Status, Risk, Recommendation, Alternatives) |
 
-```markdown
-## Vulnerability Scan Results
-
-**Project:** [path]
-**Scan Date:** [date]
-**Scanners Used:** [list]
-
-### Critical Findings
-
-| CVE | Package | Installed | Fixed In | CVSS | Reachable | Contextual Risk |
-|-----|---------|-----------|----------|------|-----------|-----------------|
-| [id] | [pkg@ver] | [ver] | [ver] | [score] | [yes/no/unknown] | [CRITICAL/HIGH/MEDIUM/LOW] |
-
-### Finding Detail: [CVE-ID]
-
-**Package:** [name] v[version]
-**Vulnerability:** [brief description]
-**CVSS Score:** [score] ([vector string])
-**Affected Versions:** [range]
-**Fixed Version:** [version]
-
-**Reachability Analysis:**
-- Import locations: [files that import the package]
-- Vulnerable component: [specific module/class/function]
-- Usage in project: [how the project uses the vulnerable component]
-- Code path reachable: [yes/no with reasoning]
-
-**Contextual Risk:** [CRITICAL/HIGH/MEDIUM/LOW]
-**Rationale:** [why the contextual risk differs from raw CVSS, if applicable]
-
-**Remediation:**
-- Upgrade to [version]: [breaking change risk assessment]
-- Alternative: [if upgrade is not straightforward]
-```
-
-### License Compliance Report
-
-```markdown
-## License Compliance Report
-
-**Project:** [path]
-**Distribution Model:** [SaaS / On-premise / Library / Open Source]
-**Project License:** [license]
-
-### License Summary
-
-| License | Count | Compatibility | Action |
-|---------|-------|---------------|--------|
-| MIT | [N] | Compatible | None |
-| Apache-2.0 | [N] | Compatible (notice required) | Verify NOTICE file |
-| GPL-3.0 | [N] | REVIEW REQUIRED | See details |
-
-### Findings Requiring Review
-
-**Package:** [name]
-**License:** [license]
-**Issue:** [specific compatibility concern]
-**Risk:** [BLOCKING / WARNING / ACCEPTABLE]
-**Recommendation:** [specific action]
-```
-
-### Maintenance Health Report
-
-```markdown
-## Dependency Health Report
-
-**Project:** [path]
-**Direct Dependencies:** [N]
-
-### Health Summary
-
-| Status | Count | Packages |
-|--------|-------|----------|
-| Healthy | [N] | [list] |
-| Aging | [N] | [list] |
-| Stale | [N] | [list] |
-| Deprecated | [N] | [list] |
-
-### Concern: [Package Name]
-
-**Last Release:** [date] ([N] months ago)
-**Open Issues:** [N] total, [N] security-related
-**Contributors:** [N] active in last 12 months
-**Status:** [HEALTHY / DECLINING / ABANDONED]
-**Risk:** [description of what happens if a vulnerability is found]
-**Recommendation:** [continue using / plan migration / migrate immediately]
-**Alternatives:** [list of actively maintained alternatives, if applicable]
-```
+Full templates: `references/vulnerability-sources.md` | `references/license-matrix.md` | `references/nuget-security-review.md`
 
 ## State Block
-
-Maintain state across conversation turns:
 
 ```
 <supply-chain-state>
@@ -307,122 +169,61 @@ next_action: [what should happen next]
 
 ## AI Discipline Rules
 
-### ALWAYS verify CVE applicability before reporting severity
+**Always verify CVE applicability before reporting severity:** A CVE exists in a database. Whether it affects a project depends on the installed version, the code paths used, and the deployment context. Never report raw CVSS as project risk. Include version verification and reachability analysis. When reachability cannot be determined, say so explicitly.
 
-A CVE exists in a database. Whether it affects your project depends on the installed version, the code paths used, and the deployment context. Never report raw CVSS as project risk. Always include version verification and reachability analysis. When reachability cannot be determined, say so explicitly rather than assuming worst case.
+**Always check license compatibility against the actual distribution model:** MIT is compatible with everything. GPL-3.0 compatibility depends on how the software is distributed. A GPL-3.0 dependency in a SaaS application may be acceptable. The same dependency in a desktop application shipped to customers is a compliance issue. Ask about the distribution model before declaring a license incompatible.
 
-### ALWAYS check license compatibility against the actual distribution model
+**Never recommend upgrades without assessing breaking change risk:** A recommendation includes the specific target version, the semantic versioning delta, known breaking changes from the changelog, impact on other dependencies in the tree, and an honest risk assessment. If the upgrade is riskier than the vulnerability, say so.
 
-MIT is compatible with everything. GPL-3.0 is compatible with some things. But compatibility depends on how the software is distributed. A GPL-3.0 dependency in a SaaS application that is never distributed may be acceptable. The same dependency in a desktop application that ships to customers is a compliance issue. Ask about the distribution model before declaring a license incompatible.
+**Always distinguish between scanner limitations and clean results:** "No vulnerabilities found" is not "no vulnerabilities exist." When reporting a clean scan, note what was scanned, what was not, and what the scanner cannot detect (zero-days, logic flaws, malicious code without CVE entries).
 
-### NEVER recommend upgrades without assessing breaking change risk
+**Present maintenance health with evidence, not judgment:** Say "this package has not had a release since March 2023, has 47 open issues including 3 labeled 'security,' and its sole maintainer has not committed in 8 months" — not "this package is poorly maintained." Evidence allows the human to make their own judgment.
 
-"Upgrade to the latest version" is not a recommendation -- it is a wish. A recommendation includes: the specific target version, the semantic versioning delta (patch/minor/major), known breaking changes from the changelog, impact on other dependencies in the tree, and an honest risk assessment. If the upgrade is riskier than the vulnerability, say so.
-
-### ALWAYS distinguish between scanner limitations and clean results
-
-"No vulnerabilities found" is not the same as "no vulnerabilities exist." Scanners check against known CVE databases. Zero-days, logic flaws, and malicious code without CVE entries will not be detected. When reporting a clean scan, always note what was scanned, what was not, and what the scanner cannot detect.
-
-### Present maintenance health with evidence, not judgment
-
-Do not say "this package is poorly maintained." Say "this package has not had a release since March 2023, has 47 open issues including 3 labeled 'security,' and its sole maintainer has not committed in 8 months." Evidence allows the human to make their own judgment about acceptable risk.
-
-### Treat lock files as security-critical artifacts
-
-If a project lacks lock files, flag this as a supply chain risk before proceeding with any other analysis. Without lock files, builds are non-reproducible, dependency resolution is non-deterministic, and the project is vulnerable to dependency confusion and version substitution attacks.
+**Treat lock files as security-critical artifacts:** If a project lacks lock files, flag this as a supply chain risk before any other analysis. Without lock files, builds are non-reproducible and vulnerable to dependency confusion attacks.
 
 ## Anti-Patterns
 
 | Anti-Pattern | Why It Fails | Correct Approach |
 |--------------|-------------|------------------|
-| **CVSS-Only Prioritization** | Sorting by CVSS score ignores reachability, exposure, and compensating controls. A CVSS 9.8 in dead code is less urgent than a CVSS 6.5 in a public API. | Compute contextual risk using CVSS as one input alongside reachability, exposure, and data sensitivity. |
-| **License Panic** | Flagging every non-MIT license as a problem creates noise and erodes trust in the audit. LGPL, MPL, and Apache-2.0 are safe for most commercial use. | Classify licenses by category, check against the actual distribution model, and only flag genuine incompatibilities. |
-| **Upgrade Everything** | Mass-upgrading all dependencies to latest introduces unnecessary breaking change risk and testing burden. | Prioritize upgrades by vulnerability severity and contextual risk. Patch upgrades for CVE fixes. Planned upgrades for outdated packages. |
-| **Ignoring Transitives** | Auditing only direct dependencies misses the vast majority of the dependency tree. Most vulnerabilities are in transitive dependencies. | Audit the full tree. Use lock files and --include-transitive flags. Distinguish direct from transitive in reporting. |
-| **One-Time Audit** | A single audit provides a snapshot. Dependencies change, new CVEs are published daily, and packages are compromised over time. | Establish recurring audits (weekly or on every CI build). Track trends, not just point-in-time results. |
-| **Scanner as Oracle** | Treating scanner output as the complete truth. Scanners miss zero-days, have false positives, and may not cover all ecosystems. | Use scanners as one input. Cross-reference multiple databases. Apply manual review for critical dependencies. |
+| **CVSS-Only Prioritization** | Ignores reachability, exposure, and compensating controls | Compute contextual risk using CVSS as one input alongside reachability and data sensitivity |
+| **License Panic** | Flagging every non-MIT license creates noise; LGPL, MPL, Apache-2.0 are safe for most commercial use | Classify by category, check against actual distribution model, flag genuine incompatibilities only |
+| **Upgrade Everything** | Mass-upgrades introduce unnecessary breaking change risk | Prioritize upgrades by contextual risk; patch for CVE fixes, plan for outdated packages |
+| **Ignoring Transitives** | Most vulnerabilities are in transitive dependencies | Audit the full tree with `--include-transitive` flags; distinguish direct from transitive in reporting |
+| **One-Time Audit** | Dependencies change and new CVEs are published daily | Establish recurring audits (weekly or on every CI build) |
+| **Scanner as Oracle** | Scanners miss zero-days, have false positives, and may not cover all ecosystems | Cross-reference multiple databases; apply manual review for critical dependencies |
 
 ## Error Recovery
 
-### Scanner Fails to Run
+**Scanner Fails to Run:** Check if the tool is installed (`which dotnet`, `which npm`, `which pip-audit`). Try alternative scanners for the same ecosystem. Continue with available tools and note the gap in the report. Never skip an ecosystem entirely due to a single tool failure.
 
-**Symptoms:** Command not found, permission denied, network timeout.
+**Conflicting CVE Data Across Databases:** Report all severity ratings with their sources. Use the highest severity for initial prioritization. Note the discrepancy for human review. If the CVE is disputed, include the dispute context. Let the human make the final severity determination.
 
-**Recovery:**
-1. Check if the tool is installed: `which dotnet`, `which npm`, `which pip-audit`
-2. If missing, report the gap and suggest installation
-3. Try alternative scanners for the same ecosystem
-4. Continue with available tools; note the gap in the report
-5. Never skip an ecosystem entirely due to a single tool failure
-
-### Conflicting CVE Data Across Databases
-
-**Symptoms:** NVD says CRITICAL, GitHub Advisory says HIGH, or one database has the CVE and another does not.
-
-**Recovery:**
-1. Report all severity ratings with their sources
-2. Use the highest severity for initial prioritization
-3. Note the discrepancy for human review
-4. If the CVE is disputed, include the dispute context
-5. Let the human make the final severity determination
-
-### License Information Unavailable
-
-**Symptoms:** Package has no license metadata, or license field says "UNLICENSED" or "SEE LICENSE IN LICENSE".
-
-**Recovery:**
-1. Check the package repository for a LICENSE file
-2. Check the registry page (nuget.org, npmjs.com, pypi.org) for license info
-3. If truly unlicensed: flag as HIGH risk -- no license means no permission
-4. If custom license: flag for legal review with a link to the license text
-5. Never assume a license; absence of license is not MIT
+**License Information Unavailable:** Check the package repository for a LICENSE file. Check the registry page (nuget.org, npmjs.com, pypi.org) for license info. If truly unlicensed, flag as HIGH risk — no license means no permission. If a custom license, flag for legal review with a link to the license text. Never assume a license.
 
 ## Integration
 
-### Cross-Skill References
-
-- **dependency-mapper** -- Use dependency-mapper to understand the structural implications of dependencies before auditing them. Coupling metrics reveal which dependencies are most deeply embedded and hardest to replace, which affects remediation planning.
-
-- **technical-debt-assessor** -- Dependency debt is one of the six categories in the debt taxonomy. Outdated packages, license risks, and abandoned dependencies are quantifiable debt items with cost-to-fix and cost-to-carry. Use the debt assessor framework to build business cases for dependency upgrades.
-
-- **security-review-trainer** -- Supply chain vulnerabilities (A06:2021 - Vulnerable and Outdated Components) are part of the OWASP Top 10. The security review trainer covers these from a code review perspective; this skill covers them from a dependency audit perspective.
-
-- **architecture-review** -- Dependency choices are architectural decisions. A decision to depend on a specific framework or library constrains the system's evolution. Use architecture-review to evaluate whether a dependency aligns with the system's architectural direction.
-
-### Stack-Specific Guidance
-
-Detailed reference materials for applying these concepts:
-
-- [Vulnerability Sources](references/vulnerability-sources.md) -- Vulnerability databases (NVD, GitHub Advisory, OSV), scanning tools per ecosystem, CVE severity scoring with CVSS, and cross-database correlation techniques
-- [License Matrix](references/license-matrix.md) -- License compatibility matrix for common open-source licenses, corporate policy considerations, copyleft risk assessment, and distribution model analysis
-- [NuGet Security Review](references/nuget-security-review.md) -- NuGet-specific review workflow, two-part report template (updates + vulnerabilities), priority guidelines, executive summary writing guidance, and "no issues found" template
-- [NuGet Severity Guidelines](references/nuget-severity-guidelines.md) -- Detailed severity/priority classification for NuGet packages, CVSS-based prioritization rules, priority matrix, CISA KEV catalog escalation, and industry compliance patching timelines
-- [NuGet Executive Summary Templates](references/nuget-executive-summary-templates.md) -- Manager-friendly summary templates for updates and security findings, per-package explanation templates, vulnerability explanation templates, and a severity language guide
+- **dependency-mapper** -- use to understand structural implications of dependencies before auditing. Coupling metrics reveal which dependencies are most deeply embedded and hardest to replace.
+- **technical-debt-assessor** -- outdated packages, license risks, and abandoned dependencies are quantifiable debt items with cost-to-fix and cost-to-carry.
+- **security-review-trainer** -- supply chain vulnerabilities (OWASP A06:2021) from a code review perspective; this skill covers them from a dependency audit perspective.
+- **architecture-review** -- dependency choices are architectural decisions that constrain the system's evolution.
 
 ## NuGet-Specific Review
 
-For .NET projects, this skill includes a dedicated NuGet package security review workflow that
-produces management-ready reports. This goes beyond the standard vulnerability scan by generating
-executive summaries and business-impact assessments suitable for non-technical stakeholders.
+For .NET projects, this skill produces management-ready reports combining update analysis with security findings.
 
-**When to use the NuGet review workflow:**
-- When asked to "review NuGet packages" or "audit .NET dependencies"
-- When preparing dependency reports for management or compliance
-- When conducting periodic security reviews of .NET solutions
-- When onboarding to an existing .NET codebase and assessing dependency health
+**When to use:** "review NuGet packages", "audit .NET dependencies", preparing reports for management or compliance, periodic security reviews, onboarding to an existing .NET codebase.
 
-**NuGet review process:**
+**Process:**
 1. Locate all `.csproj` files in the solution
 2. Run `dotnet list package --outdated` for update analysis
 3. Run `dotnet list package --vulnerable` for security analysis
-4. Generate the two-part report (updates + vulnerabilities) using the template in [nuget-security-review.md](references/nuget-security-review.md)
+4. Generate the two-part report using the template in [nuget-security-review.md](references/nuget-security-review.md)
 
-**Report structure:**
-- **Part 1: Packages Requiring Updates** -- executive summary, update details table, package-by-package summaries with business impact
-- **Part 2: Security Vulnerabilities** -- executive summary, vulnerability details table, vulnerability-by-vulnerability summaries with risk explanations in plain language
-- **Summary & Recommendations** -- categorized by urgency (immediate / scheduled / monitor)
+**Report structure:** Part 1: Packages Requiring Updates (executive summary, update details table, package-by-package summaries with business impact) | Part 2: Security Vulnerabilities (executive summary, vulnerability details table, risk explanations in plain language) | Summary & Recommendations (categorized by urgency: immediate / scheduled / monitor).
 
 **Key references:**
 - Report template and review commands: [references/nuget-security-review.md](references/nuget-security-review.md)
 - Severity classification and priority matrix: [references/nuget-severity-guidelines.md](references/nuget-severity-guidelines.md)
-- Executive summary templates and severity language guide: [references/nuget-executive-summary-templates.md](references/nuget-executive-summary-templates.md)
+- Executive summary templates: [references/nuget-executive-summary-templates.md](references/nuget-executive-summary-templates.md)
+- Vulnerability databases and scanning tools: [references/vulnerability-sources.md](references/vulnerability-sources.md)
+- License compatibility matrix: [references/license-matrix.md](references/license-matrix.md)

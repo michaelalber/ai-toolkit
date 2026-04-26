@@ -41,8 +41,6 @@ This skill scaffolds production-ready NuGet packages with proper metadata, testi
 
 ## Knowledge Base Lookups
 
-Use `search_knowledge` (grounded-code-mcp) to ground decisions in authoritative references.
-
 | Query | When to Call |
 |-------|--------------|
 | `search_knowledge("NuGet package metadata csproj PackageId authors license README")` | At CONFIGURE phase — confirms required metadata fields and MSBuild properties |
@@ -55,18 +53,7 @@ Use `search_knowledge` (grounded-code-mcp) to ground decisions in authoritative 
 
 ## Workflow
 
-### Scaffold-to-Publish Pipeline
-
-```
-┌───────────┐    ┌───────────┐    ┌──────┐    ┌──────┐    ┌─────────┐
-│ Scaffold  │───>│ Configure │───>│ Test │───>│ Pack │───>│ Publish │
-│           │    │           │    │      │    │      │    │         │
-│ - sln     │    │ - .csproj │    │ - unit│   │ - nupkg│  │ - feed  │
-│ - src     │    │ - meta   │    │ - int │    │ - snupkg│  │ - tag  │
-│ - test    │    │ - ci/cd  │    │ - api │    │ - verify│  │ - notes│
-│ - ci      │    │ - readme │    │       │    │        │  │         │
-└───────────┘    └───────────┘    └──────┘    └──────┘    └─────────┘
-```
+Six-step pipeline: **Scaffold → Configure → Test → Pack → Publish** (with iterate back if needed).
 
 ### Step 1: Scaffold
 
@@ -95,7 +82,7 @@ PackageName/
 
 ### Step 2: Configure .csproj Metadata
 
-Checklist of required metadata properties:
+Required metadata properties checklist:
 
 - [ ] `PackageId` -- unique identifier on the feed
 - [ ] `Version` -- SemVer-compliant version string
@@ -109,42 +96,25 @@ Checklist of required metadata properties:
 - [ ] `PackageTags` -- space-separated discovery tags
 - [ ] `TargetFrameworks` -- semicolon-separated TFMs
 
-### Step 3: Multi-Target Framework Decision Tree
+Multi-target decision: `TargetFrameworks: netstandard2.0;net10.0` when pre-.NET 10 consumers need support; `TargetFrameworks: net10.0` otherwise.
 
-```
-Does the package need to support pre-.NET 10 consumers?
-├── YES → TargetFrameworks: netstandard2.0;net10.0
-└── NO  → TargetFrameworks: net10.0
-```
-
-### Step 4: Test
-
-Run the full test suite across all target frameworks:
+### Step 3: Test
 
 ```bash
 dotnet test --configuration Release
 ```
 
-Verify:
-- All unit tests pass on every target framework
-- Public API surface is tested
-- Edge cases and error paths are covered
+Verify all unit tests pass on every target framework, public API surface is tested, edge cases and error paths are covered.
 
-### Step 5: Pack and Verify
+### Step 4: Pack and Verify
 
 ```bash
 dotnet pack --configuration Release --output ./artifacts
-```
-
-Then inspect the package:
-
-```bash
-# List package contents
 dotnet nuget verify ./artifacts/PackageName.1.0.0.nupkg
 unzip -l ./artifacts/PackageName.1.0.0.nupkg
 ```
 
-### Step 6: Publish
+### Step 5: Publish
 
 ```bash
 # To nuget.org
@@ -158,9 +128,7 @@ dotnet nuget push ./artifacts/PackageName.1.0.0.nupkg \
   --source https://pkgs.dev.azure.com/org/project/_packaging/feed/nuget/v3/index.json
 ```
 
-## State Block Format
-
-Maintain state across conversation turns using this block:
+## State Block
 
 ```
 <nuget-scaffold-state>
@@ -175,183 +143,25 @@ blockers: [issues]
 </nuget-scaffold-state>
 ```
 
-### Example State
-
-```
-<nuget-scaffold-state>
-step: configure
-package_name: Acme.Utilities.Json
-target_frameworks: net10.0
-version: 1.0.0
-publish_target: nuget.org
-last_action: Created solution structure and test project
-next_action: Configure .csproj package metadata
-blockers: none
-</nuget-scaffold-state>
-```
-
 ## Output Templates
 
-### Project Scaffold Output
+| Template | Required Content |
+|----------|-----------------|
+| Project Scaffold | Created files table (path → purpose), initial state block |
+| .csproj Configuration | Configured properties list (PackageId, Version, Authors, etc.), Build settings (Deterministic, Source Link, Nullable), state block |
+| CI/CD Pipeline Setup | Pipeline stages table (Stage / Trigger / Actions: Build=Push/PR, Pack=Tag push, Publish=Tag+approval), state block |
 
-```markdown
-## NuGet Package Scaffold: [PackageName]
-
-**Target Frameworks**: [frameworks]
-**License**: [SPDX expression]
-**Publish Target**: [nuget.org | private feed | local]
-
-### Created Files
-
-| File | Purpose |
-|------|---------|
-| `src/PackageName/PackageName.csproj` | Package project with metadata |
-| `tests/PackageName.Tests/PackageName.Tests.csproj` | Test project (xUnit) |
-| `PackageName.sln` | Solution file |
-| `Directory.Build.props` | Shared build properties |
-| `.github/workflows/ci.yml` | CI pipeline |
-| `.github/workflows/publish.yml` | Publish pipeline |
-
-<nuget-scaffold-state>
-step: scaffold
-package_name: [name]
-target_frameworks: [frameworks]
-version: 0.1.0
-publish_target: [target]
-last_action: Scaffolded solution structure
-next_action: Configure .csproj package metadata
-blockers: none
-</nuget-scaffold-state>
-```
-
-### .csproj Configuration Output
-
-```markdown
-## Package Metadata: [PackageName]
-
-**Configured Properties**:
-- PackageId: [id]
-- Version: [version]
-- Authors: [authors]
-- Description: [description]
-- License: [license]
-- TargetFrameworks: [tfms]
-
-**Build Settings**:
-- Deterministic: true
-- Source Link: enabled
-- Nullable: enable
-- ImplicitUsings: enable
-
-<nuget-scaffold-state>
-step: configure
-...
-last_action: Configured .csproj package metadata
-next_action: Write tests for public API
-blockers: none
-</nuget-scaffold-state>
-```
-
-### CI/CD Pipeline Setup Output
-
-```markdown
-## CI/CD Pipeline: [PackageName]
-
-**CI Trigger**: Push to main, pull requests
-**Publish Trigger**: Tag push (v*)
-
-### Pipeline Stages
-
-| Stage | Trigger | Actions |
-|-------|---------|---------|
-| Build | Push/PR | Restore, Build, Test |
-| Pack | Tag push | Pack, Verify |
-| Publish | Tag push + approval | Push to feed |
-
-<nuget-scaffold-state>
-step: configure
-...
-last_action: Created CI/CD pipeline configurations
-next_action: Run tests across all target frameworks
-blockers: none
-</nuget-scaffold-state>
-```
+Full templates: `references/cicd-templates.md`
 
 ## AI Discipline Rules
 
-### CRITICAL: Never Publish Without Tests
+**Never Publish Without Tests:** Run `dotnet test --configuration Release` before any `dotnet nuget push`. Publishing untested code to a feed is irrecoverable damage to consumers — downstream projects will take the broken version immediately.
 
-Before ANY `dotnet nuget push` command, verify a test project exists and all tests pass.
+**Always Validate Package Metadata Before Pack:** All 11 required properties (PackageId, Version, Authors, Description, PackageLicenseExpression, PackageProjectUrl, RepositoryUrl, RepositoryType, PackageReadmeFile, PackageTags, TargetFrameworks) must be present before `dotnet pack`. Missing metadata degrades discoverability and trust on the feed.
 
-```bash
-# WRONG: pushing without running tests
-dotnet pack --configuration Release
-dotnet nuget push bin/Release/*.nupkg --source nuget.org --api-key $KEY
+**Never Skip Multi-Target Verification:** When `TargetFrameworks` lists multiple TFMs, test each independently: `dotnet test --framework net10.0` then `dotnet test --framework netstandard2.0`. A package that fails on one declared target is broken, even if the other passes.
 
-# RIGHT: run tests first; only push if they pass
-dotnet test --configuration Release
-dotnet pack --configuration Release
-dotnet nuget push bin/Release/*.nupkg --source nuget.org --api-key $KEY
-```
-
-Publishing untested code to a feed is irrecoverable damage to consumers.
-
-### CRITICAL: Always Validate Package Metadata
-
-Before ANY `dotnet pack` command, verify all required NuGet metadata fields are present.
-
-```xml
-<!-- WRONG: missing required metadata — package will fail validation or be undiscoverable -->
-<PropertyGroup>
-  <PackageId>Acme.Widgets</PackageId>
-  <Version>1.0.0</Version>
-  <!-- No Description, Authors, PackageLicenseExpression, PackageReadmeFile -->
-</PropertyGroup>
-
-<!-- RIGHT: all required fields present -->
-<PropertyGroup>
-  <PackageId>Acme.Widgets</PackageId>
-  <Version>1.0.0</Version>
-  <Description>Provides reusable widget components for Acme applications.</Description>
-  <Authors>Acme Corp</Authors>
-  <PackageLicenseExpression>MIT</PackageLicenseExpression>
-  <PackageReadmeFile>README.md</PackageReadmeFile>
-  <RepositoryUrl>https://github.com/acme/widgets</RepositoryUrl>
-</PropertyGroup>
-```
-
-Missing metadata degrades discoverability and trust.
-
-### CRITICAL: Never Skip Multi-Target Verification
-
-When the package claims multi-framework compatibility, the `.csproj` must declare all
-target frameworks and CI must build and test each one.
-
-```xml
-<!-- WRONG: single target while documentation claims netstandard2.0 support -->
-<PropertyGroup>
-  <TargetFramework>net10.0</TargetFramework>
-</PropertyGroup>
-
-<!-- RIGHT: multi-target with build matrix confirming both TFMs compile -->
-<PropertyGroup>
-  <TargetFrameworks>net10.0;netstandard2.0</TargetFrameworks>
-</PropertyGroup>
-```
-
-Verify each TFM individually: `dotnet test --framework net10.0` then
-`dotnet test --framework netstandard2.0`. A package that fails on one declared target is broken.
-
-### CRITICAL: Always Review Public API Surface
-
-Before incrementing any version:
-1. List all `public` types and members in the package
-2. Compare against previous version's public API
-3. Classify changes: addition (MINOR), removal/modification (MAJOR), internal-only (PATCH)
-4. Verify no `internal` types are accidentally exposed
-5. Check that `[EditorBrowsable(EditorBrowsableState.Never)]` is used for infrastructure types
-
-Accidental public API expansion creates maintenance burden forever.
+**Always Review Public API Surface Before Versioning:** List all `public` types and members. Compare against the previous version. Classify: addition → MINOR, removal or modification → MAJOR, internal-only change → PATCH. Verify no `internal` types are accidentally exposed. Accidental public API expansion creates maintenance burden forever.
 
 ## Anti-Patterns
 
@@ -369,64 +179,31 @@ Accidental public API expansion creates maintenance burden forever.
 
 ### Pack Failure: Missing Required Metadata
 
-**Problem**: `dotnet pack` warns about missing metadata or produces a package that fails validation.
-
-**Action**:
-1. Run `dotnet pack --configuration Release` and capture all warnings
-2. Address each `NU5*` warning -- these are NuGet-specific pack warnings
-3. Common culprits: missing `Description`, missing `PackageLicenseExpression`, missing `PackageReadmeFile`
-4. Re-run pack and verify zero warnings
+**Action:** Run `dotnet pack --configuration Release` and capture all `NU5*` warnings. Address each warning — common culprits: missing `Description`, `PackageLicenseExpression`, `PackageReadmeFile`. Re-run pack and verify zero warnings.
 
 ### Version Conflict: Feed Already Contains Version
 
-**Problem**: `dotnet nuget push` fails because the version already exists on the feed.
-
-**Action**:
-1. NuGet.org does NOT allow overwriting published versions -- this is by design
-2. Increment the version number (PATCH for fixes, MINOR for features)
-3. If this was a mistake, unlist the broken version via nuget.org UI
-4. Update CI/CD to prevent duplicate version pushes (use git tags as version source)
+**Action:** NuGet.org does not allow overwriting published versions — increment the version number. Unlist the broken version via nuget.org UI if needed. Update CI/CD to use git tags as version source to prevent duplicate pushes.
 
 ### Publish Error: Authentication Failure
 
-**Problem**: Push fails with 401 or 403 errors.
-
-**Action**:
-1. Verify the API key is valid and not expired
-2. For nuget.org: check key scopes match the package ID glob pattern
-3. For Azure Artifacts: verify the PAT has Packaging (Read & Write) scope
-4. For GitHub Packages: verify the `GITHUB_TOKEN` or PAT has `write:packages` scope
-5. Rotate the key if compromised and update CI/CD secrets
+**Action:** Verify the API key is valid and not expired. For nuget.org: check key scopes match the package ID glob. For Azure Artifacts: verify the PAT has `Packaging (Read & Write)` scope. For GitHub Packages: verify `write:packages` scope. Rotate the key if compromised and update CI/CD secrets.
 
 ### Build Failure: Target Framework Incompatibility
 
-**Problem**: Code compiles on one TFM but fails on another.
-
-**Action**:
-1. Identify the API that is unavailable on the failing TFM
-2. Add conditional compilation: `#if NET9_0_OR_GREATER` for newer APIs
-3. Provide a fallback implementation for older TFMs
-4. If no fallback is possible, remove the incompatible TFM from `TargetFrameworks`
-5. Re-run `dotnet test` across all remaining targets
+**Action:** Identify the API unavailable on the failing TFM. Add conditional compilation (`#if NET9_0_OR_GREATER`) for newer APIs. Provide a fallback for older TFMs. If no fallback is possible, remove the incompatible TFM from `TargetFrameworks`. Re-run `dotnet test` across all remaining targets.
 
 ### Test Failure: Framework-Specific Behavior Differences
 
-**Problem**: Tests pass on one TFM but fail on another due to behavioral differences.
-
-**Action**:
-1. Identify the behavioral difference (often string formatting, floating point, or date handling)
-2. Add framework-specific test expectations using `#if` directives or runtime checks
-3. Consider whether the behavior difference is a bug in your code or an expected platform difference
-4. Document the difference if it affects consumers
+**Action:** Identify the behavioral difference (string formatting, floating point, date handling). Add framework-specific test expectations using `#if` directives or runtime checks. Document the difference if it affects consumers.
 
 ## Integration with Other Skills
 
-- **`dotnet-vertical-slice`** -- when scaffolding a package that implements a vertical slice feature, use `dotnet-vertical-slice` to structure the internal architecture, then use this skill to wrap it as a distributable NuGet package
-- **TDD skills** (`tdd-cycle`, `tdd-pair`, `tdd-agent`) -- use TDD workflows to develop the package internals before progressing to the Pack step; the test project created by this scaffold integrates directly with TDD phase management
+- **`dotnet-vertical-slice`** -- use to structure the internal architecture, then use this skill to wrap it as a distributable NuGet package
+- **TDD skills** (`tdd-cycle`, `tdd-pair`, `tdd-agent`) -- develop the package internals using TDD workflows before progressing to the Pack step; the test project created by this scaffold integrates directly with TDD phase management
 - **`mcp-server-scaffold`** -- when building an MCP server that ships as a dotnet tool NuGet package, use this skill for the packaging and `mcp-server-scaffold` for the server implementation
 
-## Stack-Specific Guidance
+## Reference Files
 
-See reference files for detailed configurations:
 - [.csproj Metadata Reference](references/csproj-metadata.md) -- Complete property reference for package metadata
 - [CI/CD Pipeline Templates](references/cicd-templates.md) -- GitHub Actions and Azure DevOps pipeline templates

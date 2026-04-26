@@ -17,21 +17,18 @@ description: >
 
 Pair programming with AI brings human judgment and AI capabilities together. The human provides context, requirements, and final decisions. The AI provides pattern recognition, implementation speed, and TDD discipline.
 
-**The Partnership Principle:**
-Two minds working together produce better code than either alone — but roles must be clear.
+**The Partnership Principle:** Two minds working together produce better code than either alone — but roles must be clear.
 
 ## Knowledge Base Lookups
-
-Use `search_knowledge` (grounded-code-mcp) to ground decisions in authoritative references.
 
 | Query | When to Call |
 |-------|--------------|
 | `search_knowledge("pair programming ping pong TDD navigator driver")` | At session start — confirms pair roles and ping-pong protocol |
-| `search_knowledge("TDD test naming behavior specification")` | When writing tests in the pair session — authoritative naming conventions |
-| `search_knowledge("XP extreme programming practices pair collaboration")` | When establishing collaboration norms — grounding in XP source material |
-| `search_knowledge("test quality behavioral structure-insensitive readable")` | During review turns — confirms test quality criteria for both partners |
+| `search_knowledge("TDD test naming behavior specification")` | When writing tests — authoritative naming conventions |
+| `search_knowledge("XP extreme programming practices pair collaboration")` | When establishing collaboration norms |
+| `search_knowledge("test quality behavioral structure-insensitive readable")` | During review turns — confirms test quality criteria |
 
-**Protocol:** Search at session initialization and when disagreements arise about test quality or implementation approach. Cite the source path in your response.
+Search at session initialization and when disagreements arise about test quality or implementation approach.
 
 ## Kent Beck's 12 Test Desiderata (Pair Focus)
 
@@ -46,299 +43,98 @@ In pair programming, both partners share responsibility for test quality:
 
 ## Session Initialization
 
-At the start of each pairing session, negotiate roles:
+At the start of each session, negotiate roles:
 
 ```markdown
 ## TDD Pair Session
 
-Welcome! Let's establish our collaboration style.
-
-**Pairing Modes Available**:
-
-1. **Ping-Pong TDD** (Recommended for learning)
-   - We alternate: one writes test, other implements
-   - Builds shared understanding
-   - Both stay engaged
-
-2. **Navigator Mode**
-   - AI suggests, human executes (or reverse)
-   - One drives, one guides
-   - Good for complex domains
-
-3. **Teaching Mode**
-   - AI explains TDD concepts as we go
-   - Socratic questions to deepen understanding
-   - Best for TDD newcomers
+**Pairing Modes:**
+1. **Ping-Pong TDD** (Recommended) — alternate: one writes test, other implements
+2. **Navigator Mode** — AI suggests, human executes (or reverse)
+3. **Teaching Mode** — AI explains TDD concepts via Socratic questions
 
 **Which mode would you prefer?**
 ```
 
 ## Ping-Pong TDD
 
-### How It Works
+Each round: one partner writes a failing test, the other implements minimally to pass it, then both refactor together. Roles alternate each round.
 
-```
-Round 1:
-  Human: Writes a failing test
-  AI: Implements to make it pass
-  Together: Refactor if needed
+### Turn Prompts
 
-Round 2:
-  AI: Writes next failing test
-  Human: Implements to make it pass
-  Together: Refactor if needed
-
-... alternate ...
-```
-
-### Ping-Pong Protocol
-
-#### Human's Turn (Test Writer)
-
+**Human's turn (test writer):**
 ```markdown
 ### Your Turn: Write a Test
-
-**Current state**: [passing/failing, count]
-**Feature area**: [what we're building]
-
-Please write a test for the next behavior you want to add.
-
-**Guidance**:
-- Focus on one small behavior
-- Make assertions specific
-- Use clear test names
-
+**Current state**: [passing count] tests passing | **Feature area**: [description]
+Write a test for the next behavior. Focus on one small behavior with specific assertions.
 I'll implement once you share the test.
 ```
 
-#### AI's Turn (Implementer)
-
+**AI's turn (implementer):**
 ```markdown
 ### My Turn: Implement
+**Your test**: `[test_name]` | **Current failure**: [error message]
 
-**Your test**: `test_name`
-**Current failure**: [error message]
-
-**My implementation**:
 ```[language]
-[minimal code]
+[minimal implementation code]
 ```
-
-**Verification**:
-```
-[test output]
-```
-
-**Questions before proceeding**:
-- Does this match your intent?
-- Any edge cases I should know about?
-
+**Result**: [test output] | Does this match your intent? Any edge cases I should know?
 Your turn to write the next test!
 ```
 
-#### AI's Turn (Test Writer)
-
+**AI's turn (test writer):**
 ```markdown
 ### My Turn: Write a Test
+**State**: [N] tests passing | **Next behavior I suggest**: [description]
 
-**Current state**: All tests passing ([count])
-**Next behavior I suggest testing**: [description]
-
-**Proposed test**:
 ```[language]
-[test code]
+[proposed test code]
 ```
-
 **Why this test**: [brief explanation]
-
-**Alternative behaviors we could test instead**:
-- [option 1]
-- [option 2]
-
-Do you want me to add this test, or would you prefer a different behavior?
+**Alternatives**: [option 1] / [option 2]
+Shall I add this test, or a different behavior?
 ```
 
-#### Human's Turn (Implementer)
-
+**Human's turn (implementer):**
 ```markdown
 ### Your Turn: Implement
-
-**Test I wrote**: `test_name`
-**Current failure**:
+**Test**: `[test_name]` | **Failure**:
 ```
 [error output]
 ```
-
-**Hints** (if you'd like):
-<details>
-<summary>Hint 1: Approach</summary>
-[general direction]
-</details>
-
-<details>
-<summary>Hint 2: Implementation pattern</summary>
-[more specific guidance]
-</details>
-
-Take your time! Let me know when you've implemented it, and I'll run the tests.
+<details><summary>Hint 1</summary>[general direction]</details>
+<details><summary>Hint 2</summary>[more specific guidance]</details>
+Let me know when implemented and I'll verify!
 ```
 
 ## Navigator Mode
 
-### Navigator Role Description
+The navigator provides strategic guidance; the driver executes. Responsibilities: navigator thinks ahead about design, spots issues, suggests refactorings, maintains TDD discipline. Driver writes code, executes commands, makes tactical decisions.
 
-The navigator provides strategic guidance while the driver executes.
+**AI as Navigator** — per turn: announce current phase (RED/GREEN/REFACTOR), state observations, suggest next step, ask 1–2 strategic questions.
 
-**Navigator Responsibilities**:
-- Think ahead about design
-- Spot potential issues
-- Suggest refactorings
-- Keep TDD discipline
-
-**Driver Responsibilities**:
-- Write the actual code
-- Execute commands
-- Make tactical decisions
-- Ask clarifying questions
-
-### AI as Navigator
-
-```markdown
-### Navigator Guidance
-
-**Current Phase**: [RED | GREEN | REFACTOR]
-**What we're doing**: [description]
-
-**My Observations**:
-- [observation 1]
-- [observation 2]
-
-**Suggested Next Step**:
-[specific action to take]
-
-**Questions to Consider**:
-- [strategic question 1]
-- [strategic question 2]
-
-I'm watching for TDD discipline. You have the keyboard!
-```
-
-### AI as Driver
-
-```markdown
-### Driver Executing
-
-**Your navigation**: [what you asked for]
-**My interpretation**: [how I understood it]
-
-**Action I'll take**:
-[specific code or command]
-
-**Before I proceed**:
-- Does this match your intent?
-- Any adjustments needed?
-
-[execute action]
-
-**Result**: [outcome]
-
-What's our next move, navigator?
-```
+**AI as Driver** — per turn: restate the navigation instruction, confirm interpretation before executing, report the result, ask "What's our next move?"
 
 ## Teaching Mode (Socratic)
 
-### Purpose
+Help humans internalize TDD thinking through questions rather than direct answers.
 
-Help humans internalize TDD thinking through guided questions rather than direct answers.
+| Situation | Question Pattern |
+|-----------|-----------------|
+| Human wants to skip RED | "What behavior are we adding? How would we know the implementation is correct without a test?" |
+| Human over-engineers | "Which specific test requires [the extra feature]? What's the simplest implementation that passes current tests?" |
+| Human wants to skip REFACTOR | "All tests pass. Looking at the code we just wrote, is there anything duplicated or awkward?" |
+| Test is too large | "If this test fails, how would we know which part went wrong? Can we split into smaller, focused tests?" |
 
-### Socratic Patterns
-
-#### When Human Wants to Skip RED
-
-```markdown
-**Observation**: It seems you're ready to implement before we have a failing test.
-
-**Question**: What behavior are we trying to add? Can you describe it in terms of inputs and expected outputs?
-
-**Follow-up**: How would we know if the implementation is correct without a test to verify it?
-```
-
-#### When Human Over-Engineers
-
-```markdown
-**Observation**: This implementation handles several cases. Let me check our tests...
-
-**Question**: Which specific test requires [the extra feature]?
-
-**Reflection**: In TDD, we often say "YAGNI" — You Aren't Gonna Need It. What's the simplest implementation that would pass our current tests?
-```
-
-#### When Human Wants to Skip REFACTOR
-
-```markdown
-**Observation**: All tests pass. Before we add more features...
-
-**Question**: Looking at the code we just wrote, is there anything that feels awkward or duplicated?
-
-**Prompt**: What would make this code clearer to someone reading it for the first time?
-```
-
-#### When Test is Too Large
-
-```markdown
-**Observation**: This test verifies several behaviors at once.
-
-**Question**: If this test fails, how would we know which part went wrong?
-
-**Exercise**: Can we split this into smaller, more focused tests? What's the smallest behavior we can test?
-```
-
-### Teaching Moments
-
-```markdown
-### TDD Insight: [Topic]
-
-**What we just experienced**: [situation]
-
-**The TDD principle at work**: [explanation]
-
-**Kent Beck's perspective**: "[relevant quote]"
-
-**How this helps us**: [practical benefit]
-
-**Question for reflection**: [thought-provoking question]
-```
+When a TDD principle is illustrated live: name it, quote a relevant Kent Beck perspective, ask a reflection question.
 
 ## Workflow
 
-### Session Structure
-
-```
-1. Role Negotiation
-   └─ Agree on pairing mode
-   └─ Clarify expectations
-   └─ Set up environment
-
-2. Iteration Loop
-   ├─ RED: Write failing test (one partner)
-   ├─ GREEN: Implement (other partner)
-   ├─ REFACTOR: Together
-   └─ Switch roles (if ping-pong)
-
-3. Periodic Check-ins
-   └─ "How's this working?"
-   └─ "Should we switch modes?"
-   └─ "Any confusion?"
-
-4. Session Wrap-up
-   └─ Review what was built
-   └─ Discuss learnings
-   └─ Plan next session
-```
+Session structure: (1) Role Negotiation — agree on mode, set up environment. (2) Iteration Loop — RED/GREEN/REFACTOR, switch roles each round in ping-pong. (3) Periodic Check-ins — "How's this working? Should we switch modes?" (4) Session Wrap-up — review built behaviors, discuss learnings, plan next session.
 
 ### State Tracking
 
-```markdown
+```
 <tdd-pair-state>
 mode: ping-pong | navigator | teaching
 phase: RED | GREEN | REFACTOR
@@ -352,170 +148,46 @@ turn: human | ai
 
 ## Output Templates
 
-### Mode Selection Response
-
 ```markdown
-Great! You've chosen **[mode]** mode.
-
-**How this works**:
-[brief explanation of chosen mode]
-
-**Getting started**:
-[first action for the mode]
+## Mode Selected: [mode]
+[one sentence: how this works]
+[first action for the chosen mode]
 
 <tdd-pair-state>
-mode: [chosen mode]
-phase: RED
-iteration: 1
-current_role: [initial role]
-turn: [who starts]
+mode: [mode] | phase: RED | iteration: 1 | turn: [who starts]
 </tdd-pair-state>
 ```
 
-### Turn Handoff
-
-```markdown
-### Turn Complete
-
-**What happened**: [brief summary]
-**Result**: [test pass/fail status]
-
-**Handing off to you**:
-[what the human should do next]
-
-<tdd-pair-state>
-...
-turn: [next turn]
-</tdd-pair-state>
-```
-
-### Session Summary
-
-```markdown
-### Pair Session Summary
-
-**Mode Used**: [mode]
-**Iterations Completed**: N
-**Tests Written**: N
-
-**Behaviors Implemented**:
-1. [behavior 1]
-2. [behavior 2]
-...
-
-**Key Moments**:
-- [interesting decision or learning]
-- [challenge and how we solved it]
-
-**For Next Session**:
-- [suggested next steps]
-
-Thanks for pairing! How did this session feel?
-```
+Full templates (Turn Handoff, Session Summary): `references/pairing-patterns.md`.
 
 ## AI Discipline Rules
 
-### CRITICAL: Respect Human Agency
+**Respect human agency.** Wait for human decisions on requirements. Accept human overrides on implementation. Do not push too hard on "correct" TDD. Let the human set the pace.
 
-The AI must:
-- Wait for human decisions on requirements
-- Accept human overrides on implementation
-- Not push too hard on "correct" TDD
-- Let human set the pace
+**Maintain role clarity.** Do not switch roles without negotiation. Announce role changes clearly. Stay in character for the chosen mode. Ask before taking action outside the role.
 
-### CRITICAL: Maintain Role Clarity
+**TDD discipline — gentle.** In pair mode, enforcement is softer: point out TDD deviations as questions, offer to help get back on track, do not block progress over purity. Prioritize the human's learning and goals.
 
-The AI must:
-- Not switch roles without negotiation
-- Announce role changes clearly
-- Stay in character for chosen mode
-- Ask before taking action outside role
-
-### CRITICAL: TDD Discipline (Gentle)
-
-In pair mode, enforcement is softer:
-- Point out TDD deviations as questions
-- Offer to help get back on track
-- Don't block progress over purity
-- Prioritize human's learning and goals
-
-### CRITICAL: Adapt to Human Style
-
-The AI must:
-- Match human's pace
-- Adjust explanation level
-- Recognize when to back off
-- Celebrate progress
+**Adapt to human style.** Match the human's pace, adjust explanation depth, recognize when to back off, celebrate progress.
 
 ## Error Recovery
 
-### Tests Won't Run
+**Tests won't run**: Switch roles temporarily — AI diagnoses infrastructure issues while human observes. Fix environment before resuming TDD work. Do NOT write new tests until suite runs cleanly.
 
-```
-Problem: Test suite errors on setup or syntax
-Actions:
-1. Switch roles temporarily — AI diagnoses infrastructure, human observes
-2. Fix environment before resuming TDD work
-3. Do NOT write new tests until suite runs cleanly
-4. Resume at the phase that was interrupted
-```
+**Tests fail during session**: Stop immediately. Identify which change caused the regression. If in REFACTOR: revert immediately, do not try to fix inline. If in GREEN: the implementation broke something — narrow scope. Restore green before adding any new behavior.
 
-### Tests Fail During Pair Session
+**State confusion (whose turn)**: Run the full test suite — output tells you the phase (all pass → REFACTOR or new RED; one fails → GREEN). Check the most recent `<tdd-pair-state>` block. Re-announce phase and whose turn it is before continuing.
 
-```
-Problem: Previously passing tests now fail unexpectedly
-Actions:
-1. Stop — identify which change caused the regression
-2. AI navigator: read the failure message, trace to the cause
-3. If in REFACTOR: revert immediately, do not try to fix inline
-4. If in GREEN: the implementation broke something — narrow scope
-5. Restore green before adding any new behavior
-```
+**Disagreement on approach**: AI defers to human on requirements and business logic — always. AI may advocate once on TDD discipline. If human wants to skip a phase, AI explains the tradeoff once, then follows the human's lead. Never block progress over TDD purity in pair mode.
 
-### State Confusion (Who Writes What)
-
-```
-Problem: Unclear whose turn it is or what phase we're in
-Actions:
-1. Run the full test suite — output tells you the phase
-   - All pass → REFACTOR or new RED
-   - One fails → GREEN
-2. Check the most recent <tdd-pair-state> block
-3. Re-announce the phase and whose turn it is before continuing
-```
-
-### Partner Disagreement on Approach
-
-```
-Problem: Human and AI disagree on implementation or test design
-Actions:
-1. AI defers to human on requirements and business logic — always
-2. AI may advocate on TDD discipline (test-first, minimal impl)
-3. If human wants to skip a phase, AI explains the tradeoff once, then follows the human's lead
-4. Never block progress over TDD purity in pair mode
-```
-
-### Lost Context Mid-Session
-
-```
-Problem: Session interrupted, state block missing or stale
-Actions:
-1. Ask the human to describe what was last completed
-2. Run the test suite to establish current phase
-3. Read the most recently touched test and implementation files
-4. Reconstruct <tdd-pair-state> from evidence before continuing
-```
+**Lost context mid-session**: Ask the human to describe what was last completed. Run the test suite to establish current phase. Read the most recently touched test and implementation files. Reconstruct `<tdd-pair-state>` from evidence before continuing.
 
 ## Integration with Other Skills
 
 - **`tdd-cycle`** — Provides the phase state machine and transition rules used in every pairing mode
-- **`tdd-implementer`** — Invoked when it is the AI's turn to write implementation code in ping-pong mode
-- **`tdd-refactor`** — Invoked during the shared REFACTOR step at the end of each ping-pong round
+- **`tdd-implementer`** — Invoked when it is the AI's turn to write implementation in ping-pong mode
+- **`tdd-refactor`** — Invoked during the shared REFACTOR step
 - **`tdd-verify`** — Run after the session to audit TDD compliance and generate a scorecard
-- **`tdd-agent`** — Alternative to this skill; use when the AI should drive all phases autonomously rather than collaborating
+- **`tdd-agent`** — Alternative to this skill; use when the AI should drive all phases autonomously
 
-## Stack-Specific Guidance
-
-See reference files for pairing-specific patterns:
-- [Pairing Patterns](references/pairing-patterns.md) - Common pair programming patterns
-- [Socratic Guidance](references/socratic-guidance.md) - Teaching and questioning techniques
+Reference files: [Pairing Patterns](references/pairing-patterns.md) | [Socratic Guidance](references/socratic-guidance.md)
