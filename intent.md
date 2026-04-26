@@ -79,6 +79,7 @@ A good output for this project:
 - A state block XML tag that duplicates one already in use
 - A `references/` directory with fewer than 2 files
 - A project-template file that references concepts from the global files without explaining them locally
+- **Global template files (`claude/global/`, `opencode/global/`) that name specific books, personal document titles, or user-specific collection contents.** These files are public templates — any user may install them. Descriptions must be generic enough for any user's setup. The mistake: writing `grounded_dotnet` as "EF Core in Action, DI in .NET, Pro ASP.NET Core 7" instead of "Third-party .NET books and vendor docs ingested into your local knowledge base." The installed personal copies may be enriched; the repo source files must not reveal any individual user's document library.
 
 ---
 

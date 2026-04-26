@@ -250,6 +250,7 @@ Key difference: Claude uses `skills:` array in frontmatter; OpenCode uses `skill
 - State block XML tags must be unique across all skills and agents.
 - Frontmatter `description` fields must include trigger phrases for slash-command discovery.
 - In Python code examples, avoid PyTorch evaluation mode calls that trigger security hooks. Use `model.train(False)` instead.
+- **`claude/global/` and `opencode/global/` files are public templates distributed to any user.** Never embed specific book titles, personal document names, personal file paths, or user-specific tool names in these files. Collection descriptions must describe topic domains (e.g., "Rust language: ownership, async, Tokio"), not the specific documents a particular user has ingested. Installed files (`~/.claude/CLAUDE.md`, `~/.config/opencode/AGENTS.md`) may contain personal references; the source template files must not.
 
 ---
 
