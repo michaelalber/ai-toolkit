@@ -7,7 +7,7 @@ and persistent decisions.
 
 ## Quick Reference
 
-- **Skills:** `skills/<n>/SKILL.md` — 10 mandatory sections, gold standard: `skills/architecture-review/SKILL.md`
+- **Skills:** `skills/<n>/SKILL.md` — two tiers: full (10 sections) or minimal (frontmatter + instruction). See AGENTS.md for when to use each. Gold standard for full: `skills/architecture-review/SKILL.md`
 - **Agents:** `claude/agents/<n>.md` (Claude Code) | `opencode/agents/<n>.md` (OpenCode) — must stay in parity
 - **Commands:** `claude/commands/<n>.md` (Claude Code) | `opencode/commands/<n>.md` (OpenCode)
 - **Global files:** `claude/global/` → installs to `~/.claude/` | `opencode/global/` → installs to `~/.config/opencode/`
@@ -25,7 +25,7 @@ No compiled artifacts. Validation is structural.
 # Count skills
 find skills -name "SKILL.md" | wc -l
 
-# Verify a skill has all 10 sections
+# Verify a full-template skill has all 10 sections (not applicable to minimal skills)
 grep -c "^## " skills/<n>/SKILL.md   # should return 10
 
 # Check agent parity (counts must match)
@@ -39,12 +39,23 @@ ls opencode/commands/*.md | wc -l
 
 ## When Adding a Skill
 
+**Choose a tier first** (see AGENTS.md for full criteria):
+- **Full template** — multi-phase workflow, state tracking, domain principles, autonomous execution
+- **Minimal** — single focused instruction, conversational, no phase management needed
+
+**Full-template skill:**
 1. Copy gold standard: `cp -r skills/architecture-review skills/<new-name>`
 2. All 10 sections required — do not skip
 3. Add agent entries in **both** `claude/agents/` and `opencode/agents/`
 4. Add command entries in **both** `claude/commands/` and `opencode/commands/` if user-invocable
 5. Update README.md skill count and table
 6. Update AGENTS.md Open Loops section
+
+**Minimal skill:**
+1. Create `skills/<new-name>/SKILL.md` with frontmatter + instruction only
+2. Add command entries in **both** `claude/commands/` and `opencode/commands/` if user-invocable
+3. Update README.md skill count and table
+4. Update AGENTS.md Open Loops section
 
 ## When Adding a Command
 

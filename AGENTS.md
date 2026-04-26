@@ -132,7 +132,20 @@ description: >
 ---
 ```
 
-### 10 Mandatory Sections (in order)
+### Two Tiers
+
+Skills come in two tiers. Choose based on complexity, not preference.
+
+| | Full template | Minimal |
+|---|---|---|
+| **Use when** | Multi-phase workflow, state tracking across turns, domain principles, autonomous execution | Single focused instruction, conversational, no phase management |
+| **Sections** | 10 mandatory (see below) | Frontmatter + instruction only |
+| **Examples** | `architecture-review`, `tdd-cycle`, `code-review-coach` | `grill-me` |
+| **Gold standard** | `skills/architecture-review/SKILL.md` | `skills/grill-me/SKILL.md` |
+
+**Decision rule:** If the skill needs to track phase state, orchestrate multiple steps, or encode a domain principle catalog to function correctly — use the full template. If a clear instruction fits in a paragraph, use minimal.
+
+### Full Template: 10 Mandatory Sections (in order)
 
 1. **Title + Epigraph** -- `# Skill Name` with 1-2 relevant quotes
 2. **Core Philosophy** -- Non-negotiable constraints and design rationale
@@ -145,11 +158,9 @@ description: >
 9. **Error Recovery** -- 3-4 scenarios with symptoms and numbered recovery steps
 10. **Integration with Other Skills** -- Cross-references to related skills
 
-Gold standard template: `skills/architecture-review/SKILL.md`
-
 ### References Directory
 
-Each `references/` directory contains 2-5 supporting files: code examples, decision matrices, checklists, configuration templates.
+Full-template skills include a `references/` directory with 2-5 supporting files: code examples, decision matrices, checklists, configuration templates. Minimal skills do not require a references directory.
 
 ---
 
