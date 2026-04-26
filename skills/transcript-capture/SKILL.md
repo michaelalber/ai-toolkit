@@ -1,6 +1,6 @@
 ---
 name: transcript-capture
-description: Converts raw Zoom/Slack AI-generated transcripts into structured capture documents for spec-driven development. Uses per-block human review to filter small talk and off-topic content. The PM guides what is in scope; the skill structures that judgment.
+description: Converts raw Zoom/Slack AI-generated transcripts into structured capture documents for spec-driven development. Uses per-block human review to filter small talk and off-topic content. The PM guides what is in scope; the skill structures that judgment. Use when given a raw Zoom transcript, Slack AI-generated meeting summary, or pasted meeting notes that need to be converted into a structured capture document for spec-driven development.
 ---
 
 # Transcript Capture

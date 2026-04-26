@@ -5,7 +5,7 @@ description: >
   Takes an existing spec (PRD, user stories, requirements doc, or acceptance criteria)
   and drives test-first implementation to verified completion. The unique step is
   translating the spec into binary, verifiable acceptance criteria before any code
-  starts. Use for "/spec-implement path/to/spec.md", "implement this spec", "implement
+  starts. Use when implementing a greenfield feature from a spec, PRD, or acceptance criteria. Trigger phrases: "/spec-implement path/to/spec.md", "implement this spec", "implement
   from requirements", "turn this PRD into code", "greenfield feature from spec",
   "acceptance criteria to implementation". Do NOT use when the codebase is complex,
   unfamiliar, or requires research before planning — use /rpi-research instead.

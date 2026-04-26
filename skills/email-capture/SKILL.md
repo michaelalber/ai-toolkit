@@ -1,6 +1,6 @@
 ---
 name: email-capture
-description: Converts email threads, SOWs, change requests, and pasted documents into structured capture documents for spec-driven development. Extracts requirements, decisions, commitments, and open questions with source attribution to sender and message date.
+description: Converts email threads, SOWs, change requests, and pasted documents into structured capture documents for spec-driven development. Extracts requirements, decisions, commitments, and open questions with source attribution to sender and message date. Use when given an email thread, SOW, change request, or pasted document that needs to be converted into structured requirements with per-message source attribution.
 ---
 
 # Email Capture

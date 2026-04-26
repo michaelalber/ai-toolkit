@@ -1,6 +1,6 @@
 ---
 name: system-design-kata
-description: Domain-calibrated system design exercises — security workflows, edge fleet management, hybrid cloud, and real-world scenarios. NOT generic interview prep. Use to practice system design thinking with focused feedback and iterative improvement.
+description: Domain-calibrated system design exercises — security workflows, edge fleet management, hybrid cloud, and real-world scenarios. Use when practicing system design, developing distributed systems trade-off judgment, or improving design skills through domain-specific scenarios covering edge AI, security workflows, and hybrid cloud. Distinct from generic interview prep.
 ---
 
 # System Design Kata

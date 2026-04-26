@@ -1,5 +1,5 @@
 ---
-description: Run a TDD cycle. Injects live test output before implementing.
+description: Runs a RED-GREEN-REFACTOR TDD cycle with live test output injected before each phase transition. Use when starting TDD, implementing a feature test-first, or asked to "run a TDD cycle" or "do TDD".
 allowed-tools: Bash(dotnet test:*), Bash(dotnet build:*), Read, Edit, Write
 ---
 

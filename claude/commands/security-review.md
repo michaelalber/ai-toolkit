@@ -1,5 +1,5 @@
 ---
-description: OWASP security review of current codebase or specified path.
+description: Conducts an OWASP Top 10 security review of the current codebase or a specified path, identifying vulnerabilities and generating a prioritized findings report. Use when asked for a security review, security audit, or "check this for vulnerabilities".
 allowed-tools: Read, Glob, Grep
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: capture-consolidate
-description: Merges multiple capture documents from transcript-capture and email-capture into a unified intake bundle. Assigns canonical per-project REQ-XXX IDs, deduplicates overlapping requirements, surfaces cross-document contradictions for PM resolution, and produces a final capture bundle ready for spec generation.
+description: Merges multiple capture documents from transcript-capture and email-capture into a unified intake bundle. Assigns canonical per-project REQ-XXX IDs, deduplicates overlapping requirements, surfaces cross-document contradictions for PM resolution, and produces a final capture bundle ready for spec generation. Use when two or more capture documents from transcript-capture or email-capture need to be merged into a single intake bundle for spec generation.
 ---
 
 # Capture Consolidate

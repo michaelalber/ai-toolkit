@@ -1,6 +1,6 @@
 ---
 name: supply-chain-audit
-description: Software supply chain vulnerability scanning, license compliance analysis, and CVE correlation across NuGet, npm, and pip ecosystems. Provides vulnerability database references, scanning tool guidance, CVSS severity interpretation, and license compatibility matrices for dependency audits. Also performs NuGet package security reviews with manager-friendly executive summaries. Triggers on phrases like "review nuget", "package security", "nuget audit", "outdated packages", "vulnerability scan", "check dependencies", "nuget security review".
+description: Software supply chain vulnerability scanning, license compliance analysis, and CVE correlation across NuGet, npm, and pip ecosystems. Provides vulnerability database references, scanning tool guidance, CVSS severity interpretation, and license compatibility matrices for dependency audits. Also performs NuGet package security reviews with manager-friendly executive summaries. Use when asked to audit package dependencies, scan for vulnerabilities, check license compliance, or assess supply chain security. Trigger phrases: "review nuget", "package security", "nuget audit", "outdated packages", "vulnerability scan", "check dependencies", "supply chain audit".
 ---
 
 # Supply Chain Audit

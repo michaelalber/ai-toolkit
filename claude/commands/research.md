@@ -1,5 +1,5 @@
 ---
-description: Multi-source research on a topic. Usage: /research <topic>
+description: Conducts multi-source research on a technical topic using grounded knowledge and web search, producing a structured briefing with citations. Use when investigating an unfamiliar technology, comparing options, or asked to research a topic. Usage: /research <topic>
 allowed-tools: Read
 ---
 

@@ -1,5 +1,5 @@
 ---
-description: Architecture review with Socratic challenge. Pass a component or decision as argument.
+description: Runs an architecture review with Socratic challenge against a specified component or decision. Use when stress-testing an architecture design, evaluating a technical decision, or asked to critique a system component. Pass a component name or decision as the argument.
 allowed-tools: Read, Glob
 ---
 

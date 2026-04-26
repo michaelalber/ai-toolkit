@@ -2,7 +2,7 @@
 name: rpi-plan
 description: >
   RPI Plan phase -- converts a research artifact into a phased implementation plan with exact
-  file paths, change descriptions, and per-phase verification steps. Use for "/rpi-plan feature",
+  file paths, change descriptions, and per-phase verification steps. Use when converting a research artifact into a phased implementation plan. Trigger phrases: "/rpi-plan feature",
   "create implementation plan", "plan the changes for X", "design the implementation".
 ---
 
