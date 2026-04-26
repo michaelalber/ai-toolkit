@@ -1,11 +1,11 @@
 # AI Toolkit
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Skills](https://img.shields.io/badge/skills-73-blue)](#skills)
+[![Skills](https://img.shields.io/badge/skills-83-blue)](#skills)
 [![Agents](https://img.shields.io/badge/agents-35-blue)](#agents)
 [![Platforms](https://img.shields.io/badge/platforms-Claude%20Code%20%7C%20OpenCode%20%7C%20Pi-informational)](#platforms)
 
-**73 skills, 35 agents, and 8 slash commands for AI-assisted software development — spanning TDD, .NET, Python, Rust, edge AI, security, and more.**
+**83 skills, 35 agents, and 8 slash commands for AI-assisted software development — spanning TDD, .NET, Python, Rust, edge AI, security, DDD, and more.**
 
 Works with [Claude Code](https://claude.ai/code), [OpenCode](https://opencode.ai/), and [Pi](https://pi.dev) (Ollama local models).
 
@@ -20,7 +20,7 @@ This toolkit encodes that expertise as reusable primitives. Each skill is an opi
 **Design decisions:**
 - **Three primitives, one toolkit** — skills (model-invoked expertise), agents (autonomous executors), commands (user-triggered with live shell context). Each has a distinct role.
 - **Platform parity** — every skill and agent exists in both Claude Code and OpenCode format with identical behavior. Pi gets its own Ollama-optimized config.
-- **10-section template discipline** — every skill follows the same structure: philosophy, principles, workflow, state block, output templates, AI discipline rules, anti-patterns, error recovery, integrations. Enforced, not aspirational.
+- **Two-tier skill design** — full-template skills (10-section template: philosophy, principles, workflow, state, output templates, AI discipline rules, anti-patterns, error recovery, integrations) for domain-expert tools; minimal-tier skills (≤ 100 lines, focused instructions) for mode switches and conversational tools.
 - **Global + project layered config** — global standards apply everywhere; project-level files add specificity without duplicating the global.
 
 ---
@@ -29,7 +29,7 @@ This toolkit encodes that expertise as reusable primitives. Each skill is an opi
 
 | | Count |
 |--|-------|
-| Skills | 72 |
+| Skills | 83 |
 | Agents (Claude Code) | 35 |
 | Agents (OpenCode) | 35 |
 | Slash commands (per platform) | 8 |
@@ -175,6 +175,26 @@ See [`pi/global/README.md`](pi/global/README.md) for the full Ollama setup guide
 | `technical-debt-assessor` | Debt quantification — deliberate vs accidental, cost-to-fix vs cost-to-carry, business case building. |
 | `architecture-journal` | Lightweight ADR templates with retrospective prompts at 30/90/180 days. |
 | `grill-me` | Relentless plan/design interview — one question at a time with recommended answers, walking every branch of the decision tree. ([source](https://github.com/mattpocock/skills/tree/main/grill-me)) |
+| `zoom-out` | Zooms out from current code to map callers, dependents, and module relationships before continuing. ([source](https://github.com/mattpocock/skills)) |
+| `caveman` | Switches to terse, keyword-driven communication mode — cuts token usage ~75%. Persistent once triggered. ([source](https://github.com/mattpocock/skills)) |
+| `design-an-interface` | Applies "Design It Twice" from APOSD — generates two radically different interface designs and compares them. ([source](https://github.com/mattpocock/skills)) |
+| `improve-codebase-architecture` | Deep module refactoring using APOSD vocabulary — eliminates shallow modules, information leakage, and naming mismatches. ([source](https://github.com/mattpocock/skills)) |
+
+### DDD Suite
+
+| Skill | Description |
+|-------|-------------|
+| `domain-model` | DDD domain modeling consultant — enforces CONTEXT.md vocabulary, surfaces code/plan contradictions, records decisions as ADRs sparingly. ([source](https://github.com/mattpocock/skills)) |
+| `ubiquitous-language` | Extracts and formalizes domain vocabulary from conversation or codebase — classifies terms, resolves ambiguities, saves to UBIQUITOUS_LANGUAGE.md. ([source](https://github.com/mattpocock/skills)) |
+
+### Product & GitHub Workflow Suite
+
+| Skill | Description |
+|-------|-------------|
+| `to-prd` | Converts meeting notes or feature requests into a structured PRD with goals, user stories, and binary acceptance criteria. ([source](https://github.com/mattpocock/skills)) |
+| `to-issues` | Converts a PRD into atomic GitHub Issues ordered by dependency — infrastructure first, features next, polish last. ([source](https://github.com/mattpocock/skills)) |
+| `triage-issue` | Triages a GitHub Issue or bug report — classifies severity, identifies root cause area, recommends priority and owner. ([source](https://github.com/mattpocock/skills)) |
+| `qa` | Structured QA review — verifies acceptance criteria coverage, generates edge case test matrix, flags gaps before shipping. ([source](https://github.com/mattpocock/skills)) |
 
 ### Agent Support Suite
 

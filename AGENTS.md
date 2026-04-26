@@ -18,7 +18,7 @@
 ## Project Overview
 
 - **Name:** AI Toolkit
-- **Purpose:** A collection of 67+ shareable skills and autonomous agents for AI-assisted software development. Supports Claude Code and OpenCode.
+- **Purpose:** A collection of 83+ shareable skills and autonomous agents for AI-assisted software development. Supports Claude Code and OpenCode.
 - **Phase:** Maintain — stable toolkit; work consists of adding new skills/agents, fixing existing ones, and keeping platform parity.
 - **Jira project key:** N/A — task specs are tracked in conversation context or ad hoc
 - **Definition of success:** Every skill and agent installs cleanly, follows the 10-section template exactly, and works out of the box without requiring external documentation.
@@ -82,12 +82,14 @@
 | 2026-04-24 | Pi global files live in `pi/global/`; AGENTS.md installs to `~/.pi/agent/`; SYSTEM.md is a per-project template | Pi's `SYSTEM.md` is project-scoped (not a global config file); keeping it in `pi/global/` as a user-copyable template matches Pi's per-project design |
 | 2026-04-24 | Commands layer added alongside agents | Commands are user-invoked (typed as `/command-name`); skills are model-invoked (autonomous). Different primitives, same platform directory scope. |
 | 2026-04-24 | Hooks in `settings.json`, permissions in `settings.local.json` | Separation of concerns — deterministic enforcement (hooks) vs. interactive approval (permissions). Keep in separate files. |
+| 2026-04-25 | Two-tier skill system: minimal (≤ 100 lines, ≥ 1 reference) and full-template (10 sections, ≤ 400 lines, ≥ 2 references) | Ported from mattpocock/skills — minimal tier handles mode switches, conversational tools, and single-instruction skills without the overhead of the 10-section template. |
+| 2026-04-25 | `disable-model-invocation: true` frontmatter for interactive/conversational skills | Ported from mattpocock/skills — prevents auto-invocation by the model; grill-me, domain-model, ubiquitous-language, zoom-out, caveman use this. |
 
 ---
 
 ## Open Loops
 
-- [ ] Skill count (currently 73) — update this file and README when skills are added or removed
+- [ ] Skill count (currently 83) — update this file and README when skills are added or removed
 - [ ] Agent count parity — Claude Code (35) vs. OpenCode (33); identify and add the missing OpenCode agent
 - [x] Commands layer — `claude/commands/` (8 commands) and `opencode/commands/` (8 commands) — added 2026-04-24
 
@@ -129,7 +131,43 @@ Each skill lives in `skills/<name>/` with a `SKILL.md` and a `references/` direc
 name: skill-name
 description: >
   What the skill does. Trigger phrases like "keyword1", "keyword2".
+disable-model-invocation: true  # optional: prevents auto-invocation; use for interactive or conversational skills
 ---
+```
+
+### Skill Tiers
+
+| Tier | When to use | SKILL.md size | References required |
+|------|------------|--------------|---------------------|
+| **Minimal** | Mode switches, conversational tools, single-instruction skills | ≤ 100 lines | ≥ 1 file |
+| **Full-template** | Domain-expert skills with workflow, state tracking, and output templates | ≤ 400 lines (overflow → `references/`) | ≥ 2 files |
+
+Minimal-tier skills have no prescribed section structure — just focused instructions.
+Full-template skills follow the 10-section template; content that overflows 400 lines goes into `references/` files, not more sections.
+
+### Description Format
+
+The description field is the **only thing the model sees when deciding which skill to load**. Quality here determines trigger reliability.
+
+- Max 1024 chars
+- Third person: "Scaffolds...", "Audits...", "Extracts..." — not "I will..." or "You can..."
+- First sentence: what the skill does
+- Second sentence: "Use when [specific trigger scenarios]"
+- Include "Do NOT use when..." for negative triggers
+
+**Good:**
+```yaml
+description: >
+  Scaffolds NuGet package metadata, CI/CD pipeline, and test harness.
+  Use when publishing a new library to NuGet.org. Do NOT use for
+  internal workspace-only libraries; use dotnet-vertical-slice instead.
+```
+
+**Bad (too vague — triggers on everything):**
+```yaml
+description: >
+  A comprehensive and powerful tool for NuGet package management.
+  Very useful for .NET developers.
 ```
 
 ### 10 Mandatory Sections (in order)
@@ -223,7 +261,9 @@ Key difference: Claude uses `skills:` array in frontmatter; OpenCode uses `skill
 | Enterprise .NET | dotnet-vertical-slice, ef-migration-manager, nuget-package-scaffold, legacy-migration-analyzer, dotnet-architecture-checklist, dotnet-security-review, dotnet-security-review-federal, minimal-api-scaffolder, 4d-schema-migration | .NET patterns, migrations, security |
 | Edge/IoT | edge-cv-pipeline, jetson-deploy, sensor-integration, picar-x-behavior | Edge computing, CV, robotics |
 | AI/ML | rag-pipeline-python, rag-pipeline-dotnet, mcp-server-scaffold, ollama-model-workflow | RAG, MCP servers, local LLMs |
-| Coaching | architecture-review, pattern-tradeoff-analyzer, system-design-kata, dependency-mapper, code-review-coach, refactor-challenger, security-review-trainer, pr-feedback-writer, technical-debt-assessor, architecture-journal | Engineering judgment |
+| Coaching | architecture-review, pattern-tradeoff-analyzer, system-design-kata, dependency-mapper, code-review-coach, refactor-challenger, security-review-trainer, pr-feedback-writer, technical-debt-assessor, architecture-journal, grill-me, zoom-out, caveman, design-an-interface, improve-codebase-architecture | Engineering judgment and communication modes |
+| DDD | domain-model, ubiquitous-language | Domain-Driven Design vocabulary and modeling |
+| Product & GitHub | to-prd, to-issues, triage-issue, qa | PRD creation, issue decomposition, bug triage, QA |
 | Agent Support | automated-code-review, test-scaffold, doc-sync, supply-chain-audit, environment-health, model-optimization, anomaly-detection, fleet-management, research-synthesis, session-context, task-decomposition | Domain knowledge for agents |
 | Agent Design | spec-coach | Interactive spec design coach — skills, agents, PRDs, and GitHub Spec Kit |
 | RPI Workflow | rpi-research, rpi-plan, rpi-implement, rpi-iterate | Research-Plan-Implement with session isolation and parallel subagents |
