@@ -5,6 +5,7 @@ description: >
   understanding, resolving each branch of the decision tree. Use when the user
   wants to stress-test a plan, get grilled on their design, or mentions "grill me".
   Source: https://github.com/mattpocock/skills/tree/main/grill-me (Matt Pocock)
+disable-model-invocation: true
 ---
 
 Interview me relentlessly about every aspect of this plan until we reach a shared understanding. Walk down each branch of the design tree, resolving dependencies between decisions one-by-one. For each question, provide your recommended answer.

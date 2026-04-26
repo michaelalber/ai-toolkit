@@ -68,6 +68,28 @@ DRAFT:
     Anti-Patterns, Error Recovery, Integration
   Leave stubs for any section where content is not yet known
 
+DESCRIPTION QUALITY:
+  The description is the only thing the model sees when deciding which skill to load.
+  Write it last, after the full skill body is written.
+
+  Rules:
+  - Max 1024 chars
+  - Third person: "Scaffolds...", "Audits...", "Extracts..."
+  - First sentence: what the skill does
+  - Second sentence: "Use when [specific trigger scenarios]"
+  - Include "Do NOT use when..." to prevent false positives
+
+  WRONG:
+    description: >
+      A powerful tool for NuGet package management.
+      Very useful for .NET developers.
+
+  RIGHT:
+    description: >
+      Scaffolds NuGet package metadata, CI/CD pipeline, and test harness.
+      Use when publishing a new library to NuGet.org. Do NOT use for
+      internal workspace-only libraries; use dotnet-vertical-slice instead.
+
 VERIFY:
   [ ] All 10 sections present
   [ ] description field includes "Do NOT use when..." clause

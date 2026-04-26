@@ -39,6 +39,17 @@ ls opencode/commands/*.md | wc -l
 
 ## When Adding a Skill
 
+**Choose a tier first:**
+- **Minimal** (≤ 100 lines): mode switches, conversational tools, single-instruction skills. No prescribed section structure. `≥ 1` reference file.
+- **Full-template** (≤ 400 lines): domain-expert skills. All 10 sections required. Overflow goes to `references/`, not more sections.
+
+**Minimal-tier steps:**
+1. Create `skills/<new-name>/SKILL.md` with focused instructions (no template to copy)
+2. Add `disable-model-invocation: true` for interactive or conversational skills
+3. Create `skills/<new-name>/references/` with ≥ 1 supporting file
+4. Skip steps 3–6 below unless the skill is user-invocable
+
+**Full-template steps:**
 1. Copy gold standard: `cp -r skills/architecture-review skills/<new-name>`
 2. All 10 sections required — do not skip
 3. Add agent entries in **both** `claude/agents/` and `opencode/agents/`
