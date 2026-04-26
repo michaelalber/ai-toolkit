@@ -1,11 +1,11 @@
 # AI Toolkit
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Skills](https://img.shields.io/badge/skills-72-blue)](#skills)
+[![Skills](https://img.shields.io/badge/skills-73-blue)](#skills)
 [![Agents](https://img.shields.io/badge/agents-35-blue)](#agents)
 [![Platforms](https://img.shields.io/badge/platforms-Claude%20Code%20%7C%20OpenCode%20%7C%20Pi-informational)](#platforms)
 
-**72 skills, 35 agents, and 8 slash commands for AI-assisted software development — spanning TDD, .NET, Python, Rust, edge AI, security, and more.**
+**73 skills, 35 agents, and 8 slash commands for AI-assisted software development — spanning TDD, .NET, Python, Rust, edge AI, security, and more.**
 
 Works with [Claude Code](https://claude.ai/code), [OpenCode](https://opencode.ai/), and [Pi](https://pi.dev) (Ollama local models).
 
@@ -174,6 +174,7 @@ See [`pi/global/README.md`](pi/global/README.md) for the full Ollama setup guide
 | `pr-feedback-writer` | Review communication coach — blocking vs suggestion vs nit, constructive framing, explaining the "why". |
 | `technical-debt-assessor` | Debt quantification — deliberate vs accidental, cost-to-fix vs cost-to-carry, business case building. |
 | `architecture-journal` | Lightweight ADR templates with retrospective prompts at 30/90/180 days. |
+| `grill-me` | Relentless plan/design interview — one question at a time with recommended answers, walking every branch of the decision tree. ([source](https://github.com/mattpocock/skills/tree/main/grill-me)) |
 
 ### Agent Support Suite
 
