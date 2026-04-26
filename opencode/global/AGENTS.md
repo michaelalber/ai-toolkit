@@ -16,7 +16,7 @@
 At the start of every session, before doing any work:
 
 1. Check for project context files: `intent.md`, `constraints.md`
-2. If a task is in flight, check the Jira issue or Confluence page for the spec, and `domain-memory.md`
+2. If a task is in flight, check your issue tracker / spec system (e.g. Jira, Linear, GitHub Issues) for the spec, and `domain-memory.md`
 3. Confirm context — briefly state: current phase (if known), active task (if any), top constraints, open loops
 4. **Do NOT begin work until context is confirmed**
 5. If `intent.md` is absent for a non-trivial project, ask the user to populate it before proceeding
@@ -95,7 +95,7 @@ The `.md` context stack provides the information environment an agent needs acro
 |---|---|---|
 | `AGENTS.md` | Context | What the agent needs to *know* |
 | `intent.md` | Intent | What the agent should *optimize for* |
-| Jira / Confluence | Specification | Problem statement, acceptance criteria, decomposition — linked from the Jira issue or Confluence page |
+| Issue tracker / Spec system | Specification | Problem statement, acceptance criteria, decomposition — linked from your issue tracker or wiki (Jira, Linear, Confluence, GitHub Issues, etc.) |
 | `constraints.md` | Constraints | Musts, must-nots, preferences, escalation triggers |
 | `evals.md` | Evaluation | Test cases, known-good outputs, regression checks |
 | `domain-memory.md` | State | Multi-session backlog and progress log (agentic work only) |
@@ -116,23 +116,24 @@ you must follow. **This is the authoritative source — prefer it over training 
 
 **IMPORTANT — `collection=` parameter:** Pass only the suffix below. The server prepends `grounded_` automatically.
 
+> **Note:** Descriptions reflect each collection's intended domain. Your actual ingested content depends on what you have loaded into grounded-code-mcp — update these descriptions to match your own setup.
+
 | Full name | Pass as `collection=` | What lives here |
 |---|---|---|
-| `grounded_internal` | `"internal"` | Engineering standards: XP, TDD, CI/CD, DDD, Clean Architecture, OWASP, NIST AI |
-| `grounded_patterns` | `"patterns"` | Design patterns: GoF, CQRS, DDD, Clean Architecture, DI, MADR |
-| `grounded_architecture` | `"architecture"` | Software architecture: DDIA, SRE, 12-Factor, AOSA, C4, arc42, distributed systems |
-| `grounded_systems_thinking` | `"systems_thinking"` | Systems thinking: Meadows leverage points, feedback loops, chaos engineering |
+| `grounded_internal` | `"internal"` | Engineering standards and practices: XP, TDD, CI/CD, DDD, Clean Architecture, OWASP, NIST AI; technical writing guidelines |
+| `grounded_patterns` | `"patterns"` | Software design patterns: structural, behavioral, creational; CQRS, DDD, Clean Architecture, DI, ADR templates |
+| `grounded_architecture` | `"architecture"` | Software architecture: distributed systems, SRE, 12-Factor, C4 model, arc42 |
+| `grounded_systems_thinking` | `"systems_thinking"` | Systems thinking: leverage points, feedback loops, system archetypes, chaos engineering |
 | `grounded_dotnet` | `"dotnet"` | .NET/C#, EF Core, ASP.NET Core, DI, migration guides |
-| `grounded_python` | `"python"` | Python 3.13, FastAPI, FastMCP, Pydantic v2, pytest, Flask, cosmicpython |
+| `grounded_python` | `"python"` | Python language, frameworks, and libraries: FastAPI, FastMCP, Pydantic v2, pytest, Flask |
 | `grounded_databases` | `"databases"` | SQL, PostgreSQL indexing, relational theory |
 | `grounded_edge_ai` | `"edge_ai"` | AI/ML engineering, RAG, embeddings, NLP, AI agents |
-| `grounded_automation` | `"automation"` | Raspberry Pi, PLC, MODBUS, OPC UA, NIST 800-82, robotics |
-| `grounded_4d_legacy` | `"4d_legacy"` | 4D v18/v20 — source reference for 4D → .NET migration |
-| `grounded_php` | `"php"` | PHP manual, Laravel 5.5 / 6.x / 12.x |
-| `grounded_javascript` | `"javascript"` | JS/TS: Definitive Guide, TypeScript Handbook, Vue 2/3, ECMAScript 2024 |
-| `grounded_ui_ux` | `"ui_ux"` | UI/UX: Laws of UX, Nielsen heuristics, WCAG 2.2, ARIA patterns, GOV.UK Design System, USWDS |
+| `grounded_automation` | `"automation"` | Industrial automation: PLC, MODBUS, OPC UA, embedded systems, NIST 800-82 |
+| `grounded_php` | `"php"` | PHP language and Laravel framework |
+| `grounded_javascript` | `"javascript"` | JavaScript and TypeScript: language, Vue 2/3, ECMAScript 2024 |
+| `grounded_ui_ux` | `"ui_ux"` | UI/UX: usability heuristics, WCAG 2.2, ARIA patterns, GOV.UK Design System, USWDS |
 | `grounded_gov` | `"gov"` | Federal/government: NIST 800-53/171/218, DOE, Zero Trust, AI RMF, CUI |
-| `grounded_robotics` | `"robotics"` | Physical AI / embodied AI: ROS 2, MuJoCo, Isaac Lab, LeRobot, Spinning Up in Deep RL, VLA models |
+| `grounded_robotics` | `"robotics"` | Physical AI / embodied AI: ROS 2, MuJoCo, Isaac Lab, deep RL for robotics, VLA models |
 | `grounded_rust` | `"rust"` | Rust language: ownership/borrowing/lifetimes, async/Tokio, Cargo, error handling, Axum, Clippy, ecosystem crates |
 | `grounded_langsmith` | `"langsmith"` | LangSmith: tracing, evaluation, datasets, experiments, annotation, prompt engineering |
 | `grounded_langchain` | `"langchain"` | LangChain: LCEL, chains, agents, retrievers, RAG patterns, core concepts |
@@ -141,13 +142,13 @@ you must follow. **This is the authoritative source — prefer it over training 
 
 ### Canonical Engineering Standards
 
-`internal/xp-and-continuous-delivery-practices.md` is the **authoritative engineering standard**. Search it before any non-trivial code generation.
+The `internal` collection is the **authoritative engineering standard**. Search it before any non-trivial code generation.
 
 ### When to Skip search_knowledge
 
 You MAY skip `search_knowledge` if ALL of the following are true:
 1. The answer is based on well-established, stable knowledge (e.g., C# `async/await` syntax, standard LINQ operators, basic SQL clauses, Python built-ins)
-2. No project-specific convention, Telerik component parameter, or 4D migration pattern is involved
+2. No project-specific convention or vendor/framework-specific pattern is involved
 3. The question does not touch security, OWASP, or cryptographic practices
 
 When in doubt — search. The cost of a wrong answer exceeds the cost of a search call.
@@ -159,7 +160,6 @@ When in doubt — search. The cost of a wrong answer exceeds the cost of a searc
 - Security, OWASP, threat modeling
 - AI/ML pipelines, RAG, embeddings
 - Industrial automation, PLC, Raspberry Pi, sensor integration
-- 4D language or 4D-to-.NET migration — **always search `4d_legacy` first**
 - Software architecture decisions, distributed systems, scalability, SRE, SLOs — **search `architecture`**
 - Systems thinking, feedback loops, leverage points, chaos engineering — **search `systems_thinking`**
 - UI design, UX patterns, accessibility, WCAG, ARIA, usability, form design — **search `ui_ux`**

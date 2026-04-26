@@ -29,7 +29,8 @@
 - Do not modify `claude/global/CLAUDE.md` or `opencode/global/AGENTS.md` without explicit human approval — these are installed globally and affect all user projects.
 - Do not move a skill or agent without updating all cross-references in `AGENTS.md`, `README.md`, and any skills that reference it in their Integration section.
 - Do not call PyTorch's evaluation mode method in Python code examples — the security hook triggers on this string. Use `model.train(False)` instead.
-- Do not create a local `spec.md` — task specs live in Jira / Confluence.
+- Do not create a local `spec.md` — task specs live in your issue tracker or spec system.
+- Do not embed specific book titles, proprietary document names, personal file paths, or user-specific tool names in `claude/global/` or `opencode/global/` files — these are public templates in a public repo. Collection descriptions must describe domains and topic areas, not the specific documents a particular user has ingested into their grounded-code-mcp instance. The installed versions (`~/.claude/CLAUDE.md`, `~/.config/opencode/AGENTS.md`) may contain personal references; the source template files must not.
 
 ---
 
