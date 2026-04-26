@@ -106,3 +106,5 @@ These run regardless of model instruction. Exit code 2 blocks the tool call. Can
 Files in `claude/global/` and `opencode/global/` affect **every project on the user's machine** after install.
 Changes to global files require explicit review before committing.
 Do not batch-edit them alongside skill or agent changes.
+
+**These files are public templates.** Do not embed specific book titles, personal document names, personal file paths, or user-specific tool references. Collection descriptions must describe topic domains only. Personal enrichment belongs in the installed copies (`~/.claude/CLAUDE.md`, `~/.config/opencode/AGENTS.md`), not the repo source.
