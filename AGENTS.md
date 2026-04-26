@@ -87,7 +87,7 @@
 
 ## Open Loops
 
-- [ ] Skill count (currently 71) — update this file and README when skills are added or removed
+- [ ] Skill count (currently 73) — update this file and README when skills are added or removed
 - [ ] Agent count parity — Claude Code (35) vs. OpenCode (33); identify and add the missing OpenCode agent
 - [x] Commands layer — `claude/commands/` (8 commands) and `opencode/commands/` (8 commands) — added 2026-04-24
 
