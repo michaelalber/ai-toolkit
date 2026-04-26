@@ -38,29 +38,22 @@ tests/
         GetOrderById/
           GetOrderByIdHandlerTests.cs
           GetOrderByIdEndpointTests.cs
-        CancelOrder/
-          CancelOrderHandlerTests.cs
-          CancelOrderValidatorTests.cs
       Customers/
         CreateCustomer/
           CreateCustomerHandlerTests.cs
           CreateCustomerValidatorTests.cs
     Services/                          # Mirrors src/MyApp/Services/
       EmailServiceTests.cs
-      PaymentGatewayTests.cs
     Common/
       Behaviors/
         ValidationBehaviorTests.cs
-        LoggingBehaviorTests.cs
     Infrastructure/                    # Test utilities
       TestDbContextFactory.cs
       WebAppFactory.cs
       Builders/                        # Test data builders
         OrderBuilder.cs
-        CustomerBuilder.cs
       Fakes/                           # Fake implementations
         FakeEmailService.cs
-        FakeTimeProvider.cs
 ```
 
 ### Test Project Dependencies (.csproj)
@@ -104,8 +97,6 @@ global using NSubstitute;
 
 Every test method must have three clearly separated sections:
 
-### Basic AAA Structure
-
 ```csharp
 [Fact]
 public async Task Handle_WithValidCommand_CreatesOrderAndReturnsId()
@@ -129,53 +120,17 @@ public async Task Handle_WithValidCommand_CreatesOrderAndReturnsId()
 }
 ```
 
-### AAA Rules
-
 | Section | What Belongs Here | What Does NOT Belong |
 |---------|-------------------|----------------------|
 | **Arrange** | Object construction, mock setup, test data creation, database seeding | Assertions, method calls under test |
 | **Act** | ONE call to the method under test. Store the result or capture the exception. | Multiple calls, assertions, additional setup |
 | **Assert** | Assertions on the result, mock verification, state verification | Additional method calls, setup, side effects |
 
-### Common AAA Mistakes
-
-```csharp
-// WRONG: Act and Assert mixed together
-[Fact]
-public void GetById_ReturnsOrder()
-{
-    // Arrange
-    var repo = SetupRepo();
-
-    // This is Act AND Assert combined -- avoid this
-    repo.GetById(1).Should().NotBeNull();
-}
-
-// RIGHT: Act and Assert separated
-[Fact]
-public async Task GetById_WhenOrderExists_ReturnsOrder()
-{
-    // Arrange
-    var repo = SetupRepo();
-
-    // Act
-    var result = await repo.GetByIdAsync(1);
-
-    // Assert
-    result.Should().NotBeNull();
-    result!.Id.Should().Be(1);
-}
-```
+Do not mix Act and Assert in the same expression (`repo.GetById(1).Should().NotBeNull()`). Store the result from Act first, then assert on the stored result separately.
 
 ## Test Naming Convention
 
 ### Pattern: `MethodName_Scenario_ExpectedResult`
-
-```
-[MethodUnderTest]_[StateOrInput]_[ExpectedBehavior]
-```
-
-### Examples by Category
 
 | Category | Test Name | What It Tests |
 |----------|-----------|---------------|
@@ -188,14 +143,11 @@ public async Task GetById_WhenOrderExists_ReturnsOrder()
 | State change | `Handle_CancelsPendingOrder_SetsStatusToCancelled` | State mutation |
 | Side effect | `Handle_AfterCreatingOrder_SendsConfirmationEmail` | External effect |
 
-### Test Class Naming
-
 | Source Class | Test Class | File Name |
 |-------------|------------|-----------|
 | `CreateOrderHandler` | `CreateOrderHandlerTests` | `CreateOrderHandlerTests.cs` |
 | `CreateOrderValidator` | `CreateOrderValidatorTests` | `CreateOrderValidatorTests.cs` |
 | `OrderService` | `OrderServiceTests` | `OrderServiceTests.cs` |
-| `PaymentGateway` | `PaymentGatewayTests` | `PaymentGatewayTests.cs` |
 
 ## Mock Patterns
 
@@ -234,9 +186,9 @@ repository.GetByIdAsync(Arg.Any<int>(), Arg.Any<CancellationToken>())
 | Email / SMS services | Yes | Avoids sending real messages in tests |
 | External HTTP APIs | Yes | Avoids network calls, controls responses |
 | FreeMediator `ISender` | Yes | When testing code that dispatches commands |
-| `ILogger<T>` | Usually no | Logging rarely needs assertion; pass `NullLogger<T>.Instance` |
-| `DbContext` (EF Core) | No -- use InMemory | InMemoryDatabase is simpler and more realistic than mocking |
-| Value objects / records | No | Use real instances -- they are simple data containers |
+| `ILogger<T>` | Usually no | Pass `NullLogger<T>.Instance` |
+| `DbContext` (EF Core) | No -- use InMemory | InMemoryDatabase is simpler and more realistic |
+| Value objects / records | No | Use real instances -- simple data containers |
 | Static utility methods | No | Wrap in an interface if mocking is needed |
 
 ## Test Data Patterns
@@ -272,12 +224,6 @@ public class OrderBuilder
         CreatedAt = DateTime.UtcNow
     };
 }
-
-// Usage in tests:
-var order = new OrderBuilder()
-    .WithStatus(OrderStatus.Pending)
-    .WithItem(productId: 10, qty: 2, price: 25.00m)
-    .Build();
 ```
 
 ### InMemory DbContext Factory
@@ -316,26 +262,16 @@ public class CreateOrderValidatorTests
     [Fact]
     public void Validate_WithValidCommand_HasNoErrors()
     {
-        // Arrange
         var command = new CreateOrderCommand(CustomerId: 1, Items: new[] { ValidItem() });
-
-        // Act
         var result = _validator.TestValidate(command);
-
-        // Assert
         result.ShouldNotHaveAnyValidationErrors();
     }
 
     [Fact]
     public void Validate_WithZeroCustomerId_HasErrorForCustomerId()
     {
-        // Arrange
         var command = new CreateOrderCommand(CustomerId: 0, Items: new[] { ValidItem() });
-
-        // Act
         var result = _validator.TestValidate(command);
-
-        // Assert
         result.ShouldHaveValidationErrorFor(x => x.CustomerId)
             .WithErrorMessage("A valid customer is required.");
     }
@@ -383,27 +319,14 @@ public class CreateOrderEndpointTests : IClassFixture<WebAppFactory>
 
 ## When to Use Each Test Type
 
-```
-Decision: What kind of test do I write?
-│
-├── Testing a handler's business logic in isolation?
-│   └── UNIT TEST with mocked dependencies
-│
-├── Testing a FluentValidation validator?
-│   └── UNIT TEST using TestValidate() extension
-│
-├── Testing the full HTTP pipeline (endpoint → mediator → handler → DB)?
-│   └── INTEGRATION TEST with WebApplicationFactory
-│
-├── Testing a pipeline behavior (validation, logging, transactions)?
-│   └── UNIT TEST with mocked RequestHandlerDelegate
-│
-├── Testing database queries or EF Core mappings?
-│   └── UNIT TEST with InMemory DbContext
-│
-└── Testing external service interaction?
-    └── UNIT TEST with mocked interface + optional INTEGRATION TEST with real service
-```
+| Scenario | Test Type |
+|----------|-----------|
+| Handler's business logic in isolation | Unit test with mocked dependencies |
+| FluentValidation validator | Unit test using `TestValidate()` extension |
+| Full HTTP pipeline (endpoint → mediator → handler → DB) | Integration test with WebApplicationFactory |
+| Pipeline behavior (validation, logging, transactions) | Unit test with mocked `RequestHandlerDelegate` |
+| Database queries or EF Core mappings | Unit test with InMemory DbContext |
+| External service interaction | Unit test with mocked interface + optional integration test |
 
 ## Common Pitfalls
 
@@ -414,10 +337,9 @@ Decision: What kind of test do I write?
 | Shared mutable state between tests | Tests fail intermittently | Each test creates its own state |
 | Not disposing DbContext | Memory leaks in test runner | Implement `IDisposable` on test class |
 | Hardcoded GUIDs/dates | Tests break across environments | Use `Guid.NewGuid()` and `DateTime.UtcNow` |
-| Testing framework code | Wasted effort verifying EF Core or ASP.NET | Test YOUR logic, trust the framework |
+| Testing framework code | Wasted effort | Test YOUR logic, trust the framework |
 
 ## Reference Files
 
-See detailed patterns and code examples:
 - [Mock Patterns](references/mock-patterns.md) -- Mock, stub, and fake patterns for repositories, mediator, HttpClient, DbContext, and common .NET infrastructure
 - [Naming Conventions](references/naming-conventions.md) -- Test naming patterns, file organization rules, and test project structure conventions

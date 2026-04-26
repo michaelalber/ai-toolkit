@@ -14,10 +14,10 @@ This skill provides the statistical methods, drift detection algorithms, and dec
 
 **Non-Negotiable Constraints:**
 1. **Baseline first** -- no detection algorithm produces meaningful results without a valid baseline for comparison.
-2. **Multiple methods** -- never rely on a single statistical test. Use at least two independent methods for consensus before classifying an anomaly.
-3. **Context matters** -- a reading that is anomalous for one sensor may be normal for another. Detection thresholds must be tuned per sensor and environment.
-4. **Log everything** -- every anomaly event, every threshold crossing, every suppression decision must be recorded with full context.
-5. **Distinguish fault from signal** -- a sensor reporting an unusual value may be broken, or the environment may have genuinely changed. The detection system must help discriminate between these cases.
+2. **Multiple methods** -- never rely on a single statistical test; use at least two independent methods for consensus.
+3. **Context matters** -- detection thresholds must be tuned per sensor and environment.
+4. **Log everything** -- every anomaly event, threshold crossing, and suppression decision must be recorded.
+5. **Distinguish fault from signal** -- a sensor reporting an unusual value may be broken, or the environment may have genuinely changed.
 
 ## Domain Principles Table
 
@@ -28,386 +28,152 @@ This skill provides the statistical methods, drift detection algorithms, and dec
 | **Temporal Context** | A single outlier is less significant than a sustained deviation | High |
 | **Physical Plausibility** | Anomaly classification must consider what is physically possible for the sensor | Critical |
 | **Adaptive Thresholds** | Static thresholds fail as sensor behavior drifts; thresholds must adapt | High |
-| **Alert Hygiene** | Too many false positives cause alert fatigue; too few false negatives miss real events | High |
+| **Alert Hygiene** | Too many false positives cause alert fatigue; too few miss real events | High |
 | **Drift Awareness** | Gradual drift is harder to detect than spikes but often more consequential | High |
-| **Recalibration Discipline** | Recalibration is an invasive action that requires evidence and approval | Critical |
+| **Recalibration Discipline** | Recalibration is an invasive action requiring evidence and approval | Critical |
 
 ## Knowledge Base Lookups
 
-Use `search_knowledge` (grounded-code-mcp) to ground decisions in authoritative references.
-
 | Query | When to Call |
 |-------|--------------|
-| `search_knowledge("Z-score CUSUM EWMA anomaly detection statistical methods")` | At BASELINE phase — confirms algorithm selection and threshold calculation formulas |
-| `search_knowledge("sensor drift detection time series change point")` | When implementing drift detection — authoritative drift detection methods |
-| `search_knowledge("Python numpy scipy statistical anomaly detection time series")` | When implementing Python detection code — authoritative library patterns |
-| `search_knowledge("alert fatigue false positive threshold tuning sensor")` | During RESPOND phase — confirms alert hygiene and threshold tuning strategies |
-| `search_knowledge("sensor calibration recalibration trigger conditions")` | When building recalibration decision trees — confirms when to trigger vs. suppress |
+| `search_knowledge("Z-score CUSUM EWMA anomaly detection statistical methods")` | At BASELINE phase — algorithm selection and threshold calculation |
+| `search_knowledge("sensor drift detection time series change point")` | When implementing drift detection |
+| `search_knowledge("Python numpy scipy statistical anomaly detection time series")` | When implementing detection code |
+| `search_knowledge("alert fatigue false positive threshold tuning sensor")` | During RESPOND phase — alert hygiene and threshold tuning |
+| `search_knowledge("sensor calibration recalibration trigger conditions")` | When building recalibration decision trees |
 
-**Protocol:** Search at BASELINE and DETECT phases. Algorithm choices must be grounded in the KB before implementation. Cite source paths in implementation comments.
+Search at BASELINE and DETECT phases. Algorithm choices must be grounded in the KB before implementation.
 
 ## Workflow
 
-### Anomaly Detection Pipeline
+The pipeline flows: **BASELINE → CONFIGURE → DETECT → CLASSIFY → RESPOND**, looping back to MONITOR after each reading; re-baseline after confirmed drift correction.
 
-```
-┌──────────────────────────────────────────────────────────────────────────┐
-│                                                                          │
-│  ┌──────────┐    ┌─────────┐    ┌────────┐    ┌──────────┐    ┌───────┐ │
-│  │ BASELINE │───>│ MONITOR │───>│ DETECT │───>│ CLASSIFY │───>│RESPOND│ │
-│  └──────────┘    └─────────┘    └────────┘    └──────────┘    └───────┘ │
-│       │               ^              │                            │      │
-│       │               │              │                            │      │
-│       │               └──────────────┘                            │      │
-│       │                (no anomaly)                               │      │
-│       │                                                           │      │
-│       └───────────────────────────────────────────────────────────┘      │
-│                        (re-baseline after drift correction)              │
-│                                                                          │
-└──────────────────────────────────────────────────────────────────────────┘
-```
+### Detection Method by Anomaly Type
 
-### Detection Method Selection Guide
+| Anomaly Type | Methods | When to Use |
+|--------------|---------|-------------|
+| Point outliers (spikes) | Z-score, IQR, Grubbs test | Normal or near-normal distributions |
+| Gradual drift | CUSUM, Page-Hinkley, EWMA drift | Any distribution; sustained mean shift |
+| Distribution change | ADWIN, Kolmogorov-Smirnov | When the entire distribution shifts |
 
-```
-                     ┌──────────────────────────┐
-                     │ What kind of anomaly are  │
-                     │ you looking for?          │
-                     └────────────┬─────────────┘
-                                  │
-              ┌───────────────────┼───────────────────┐
-              │                   │                   │
-         Point outliers     Gradual drift        Distribution
-              │                   │               change
-              v                   v                   v
-       ┌────────────┐    ┌──────────────┐    ┌──────────────┐
-       │ Z-score     │    │ CUSUM        │    │ ADWIN        │
-       │ IQR         │    │ Page-Hinkley │    │ Kolmogorov-  │
-       │ Grubbs test │    │ EWMA drift   │    │ Smirnov      │
-       └────────────┘    └──────────────┘    └──────────────┘
-```
+### Anomaly Classification
 
-### Anomaly Type Decision Tree
-
-```
-        ┌─────────────────────────────────────────┐
-        │ Anomalous reading detected               │
-        └───────────────────┬─────────────────────┘
-                            │
-              ┌─────────────┴──────────────┐
-              │                            │
-        Single reading              Multiple readings
-              │                            │
-              v                            v
-    ┌─────────────────┐        ┌─────────────────────┐
-    │ Return to normal │        │ What is the pattern? │
-    │ within 1-3       │        └──────────┬──────────┘
-    │ readings?        │                   │
-    └────────┬────────┘        ┌───────────┼───────────┐
-             │                 │           │           │
-            Yes              Trend      Constant    Erratic
-             │                 │           │           │
-             v                 v           v           v
-         ┌───────┐       ┌───────┐   ┌──────────┐ ┌───────┐
-         │ SPIKE │       │ DRIFT │   │ FLATLINE │ │ NOISE │
-         └───────┘       └───────┘   └──────────┘ └───────┘
-```
+Classify based on temporal pattern: **SPIKE** (returns to normal within 1–3 readings), **DRIFT** (sustained trend away from baseline), **FLATLINE** (≤2 unique values in last 10 readings), **NOISE** (variance >2x baseline std but no mean shift).
 
 ## Step-by-Step Workflow
 
-### Step 1: Establish Baseline
-
-Collect a representative sample of normal sensor operation and compute reference statistics.
+**Step 1: Establish Baseline** — Collect a representative sample of normal operation.
 
 ```python
 import numpy as np
 from scipy import stats
 
-
-def establish_baseline(readings: list[float],
-                       min_samples: int = 100) -> dict:
-    """
-    Compute baseline statistics from a sample of normal sensor readings.
-
-    Args:
-        readings: List of sensor readings during known-normal operation.
-        min_samples: Minimum number of samples required.
-
-    Returns:
-        Dict with baseline statistics and quality metrics.
-
-    Raises:
-        ValueError: If insufficient samples provided.
-    """
+def establish_baseline(readings: list[float], min_samples: int = 100) -> dict:
+    """Compute baseline statistics from known-normal readings."""
     if len(readings) < min_samples:
-        raise ValueError(
-            f"Need >= {min_samples} samples, got {len(readings)}"
-        )
-
+        raise ValueError(f"Need >= {min_samples} samples, got {len(readings)}")
     arr = np.array(readings)
     q1, q3 = np.percentile(arr, [25, 75])
     iqr = q3 - q1
-
-    # Stationarity check: split in half and compare means
     mid = len(arr) // 2
-    first_half_mean = np.mean(arr[:mid])
-    second_half_mean = np.mean(arr[mid:])
-    mean_drift = abs(second_half_mean - first_half_mean) / np.std(arr)
-
-    # Normality check
-    if len(arr) <= 5000:
-        _, normality_p = stats.shapiro(arr[:min(len(arr), 5000)])
-    else:
-        _, normality_p = stats.normaltest(arr)
-
+    mean_drift = abs(np.mean(arr[mid:]) - np.mean(arr[:mid])) / np.std(arr)
+    _, normality_p = stats.shapiro(arr[:min(len(arr), 5000)])
     return {
-        "mean": float(np.mean(arr)),
-        "std": float(np.std(arr)),
-        "median": float(np.median(arr)),
-        "min": float(np.min(arr)),
-        "max": float(np.max(arr)),
-        "q1": float(q1),
-        "q3": float(q3),
-        "iqr": float(iqr),
-        "count": len(arr),
-        "is_normal": bool(normality_p > 0.05),
-        "normality_p": float(normality_p),
-        "is_stationary": bool(mean_drift < 0.5),
-        "mean_drift_sigma": float(mean_drift),
+        "mean": float(np.mean(arr)), "std": float(np.std(arr)),
+        "median": float(np.median(arr)), "min": float(np.min(arr)), "max": float(np.max(arr)),
+        "q1": float(q1), "q3": float(q3), "iqr": float(iqr), "count": len(arr),
+        "is_normal": bool(normality_p > 0.05), "normality_p": float(normality_p),
+        "is_stationary": bool(mean_drift < 0.5), "mean_drift_sigma": float(mean_drift),
     }
 ```
 
-### Step 2: Configure Detection Methods
-
-Select and configure detection methods based on the baseline characteristics and the types of anomalies you need to detect.
+**Step 2: Configure Detectors** — Set thresholds from baseline statistics.
 
 ```python
 def configure_detectors(baseline: dict) -> dict:
-    """
-    Configure detection thresholds based on baseline statistics.
-
-    Returns configuration for z-score, IQR, and EWMA detectors.
-    """
-    config = {
+    """Configure detection thresholds based on baseline statistics."""
+    return {
         "zscore": {
-            "enabled": baseline["is_normal"],
-            "threshold": 3.0,
-            "mean": baseline["mean"],
-            "std": baseline["std"],
+            "enabled": baseline["is_normal"], "threshold": 3.0,
+            "mean": baseline["mean"], "std": baseline["std"],
         },
         "iqr": {
-            "enabled": True,  # Works for any distribution
-            "factor": 1.5,
-            "q1": baseline["q1"],
-            "q3": baseline["q3"],
-            "iqr": baseline["iqr"],
+            "enabled": True, "factor": 1.5,
             "lower": baseline["q1"] - 1.5 * baseline["iqr"],
             "upper": baseline["q3"] + 1.5 * baseline["iqr"],
         },
-        "ewma": {
-            "enabled": True,
-            "alpha": 0.3,
-            "sigma_threshold": 3.0,
-            "initial_mean": baseline["mean"],
-        },
-        "cusum": {
-            "enabled": True,
-            "target": baseline["mean"],
-            "threshold": 5.0 * baseline["std"],
-            "drift_allowance": 0.5 * baseline["std"],
-        },
+        "ewma": {"enabled": True, "alpha": 0.3, "sigma_threshold": 3.0, "initial_mean": baseline["mean"]},
+        "cusum": {"enabled": True, "target": baseline["mean"],
+                  "threshold": 5.0 * baseline["std"], "drift_allowance": 0.5 * baseline["std"]},
     }
-    return config
 ```
 
-### Step 3: Run Detection
-
-Process incoming readings through the detection pipeline.
+**Step 3: Detect** — Run each reading through all configured detectors, require consensus.
 
 ```python
 def detect_anomaly(value: float, config: dict) -> dict:
-    """
-    Run a single reading through all configured detectors.
-
-    Returns detection results from each method plus a consensus verdict.
-    """
+    """Run a reading through all detectors; return per-method results and consensus."""
     results = {}
-    votes_anomaly = 0
-    votes_total = 0
+    votes_anomaly, votes_total = 0, 0
 
-    # Z-score detection
     if config["zscore"]["enabled"]:
         z = abs(value - config["zscore"]["mean"]) / config["zscore"]["std"]
         is_anomaly = z > config["zscore"]["threshold"]
-        results["zscore"] = {
-            "z_score": float(z),
-            "is_anomaly": is_anomaly,
-        }
+        results["zscore"] = {"z_score": float(z), "is_anomaly": is_anomaly}
         votes_total += 1
-        if is_anomaly:
-            votes_anomaly += 1
+        if is_anomaly: votes_anomaly += 1
 
-    # IQR detection
     if config["iqr"]["enabled"]:
         below = value < config["iqr"]["lower"]
         above = value > config["iqr"]["upper"]
         is_anomaly = below or above
-        results["iqr"] = {
-            "is_anomaly": is_anomaly,
-            "bound_violated": "lower" if below else ("upper" if above else "none"),
-        }
+        results["iqr"] = {"is_anomaly": is_anomaly,
+                          "bound_violated": "lower" if below else ("upper" if above else "none")}
         votes_total += 1
-        if is_anomaly:
-            votes_anomaly += 1
+        if is_anomaly: votes_anomaly += 1
 
-    # Consensus
     consensus = votes_anomaly >= max(1, votes_total // 2 + 1)
     results["consensus"] = {
-        "is_anomaly": consensus,
-        "votes_anomaly": votes_anomaly,
-        "votes_total": votes_total,
+        "is_anomaly": consensus, "votes_anomaly": votes_anomaly, "votes_total": votes_total,
         "agreement_ratio": votes_anomaly / votes_total if votes_total > 0 else 0,
     }
-
     return results
 ```
 
-### Step 4: Classify Anomaly
-
-Determine the anomaly type based on the temporal pattern.
+**Step 4: Classify** — Determine anomaly type from temporal pattern.
 
 ```python
-def classify_anomaly(recent_anomalies: list[dict],
-                     baseline: dict,
+def classify_anomaly(recent_anomalies: list[dict], baseline: dict,
                      window_readings: list[float]) -> dict:
-    """
-    Classify the anomaly type based on recent detection history.
-
-    Args:
-        recent_anomalies: List of recent anomaly detection records.
-        baseline: Baseline statistics dictionary.
-        window_readings: Recent sliding window of readings.
-
-    Returns:
-        Classification with type, severity, and evidence.
-    """
+    """Classify anomaly type based on recent detection history and window statistics."""
     arr = np.array(window_readings)
-    current_mean = np.mean(arr)
-    current_std = np.std(arr)
+    current_mean, current_std = np.mean(arr), np.std(arr)
     unique_values = len(set(window_readings[-10:]))
 
-    # Flatline detection: very low variance or identical values
     if unique_values <= 2 and len(window_readings) >= 10:
-        return {
-            "type": "FLATLINE",
-            "severity": "CRITICAL",
-            "evidence": f"Only {unique_values} unique values in last 10 readings",
-        }
+        return {"type": "FLATLINE", "severity": "CRITICAL",
+                "evidence": f"Only {unique_values} unique values in last 10 readings"}
 
-    # Drift detection: sustained shift in mean
     drift_sigma = abs(current_mean - baseline["mean"]) / baseline["std"]
     if drift_sigma > 2.0 and len(recent_anomalies) >= 5:
         severity = "CRITICAL" if drift_sigma > 4.0 else "WARNING"
-        return {
-            "type": "DRIFT",
-            "severity": severity,
-            "evidence": f"Mean shifted {drift_sigma:.1f} sigma from baseline",
-            "drift_magnitude": float(drift_sigma),
-        }
+        return {"type": "DRIFT", "severity": severity,
+                "evidence": f"Mean shifted {drift_sigma:.1f} sigma from baseline",
+                "drift_magnitude": float(drift_sigma)}
 
-    # Noise detection: increased variance
     noise_ratio = current_std / baseline["std"] if baseline["std"] > 0 else 0
     if noise_ratio > 2.0:
         severity = "CRITICAL" if noise_ratio > 4.0 else "WARNING"
-        return {
-            "type": "NOISE",
-            "severity": severity,
-            "evidence": f"Noise level {noise_ratio:.1f}x baseline",
-        }
+        return {"type": "NOISE", "severity": severity, "evidence": f"Noise {noise_ratio:.1f}x baseline"}
 
-    # Spike detection: isolated outlier(s)
-    if len(recent_anomalies) <= 3:
-        return {
-            "type": "SPIKE",
-            "severity": "INFO" if len(recent_anomalies) == 1 else "WARNING",
-            "evidence": f"{len(recent_anomalies)} spike(s) detected",
-        }
-
-    return {
-        "type": "SPIKE",
-        "severity": "WARNING",
-        "evidence": "Recurring spikes detected, investigate root cause",
-    }
+    severity = "INFO" if len(recent_anomalies) == 1 else "WARNING"
+    return {"type": "SPIKE", "severity": severity,
+            "evidence": f"{len(recent_anomalies)} spike(s) detected"}
 ```
 
-### Step 5: Respond
+**Step 5: Respond** — Log, alert, and recommend recalibration or replacement based on classification. See `references/response-actions.md` for the full `respond_to_anomaly()` implementation including alert routing, recalibration approval workflow, and FLATLINE replacement escalation.
 
-Execute the appropriate response based on classification.
-
-```python
-import logging
-import time
-
-logger = logging.getLogger("anomaly.response")
-
-
-def respond_to_anomaly(classification: dict, sensor_id: str,
-                       value: float, baseline: dict) -> dict:
-    """
-    Execute the appropriate response for a classified anomaly.
-
-    Returns response record for logging.
-    """
-    response = {
-        "timestamp": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
-        "sensor_id": sensor_id,
-        "anomaly_type": classification["type"],
-        "severity": classification["severity"],
-        "value": value,
-        "baseline_mean": baseline["mean"],
-        "baseline_std": baseline["std"],
-        "evidence": classification["evidence"],
-        "actions_taken": [],
-    }
-
-    severity = classification["severity"]
-
-    # Always log
-    response["actions_taken"].append("logged")
-    logger.info(
-        "Anomaly [%s/%s] on %s: value=%.4f, %s",
-        classification["type"], severity, sensor_id,
-        value, classification["evidence"],
-    )
-
-    # Alert for WARNING and above
-    if severity in ("WARNING", "CRITICAL", "EMERGENCY"):
-        response["actions_taken"].append("alert_sent")
-        logger.warning(
-            "ALERT [%s] %s: %s", severity, sensor_id,
-            classification["evidence"],
-        )
-
-    # Recommend recalibration for drift
-    if classification["type"] == "DRIFT" and severity in ("CRITICAL", "EMERGENCY"):
-        response["actions_taken"].append("recalibration_recommended")
-        response["requires_approval"] = True
-        logger.warning(
-            "RECALIBRATION RECOMMENDED for %s -- awaiting approval",
-            sensor_id,
-        )
-
-    # Recommend replacement for flatline
-    if classification["type"] == "FLATLINE":
-        response["actions_taken"].append("replacement_recommended")
-        response["requires_approval"] = True
-
-    return response
-```
-
-## State Block Format
-
-Maintain state across conversation turns using this block:
+## State Block
 
 ```
 <anomaly-detection-state>
@@ -427,107 +193,43 @@ blockers: [any issues]
 
 ## Output Templates
 
-### Anomaly Detection Report
-
 ```markdown
 ## Anomaly Detection Report: [Sensor ID]
+**Period**: [start] to [end] | **Readings**: [count] | **Anomaly Rate**: [%]
 
-**Date**: [ISO 8601]
-**Analysis Period**: [start] to [end]
-**Readings Analyzed**: [count]
-
-**Baseline**:
-- Mean: [value] [unit], Std: [value] [unit]
-- Distribution: [normal / skewed]
-- Quality: [excellent / acceptable / marginal]
-
-**Anomalies Detected**: [count] ([percentage]% anomaly rate)
+**Baseline**: Mean=[value], Std=[value], Distribution=[normal/skewed], Quality=[excellent/acceptable/marginal]
 
 | Timestamp | Value | Type | Severity | Action |
 |-----------|-------|------|----------|--------|
-| [time] | [val] | [type] | [severity] | [action] |
+| [time] | [val] | SPIKE/DRIFT/FLATLINE/NOISE | INFO/WARNING/CRITICAL | logged/alerted/recal-recommended |
 
-**Summary**:
-- Spikes: [count]
-- Drift events: [count], magnitude: [sigma]
-- Flatline events: [count]
-- Noise events: [count]
-
-**Recommendations**:
-- [recommendation 1]
-- [recommendation 2]
+**Summary**: Spikes=[N], Drift events=[N] (magnitude=[sigma]σ), Flatline=[N], Noise=[N]
+**Recommendations**: [action items]
 ```
 
 ## Anti-Patterns Table
 
 | Anti-Pattern | Why It Fails | Correct Approach |
 |--------------|-------------|------------------|
-| Detecting without a baseline | No reference for what is "normal" -- everything or nothing is anomalous | Always establish baseline before enabling detection |
+| Detecting without a baseline | No reference for "normal" — everything or nothing is anomalous | Always establish baseline before enabling detection |
 | Using only z-score | Fails on non-normal distributions, sensitive to outliers in baseline | Combine z-score with IQR and EWMA for robustness |
-| Static thresholds forever | Sensor behavior drifts over time; static thresholds accumulate false positives | Use adaptive methods (EWMA, ADWIN) that track evolving normal |
-| Alerting on every single outlier | Single-sample spikes are often noise; alerting on each one causes fatigue | Require N consecutive violations or use a debounce window |
+| Static thresholds forever | Sensor behavior drifts; static thresholds accumulate false positives | Use adaptive methods (EWMA, ADWIN) that track evolving normal |
+| Alerting on every single outlier | Single-sample spikes are often noise; causes alert fatigue | Require N consecutive violations or use a debounce window |
 | Ignoring flatline as "stable" | A sensor reading the exact same value repeatedly is likely stuck | Monitor unique value count; flatline is always suspicious |
 | Auto-recalibrating on drift | Drift may indicate a real environmental change, not sensor error | Require human approval and cross-sensor validation before recalibrating |
 | Suppressing repeated alerts silently | Hides escalating problems; repeated anomalies may indicate worsening failure | Log all suppressions with rationale; escalate if pattern persists |
-| Using training data with anomalies | Contaminated baseline produces thresholds that miss real anomalies | Curate baseline data carefully; validate stationarity and distribution |
+| Using training data with anomalies | Contaminated baseline produces thresholds that miss real anomalies | Curate baseline data; validate stationarity and distribution |
 
 ## AI Discipline Rules
 
-### CRITICAL: Baseline Before Detection
+**Baseline before detection.** Calling `detect_anomaly()` without an established baseline produces meaningless results — every threshold is derived from baseline statistics. Run `establish_baseline()` first, verify `is_stationary=True`, then configure detectors. A non-stationary baseline produces unreliable thresholds.
 
-Calling `detect_anomaly()` on a stream without an established baseline produces
-meaningless results. Every threshold in the detector is derived from baseline statistics.
+**Multiple methods must agree.** A single Z-score breach is insufficient. Requiring consensus from ≥2 independent methods eliminates most false positives from non-normal distributions and baseline contamination. The consensus threshold is `votes_anomaly >= ceil(votes_total / 2)`.
 
-```
-WRONG: readings = get_sensor_readings()
-       result = detect_anomaly(readings[-1], config={})
-       # config is empty; thresholds are undefined
-
-RIGHT: baseline = establish_baseline(readings, min_samples=100)
-       # Only proceed if baseline is established
-       config = configure_detectors(baseline)
-       result = detect_anomaly(readings[-1], config)
-```
-
-### CRITICAL: Multiple Methods Must Agree
-
-A single Z-score threshold breach is insufficient evidence for an anomaly. Requiring
-consensus from ≥ 2 independent methods eliminates the majority of false positives
-from non-normal distributions and outlier contamination in the baseline.
-
-```
-WRONG: if abs(z_score) > 3.0:
-           raise_alert(sensor_id, value)
-       # Single-method verdict — false positive rate is high
-
-RIGHT: results = detect_anomaly(value, config)
-       consensus = results["consensus"]
-       if consensus["votes_anomaly"] >= 2:  # ≥ 2 methods agree
-           raise_alert(sensor_id, value, evidence=consensus)
-```
-
-### CRITICAL: Distinguish Fault from Signal
-
-A sensor reporting a null, zero, or flatline reading may be broken, not detecting
-a real environmental event. Run a fault filter before anomaly scoring — applying
-statistical outlier detection to a broken sensor produces misleading severity labels.
-
-```
-WRONG: if detect_anomaly(value, config)["consensus"]["is_anomaly"]:
-           classify_and_alert(value)
-       # If value=0.0 due to sensor power loss, this fires a SPIKE alert
-
-RIGHT: fault = check_sensor_fault(value)  # null, out-of-range, flatline
-       if fault.is_faulty:
-           raise_sensor_fault_alert(sensor_id, fault)
-       else:
-           result = detect_anomaly(value, config)
-           if result["consensus"]["is_anomaly"]:
-               classify_and_alert(value)
-```
+**Distinguish fault from signal.** Run a fault filter before anomaly scoring — check for null, out-of-range, or flatline values. Applying statistical outlier detection to a broken sensor produces misleading SPIKE alerts. Sensor faults are hardware events; they must be reported separately from environmental anomalies.
 
 ## Integration with Other Skills
 
-- **`sensor-integration`** -- Use for physical sensor setup, protocol configuration, and calibration procedures. Anomaly detection begins after `sensor-integration` has established a calibrated data pipeline.
-- **`edge-cv-pipeline`** -- Camera frame drop detection and quality monitoring use similar statistical anomaly detection patterns. The frame rate monitoring in edge-cv-pipeline can leverage the EWMA and drift detection methods from this skill.
-- **`jetson-deploy`** -- When deploying anomaly detection models on Jetson hardware, use this skill for the statistical methods and `jetson-deploy` for the containerized deployment pipeline.
+- **`sensor-integration`** -- Use for physical sensor setup, protocol configuration, and calibration. Anomaly detection begins after `sensor-integration` has established a calibrated data pipeline.
+- **`edge-cv-pipeline`** -- Frame rate and inference quality monitoring use similar EWMA and drift detection patterns.
+- **`jetson-deploy`** -- When deploying anomaly detection on Jetson hardware, use this skill for statistical methods and `jetson-deploy` for the containerized deployment pipeline.

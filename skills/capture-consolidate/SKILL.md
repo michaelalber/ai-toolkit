@@ -15,38 +15,27 @@ description: Merges multiple capture documents from transcript-capture and email
 
 Individual capture sessions — whether from transcripts or email threads — produce fragmented snapshots. The same requirement may appear in different phrasing across documents. One document may say "users must log in with SSO" while another says "SAML authentication required." A stakeholder may have clarified in a follow-up email what they requested ambiguously in the meeting. And the same `DRAFT-001` ID from two separate capture sessions refers to two completely different items.
 
-Consolidation is the phase that makes the capture bundle coherent enough for spec generation. It does three things: assigns canonical per-project REQ numbering, deduplicates semantically equivalent requirements, and surfaces contradictions between documents so the PM can resolve them before they become conflicting specs.
+Consolidation makes the capture bundle coherent enough for spec generation. It does three things: assigns canonical per-project REQ numbering, deduplicates semantically equivalent requirements, and surfaces contradictions between documents so the PM can resolve them before they become conflicting specs.
 
 This is a PM-supervised process. The skill makes proposals; the PM decides. No requirement is dropped, merged, or renumbered without PM awareness.
 
-**What this skill does:**
-- Reads all `DRAFT-NNN` capture documents for a project
-- Identifies duplicate and near-duplicate requirements across documents
-- Surfaces contradictions for PM resolution
-- Assigns canonical `REQ-XXX` per-project IDs
-- Produces a unified capture bundle ready for Phase 2 spec generation
+**What this skill does:** Reads all `DRAFT-NNN` capture documents, identifies duplicates and near-duplicates, surfaces contradictions, assigns canonical `REQ-XXX` IDs, produces a unified capture bundle.
 
-**What this skill does NOT do:**
-- It does NOT write specs — that is the spec generation phase
-- It does NOT resolve contradictions autonomously — PM resolves all conflicts
-- It does NOT drop any requirement without PM approval
-- It does NOT push to Confluence without explicit PM instruction
+**What this skill does NOT do:** Write specs, resolve contradictions autonomously, drop requirements without PM approval, or push to Confluence without explicit PM instruction.
 
 ## Domain Principles
 
 | # | Principle | Applied As |
 |---|-----------|------------|
-| 1 | **Per-project REQ numbering** | `REQ-XXX` IDs are sequential and unique within a project. The `REQ-001` registry is maintained in `captures/req-registry.md`. No two requirements in the project share an ID. |
-| 2 | **Propose, do not decide** | The skill proposes duplicates and merges. The PM approves. A proposed merge that the PM rejects results in two separate REQs. |
-| 3 | **Semantic deduplication, not textual** | "SSO login" and "SAML authentication" may be the same requirement. "User authentication" may be broader. The skill flags semantic similarity; PM determines equivalence. |
+| 1 | **Per-project REQ numbering** | `REQ-XXX` IDs are sequential and unique within a project. The `REQ-001` registry is maintained in `captures/req-registry.md`. No two requirements share an ID. |
+| 2 | **Propose, do not decide** | The skill proposes duplicates and merges. The PM approves. A proposed merge the PM rejects results in two separate REQs. |
+| 3 | **Semantic deduplication, not textual** | "SSO login" and "SAML authentication" may be the same requirement. The skill flags semantic similarity; PM determines equivalence. |
 | 4 | **Source provenance is preserved** | The consolidated REQ records all source documents and their DRAFT IDs. Traceability runs from REQ-XXX back to the original capture session. |
-| 5 | **Contradictions block consolidation** | If two documents give contradictory positions on the same topic, the skill flags the contradiction and pauses until the PM resolves it. It does not assign a REQ ID to an unresolved conflict. |
-| 6 | **Nothing is deleted** | Superseded, merged, or rejected DRAFT items move to the Retired section of the registry. They are never deleted — they are part of the audit trail. |
-| 7 | **Incremental consolidation is supported** | A project may run `capture-consolidate` after each capture session, not just once at the end. The skill reads the existing `req-registry.md` and continues from the last REQ number. |
+| 5 | **Contradictions block consolidation** | If two documents give contradictory positions on the same topic, the skill flags the contradiction and pauses until the PM resolves it. No REQ ID is assigned to an unresolved conflict. |
+| 6 | **Nothing is deleted** | Superseded, merged, or rejected DRAFT items move to the Retired section of the registry. Never deleted — they are part of the audit trail. |
+| 7 | **Incremental consolidation is supported** | A project may run `capture-consolidate` after each capture session. The skill reads the existing `req-registry.md` and continues from the last REQ number. |
 
 ## Knowledge Base Lookups
-
-Use `search_knowledge` (grounded-code-mcp) before the DEDUPLICATE phase.
 
 | Query | When to Call |
 |-------|-------------|
@@ -54,53 +43,17 @@ Use `search_knowledge` (grounded-code-mcp) before the DEDUPLICATE phase.
 | `search_knowledge("requirements deduplication equivalence semantic matching")` | Before DEDUPLICATE — calibrate semantic similarity heuristics |
 | `search_knowledge("acceptance criteria given when then format")` | Before OUTPUT — confirm output format for the consolidated bundle |
 
-**Protocol:** Call at the start of DEDUPLICATE. Do not repeat for the same session.
+Call at the start of DEDUPLICATE. Do not repeat for the same session.
 
-## Workflow: The LOAD–DEDUPLICATE–RESOLVE–RENUMBER–OUTPUT Loop
+## Workflow: LOAD–DEDUPLICATE–RESOLVE–RENUMBER–OUTPUT
 
-### Phase 1: LOAD — Read All Capture Documents
+### Phase 1: LOAD
 
-**Actions:**
+Ask the PM which project this consolidation covers. Read the `captures/` directory and list all capture documents. Read the existing `req-registry.md` if one exists (incremental run). Extract all `DRAFT-NNN` items into a flat working list. Report before proceeding: project name, documents found, whether registry exists and its last REQ number, and counts of DRAFT items by type (requirements, decisions, commitments, open questions, within-document contradictions).
 
-1. Ask the PM which project this consolidation covers
-2. Read the `captures/` directory (or PM-specified location) and list all capture documents
-3. Read the existing `req-registry.md` if one exists (this is an incremental run)
-4. Extract all `DRAFT-NNN` items from all capture documents into a flat working list
-5. Report the LOAD summary before proceeding
+### Phase 2: DEDUPLICATE
 
-**LOAD Summary:**
-
-```markdown
-### LOAD Phase Summary
-
-**Project**: [name]
-**Capture documents found**: [N] — [list filenames]
-**Existing req-registry.md**: [found / not found]
-**Last REQ assigned** (if registry exists): REQ-[NNN]
-**DRAFT items extracted**: [total count]
-  - Requirements: [N]
-  - Decisions: [N]
-  - Commitments: [N]
-  - Open questions: [N]
-  - Contradictions (within documents): [N]
-
-Proceeding to DEDUPLICATE.
-```
-
-### Phase 2: DEDUPLICATE — Identify Overlapping Requirements
-
-**Actions:**
-
-1. Call `search_knowledge("requirements deduplication equivalence semantic matching")` to calibrate
-2. For each DRAFT requirement, compare it against all other DRAFT requirements for:
-   - **Exact match:** Identical or near-identical phrasing
-   - **Semantic match:** Same functional intent, different phrasing
-   - **Subset match:** One requirement is a special case of another
-   - **Conflict:** Same topic, contradictory positions
-3. Group matching items into candidate merge sets
-4. Present each candidate merge set to the PM for decision
-
-**Similarity Classification:**
+Call `search_knowledge("requirements deduplication equivalence semantic matching")` to calibrate. For each DRAFT requirement, compare it against all others for:
 
 | Class | Description | PM Decision Required |
 |-------|-------------|---------------------|
@@ -110,110 +63,62 @@ Proceeding to DEDUPLICATE.
 | `conflict` | Same topic, different positions. Cannot merge — must resolve first. | Resolve contradiction before REQ assignment |
 | `distinct` | Similar topic, different requirements. Appears related but is actually independent. | Confirm as two separate REQs |
 
-**Per-Merge-Set Presentation:**
+Present each candidate merge set to the PM:
 
 ```markdown
----
 ### Candidate Merge Set M-[NNN]
 
 **Similarity class**: [exact | semantic | subset | conflict | distinct]
-**Items in this set**:
 
 | DRAFT ID | Source Document | Statement | Uncertainty Tags |
 |----------|----------------|-----------|-----------------|
 | DRAFT-002 | 2026-01-10-kickoff.md | "Users must authenticate with SSO" | — |
 | DRAFT-014 | 2026-01-15-email.md | "SAML-based authentication required" | — |
 
-**Assessment**: These appear to be the same requirement stated in different terms.
-If merged: [Proposed canonical phrasing: "System must support SSO/SAML authentication"]
+**Assessment**: These appear to be the same requirement in different terms.
+**Proposed canonical phrasing**: "System must support SSO/SAML authentication"
 
----
-**PM decision for M-[NNN]:**
-- [ ] **Merge** — treat as one requirement, use proposed phrasing
-- [ ] **Merge with revised phrasing** — [PM types revised phrasing here]
-- [ ] **Keep separate** — these are two distinct requirements
-- [ ] **Conflict** — mark as contradiction requiring resolution
-
-Type your decision (merge / revise / separate / conflict):
+PM decision: merge / merge with revised phrasing / keep separate / conflict
 ```
 
-**After all merge sets are reviewed, post a deduplication summary:**
+After all merge sets are reviewed, report: merge sets reviewed, count merged vs. kept separate vs. flagged as conflicts.
+
+### Phase 3: RESOLVE
+
+For each flagged conflict, present both positions and ask the PM to resolve:
 
 ```markdown
-### DEDUPLICATE Phase Summary
-
-**Merge sets reviewed**: [N]
-**Merged**: [N] (reduced from [N] DRAFTs to [N] distinct requirements)
-**Kept separate**: [N]
-**Conflicts flagged**: [N] (must resolve before REQ assignment)
-
-Proceeding to RESOLVE for flagged conflicts.
-```
-
-### Phase 3: RESOLVE — PM Resolves Cross-Document Contradictions
-
-For each flagged conflict, present both positions and ask the PM to resolve.
-
-**Conflict Presentation:**
-
-```markdown
----
 ### Conflict C-[NNN] — Resolution Required
 
 **Topic**: [What this conflict is about]
 
 | Position | Statement | Source Document | Date | Speaker / Sender |
 |----------|-----------|----------------|------|-----------------|
-| A | "[exact quote or statement A]" | [filename] | [date] | [speaker/sender] |
-| B | "[exact quote or statement B]" | [filename] | [date] | [speaker/sender] |
+| A | "[statement A]" | [filename] | [date] | [speaker/sender] |
+| B | "[statement B]" | [filename] | [date] | [speaker/sender] |
 
 **Why this matters**: Implementing A and B together would [describe the conflict].
 
----
-**PM resolution for C-[NNN]:**
-- [ ] **Position A is current** — B is superseded
-- [ ] **Position B is current** — A is superseded
-- [ ] **Both are valid** — they apply to different scenarios (PM explains below)
-- [ ] **Neither is final** — this is still open (becomes an open question)
-
-PM explanation (required for "Both" or "Neither"):
+PM resolution: Position A is current / Position B is current / Both are valid (PM explains) / Neither is final (becomes open question)
 ```
 
-**Conflicts block REQ assignment.** The RESOLVE phase must complete before RENUMBER begins. If the PM defers a conflict ("we'll figure this out later"), it is logged as an open question in the consolidated output — not assigned a REQ ID.
+Conflicts block REQ assignment. If the PM defers a conflict, it is logged as an open question in the consolidated output — not assigned a REQ ID.
 
-### Phase 4: RENUMBER — Assign Canonical REQ-XXX IDs
+### Phase 4: RENUMBER
 
-**Actions:**
+Load `req-registry.md` to find the last-used REQ number (or start at `REQ-001`). For each accepted requirement, assign the next sequential `REQ-XXX`. Record the mapping: `REQ-XXX ← DRAFT-NNN (source doc) + DRAFT-NNN (source doc)`. Record superseded DRAFTs in the Retired section. Update `req-registry.md`.
 
-1. Load the current `req-registry.md` to find the last-used REQ number (or start at `REQ-001`)
-2. For each accepted requirement (merged or individual), assign the next sequential `REQ-XXX`
-3. Record the mapping: `REQ-XXX ← DRAFT-NNN (source doc) + DRAFT-NNN (source doc) ...`
-4. Record superseded DRAFTs in the Retired section
-5. Update `req-registry.md`
+**REQ IDs are sequential, never recycled.** A retired REQ ID stays in the Retired section permanently.
 
-**REQ ID assignment is sequential, never recycled.** A retired REQ ID (from a deleted or superseded requirement) is never reused — it stays in the Retired section permanently.
+After RENUMBER, report: REQs assigned this session (starting and ending number), DRAFTs retired, open questions retained without REQ.
 
-**Renumber Log:**
+### Phase 5: OUTPUT
 
-```markdown
-### RENUMBER Phase Summary
+Produce two files:
+1. **`captures/consolidated-[YYYY-MM-DD].md`** — The unified capture document for this run
+2. **`captures/req-registry.md`** — The running REQ registry (create or update)
 
-**REQs assigned this session**: [N]
-  Starting REQ: REQ-[NNN]
-  Ending REQ:   REQ-[NNN]
-**DRAFTs retired**: [N]
-**Open questions retained without REQ**: [N]
-
-Proceeding to OUTPUT.
-```
-
-### Phase 5: OUTPUT — Produce Consolidated Capture Bundle
-
-Produce two outputs:
-1. **`captures/consolidated-[YYYY-MM-DD].md`** — The unified capture document for this consolidation run
-2. **`captures/req-registry.md`** — The running REQ registry for the project (create or update)
-
-**If Confluence output is requested:** Ask for target space and parent page before publishing. Default to local files.
+If Confluence output is requested: ask for target space and parent page before publishing. Default to local files.
 
 ## State Block
 
@@ -241,209 +146,50 @@ next_action: [what should happen next]
 
 ## Output Templates
 
-### Consolidated Capture Document
+**Consolidated capture bundle header:** `# Consolidated Capture Bundle — [Project] — [Date] | Sources: [filenames] | REQ range: REQ-NNN – REQ-NNN`
 
-```markdown
-# Consolidated Capture Bundle — [Project / Client] — [Date]
+**Requirements table:** `| REQ ID | Statement | Source Documents | Uncertainty | Status |` with statuses Active/Retired.
 
-> **Capture method**: capture-consolidate skill
-> **Source documents**: [list of filenames]
-> **Consolidated by**: [PM name] on [date]
-> **REQ range this session**: REQ-[NNN] – REQ-[NNN]
+**Provenance map:** `| REQ ID | Merged From (DRAFT IDs) | Source Documents |` — traces every REQ back to its original capture session.
 
-## Summary
+**REQ registry tables:** Active Requirements `| REQ ID | Statement (short) | Source Documents | Assigned Date | Status |` and Retired Requirements `| REQ/DRAFT ID | Statement | Reason Retired | Superseded By | Retired Date |`
 
-[2–3 sentences describing the scope of this consolidation: what meetings/threads were covered, date range, number of requirements.]
+**Session opening:** Explain the 5-phase process, ask PM for project name and capture document location, emit initial `<capture-consolidate-state>` block with `phase: load`.
 
-## Participants (across all sources)
-
-- [Name] ([Role]) — [authoritative | non-authoritative]
-
-## Key Decisions
-
-- [Decision statement] — *Sources: [list of source docs and dates]*
-
-## Requirements
-
-| REQ ID | Statement | Source Documents | Uncertainty | Status |
-|--------|-----------|-----------------|-------------|--------|
-| REQ-001 | [Statement] | [filename], [filename] | — | Active |
-| REQ-002 | [Statement] | [filename] | [UNCERTAIN] | Active |
-| REQ-003 | [Statement] | [filename] | [NEEDS-CLARIFICATION] | Active |
-
-## Commitments
-
-| REQ ID | Statement | Source | Due Date |
-|--------|-----------|--------|----------|
-| REQ-010 | [Commitment] | [sender, filename] | [date or TBD] |
-
-## Open Questions
-
-| # | Question | Source | Assigned To | Status |
-|---|----------|--------|-------------|--------|
-| OQ-001 | [Question] | [filename] | [Name or TBD] | Open |
-| OQ-002 | [Unresolved conflict: topic] | [filename], [filename] | [PM] | Pending resolution |
-
-## Action Items
-
-- [ ] [Action] — Owner: [Name] — Due: [Date or TBD]
-
----
-
-## Provenance Map
-
-> Maps REQ-XXX IDs back to their DRAFT source IDs and documents.
-
-| REQ ID | Merged From | Source Documents |
-|--------|-------------|-----------------|
-| REQ-001 | DRAFT-002, DRAFT-014 | 2026-01-10-kickoff.md, 2026-01-15-email.md |
-| REQ-002 | DRAFT-007 | 2026-01-10-kickoff.md |
-```
-
-### REQ Registry (`captures/req-registry.md`)
-
-```markdown
-# REQ Registry — [Project / Client]
-
-> Per-project requirement ID registry. Updated after each capture-consolidate session.
-> Never delete entries — retire them to the Retired section.
-
-## Active Requirements
-
-| REQ ID | Statement (short) | Source Documents | Assigned Date | Status |
-|--------|-------------------|-----------------|---------------|--------|
-| REQ-001 | SSO/SAML authentication | kickoff.md, email.md | 2026-01-20 | Active |
-| REQ-002 | Weekly summary report | kickoff.md | 2026-01-20 | Active |
-
-## Retired Requirements
-
-> Merged, superseded, or rejected DRAFTs. Never recycled.
-
-| REQ / DRAFT ID | Statement (short) | Reason Retired | Superseded By | Retired Date |
-|---------------|-------------------|---------------|---------------|--------------|
-| DRAFT-001 | "SSO login required" | Merged into REQ-001 | REQ-001 | 2026-01-20 |
-| DRAFT-014 | "SAML authentication" | Merged into REQ-001 | REQ-001 | 2026-01-20 |
-
-## Registry Metadata
-
-- **Last REQ assigned**: REQ-[NNN]
-- **Last updated**: [date]
-- **Consolidation sessions**: [N]
-```
-
-### Session Opening
-
-```markdown
-## Capture Consolidate Session
-
-I will merge your capture documents into a unified bundle and assign canonical REQ-XXX IDs.
-
-**How this works:**
-
-1. I read all capture documents for the project and the existing REQ registry (if any)
-2. I identify duplicate and near-duplicate requirements across documents
-3. I present each candidate merge set to you for a decision — merge, keep separate, or flag as conflict
-4. You resolve any cross-document contradictions
-5. I assign canonical REQ-XXX IDs and produce the consolidated capture bundle
-
-To begin, which project is this consolidation for, and where are the capture documents?
-(Default location: captures/ in the project root)
-
-<capture-consolidate-state>
-phase: load
-project: awaiting input
-capture_docs: awaiting input
-draft_items_total: 0
-merge_sets_total: 0
-merge_sets_reviewed: 0
-merged: 0
-kept_separate: 0
-conflicts_total: 0
-conflicts_resolved: 0
-conflicts_pending: 0
-last_req_before: none
-last_req_after: pending
-output_path_consolidated: pending
-output_path_registry: pending
-last_action: Session opened
-next_action: PM provides project name and capture document location
-</capture-consolidate-state>
-```
+Full templates (Consolidated Capture Document, REQ Registry): `references/consolidation-templates.md`
 
 ## AI Discipline Rules
 
-### Propose Merges, Never Execute Them
+**Propose merges, never execute them.** Every proposed merge is shown to the PM with both source statements before any action is taken. Never silently merge two requirements. Present candidate → PM decides → record decision.
 
-Every proposed merge is shown to the PM with both source statements before any action is taken. The skill never silently merges two requirements.
+**Contradictions block progress.** An unresolved contradiction cannot receive a REQ ID. Do not work around this by assigning the ID to one position and silently dropping the other. Both positions stay in the open questions section until the PM resolves them.
 
-```
-WRONG: "I merged DRAFT-002 and DRAFT-014 because they're the same thing."
-RIGHT: "DRAFT-002 and DRAFT-014 appear to be the same requirement phrased differently.
-        Proposed merge: 'System must support SSO/SAML authentication.'
-        Do you want to merge these, keep them separate, or rephrase the merged version?"
-```
+**Source provenance travels with every REQ.** The consolidated document and the REQ registry both record the DRAFT-NNN sources for every REQ. This is the audit trail that lets a reviewer trace REQ-042 back to what was actually said in the kickoff meeting.
 
-### Contradictions Block Progress
+**Semantic similarity is a proposal, not a finding.** The skill may flag two requirements as semantically similar. The PM decides whether they are actually equivalent. "Authentication" and "SSO" are related — they may not be the same requirement.
 
-An unresolved contradiction cannot receive a REQ ID. The skill does not work around this by assigning the ID to one position and silently dropping the other. Both positions stay in the open questions section until the PM resolves them.
-
-### Source Provenance Travels With Every REQ
-
-The consolidated document and the REQ registry both record the DRAFT-NNN sources for every REQ. This is the audit trail that lets a reviewer trace REQ-042 back to what was actually said in the kickoff meeting.
-
-### Semantic Similarity Is a Proposal, Not a Finding
-
-The skill may flag two requirements as semantically similar. The PM decides whether they are actually equivalent. "Authentication" and "SSO" are related — they may not be the same requirement. Surface the candidate; let the PM adjudicate.
-
-### Never Recycle REQ IDs
-
-A REQ ID assigned to a retired requirement stays in the Retired section permanently. It is never reused. This preserves the integrity of any external references (Jira tickets, specs) that used that ID.
+**Never recycle REQ IDs.** A REQ ID assigned to a retired requirement stays in the Retired section permanently. It is never reused — this preserves the integrity of any external references (Jira tickets, specs) that used that ID.
 
 ## Anti-Patterns
 
-| Anti-Pattern | Description | Why It Fails | What to Do Instead |
-|---|---|---|---|
-| **Silent merging** | Merging semantically similar requirements without PM review | Two different stakeholders may have intended different things; "authentication" and "SSO" are not always synonyms | Present every candidate merge to PM before acting |
-| **Conflict suppression** | Choosing one position in a contradiction and not surfacing the other | The losing position may be the one the stakeholder intended; unresolved conflicts become disputed scope | Flag all contradictions; pause until PM resolves |
-| **ID recycling** | Reusing a REQ ID after the original requirement is retired | External references (Jira, specs) point to the old ID; reuse creates ambiguity about which requirement is meant | Retire IDs to the Retired section; never reuse them |
-| **Single-session assumption** | Treating consolidation as a one-time, end-of-capture activity | Capture happens incrementally; the registry must support being updated after each session | Check for existing `req-registry.md` on every run; continue from the last REQ number |
-| **Confluence-first output** | Publishing directly to Confluence without PM review of the local draft | PM loses review opportunity before requirements enter the spec pipeline | Default to local files; ask for explicit instruction before Confluence publish |
-| **Dropping deferred conflicts** | Removing an unresolved conflict from the output because "it will be figured out later" | The conflict becomes invisible and surfaces later as a spec discrepancy or implementation disagreement | Retain unresolved conflicts as open questions in the output with explicit `OQ-XXX` IDs |
+| Anti-Pattern | Why It Fails | What to Do Instead |
+|---|---|---|
+| **Silent merging** | Two different stakeholders may have intended different things | Present every candidate merge to PM before acting |
+| **Conflict suppression** | The losing position may be the one the stakeholder intended | Flag all contradictions; pause until PM resolves |
+| **ID recycling** | External references point to the old ID; reuse creates ambiguity | Retire IDs to the Retired section; never reuse them |
+| **Single-session assumption** | Capture happens incrementally; the registry must be updatable | Check for existing `req-registry.md` on every run |
+| **Confluence-first output** | PM loses review opportunity before requirements enter the spec pipeline | Default to local files; ask for explicit instruction before publishing |
+| **Dropping deferred conflicts** | The conflict becomes invisible and surfaces later as a spec discrepancy | Retain unresolved conflicts as open questions with explicit `OQ-XXX` IDs |
 
 ## Error Recovery
 
-### No Capture Documents Found
+**No capture documents found**: Alert the PM — "No DRAFT-NNN items found in [location]. Run `transcript-capture` or `email-capture` first, then re-run consolidation." If the PM provides an alternate location, search there.
 
-The `captures/` directory is empty or no `DRAFT-NNN` items were found.
+**REQ registry corrupted or has gaps**: Alert the PM, show the suspected conflict (duplicate IDs, gap in sequence), and propose a resolution. Wait for PM instruction before repairing.
 
-**Recovery:**
-1. Alert the PM: "No capture documents were found in [location]. Run `transcript-capture` or `email-capture` first to produce DRAFT-NNN items, then re-run consolidation."
-2. If the PM provides an alternate location, search there
+**Very large DRAFT item set (> 100 items)**: Report the count to the PM. Propose phased consolidation by topic area — "There are 143 DRAFT items. Which area should we start with?" Complete one area at a time and update the registry incrementally.
 
-### REQ Registry Is Corrupted or Missing REQ Assignments
-
-**Recovery:**
-1. Alert the PM: "The REQ registry appears to have a gap or inconsistency at [location]."
-2. Show the PM the suspected conflict (e.g., duplicate REQ IDs, gap in sequence)
-3. Propose a resolution: "I can repair the registry by [proposed action]. Shall I proceed?"
-4. Wait for PM instruction. Do not repair without approval.
-
-### Very Large DRAFT Item Set (>100 items)
-
-**Recovery:**
-1. Report the count to the PM
-2. Propose a phased approach: "There are 143 DRAFT items. I suggest we deduplicate by topic area. Which area should we start with?"
-3. Complete one area at a time; update the registry incrementally
-
-### PM Wants to Split a Merged REQ After Consolidation
-
-A REQ that was merged in a previous session needs to be split.
-
-**Recovery:**
-1. Retire the merged REQ (add to Retired section)
-2. Create two new REQs from the original DRAFT sources
-3. Assign the next two available REQ IDs
-4. Note in the registry: "REQ-[N] retired — split into REQ-[A] and REQ-[B] on [date]"
+**PM wants to split a merged REQ after consolidation**: Retire the merged REQ, create two new REQs from the original DRAFT sources, assign the next two available REQ IDs, and note in the registry: "REQ-[N] retired — split into REQ-[A] and REQ-[B] on [date]."
 
 ## Integration with Other Skills
 
@@ -451,4 +197,4 @@ A REQ that was merged in a previous session needs to be split.
 - **`email-capture`** — Produces `DRAFT-NNN` capture documents from email threads and documents. This skill is the downstream consumer.
 - **`jira-review`** — After consolidation produces `REQ-XXX` requirements, use `jira-review` to assess readiness for Jira ticket decomposition.
 - **`task-decomposition`** — Use after `jira-review` to decompose consolidated requirements into Jira-sized tickets.
-- **`confluence-guide-writer`** — If the consolidated capture bundle should be published to Confluence as a stakeholder-facing artifact, use this skill after PM approval.
+- **`confluence-guide-writer`** — If the consolidated capture bundle should be published to Confluence, use this skill after PM approval.

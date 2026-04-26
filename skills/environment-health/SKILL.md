@@ -10,14 +10,14 @@ description: Docker health checks, service monitoring, container lifecycle manag
 
 ## Core Philosophy
 
-This skill provides the diagnostic toolkit for environment health assessment. It covers Docker container health, service endpoint monitoring, connection validation, port conflict resolution, resource usage analysis, and dependency verification. **Every diagnosis is evidence-based** -- no assumptions, no guesses, only verified findings.
+This skill provides the diagnostic toolkit for environment health assessment. It covers Docker container health, service endpoint monitoring, connection validation, port conflict resolution, resource usage analysis, and dependency verification. **Every diagnosis is evidence-based** — no assumptions, no guesses, only verified findings.
 
 **Non-Negotiable Constraints:**
-1. **Probe before diagnosing** -- discover what is actually running before checking health. Stale assumptions about expected services cause missed diagnoses.
-2. **Diagnose before remediating** -- understand the root cause before applying a fix. Restarting a container that crashes due to a missing volume just creates a restart loop.
-3. **Verify after every action** -- confirm the fix actually worked. A service that starts is not necessarily healthy.
-4. **Log every command and output** -- reproducibility is the foundation of debugging. If you cannot replay the steps, you cannot verify the fix.
-5. **Respect environment boundaries** -- development environments get autonomous fixes; everything else gets a report.
+1. **Probe before diagnosing** — discover what is actually running before checking health. Stale assumptions about expected services cause missed diagnoses.
+2. **Diagnose before remediating** — understand the root cause before applying a fix. Restarting a container that crashes due to a missing volume just creates a restart loop.
+3. **Verify after every action** — confirm the fix actually worked. A service that starts is not necessarily healthy.
+4. **Log every command and output** — reproducibility is the foundation of debugging. If you cannot replay the steps, you cannot verify the fix.
+5. **Respect environment boundaries** — development environments get autonomous fixes; everything else gets a report.
 
 ## Domain Principles Table
 
@@ -60,8 +60,6 @@ hostname
 
 ### Docker Health Check Patterns
 
-**Check container health status:**
-
 ```bash
 # Health status for all containers
 docker ps --format "{{.Names}}: {{.Status}}"
@@ -71,28 +69,14 @@ docker inspect --format='{{json .State.Health}}' <container_name> | python3 -m j
 
 # Health check log (last 5 checks)
 docker inspect --format='{{range .State.Health.Log}}{{.Start}}: {{.ExitCode}} {{.Output}}{{end}}' <container_name>
-```
 
-**Check container resource usage:**
-
-```bash
 # Live resource stats
 docker stats --no-stream --format "table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.NetIO}}\t{{.BlockIO}}"
 
-# Container restart count
-docker inspect --format='{{.RestartCount}}' <container_name>
+# Container restart count and uptime
+docker inspect --format='Restarts: {{.RestartCount}} | Started: {{.State.StartedAt}}' <container_name>
 
-# Container uptime
-docker inspect --format='{{.State.StartedAt}}' <container_name>
-```
-
-**Analyze container logs:**
-
-```bash
-# Last 50 lines with timestamps
-docker logs --tail 50 --timestamps <container_name>
-
-# Errors only (common patterns)
+# Errors in logs (last 20 matches)
 docker logs <container_name> 2>&1 | grep -iE "(error|fatal|panic|exception|failed|refused|timeout)" | tail -20
 
 # Logs since last restart
@@ -105,12 +89,8 @@ docker logs --since "$(docker inspect --format='{{.State.StartedAt}}' <container
 # HTTP health check with timing
 curl -sw "\nHTTP_CODE: %{http_code}\nTIME_TOTAL: %{time_total}s\n" http://localhost:PORT/health
 
-# TCP port check (is the port open?)
+# TCP port check
 timeout 5 bash -c 'cat < /dev/null > /dev/tcp/localhost/PORT' && echo "Port PORT open" || echo "Port PORT closed"
-
-# DNS resolution
-dig +short hostname
-nslookup hostname
 
 # Certificate expiry check
 echo | openssl s_client -connect hostname:443 -servername hostname 2>/dev/null | openssl x509 -noout -dates
@@ -122,7 +102,7 @@ echo | openssl s_client -connect hostname:443 -servername hostname 2>/dev/null |
 # PostgreSQL
 PGPASSWORD=password psql -h localhost -p 5432 -U user -d dbname -c "SELECT 1;" 2>&1
 
-# PostgreSQL connection count
+# PostgreSQL connection count by state
 PGPASSWORD=password psql -h localhost -p 5432 -U user -d dbname \
   -c "SELECT state, count(*) FROM pg_stat_activity GROUP BY state;"
 
@@ -143,9 +123,6 @@ mongosh --host localhost --port 27017 --eval "db.runCommand({ping: 1})" 2>&1
 ss -tlnp | grep :PORT
 lsof -i :PORT 2>/dev/null
 
-# Find all Docker container port mappings
-docker ps --format "{{.Names}}: {{.Ports}}" | grep -v "^$"
-
 # Check for duplicate port bindings
 ss -tlnp | awk '{print $4}' | sort | uniq -d
 ```
@@ -156,10 +133,8 @@ ss -tlnp | awk '{print $4}' | sort | uniq -d
 # Disk space on key mounts
 df -h / /var/lib/docker /tmp 2>/dev/null
 
-# Docker disk usage breakdown
+# Docker disk usage (summary and verbose)
 docker system df
-
-# Docker disk usage (verbose -- shows per-image and per-container)
 docker system df -v
 
 # Largest Docker images
@@ -169,83 +144,14 @@ docker images --format "{{.Repository}}:{{.Tag}} {{.Size}}" | sort -k2 -h -r | h
 docker images -f dangling=true -q | wc -l
 docker volume ls -f dangling=true -q | wc -l
 
-# Memory usage
-free -h
-
 # Top memory consumers
+free -h
 ps aux --sort=-%mem | head -10
 ```
 
 ### Docker Compose Health Checks
 
-Writing effective health checks in docker-compose:
-
-```yaml
-# PostgreSQL health check
-services:
-  db:
-    image: postgres:16
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
-
-# Redis health check
-  redis:
-    image: redis:7
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 3s
-      retries: 3
-
-# HTTP application health check
-  api:
-    image: myapp:latest
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
-      interval: 15s
-      timeout: 5s
-      retries: 3
-      start_period: 30s
-    depends_on:
-      db:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-
-# MySQL health check
-  mysql:
-    image: mysql:8
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
-
-# RabbitMQ health check
-  rabbitmq:
-    image: rabbitmq:3-management
-    healthcheck:
-      test: ["CMD", "rabbitmq-diagnostics", "check_port_connectivity"]
-      interval: 15s
-      timeout: 10s
-      retries: 3
-      start_period: 60s
-
-# Elasticsearch health check
-  elasticsearch:
-    image: elasticsearch:8.12.0
-    healthcheck:
-      test: ["CMD-SHELL", "curl -s http://localhost:9200/_cluster/health | grep -vq '\"status\":\"red\"'"]
-      interval: 20s
-      timeout: 10s
-      retries: 5
-      start_period: 60s
-```
+For Docker Compose health check patterns by service type (PostgreSQL, Redis, MySQL, RabbitMQ, Elasticsearch, HTTP apps with `depends_on: condition: service_healthy`), see `references/docker-health-patterns.md`.
 
 ### Dependency Graph Analysis
 
@@ -257,34 +163,13 @@ config = json.load(sys.stdin)
 for name, svc in config.get('services', {}).items():
     deps = svc.get('depends_on', {})
     if deps:
-        for dep in deps:
-            print(f'{name} -> {dep}')
+        for dep in deps: print(f'{name} -> {dep}')
     else:
         print(f'{name} (no dependencies)')
 "
 ```
 
 ## State Block Format
-
-Maintain state across conversation turns:
-
-```
-<env-health-state>
-phase: [PROBE | DIAGNOSE | REMEDIATE | MONITOR]
-environment: [dev | staging | production | unknown]
-services_total: [number]
-services_healthy: [number]
-services_degraded: [number]
-services_failing: [number]
-issues_found: [number]
-issues_resolved: [number]
-last_action: [what was just done]
-last_verified: [what was just confirmed]
-blockers: [any issues preventing progress]
-</env-health-state>
-```
-
-**Example:**
 
 ```
 <env-health-state>
@@ -304,82 +189,23 @@ blockers: none
 
 ## Output Templates
 
-### Health Audit Report
-
 ```markdown
 ## Environment Health Audit: [Project Name]
+**Environment**: [dev/staging/prod] | **Date**: [date]
 
-**Date**: [date]
-**Environment**: [dev / staging / production]
-**Docker Version**: [version]
-**Compose File**: [path]
-
-### Service Health Summary
-
-| Service | Container | Status | Health Check | Uptime | Restarts |
-|---------|-----------|--------|--------------|--------|----------|
-| [name]  | [container] | [running/stopped] | [healthy/unhealthy/none] | [duration] | [count] |
-
-### Port Mapping
-
-| Port | Service | Container | Status |
-|------|---------|-----------|--------|
-| [n]  | [name]  | [name]    | [ok/conflict] |
-
-### Resource Usage
+| Service | Status | Health Check | Uptime | Restarts |
+|---------|--------|--------------|--------|----------|
+| [name]  | [running/stopped] | [healthy/unhealthy/none] | [duration] | [N] |
 
 | Resource | Current | Threshold | Status |
 |----------|---------|-----------|--------|
-| Disk (/) | [n]%    | 80%       | [ok/warn/critical] |
-| Disk (/var/lib/docker) | [n]% | 80% | [ok/warn/critical] |
-| Memory   | [n]%    | 85%       | [ok/warn/critical] |
-| Docker images | [n] ([size]) | -- | -- |
-| Docker volumes | [n] ([size]) | -- | -- |
-| Build cache | [size] | -- | -- |
-
-### Issues
+| Disk (/) | [N]% | 80% | [ok/warn/critical] |
 
 | # | Severity | Component | Issue | Status |
 |---|----------|-----------|-------|--------|
-| 1 | [CRITICAL/HIGH/MEDIUM/LOW] | [component] | [description] | [open/resolved] |
-
-### Remediation Actions Taken
-
-| # | Action | Target | Result | Rollback |
-|---|--------|--------|--------|----------|
-| 1 | [action] | [target] | [success/failed] | [rollback command] |
 ```
 
-### Dependency Health Map
-
-```markdown
-## Service Dependency Map
-
-```
-                    ┌──────────┐
-                    │  nginx   │ :80, :443
-                    └────┬─────┘
-                         │
-                    ┌────┴─────┐
-                    │   api    │ :3000
-                    └────┬─────┘
-                    ┌────┼─────┐
-               ┌────┴──┐ │  ┌─┴──────┐
-               │  db   │ │  │ redis  │
-               │:5432  │ │  │ :6379  │
-               └───────┘ │  └────────┘
-                    ┌────┴─────┐
-                    │ worker   │
-                    └──────────┘
-```
-
-**Dependency Health:**
-- nginx -> api: [ok / degraded / broken]
-- api -> db: [ok / degraded / broken]
-- api -> redis: [ok / degraded / broken]
-- worker -> db: [ok / degraded / broken]
-- worker -> redis: [ok / degraded / broken]
-```
+Full templates (Port Mapping table, Dependency Health Map, Remediation Actions log): `references/service-recovery-playbook.md`
 
 ## Anti-Patterns Table
 
@@ -396,113 +222,24 @@ blockers: none
 
 ## AI Discipline Rules
 
-### CRITICAL: Probe Before Diagnosing
+**Probe before diagnosing.** Run `docker inspect` and read its output before forming any diagnosis. Parse `State.Health.Status` from actual command output — never assume container state. Assumptions about expected services that are not verified from actual command output produce wrong diagnoses and misdirected remediation.
 
-Run `docker inspect` and read its output before forming any diagnosis. Assumptions
-about container state that are not verified from actual output produce wrong diagnoses.
+**Never modify production resources.** Always confirm the target environment before running any mutating command. Verify `DOCKER_HOST` is pointing to the local daemon and check container labels (`docker inspect <id> --format='{{json .Config.Labels}}'`) to confirm `environment=dev` before any restart, reconfigure, or rebuild action.
 
-```
-WRONG: Assuming a container is unhealthy because the service is slow,
-       then restarting it without reading docker inspect output.
-
-RIGHT: docker inspect <id> --format='{{json .State.Health}}'
-       Parse the State.Health.Status field.
-       Only form a diagnosis from what the output shows.
-```
-
-### CRITICAL: Never Modify Production Resources
-
-Always confirm the target environment before running any mutating command. Restarting
-or reconfiguring a production container from a dev context is irreversible in its impact.
-
-```
-WRONG: Running docker restart <container> after seeing errors,
-       without confirming that DOCKER_HOST and container labels
-       indicate a local dev environment.
-
-RIGHT: Verify DOCKER_HOST is pointing to local daemon.
-       Check container labels: docker inspect <id> --format='{{json .Config.Labels}}'
-       Confirm environment label matches dev before any mutating command.
-```
-
-### CRITICAL: Verify After Every Remediation
-
-Re-run the same probe that detected the problem after applying a fix. Reporting "fixed"
-based solely on the remediation command succeeding — without re-probing — is a false positive.
-
-```
-WRONG: Running docker start <container> and reporting "container is healthy"
-       without re-checking its health status.
-
-RIGHT: docker start <container>
-       # Wait for health check to run
-       sleep 5
-       docker inspect <container> --format='{{.State.Health.Status}}'
-       # Only report healthy if output shows "healthy"
-```
+**Verify after every remediation.** Re-run the same probe that detected the problem after applying a fix. Reporting "fixed" based solely on the remediation command succeeding — without re-probing — is a false positive. After `docker start <container>`, wait 5 seconds and check `docker inspect <container> --format='{{.State.Health.Status}}'` before reporting healthy.
 
 ## Error Recovery
 
-### Docker Daemon Not Running
+**Docker daemon not running** ("Cannot connect to the Docker daemon"): Check `systemctl status docker` and `ls -la /var/run/docker.sock`. Check user groups: `groups | grep docker`. In dev: `sudo systemctl start docker`. Wait for daemon: `until docker info >/dev/null 2>&1; do sleep 1; done`.
 
-```
-Problem: "Cannot connect to the Docker daemon"
-Actions:
-1. Check systemd status: systemctl status docker
-2. Check socket: ls -la /var/run/docker.sock
-3. Check user groups: groups | grep docker
-4. In dev: sudo systemctl start docker
-5. Wait for daemon: until docker info >/dev/null 2>&1; do sleep 1; done
-6. Verify: docker ps
-```
+**Container restart loop** (RestartCount > 5): Check exit code and OOM status (`docker inspect --format='{{.State.ExitCode}} {{.State.OOMKilled}}' <name>`). Read logs from last run (`docker logs --tail 100 <name>`). Check mounts and env vars via `docker inspect`. If OOM: increase memory limit in compose file. If config error: fix config, then `docker compose up -d <service>`.
 
-### Container Restart Loop
+**Network connectivity between containers** (cannot reach another container by name): Verify both are on the same network (`docker network inspect <network> --format='{{range .Containers}}{{.Name}} {{end}}'`). Test DNS from inside: `docker exec <container> nslookup <target>`. Test connectivity: `docker exec <container> curl -s http://<target>:<port>/health`. If DNS fails: recreate the network (dev only).
 
-```
-Problem: Container keeps restarting (RestartCount > 5)
-Actions:
-1. Check exit code: docker inspect --format='{{.State.ExitCode}}' <name>
-2. Check OOM kill: docker inspect --format='{{.State.OOMKilled}}' <name>
-3. Read logs from last run: docker logs --tail 100 <name>
-4. Check mounts exist: docker inspect --format='{{json .Mounts}}' <name>
-5. Check env vars: docker inspect --format='{{json .Config.Env}}' <name>
-6. If OOM: increase memory limit in compose file
-7. If config error: fix config, then docker compose up -d <service>
-```
-
-### Network Connectivity Between Containers
-
-```
-Problem: Container cannot reach another container by name
-Actions:
-1. Verify both containers on same network:
-   docker network inspect <network> --format='{{range .Containers}}{{.Name}} {{end}}'
-2. Test DNS resolution from inside container:
-   docker exec <container> nslookup <target_name>
-3. Test connectivity:
-   docker exec <container> curl -s http://<target_name>:<port>/health
-4. Check if target container is healthy:
-   docker inspect --format='{{.State.Health.Status}}' <target_name>
-5. If DNS fails: recreate the network (dev only)
-```
-
-### Volume Mount Failures
-
-```
-Problem: Container exits because mount path does not exist or is not accessible
-Actions:
-1. Check mount config: docker inspect --format='{{json .Mounts}}' <name> | python3 -m json.tool
-2. Verify host path exists: ls -la /path/on/host
-3. Check permissions: stat /path/on/host
-4. For named volumes: docker volume inspect <volume_name>
-5. If volume corrupted in dev: docker volume rm <name> && docker compose up -d
-```
+**Volume mount failures** (container exits, mount path not found): Check mount config with `docker inspect --format='{{json .Mounts}}' <name>`. Verify host path exists (`ls -la /path`) and permissions (`stat /path`). For named volumes: `docker volume inspect <volume_name>`. If volume corrupted in dev: `docker volume rm <name> && docker compose up -d`.
 
 ## Integration with Other Skills
 
 This is a standalone skill designed for the environment-health-agent. It provides the diagnostic commands, health check patterns, and recovery procedures that the agent executes during its PROBE, DIAGNOSE, REMEDIATE, and MONITOR phases.
 
-## Reference Files
-
-- [Docker Health Patterns](references/docker-health-patterns.md) -- Docker compose health checks, container log analysis, network connectivity debugging, volume mount verification, image freshness checks
-- [Service Recovery Playbook](references/service-recovery-playbook.md) -- Common service recovery procedures for database connection pool exhaustion, port conflicts, certificate expiry, DNS resolution failures, memory leaks, zombie processes
+Reference files: `references/docker-health-patterns.md` (Docker Compose health checks by service type, container log analysis, network debugging, volume mount verification) | `references/service-recovery-playbook.md` (database connection pool exhaustion, port conflicts, certificate expiry, DNS failures, memory leaks, zombie processes)
