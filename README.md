@@ -5,7 +5,7 @@
 [![Agents](https://img.shields.io/badge/agents-35-blue)](#agents)
 [![Platforms](https://img.shields.io/badge/platforms-Claude%20Code%20%7C%20OpenCode%20%7C%20Pi-informational)](#platforms)
 
-**83 skills, 35 agents, and 8 slash commands for AI-assisted software development — spanning TDD, .NET, Python, Rust, edge AI, security, DDD, and more.**
+**83 skills, 35 agents, and 9 slash commands for AI-assisted software development — spanning TDD, .NET, Python, Rust, edge AI, security, DDD, and more.**
 
 Works with [Claude Code](https://claude.ai/code), [OpenCode](https://opencode.ai/), and [Pi](https://pi.dev) (Ollama local models).
 
@@ -32,7 +32,7 @@ This toolkit encodes that expertise as reusable primitives. Each skill is an opi
 | Skills | 83 |
 | Agents (Claude Code) | 35 |
 | Agents (OpenCode) | 35 |
-| Slash commands (per platform) | 8 |
+| Slash commands (per platform) | 9 |
 | Platforms | Claude Code, OpenCode, Pi |
 
 ---
@@ -299,7 +299,7 @@ Autonomous agents that make decisions and take actions independently. Each exist
 
 ## Commands
 
-Eight slash commands per platform. Each injects live shell state before the model acts — the model sees real output, not a description of it.
+Nine slash commands per platform. Each injects live shell state before the model acts — the model sees real output, not a description of it.
 
 | Command | Injects | What it does |
 |---------|---------|--------------|
@@ -311,6 +311,7 @@ Eight slash commands per platform. Each injects live shell state before the mode
 | `/migrate [MigrationName]` | `dotnet ef migrations list` | EF Core migration with safety checks |
 | `/research [topic]` | — | Multi-source research briefing |
 | `/context-prime` | `git log`, `git status`, `git diff` | Primes session from current repo state |
+| `/grill-me [plan]` | — | Relentless one-question-at-a-time plan/design interview with recommended answers |
 
 ---
 
@@ -353,7 +354,7 @@ The `project-templates/` directory contains per-project context files based on t
 
 ```
 ai-toolkit/
-├── skills/                     # 72 skills (SKILL.md + references/ per skill)
+├── skills/                     # 83 skills (SKILL.md + references/ per skill)
 ├── claude/
 │   ├── agents/                 # 35 Claude Code agent definitions
 │   ├── commands/               # 8 slash commands with shell injection
