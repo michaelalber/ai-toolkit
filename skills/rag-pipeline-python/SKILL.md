@@ -38,6 +38,7 @@ This skill scaffolds end-to-end Retrieval-Augmented Generation pipelines: docume
 | 8 | **Query Transformation** | Raw user queries are often poor retrieval queries. Consider query expansion, HyDE, or multi-query retrieval to improve recall. | Medium |
 | 9 | **Answer Grounding** | Generated answers MUST cite their source chunks. Hallucinated answers without grounding are the primary RAG failure mode. | Critical |
 | 10 | **Cost Awareness** | Estimate costs per query and per corpus re-index before committing to a design. | Medium |
+| 11 | **Incremental Ingestion** | For corpora > 100 documents, use hash-based change detection to skip unchanged files. Track chunk IDs per document to delete stale chunks on re-ingest — stale chunks are invisible failures. | High |
 
 ## Knowledge Base Lookups
 
@@ -74,6 +75,7 @@ def ingest_documents(source_dir: str) -> list:
 ```
 
 Spot-check 3–5 documents after ingestion to confirm text extraction preserved semantic content.
+For corpora > 100 documents, add hash-based change detection to avoid reprocessing unchanged files — see [Production Ingestion Hardening](references/production-ingestion.md).
 
 ### Step 2: CHUNK — Text Splitting
 
@@ -239,6 +241,7 @@ blockers: none
 | No metadata on chunks | Cannot filter or provide source attribution | Attach source, page, section, date to every chunk |
 | Unnormalized embeddings | Inconsistent similarity scores | Use `normalize_embeddings=True` at index time |
 | No preprocessing of raw documents | PDF artifacts degrade embedding quality | Preprocess and validate content before chunking |
+| Splitting tables mid-row | Rows without headers (or headers without rows) are semantically useless — retrieval returns corrupt context | Detect Markdown and HTML tables before chunking; treat as atomic units |
 
 ## Error Recovery
 
@@ -274,3 +277,4 @@ blockers: none
 
 - [Chunking Strategies](references/chunking-strategies.md) — Detailed implementations for PDF, Markdown, code, and mixed content
 - [Vector Store Patterns](references/vector-store-patterns.md) — Setup, CRUD, and comparisons for ChromaDB, FAISS, Qdrant, pgvector
+- [Production Ingestion Hardening](references/production-ingestion.md) — Incremental ingestion, chunk lifecycle, memory-bounded batching, crash resilience, heading context, table atomicity, quality gates, sidecar pattern
