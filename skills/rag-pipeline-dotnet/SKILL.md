@@ -37,6 +37,7 @@ RAG is the primary pattern for grounding LLM responses in organizational knowled
 | 8 | **Hallucination Detection** | Monitor for answers containing claims not present in retrieved context. Implement post-generation verification: compare answer claims against source chunk content. | High |
 | 9 | **Federal Data Handling** | Validate data classification before ingestion. CUI requires access controls and audit trails. Classified data is never eligible for RAG. See `references/federal-ai-compliance.md`. | Critical |
 | 10 | **Air-Gapped Deployment** | Support disconnected environments with Ollama (local LLM + embeddings) and on-premise vector stores (Qdrant, pgvector). No external API calls. | High |
+| 11 | **Incremental Ingestion** | For corpora > 100 documents, use hash-based change detection to skip unchanged files. Track chunk IDs per document to delete stale chunks on re-ingest — stale chunks are invisible failures. | High |
 
 ## Knowledge Base Lookups
 
@@ -64,7 +65,7 @@ See `references/rag-service-impl.md` for complete NuGet package references, Prog
 
 ### Phase 2: INGEST -- Document Processing and Chunking
 
-Load documents, validate content extraction, and split into semantically coherent chunks. The `ChunkText` method uses sentence boundaries with configurable overlap. Spot-check 5-10 chunks before embedding — verify they are self-contained and not mid-sentence splits.
+Load documents, validate content extraction, and split into semantically coherent chunks. The `ChunkText` method uses sentence boundaries with configurable overlap. Spot-check 5-10 chunks before embedding — verify they are self-contained and not mid-sentence splits. For corpora > 100 documents, add hash-based change detection — see [Production Ingestion Hardening](references/production-ingestion.md).
 
 See `references/rag-service-impl.md` for the `IngestDocumentAsync` and `ChunkText` implementations.
 
@@ -173,6 +174,7 @@ next_action: Run retrieval evaluation with 10 representative queries
 | **No citation or source attribution** | Users cannot verify answers; compliance failure in federal contexts | Include source document ID, chunk description, and relevance score in every response |
 | **Batch ingestion without connection validation** | Partial index state on connection failure; silent data loss | Test vector store connection before starting; implement retry with idempotent IDs |
 | **Using MinRelevanceScore of 0.0** | Returns every chunk regardless of relevance, flooding the LLM context with noise | Set MinRelevanceScore to 0.7+ and tune based on evaluation results |
+| **Splitting tables mid-row** | Rows without headers (or headers without rows) are semantically useless — retrieval returns corrupt context | Detect Markdown and HTML tables before chunking; treat as atomic units |
 
 ## Error Recovery
 
@@ -205,3 +207,4 @@ Verify Ollama: `curl http://localhost:11434/api/tags`. Confirm model pulled (`ol
 - `references/federal-ai-compliance.md` — Federal compliance requirements (NIST AI RMF, FedRAMP, CUI, audit logging)
 - `references/vector-store-options.md` — Vector store comparison (Azure AI Search, Qdrant, ChromaDB, pgvector)
 - `references/embedding-models.md` — Embedding model options and performance characteristics
+- `references/production-ingestion.md` — Incremental ingestion, chunk lifecycle, memory-bounded batching, crash resilience, heading context, table atomicity, quality gates, sidecar pattern
