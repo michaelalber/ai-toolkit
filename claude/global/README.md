@@ -9,18 +9,19 @@
 
 ## Installation
 
+Two steps — the script handles per-session content (agents, skills, commands), and you copy the global config manually so you can edit `YOUR_USERNAME` before it takes effect.
+
 ```bash
-# Copy to Claude's global config directory
+# 1. Install agents, skills, and commands (idempotent — re-run to refresh)
+bash ../../scripts/install-claude.sh
+
+# 2. Copy the global config (one-time; edit YOUR_USERNAME after)
 cp CLAUDE.md ~/.claude/CLAUDE.md
 cp settings.json ~/.claude/settings.json
 cp settings.local.json ~/.claude/settings.local.json
-
-# Copy commands (user-invoked slash commands)
-mkdir -p ~/.claude/commands
-cp -r ../../claude/commands/* ~/.claude/commands/
 ```
 
-Then edit `settings.local.json` — replace `YOUR_USERNAME` with your actual username.
+Then edit `~/.claude/settings.local.json` — replace `YOUR_USERNAME` with your actual username.
 
 ## What's in CLAUDE.md
 
