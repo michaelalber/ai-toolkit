@@ -8,17 +8,18 @@
 
 ## Installation
 
+Two steps — the script handles per-session content (agents, skills, commands), and you copy the global config manually so you can edit `YOUR_USERNAME` before it takes effect.
+
 ```bash
-# Copy to OpenCode's global config directory
+# 1. Install agents, skills, and commands (idempotent — re-run to refresh)
+bash ../../scripts/install-opencode.sh
+
+# 2. Copy the global config (one-time; edit YOUR_USERNAME after)
 cp AGENTS.md ~/.config/opencode/AGENTS.md
 cp opencode.json ~/.config/opencode/opencode.json
-
-# Copy commands (user-invoked slash commands)
-mkdir -p ~/.config/opencode/commands
-cp -r ../../opencode/commands/* ~/.config/opencode/commands/
 ```
 
-Then edit `opencode.json` — replace `YOUR_USERNAME` with your actual username.
+Then edit `~/.config/opencode/opencode.json` — replace `YOUR_USERNAME` with your actual username.
 
 ## What's in AGENTS.md
 
