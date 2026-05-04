@@ -385,12 +385,12 @@ ai-toolkit/
 
 ## Author
 
-**Michael K. Alber** — [github.com/michaelalber](https://github.com/michaelalber)
+**Michael K. Alber** — [codeberg.org/michaelkalber](https://codeberg.org/michaelkalber)
 
 Software engineer working across enterprise .NET, Python, Rust, edge AI, robotics, and federal security domains. I build tools that encode engineering standards into AI-assisted workflows — grounding AI output in deliberate practice rather than generic defaults.
 
 Related projects:
-- [grounded-code-mcp](https://github.com/michaelalber/grounded-code-mcp) — local MCP RAG server that grounds AI coding agents in the books and standards you actually trust
+- [grounded-code-mcp](https://codeberg.org/michaelkalber/grounded-code-mcp) — local MCP RAG server that grounds AI coding agents in the books and standards you actually trust
 
 ---
 
