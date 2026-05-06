@@ -146,10 +146,8 @@ you must follow. **This is the authoritative source — prefer it over training 
 | `grounded_gov` | `"gov"` | Federal/government: NIST 800-53/171/218, DOE, Zero Trust, AI RMF, CUI |
 | `grounded_robotics` | `"robotics"` | Physical AI / embodied AI: ROS 2, MuJoCo, Isaac Lab, deep RL for robotics, VLA models |
 | `grounded_rust` | `"rust"` | Rust language: ownership/borrowing/lifetimes, async/Tokio, Cargo, error handling, Axum, Clippy, ecosystem crates |
-| `grounded_langsmith` | `"langsmith"` | LangSmith: tracing, evaluation, datasets, experiments, annotation, prompt engineering |
-| `grounded_langchain` | `"langchain"` | LangChain: LCEL, chains, agents, retrievers, RAG patterns, core concepts |
-| `grounded_langgraph` | `"langgraph"` | LangGraph: state machines, agent graphs, multi-agent orchestration |
 | `grounded_api_design` | `"api_design"` | REST API design: Zalando guidelines, Google AIP, Microsoft REST API guidelines (Azure + Graph) |
+| `grounded_4d_legacy` | `"4d_legacy"` | 4D v18/v20 — source reference for 4D → .NET migration |
 
 ### Canonical Engineering Standards
 
@@ -176,10 +174,8 @@ When in doubt — search. The cost of a wrong answer exceeds the cost of a searc
 - UI design, UX patterns, accessibility, WCAG, ARIA, usability, form design — **search `ui_ux`**
 - Robotics, ROS 2, physical AI, embodied AI, VLA models, RL for robotics, sim-to-real, MuJoCo, Isaac Lab — **search `robotics`**
 - Rust ownership, lifetimes, traits, async, Tokio, Cargo, error handling, unsafe, ecosystem crates — **search `rust`**
-- LangSmith tracing, evaluation, datasets, experiments, prompt engineering — **search `langsmith`**
-- LangChain LCEL, chains, agents, retrievers, RAG patterns — **search `langchain`**
-- LangGraph state machines, agent graphs, multi-agent orchestration — **search `langgraph`**
 - REST API design, resource modelling, versioning, error contracts, pagination, HTTP semantics — **search `api_design`**
+- 4D language, 4D database, or 4D-to-.NET migration — **search `4d_legacy` first**
 - .NET/C# platform docs, ASP.NET Core, C# language reference, Azure, .NET APIs — **use Microsoft Learn MCP**
 - Technical writing, documentation frameworks, Diátaxis, Google/GitLab style guide, Write the Docs, plain language — **search `internal`**
 - Microsoft Writing Style Guide — **use Microsoft Learn MCP**
