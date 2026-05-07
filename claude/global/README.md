@@ -4,8 +4,9 @@
 
 `CLAUDE.md` is Claude Code's global instruction file. It applies to **every project** you open — Claude reads it automatically at the start of each session.
 
-`settings.json` installs deterministic hooks (credential stop, post-write build/lint gates).
+`settings.json` installs deterministic hooks (credential stop, post-write build/lint gates) and wires up the status line.
 `settings.local.json` controls Claude Code's permissions and tool allowlist.
+`statusline.sh` renders token count and context window usage below the prompt (e.g. `57.5k (6.0%)`).
 
 ## Installation
 
@@ -22,6 +23,8 @@ cp settings.local.json ~/.claude/settings.local.json
 ```
 
 Then edit `~/.claude/settings.local.json` — replace `YOUR_USERNAME` with your actual username.
+
+> `statusline.sh` is copied automatically by `install-claude.sh` in step 1 — no manual copy needed.
 
 ## What's in CLAUDE.md
 
