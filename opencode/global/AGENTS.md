@@ -74,7 +74,7 @@ Prefix triggers that change how the model reasons:
 **Escape hatch** — when a task cannot be completed accurately:
 > `[CANNOT COMPLETE]: <one sentence reason>` — then complete what's possible with `# VERIFY:` comments on uncertain parts.
 
-**Accuracy:** Never invent libraries, function signatures, or syntax. When uncertain, use the escape hatch above.
+**Accuracy:** Never invent libraries, function signatures, or syntax. Prefer a shorter correct answer over a longer partially-correct one. When uncertain, use the escape hatch or mark uncertain parts with `# VERIFY: [what to check]`.
 
 ---
 
@@ -259,12 +259,14 @@ All practices align with [OWASP Top 10 (2025)](https://owasp.org/Top10/2025/).
 
 ---
 
-## YAGNI
+## YAGNI & DRY
 
 - Start with the simplest direct implementation that works
 - Add abstractions only when complexity genuinely demands it — not in anticipation
 - Create interfaces only when multiple concrete implementations exist or are imminent
 - No plugin architecture, repository pattern, or event sourcing unless the problem requires it
+- Every piece of knowledge has one authoritative representation — no copy-pasted logic
+- Rule of Three: tolerate one duplicate; extract on the third occurrence
 
 ---
 
