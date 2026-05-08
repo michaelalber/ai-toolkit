@@ -1,24 +1,10 @@
-<!--# BEGIN SNYK GLOBAL RULE -->
-<!--# Optional — requires Snyk CLI + MCP tool. Remove this block if you don't use Snyk. -->
----
-alwaysApply: true
-always_on: true
-trigger: always_on
-applyTo: "**"
-description: Snyk Security At Inception
----
-
-# Project security best practices
-
-- Always run snyk_code_scan tool for new first party code that is generated in a Snyk-supported language.
-- If any security issues are found based on newly introduced or modified code or dependencies, attempt to fix the issues using the results context from Snyk.
-- Rescan the code after fixing the issues to ensure that the issues were fixed and that there are no newly introduced issues.
-- Repeat this process until no new issues are found.
-<!--# END SNYK GLOBAL RULE -->
-
----
-
 # Global Development Rules
+
+## Security Scanning (Snyk)
+
+> **Optional** — requires Snyk CLI + MCP tool. Remove this section if you don't use Snyk.
+
+Always run `snyk_code_scan` for new first-party code in a Snyk-supported language. Fix any issues found; rescan until clean.
 
 ## Session Boot Ritual
 
@@ -151,36 +137,7 @@ you must follow. **This is the authoritative source — prefer it over training 
 
 The `internal` collection is the **authoritative engineering standard**. Search it before any non-trivial code generation.
 
-### When to Skip search_knowledge
-
-You MAY skip `search_knowledge` if ALL of the following are true:
-1. The answer is based on well-established, stable knowledge (e.g., C# `async/await` syntax, standard LINQ operators, basic SQL clauses, Python built-ins)
-2. No project-specific convention or vendor/framework-specific pattern is involved
-3. The question does not touch security, OWASP, or cryptographic practices
-
-When in doubt — search. The cost of a wrong answer exceeds the cost of a search call.
-
-**Mandatory search triggers** — call `search_knowledge` before answering questions about:
-- XP, TDD, CI/CD, DDD, Clean Architecture, refactoring, pair programming
-- API usage, library functions, or framework behavior
-- Language idioms: .NET/C#, Python, PHP, JavaScript/TypeScript, SQL, Rust
-- Security, OWASP, threat modeling
-- AI/ML pipelines, RAG, embeddings
-- Industrial automation, PLC, Raspberry Pi, sensor integration
-- Software architecture decisions, distributed systems, scalability, SRE, SLOs — **search `architecture`**
-- Systems thinking, feedback loops, leverage points, chaos engineering — **search `systems_thinking`**
-- UI design, UX patterns, accessibility, WCAG, ARIA, usability, form design — **search `ui_ux`**
-- Robotics, ROS 2, physical AI, embodied AI, VLA models, RL for robotics, sim-to-real, MuJoCo, Isaac Lab — **search `robotics`**
-- Rust ownership, lifetimes, traits, async, Tokio, Cargo, error handling, unsafe, ecosystem crates — **search `rust`**
-- REST API design, resource modelling, versioning, error contracts, pagination, HTTP semantics — **search `api_design`**
-- 4D language, 4D database, or 4D-to-.NET migration — **search `4d_legacy` first**
-- .NET/C# platform docs, ASP.NET Core, C# language reference, Azure, .NET APIs — **use Microsoft Learn MCP**
-- Technical writing, documentation frameworks, Diátaxis, Google/GitLab style guide, Write the Docs, plain language — **search `internal`**
-- Microsoft Writing Style Guide — **use Microsoft Learn MCP**
-- OWASP security cheat sheets (SQL injection, XSS, auth, session, crypto, input validation) — **search `internal`**
-- Code smells, refactoring techniques (extract method, move field, replace conditional, etc.) — **search `patterns`**
-- Code review discipline, what reviewers look for, CL preparation — **search `internal`**
-- Any topic where you would otherwise rely on training data alone
+**Search first.** Before relying on training data for any topic in the collection table above, call `search_knowledge(collection)`. Skip only when all three apply: (1) stable, well-established knowledge (core syntax, standard operators); (2) no project conventions or vendor/framework-specific patterns; (3) no security or OWASP concern. When in doubt — search.
 
 ### Workflow — mandatory
 
@@ -294,7 +251,6 @@ All practices align with [OWASP Top 10 (2025)](https://owasp.org/Top10/2025/).
 
 ## Architecture & Design
 
-- Group code by **feature/vertical slice**, not by technical layer
 - Keep modules cohesive and loosely coupled
 - Public APIs must have documentation comments
 - Avoid deep inheritance hierarchies; prefer flat, composable structures
@@ -307,21 +263,6 @@ All practices align with [OWASP Top 10 (2025)](https://owasp.org/Top10/2025/).
 
 **VSA is the default.** Organize code by feature — each slice owns its full stack (request, handler, service, persistence, tests). This is the right choice for most teams and most applications.
 
-```
-features/
-  create-order/
-    CreateOrderCommand   ← handler, validator, tests co-located
-  get-order/
-    GetOrderQuery        ← handler, tests co-located
-```
-
-Why VSA:
-- Feature cohesion — everything for a feature is co-located: easy to find, change, or delete
-- Changes are localized — modifying one feature doesn't ripple through unrelated layers
-- Well-suited to AI-assisted development: each slice is independently generatable and testable without cross-layer reasoning
-- Low ceremony for small teams; scales up with CQRS when complexity warrants it
-
-**Prefer VSA unless you have a specific reason to add enforced layer boundaries.**
 
 ### Clean Architecture — the escalation path
 
@@ -350,9 +291,6 @@ SOLID principles are useful intuitions that become harmful when applied mechanic
 | **ISP** | Consumers use only part of an interface and it causes real friction | All consumers use the full contract |
 | **DIP** | Infrastructure must be swapped at runtime, or domain must be tested in isolation from a DB that can't be faked cheaply | A single implementation exists and TestContainers / in-memory DB make integration testing straightforward |
 
-**DIP in the modern era:** The classic justification — "abstract your repository so tests can swap the implementation" — is largely obsolete. A test running against SQLite in-process or a Testcontainers-managed Postgres is faster, more realistic, and requires zero abstraction overhead. Introduce `IRepository<T>` only when multiple real implementations exist, or the domain must be tested truly infrastructure-free.
-
-**OCP in the modern era:** Designed for slow-compiler, limited-refactoring workflows. With modern IDEs and fast CI, modifying existing code is cheap. Add extension points when the second real variant arrives — not before.
 
 ---
 
