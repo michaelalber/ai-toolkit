@@ -53,6 +53,20 @@
 
 ---
 
+## Knowledge Grounding
+
+Before relying on training data, search the local knowledge base:
+
+```bash
+grounded-code-mcp search "query" --collection <name> --json
+grounded-code-mcp search-code "query" --language <lang> --json
+grounded-code-mcp list-sources --json   # see what's available
+```
+
+Collection map is in AGENTS.md (20B+ overlay).
+
+---
+
 ## Escape Hatch
 
 When you cannot complete a task accurately:
