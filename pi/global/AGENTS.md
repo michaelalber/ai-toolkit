@@ -89,6 +89,38 @@ A passing test suite ≠ done. Tests verify code correctness; evals verify the o
 
 ---
 
+## Knowledge Grounding (grounded-code-mcp)
+
+The `grounded-code-mcp` extension exposes a local knowledge base of vetted documentation. **Search it before relying on training data for any covered domain.**
+
+Tools: `grounded_search`, `grounded_search_code`, `grounded_list_sources`, `grounded_source_info`, `grounded_query_graph`
+
+Pass the bare collection suffix — the server prepends `grounded_` automatically:
+
+| Pass as `collection=` | What lives here |
+|---|---|
+| `internal` | XP, TDD, CI/CD, DDD, Clean Architecture, OWASP, NIST AI; technical writing |
+| `patterns` | GoF, CQRS, DDD, Clean Architecture, DI, MADR |
+| `architecture` | DDIA, SRE, 12-Factor, AOSA, C4, arc42, distributed systems |
+| `systems_thinking` | Meadows leverage points, feedback loops, chaos engineering |
+| `ui_ux` | Laws of UX, Nielsen, WCAG 2.2, ARIA, USWDS, GOV.UK Design System |
+| `dotnet` | EF Core in Action, DI in .NET, Telerik UI for Blazor/MVC/Reporting |
+| `python` | Python 3.13, FastAPI, FastMCP, Pydantic v2, pytest, cosmicpython |
+| `databases` | SQL, PostgreSQL indexing, relational theory |
+| `edge_ai` | RAG, embeddings, LLM application design, AI agents; LangSmith |
+| `automation` | PLC, OPC UA, MODBUS, ICS security, Raspberry Pi, NIST 800-82 |
+| `4d_legacy` | 4D v18/v20 — source reference for 4D → .NET migration |
+| `php` | PHP manual, Laravel 5.5 / 6.x / 12.x |
+| `javascript` | JS/TS: Definitive Guide, TypeScript Handbook, Vue 2/3, ECMAScript 2024 |
+| `gov` | NIST 800-53/171/218, DOE, Zero Trust, AI RMF, CUI |
+| `robotics` | ROS 2, MuJoCo, Isaac Lab, LeRobot, Spinning Up in Deep RL, VLA models |
+| `rust` | Rust ownership, async/Tokio, Cargo, error handling, Axum |
+| `api_design` | Zalando guidelines, Google AIP, Microsoft REST API guidelines |
+
+Use `grounded_list_sources()` for the authoritative runtime list.
+
+---
+
 ## AI-Generated Code Markers
 
 Wrap generated blocks with `<AI-Generated START>` / `<AI-Generated END>` using the language-appropriate comment syntax.
