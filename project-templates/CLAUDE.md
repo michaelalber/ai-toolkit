@@ -113,7 +113,7 @@
 
 - [e.g., `mcp__jira` — read/write Jira issues for this project]
 - [e.g., `mcp__confluence` — read Confluence pages in PROJ space]
-- [e.g., `grounded-code-mcp` — local knowledge base for this stack]
+- [e.g., `grounded-code-mcp` — local knowledge base; collection map and MCP tool signatures in global CLAUDE.md]
 
 ---
 

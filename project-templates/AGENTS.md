@@ -114,7 +114,7 @@
 
 - [e.g., Jira MCP — read/write Jira issues for this project]
 - [e.g., Confluence MCP — read Confluence pages in PROJ space]
-- [e.g., grounded-code-mcp — local knowledge base for this stack]
+- [e.g., grounded-code-mcp — local knowledge base; collection map and CLI usage in global AGENTS.md]
 
 ---
 
