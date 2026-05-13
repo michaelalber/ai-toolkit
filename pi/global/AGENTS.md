@@ -91,13 +91,21 @@ A passing test suite ≠ done. Tests verify code correctness; evals verify the o
 
 ## Knowledge Grounding (grounded-code-mcp)
 
-The `grounded-code-mcp` extension exposes a local knowledge base of vetted documentation. **Search it before relying on training data for any covered domain.**
+A local knowledge base of vetted documentation is available via the `grounded-code-mcp` CLI. **Search it before relying on training data for any covered domain.**
 
-Tools: `grounded_search`, `grounded_search_code`, `grounded_list_sources`, `grounded_source_info`, `grounded_query_graph`
+When the grounded-code-mcp extension is active, its tools call the CLI automatically. When running without the extension, invoke the CLI directly:
+
+```bash
+grounded-code-mcp search "query" --collection python --json
+grounded-code-mcp search-code "query" --language python --json
+grounded-code-mcp list-sources --json
+grounded-code-mcp source-info <path> --json
+grounded-code-mcp query-graph <concept> --depth 2 --json
+```
 
 Pass the bare collection suffix — the server prepends `grounded_` automatically:
 
-| Pass as `collection=` | What lives here |
+| `--collection` | What lives here |
 |---|---|
 | `internal` | XP, TDD, CI/CD, DDD, Clean Architecture, OWASP, NIST AI; technical writing |
 | `patterns` | GoF, CQRS, DDD, Clean Architecture, DI, MADR |
@@ -117,7 +125,7 @@ Pass the bare collection suffix — the server prepends `grounded_` automaticall
 | `rust` | Rust ownership, async/Tokio, Cargo, error handling, Axum |
 | `api_design` | Zalando guidelines, Google AIP, Microsoft REST API guidelines |
 
-Use `grounded_list_sources()` for the authoritative runtime list.
+Run `grounded-code-mcp list-sources --json` for the authoritative runtime list.
 
 ---
 
