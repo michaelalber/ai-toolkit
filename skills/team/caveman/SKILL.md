@@ -1,5 +1,9 @@
 ---
 name: caveman
+audience: team
+source: mattpocock/skills
+source_commit: unknown
+source_note: "Modified locally — see .matt-pocock-attribution.yml for details"
 description: >
   Switches to caveman communication mode: terse, keyword-driven responses with no
   pleasantries and minimal formatting. Cuts response token usage ~75% while keeping

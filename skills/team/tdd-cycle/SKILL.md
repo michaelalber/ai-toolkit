@@ -1,5 +1,6 @@
 ---
 name: tdd-cycle
+audience: team
 description: >
   Orchestrate RED-GREEN-REFACTOR TDD phases. Use when starting TDD, managing phase
   transitions, or maintaining TDD discipline across a development session.

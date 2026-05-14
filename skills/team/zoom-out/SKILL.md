@@ -1,5 +1,9 @@
 ---
 name: zoom-out
+audience: team
+source: mattpocock/skills
+source_commit: unknown
+source_note: "Modified locally — see .matt-pocock-attribution.yml for details"
 description: >
   Zooms out from the current code to map callers, dependents, and module relationships
   before continuing. Use when entering unfamiliar code, debugging a confusing call chain,

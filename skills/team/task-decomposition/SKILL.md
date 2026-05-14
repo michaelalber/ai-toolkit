@@ -1,5 +1,6 @@
 ---
 name: task-decomposition
+audience: team
 description: Goal decomposition heuristics, dependency DAG construction, sub-agent assignment protocols, and multi-agent orchestration patterns. Use when breaking complex goals into sub-tasks, constructing execution plans, or coordinating work across multiple specialized agents.
 ---
 

@@ -1,5 +1,6 @@
 ---
 name: alembic-migration-manager
+audience: team
 description: Manages the full Alembic migration lifecycle with safety checks and rollback planning. Python analog of ef-migration-manager. Use when creating, reviewing, or applying database migrations in Python projects using SQLAlchemy and Alembic. Triggers on phrases like "alembic migration", "create migration", "apply migration python", "database migration python", "sqlalchemy migration", "alembic revision", "alembic upgrade", "alembic downgrade".
 ---
 

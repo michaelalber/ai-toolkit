@@ -1,5 +1,6 @@
 ---
 name: rust-feature-slice
+audience: team
 description: >
   Feature-based vertical slice architecture for Rust using Axum routers, handler functions,
   and service traits. No DI framework — dependencies are wired manually via Arc<dyn Trait>

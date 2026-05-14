@@ -1,5 +1,6 @@
 ---
 name: spec-implement
+audience: team
 description: >
   Spec-driven TDD implementation for greenfield features and well-understood changes.
   Takes an existing spec (PRD, user stories, requirements doc, or acceptance criteria)

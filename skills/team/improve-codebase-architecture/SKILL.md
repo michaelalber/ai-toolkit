@@ -1,5 +1,9 @@
 ---
 name: improve-codebase-architecture
+audience: team
+source: mattpocock/skills
+source_commit: unknown
+source_note: "Modified locally — see .matt-pocock-attribution.yml for details"
 description: >
   Deep module refactoring using APOSD vocabulary: eliminates shallow modules, reduces
   information leakage, resolves temporal coupling, and aligns naming with the ubiquitous

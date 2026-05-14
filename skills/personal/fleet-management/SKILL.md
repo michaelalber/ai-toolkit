@@ -1,5 +1,6 @@
 ---
 name: fleet-management
+audience: personal
 description: Rolling deployment strategies, multi-device coordination, and rollback triggers for edge device fleets. Use when managing fleet-wide deployments, configuring rollout strategies, building device registries, or implementing rollback automation.
 ---
 

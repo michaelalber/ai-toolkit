@@ -1,5 +1,6 @@
 ---
 name: confluence-guide-writer
+audience: team
 description: >
   Reads Confluence spec pages and/or source code and generates well-formatted
   tutorial and user guide content for a Confluence space's user guide section.

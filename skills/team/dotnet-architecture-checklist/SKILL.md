@@ -1,5 +1,6 @@
 ---
 name: dotnet-architecture-checklist
+audience: team
 description: Checklist executor for .NET Blazor architecture reviews using CQRS patterns (FreeMediator/Mapster). Use when asked to review architecture, audit code quality, assess technical debt, evaluate Blazor projects, check for anti-patterns, review .NET solutions, validate FreeMediator/Mapster usage, run architecture checklist, or grade a .NET project. Triggers on phrases like "review this project", "architecture checklist", "audit this code", "check for issues", "evaluate this solution", "review CQRS patterns", "check handlers", "check framework version", "shared kernel review", "run checklist", "grade this architecture".
 ---
 

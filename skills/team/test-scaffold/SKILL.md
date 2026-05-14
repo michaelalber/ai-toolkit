@@ -1,5 +1,6 @@
 ---
 name: test-scaffold
+audience: team
 description: Test generation conventions, naming patterns, mock strategies, and project structure for .NET test suites. Use when generating tests for C#/.NET projects with xUnit, FluentAssertions, and NSubstitute.
 ---
 

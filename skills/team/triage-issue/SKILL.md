@@ -1,5 +1,6 @@
 ---
 name: triage-issue
+audience: team
 description: >
   Triages a GitHub Issue or bug report: classifies severity, identifies the likely
   root cause area, suggests reproduction steps, and recommends priority and owner.

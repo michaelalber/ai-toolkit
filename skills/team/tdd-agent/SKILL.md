@@ -1,5 +1,6 @@
 ---
 name: tdd-agent
+audience: team
 description: Fully autonomous TDD with strict guardrails. Use when you want the AI to drive the entire RED-GREEN-REFACTOR cycle independently while maintaining TDD discipline.
 ---
 

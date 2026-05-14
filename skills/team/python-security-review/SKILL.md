@@ -1,5 +1,6 @@
 ---
 name: python-security-review
+audience: team
 description: Conducts OWASP-based security reviews of Python applications (FastAPI, Django, Flask) with bandit/pip-audit tooling. Identifies vulnerabilities, insecure patterns, and compliance gaps across all OWASP Top 10 categories. Generates manager-friendly reports with risk explanations and remediation priorities. Use when asked to review security, audit python code, check python vulnerabilities, OWASP python, bandit scan, pip-audit, or evaluate python application security posture. Triggers on phrases like "python security review", "audit python code", "check python vulnerabilities", "OWASP python", "bandit scan", "pip-audit", "python security posture", "fastapi security", "django security", "flask security".
 ---
 

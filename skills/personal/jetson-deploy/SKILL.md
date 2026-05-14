@@ -1,5 +1,6 @@
 ---
 name: jetson-deploy
+audience: personal
 description: >
   Deploy and optimize applications on Jetson Orin Nano with TensorRT. Use when
   setting up Jetson environments, converting models to TensorRT, managing power

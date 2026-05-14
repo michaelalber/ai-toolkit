@@ -1,5 +1,6 @@
 ---
 name: dependency-mapper
+audience: personal
 description: Coupling visualization with Robert C. Martin stability metrics — makes architectural decisions visible as dependency patterns. Use when analyzing module dependencies, detecting circular references, visualizing coupling, or assessing architectural health through Robert C. Martin stability metrics.
 ---
 

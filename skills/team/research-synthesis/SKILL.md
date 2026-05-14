@@ -1,5 +1,6 @@
 ---
 name: research-synthesis
+audience: team
 description: Multi-source cross-referencing, source credibility scoring, and structured briefing formats. Use when synthesizing research findings from multiple sources into evidence-based deliverables with confidence levels and citations.
 ---
 

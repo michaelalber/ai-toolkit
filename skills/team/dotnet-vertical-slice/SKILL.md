@@ -1,5 +1,6 @@
 ---
 name: dotnet-vertical-slice
+audience: team
 description: >
   Scaffold vertical slice architecture with CQRS + FreeMediator, including optional
   Telerik Blazor UI generation. Use when creating feature-based .NET projects with

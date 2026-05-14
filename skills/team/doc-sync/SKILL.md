@@ -1,5 +1,6 @@
 ---
 name: doc-sync
+audience: team
 description: Documentation staleness detection, XML doc comment generation, and README synchronization -- keeps documentation accurate and in sync with code changes. Use when auditing documentation coverage, generating XML doc comments, or syncing READMEs after code changes.
 ---
 

@@ -1,5 +1,6 @@
 ---
 name: minimal-api-scaffolder
+audience: team
 description: >
   Scaffolds .NET 10 Minimal API endpoints with OpenAPI documentation, versioning
   strategies, and security patterns. Use when creating REST APIs, adding endpoints,

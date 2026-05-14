@@ -1,5 +1,6 @@
 ---
 name: rpi-implement
+audience: team
 description: >
   RPI Implement phase -- executes a phased implementation plan mechanically with verification
   after each phase and checkpoint-based context management. Use when executing an approved implementation plan. Trigger phrases: "/rpi-implement path/to/plan.md",

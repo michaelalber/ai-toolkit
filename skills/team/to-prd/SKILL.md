@@ -1,5 +1,9 @@
 ---
 name: to-prd
+audience: team
+source: mattpocock/skills
+source_commit: unknown
+source_note: "Modified locally — see .matt-pocock-attribution.yml for details"
 description: >
   Converts meeting notes, feature requests, or conversation context into a structured
   Product Requirements Document (PRD) with goals, user stories, and binary acceptance

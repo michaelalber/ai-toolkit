@@ -1,5 +1,6 @@
 ---
 name: python-security-review-federal
+audience: team
 description: Conducts security reviews of Python applications for federal/DOE/DOD environments. Extends python-security-review with NIST SP 800-53 control mapping, DOE Order 205.1B compliance, FIPS 140-2/3 cryptographic requirements, and CUI handling. Generates federal-compliant reports with impact levels and POA&M-ready findings. Trigger phrases: "federal python security", "NIST python", "FISMA python", "DOE python security", "python ATO review", "python FIPS compliance", "CUI python", "python federal compliance", "python NIST 800-53".
 ---
 

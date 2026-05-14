@@ -1,5 +1,6 @@
 ---
 name: automated-code-review
+audience: team
 description: Systematic review execution engine -- transforms structured human review coaching patterns into autonomous review checklists with pass/fail gates, convention detection, and structured finding production. Use when running autonomous code reviews to ensure systematic coverage and consistent quality.
 ---
 

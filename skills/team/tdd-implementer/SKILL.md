@@ -1,5 +1,6 @@
 ---
 name: tdd-implementer
+audience: team
 description: >
   Implement minimal code to make failing tests pass (GREEN phase). Use when you have
   a failing test and need to write just enough code to make it pass.

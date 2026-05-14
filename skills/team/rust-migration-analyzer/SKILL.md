@@ -1,5 +1,6 @@
 ---
 name: rust-migration-analyzer
+audience: team
 description: >
   Analyzes Rust migration paths: C/C++ to Rust rewrites using incremental FFI-based
   strangler fig, and Rust modernization (edition upgrades 2015→2018→2021, deprecated

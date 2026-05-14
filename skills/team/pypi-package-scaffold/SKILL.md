@@ -1,5 +1,6 @@
 ---
 name: pypi-package-scaffold
+audience: team
 description: Scaffolds production-ready PyPI packages with pyproject.toml, hatch/flit/build tooling, GitHub Actions publish workflow, test harness, and documentation. Python analog of nuget-package-scaffold. Use when creating Python packages, setting up PyPI publishing, configuring package metadata, or building Python libraries. Triggers on phrases like "create python package", "scaffold pypi", "publish python package", "pyproject.toml setup", "python library scaffold", "python package setup", "pypi publish", "python package metadata".
 ---
 

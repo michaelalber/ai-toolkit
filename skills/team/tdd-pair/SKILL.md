@@ -1,5 +1,6 @@
 ---
 name: tdd-pair
+audience: team
 description: >
   AI as TDD pair programmer with role-based collaboration. Use when you want to
   collaborate on TDD with the AI taking a specific role (driver, navigator, or

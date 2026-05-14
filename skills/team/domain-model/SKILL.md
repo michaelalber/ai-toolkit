@@ -1,5 +1,6 @@
 ---
 name: domain-model
+audience: team
 description: >
   Interrogates a plan or codebase using Domain-Driven Design vocabulary. Enforces
   CONTEXT.md terminology, surfaces code/plan contradictions, and records domain decisions

@@ -1,5 +1,6 @@
 ---
 name: jira-review
+audience: team
 description: >
   Automatically review Jira issues for implementation readiness. Detects complexity
   signals, parses acceptance criteria, and recommends clarification or planning mode

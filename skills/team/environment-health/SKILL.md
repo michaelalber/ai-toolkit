@@ -1,5 +1,6 @@
 ---
 name: environment-health
+audience: team
 description: Docker health checks, service monitoring, container lifecycle management, connection validation, and environment diagnostics. Use when troubleshooting dev environment issues or performing health audits.
 ---
 

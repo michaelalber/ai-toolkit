@@ -1,5 +1,6 @@
 ---
 name: skill-creator
+audience: team
 description: >
   Create, modify, and audit AI agent skills in this toolkit. Use when scaffolding
   a new SKILL.md from the 10-section template, revising an existing skill to fix

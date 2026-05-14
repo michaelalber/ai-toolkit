@@ -1,5 +1,6 @@
 ---
 name: jira-comment-writer
+audience: team
 description: >
   Plain-language Jira comment drafter for project managers and clients. Translates
   technical progress, blockers, and decisions into clear, jargon-free updates.

@@ -1,5 +1,6 @@
 ---
 name: rpi-research
+audience: team
 description: >
   RPI Research phase -- parallel codebase exploration using subagents to produce a compact,
   objective research artifact. Use for "/rpi-research topic", "research the codebase for X",

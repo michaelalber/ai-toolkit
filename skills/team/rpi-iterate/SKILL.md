@@ -1,5 +1,6 @@
 ---
 name: rpi-iterate
+audience: team
 description: >
   RPI Iterate phase -- surgically updates an existing implementation plan based on feedback
   without starting over. Use when updating an existing plan based on new feedback or constraints. Trigger phrases: "/rpi-iterate feedback", "update the plan", "the plan needs

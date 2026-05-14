@@ -1,5 +1,6 @@
 ---
 name: architecture-review
+audience: personal
 description: Devil's advocate architecture critic -- challenges designs via Socratic questioning against SOLID, coupling, failure modes, scalability, and operational complexity. Use when stress-testing an architecture decision, evaluating a proposed system design, reviewing architecture before implementation, or asked to critique a technical approach.
 ---
 

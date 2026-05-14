@@ -1,5 +1,6 @@
 ---
 name: anomaly-detection
+audience: personal
 description: Statistical anomaly detection for sensor data streams. Use when implementing outlier detection, drift monitoring, anomaly classification, and alert/recalibration decision trees for time-series sensor data.
 ---
 

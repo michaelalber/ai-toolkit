@@ -1,5 +1,6 @@
 ---
 name: model-optimization
+audience: personal
 description: Optimize ML models for edge deployment through quantization, pruning, format conversion (TensorRT/TFLite/ONNX), and accuracy/latency benchmarking. Use when preparing models for resource-constrained devices.
 ---
 

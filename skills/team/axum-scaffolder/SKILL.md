@@ -1,5 +1,6 @@
 ---
 name: axum-scaffolder
+audience: team
 description: >
   Scaffolds Axum HTTP endpoints with OpenAPI documentation (utoipa), Tower middleware,
   JWT authentication, rate limiting, CORS, health checks, and versioning. Axum-first

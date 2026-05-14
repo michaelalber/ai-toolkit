@@ -1,5 +1,6 @@
 ---
 name: sqlx-migration-manager
+audience: team
 description: >
   SQLx migration lifecycle management with safety checks and rollback planning.
   Manages plain SQL migration files, compile-time query verification via sqlx prepare,

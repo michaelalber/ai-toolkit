@@ -1,5 +1,6 @@
 ---
 name: edge-cv-pipeline
+audience: personal
 description: >
   Build OpenCV + TFLite computer vision pipelines for Jetson and Raspberry Pi.
   Use when deploying real-time inference on edge devices with camera capture, model

@@ -1,5 +1,6 @@
 ---
 name: security-review-trainer
+audience: personal
 description: Progressive security review challenges -- intentional vulnerabilities embedded in clean code, scored findings, and increasing subtlety. Use when building security review skills, practicing vulnerability identification, developing severity judgment, or training to detect subtle security flaws in progressively harder code samples.
 ---
 

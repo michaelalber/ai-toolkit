@@ -1,5 +1,6 @@
 ---
 name: cargo-package-scaffold
+audience: team
 description: >
   Cargo crate creation with CI/CD pipeline setup, test harness, and crates.io publish
   workflow. Use when creating new Rust crates, configuring Cargo.toml metadata, setting

@@ -1,5 +1,6 @@
 ---
 name: session-context
+audience: team
 description: Git change summarization, ADR relevance matching, and pattern applicability for building session context. Provides techniques for analyzing recent project activity, scoring context relevance, and detecting patterns that accelerate AI coding session starts. Use when building context for a new coding session, analyzing recent changes, or matching project decisions to current work.
 ---
 

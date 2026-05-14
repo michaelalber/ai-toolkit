@@ -1,5 +1,6 @@
 ---
 name: dotnet-security-review
+audience: team
 description: Conducts OWASP-based security reviews of .NET and .NET Framework applications with Telerik UI specialization. Identifies vulnerabilities, insecure patterns, and compliance gaps across all OWASP Top 10 categories. Generates manager-friendly reports with risk explanations and remediation priorities. Use when asked to review security, audit code for vulnerabilities, check OWASP compliance, assess security risks, find security issues, scan for CVEs, review Telerik security, or evaluate application security posture. Triggers on phrases like "security review", "OWASP audit", "vulnerability assessment", "security scan", "check for vulnerabilities", "security compliance", "Telerik security", "security posture", "penetration test prep".
 ---
 

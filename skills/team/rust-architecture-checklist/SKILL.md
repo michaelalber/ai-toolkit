@@ -1,5 +1,6 @@
 ---
 name: rust-architecture-checklist
+audience: team
 description: >
   Checklist executor for Rust architecture reviews. Detects Rust edition, async runtime,
   and workspace structure, then runs a systematic checklist covering ownership discipline,

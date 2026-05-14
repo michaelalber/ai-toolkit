@@ -1,5 +1,6 @@
 ---
 name: 4d-schema-migration
+audience: team
 description: >
   Parses 4D application exports and generates SQL Server DDL, EF Core entities,
   and Blazor UI guidance. Use when migrating from 4th Dimension (4D) platform to

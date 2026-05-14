@@ -1,5 +1,6 @@
 ---
 name: nuget-package-scaffold
+audience: team
 description: >
   NuGet package creation with CI/CD pipeline setup and test harness. Use when
   creating new NuGet packages, configuring package metadata, or setting up publish

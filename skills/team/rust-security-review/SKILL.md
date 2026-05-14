@@ -1,5 +1,6 @@
 ---
 name: rust-security-review
+audience: team
 description: >
   OWASP-based security review for Rust applications. Rust eliminates memory safety
   vulnerabilities at compile time, but logic flaws, injection attacks, cryptographic

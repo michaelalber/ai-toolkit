@@ -1,5 +1,6 @@
 ---
 name: python-arch-review
+audience: team
 description: Architecture review for Python 3 projects enforcing TDD (Red->Green->Refactor->Quality Check), YAGNI principles, and code quality gates. Use when (1) writing new Python code, (2) reviewing existing Python code, (3) refactoring Python modules, (4) adding tests to Python projects, (5) checking code quality metrics, (6) running quality gates before merging, or (7) improving Python architecture with type safety and clean design. Integrates Ruff, mypy, radon, bandit, pip-audit, and pytest-cov.
 ---
 

@@ -1,5 +1,6 @@
 ---
 name: spec-coach
+audience: personal
 description: >
   Interactive spec design coach. Guides through vision, PRD structure, three-tier boundary
   definition, user story quality (INVEST), specification by example, and measurable success

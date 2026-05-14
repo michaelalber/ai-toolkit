@@ -1,5 +1,6 @@
 ---
 name: ollama-model-workflow
+audience: team
 description: >
   Local LLM management with Ollama, Modelfile creation, and benchmarking. Use when
   pulling models, creating custom Modelfiles, or evaluating model performance locally.

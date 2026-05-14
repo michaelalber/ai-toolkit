@@ -1,5 +1,6 @@
 ---
 name: rag-pipeline-dotnet
+audience: team
 description: Implements RAG (Retrieval-Augmented Generation) pipelines using Microsoft Semantic Kernel for .NET applications with federal compliance and air-gapped deployment support. Use when building RAG .NET, Semantic Kernel RAG, vector search .NET, document QA .NET, knowledge base .NET, AI search .NET, embedding pipeline, or retrieval-augmented generation in C#.
   Do NOT use when the application stack is Python — use rag-pipeline-python
   instead; do NOT use outside federal or .NET-primary environments.

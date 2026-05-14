@@ -1,5 +1,9 @@
 ---
 name: to-issues
+audience: team
+source: mattpocock/skills
+source_commit: unknown
+source_note: "Modified locally — see .matt-pocock-attribution.yml for details"
 description: >
   Converts a PRD or feature spec into a set of atomic GitHub Issues ready to open,
   each covering one independently-deliverable slice ordered by dependency. Use when

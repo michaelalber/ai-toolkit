@@ -1,5 +1,6 @@
 ---
 name: tdd-refactor
+audience: team
 description: >
   Safely refactor code while keeping tests green (REFACTOR phase). Use when tests
   pass and you want to improve code structure without changing behavior.

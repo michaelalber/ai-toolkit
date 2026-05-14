@@ -1,5 +1,6 @@
 ---
 name: fastapi-scaffolder
+audience: team
 description: Scaffolds FastAPI endpoints with OpenAPI documentation, Pydantic v2 request/response models, JWT authentication, rate limiting, and health checks. Python analog of minimal-api-scaffolder. Use when creating REST APIs, adding endpoints, setting up FastAPI projects, or configuring API infrastructure. Triggers on phrases like "scaffold fastapi", "create fastapi endpoint", "fastapi router", "add fastapi route", "fastapi api", "python rest api", "fastapi project setup", "fastapi authentication", "fastapi openapi".
 ---
 

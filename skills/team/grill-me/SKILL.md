@@ -1,5 +1,9 @@
 ---
 name: grill-me
+audience: team
+source: mattpocock/skills
+source_commit: unknown
+source_note: "Modified locally — see .matt-pocock-attribution.yml for details"
 description: >
   Interview the user relentlessly about a plan or design until reaching shared
   understanding, resolving each branch of the decision tree. Use when the user

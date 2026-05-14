@@ -1,5 +1,6 @@
 ---
 name: dotnet-security-review-federal
+audience: team
 description: >
   Conducts security reviews of .NET applications for federal/DOE/DOD environments.
   Extends the base dotnet-security-review with NIST SP 800-53 control mapping,
