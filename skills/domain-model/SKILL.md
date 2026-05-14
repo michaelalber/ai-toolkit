@@ -5,7 +5,7 @@ description: >
   CONTEXT.md terminology, surfaces code/plan contradictions, and records domain decisions
   as ADRs sparingly. Use when designing a bounded context, reviewing a domain model,
   or asked to "apply DDD", "model the domain", or "review the domain model".
-  Requires CONTEXT.md or runs ubiquitous-language first.
+  Requires CONTEXT.md or creates one from CONTEXT-FORMAT.md.
   Ported from https://github.com/mattpocock/skills (Matt Pocock).
 disable-model-invocation: true
 ---
@@ -17,8 +17,8 @@ model through structured interrogation.
 
 1. Check if `CONTEXT.md` exists in the project root.
    - **YES:** load it — this is the authoritative domain vocabulary. Do not deviate from it.
-   - **NO:** tell the user: "Run `ubiquitous-language` first to establish CONTEXT.md,
-     or create one from `references/CONTEXT-FORMAT.md`."
+   - **NO:** tell the user: "No CONTEXT.md found. Create one from `references/CONTEXT-FORMAT.md`
+     before we proceed."
 
 ## Interrogation Protocol
 
@@ -54,5 +54,5 @@ Do not create ADRs for obvious or uncontested decisions.
 ## Handoff
 
 When the model is stable, offer:
-1. Run `ubiquitous-language` to extract and save the full glossary
-2. Update `CONTEXT.md` with any new terms discovered
+1. Extract and save all discovered terms to `CONTEXT.md`
+2. Record any contested boundary decisions as ADRs

@@ -83,7 +83,7 @@
 | 2026-04-24 | Commands layer added alongside agents | Commands are user-invoked (typed as `/command-name`); skills are model-invoked (autonomous). Different primitives, same platform directory scope. |
 | 2026-04-24 | Hooks in `settings.json`, permissions in `settings.local.json` | Separation of concerns — deterministic enforcement (hooks) vs. interactive approval (permissions). Keep in separate files. |
 | 2026-04-25 | Two-tier skill system: minimal (≤ 100 lines, ≥ 1 reference) and full-template (10 sections, ≤ 400 lines, ≥ 2 references) | Ported from mattpocock/skills — minimal tier handles mode switches, conversational tools, and single-instruction skills without the overhead of the 10-section template. |
-| 2026-04-25 | `disable-model-invocation: true` frontmatter for interactive/conversational skills | Ported from mattpocock/skills — prevents auto-invocation by the model; grill-me, domain-model, ubiquitous-language, zoom-out, caveman use this. |
+| 2026-04-25 | `disable-model-invocation: true` frontmatter for interactive/conversational skills | Ported from mattpocock/skills — prevents auto-invocation by the model; grill-me, domain-model, zoom-out, caveman use this. |
 | 2026-04-26 | Global template files (`claude/global/`, `opencode/global/`) must contain only generic, domain-level descriptions — no specific book titles, personal document names, or user-specific tool references | These files are public templates installable by any user. Personal enrichment belongs in the installed copies (`~/.claude/CLAUDE.md`, `~/.config/opencode/AGENTS.md`), not the repo source. |
 
 ---
@@ -263,9 +263,9 @@ Key difference: Claude uses `skills:` array in frontmatter; OpenCode uses `skill
 | Enterprise .NET | dotnet-vertical-slice, ef-migration-manager, nuget-package-scaffold, legacy-migration-analyzer, dotnet-architecture-checklist, dotnet-security-review, dotnet-security-review-federal, minimal-api-scaffolder, 4d-schema-migration | .NET patterns, migrations, security |
 | Edge/IoT | edge-cv-pipeline, jetson-deploy, sensor-integration, picar-x-behavior | Edge computing, CV, robotics |
 | AI/ML | rag-pipeline-python, rag-pipeline-dotnet, mcp-server-scaffold, ollama-model-workflow | RAG, MCP servers, local LLMs |
-| Coaching | architecture-review, pattern-tradeoff-analyzer, system-design-kata, dependency-mapper, code-review-coach, refactor-challenger, security-review-trainer, pr-feedback-writer, technical-debt-assessor, architecture-journal, grill-me, zoom-out, caveman, design-an-interface, improve-codebase-architecture | Engineering judgment and communication modes |
-| DDD | domain-model, ubiquitous-language | Domain-Driven Design vocabulary and modeling |
-| Product & GitHub | to-prd, to-issues, triage-issue, qa | PRD creation, issue decomposition, bug triage, QA |
+| Coaching | architecture-review, pattern-tradeoff-analyzer, system-design-kata, dependency-mapper, code-review-coach, refactor-challenger, security-review-trainer, pr-feedback-writer, technical-debt-assessor, architecture-journal, grill-me, zoom-out, caveman, improve-codebase-architecture | Engineering judgment and communication modes |
+| DDD | domain-model | Domain-Driven Design vocabulary and modeling |
+| Product & GitHub | to-prd, to-issues, triage-issue | PRD creation, issue decomposition, bug triage |
 | Agent Support | automated-code-review, test-scaffold, doc-sync, supply-chain-audit, environment-health, model-optimization, anomaly-detection, fleet-management, research-synthesis, session-context, task-decomposition | Domain knowledge for agents |
 | Agent Design | spec-coach | Interactive spec design coach — skills, agents, PRDs, and GitHub Spec Kit |
 | RPI Workflow | rpi-research, rpi-plan, rpi-implement, rpi-iterate | Research-Plan-Implement with session isolation and parallel subagents |

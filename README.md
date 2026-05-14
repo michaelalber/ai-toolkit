@@ -177,7 +177,6 @@ See [`pi/global/README.md`](pi/global/README.md) for the full Ollama setup guide
 | `grill-me` | Relentless plan/design interview — one question at a time with recommended answers, walking every branch of the decision tree. ([source](https://github.com/mattpocock/skills/tree/main/grill-me)) |
 | `zoom-out` | Zooms out from current code to map callers, dependents, and module relationships before continuing. ([source](https://github.com/mattpocock/skills)) |
 | `caveman` | Switches to terse, keyword-driven communication mode — cuts token usage ~75%. Persistent once triggered. ([source](https://github.com/mattpocock/skills)) |
-| `design-an-interface` | Applies "Design It Twice" from APOSD — generates two radically different interface designs and compares them. ([source](https://github.com/mattpocock/skills)) |
 | `improve-codebase-architecture` | Deep module refactoring using APOSD vocabulary — eliminates shallow modules, information leakage, and naming mismatches. ([source](https://github.com/mattpocock/skills)) |
 
 ### DDD Suite
@@ -185,7 +184,6 @@ See [`pi/global/README.md`](pi/global/README.md) for the full Ollama setup guide
 | Skill | Description |
 |-------|-------------|
 | `domain-model` | DDD domain modeling consultant — enforces CONTEXT.md vocabulary, surfaces code/plan contradictions, records decisions as ADRs sparingly. ([source](https://github.com/mattpocock/skills)) |
-| `ubiquitous-language` | Extracts and formalizes domain vocabulary from conversation or codebase — classifies terms, resolves ambiguities, saves to UBIQUITOUS_LANGUAGE.md. ([source](https://github.com/mattpocock/skills)) |
 
 ### Product & GitHub Workflow Suite
 
@@ -193,8 +191,7 @@ See [`pi/global/README.md`](pi/global/README.md) for the full Ollama setup guide
 |-------|-------------|
 | `to-prd` | Converts meeting notes or feature requests into a structured PRD with goals, user stories, and binary acceptance criteria. ([source](https://github.com/mattpocock/skills)) |
 | `to-issues` | Converts a PRD into atomic GitHub Issues ordered by dependency — infrastructure first, features next, polish last. ([source](https://github.com/mattpocock/skills)) |
-| `triage-issue` | Triages a GitHub Issue or bug report — classifies severity, identifies root cause area, recommends priority and owner. ([source](https://github.com/mattpocock/skills)) |
-| `qa` | Structured QA review — verifies acceptance criteria coverage, generates edge case test matrix, flags gaps before shipping. ([source](https://github.com/mattpocock/skills)) |
+| `triage-issue` | Triages a GitHub Issue or bug report — classifies severity, identifies root cause area, recommends priority and owner. |
 
 ### Agent Support Suite
 
