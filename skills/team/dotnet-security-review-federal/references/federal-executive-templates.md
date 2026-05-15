@@ -129,7 +129,7 @@ Use these to explain system categorization to non-technical leadership:
 
 ### Data Breach Risk
 
-> "This vulnerability could enable unauthorized access to [X records of CUI/PII/sensitive data]. Based on the data types involved, a breach could trigger [DOE incident reporting requirements/Privacy Act notification obligations/potential regulatory penalties]. The reputational impact to the Laboratory could be significant, particularly given [describe context if relevant]."
+> "This vulnerability could enable unauthorized access to [X records of CUI/PII/sensitive data]. Based on the data types involved, a breach could trigger [DOE incident reporting requirements/Privacy Act notification obligations/potential regulatory penalties]. The reputational impact to the agency could be significant, particularly given [describe context if relevant]."
 
 ### Compliance Risk
 

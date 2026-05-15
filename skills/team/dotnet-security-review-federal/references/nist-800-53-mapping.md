@@ -396,7 +396,7 @@ _logger.LogInformation(
 // (No SELECT, UPDATE, DELETE)
 
 // Centralized logging (preferred for federal)
-.WriteTo.Seq("https://seq.internal.lanl.gov")
+.WriteTo.Seq("https://seq.internal.agency.gov")
 // or
 .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(...))
 ```
