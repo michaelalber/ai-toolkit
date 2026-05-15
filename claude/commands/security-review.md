@@ -3,6 +3,6 @@ description: Conducts an OWASP Top 10 security review of the current codebase or
 allowed-tools: Read, Glob, Grep
 ---
 
-Use the dotnet-security-review skill (or dotnet-security-review-federal for federal/LANL contexts).
+Use the dotnet-security-review skill (or dotnet-security-review-federal for federal/national laboratory contexts).
 Scope: $ARGUMENTS (defaults to full project if empty).
 Output a manager-friendly summary with: critical findings, medium findings, recommendation table.
