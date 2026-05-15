@@ -1,11 +1,11 @@
 # AI Toolkit
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Skills](https://img.shields.io/badge/skills-83-blue)](#skills)
+[![Skills](https://img.shields.io/badge/skills-80-blue)](#skills)
 [![Agents](https://img.shields.io/badge/agents-35-blue)](#agents)
 [![Platforms](https://img.shields.io/badge/platforms-Claude%20Code%20%7C%20OpenCode%20%7C%20Pi-informational)](#platforms)
 
-**83 skills, 35 agents, and 9 slash commands for AI-assisted software development — spanning TDD, .NET, Python, Rust, edge AI, security, DDD, and more.**
+**80 skills, 35 agents, and 9 slash commands for AI-assisted software development — spanning TDD, .NET, Python, Rust, edge AI, security, DDD, and more.**
 
 Works with [Claude Code](https://claude.ai/code), [OpenCode](https://opencode.ai/), and [Pi](https://pi.dev) (Ollama local models).
 
@@ -29,7 +29,8 @@ This toolkit encodes that expertise as reusable primitives. Each skill is an opi
 
 | | Count |
 |--|-------|
-| Skills | 83 |
+| Skills (team) | 62 |
+| Skills (personal) | 18 |
 | Agents (Claude Code) | 35 |
 | Agents (OpenCode) | 35 |
 | Slash commands (per platform) | 9 |
@@ -66,17 +67,35 @@ User types /tdd-cycle
 | **[Pi](https://pi.dev)** | Ollama local models (7B–32B) | Fully offline | Zero API cost, privacy-first, air-gapped use |
 
 ### Claude Code
+
 ```bash
-bash scripts/install-claude.sh     # macOS / Linux
-.\scripts\install-claude.ps1       # Windows
+# Skills (both team and personal by default)
+mkdir -p ~/.claude/skills
+ln -sf /path/to/ai-toolkit/skills/team/*/ ~/.claude/skills/
+ln -sf /path/to/ai-toolkit/skills/personal/*/ ~/.claude/skills/
+
+# Agents
+mkdir -p ~/.claude/agents
+ln -sf /path/to/ai-toolkit/claude/agents/team/*.md ~/.claude/agents/
+ln -sf /path/to/ai-toolkit/claude/agents/personal/*.md ~/.claude/agents/
 ```
+
+To install only the team-facing skills (e.g. when sharing this with a colleague), omit the `personal/` lines.
+
 See [`claude/global/README.md`](claude/global/README.md) for global config setup (hooks, permissions, commands).
 
 ### OpenCode
+
 ```bash
-bash scripts/install-opencode.sh   # macOS / Linux
-.\scripts\install-opencode.ps1     # Windows
+mkdir -p ~/.config/opencode/skills
+ln -sf /path/to/ai-toolkit/skills/team/*/ ~/.config/opencode/skills/
+ln -sf /path/to/ai-toolkit/skills/personal/*/ ~/.config/opencode/skills/
+
+mkdir -p ~/.config/opencode/agents
+ln -sf /path/to/ai-toolkit/opencode/agents/team/*.md ~/.config/opencode/agents/
+ln -sf /path/to/ai-toolkit/opencode/agents/personal/*.md ~/.config/opencode/agents/
 ```
+
 See [`opencode/global/README.md`](opencode/global/README.md) for provider config, Ollama tuning, and permissions.
 
 ### Pi (Ollama / Local Models)
@@ -91,6 +110,22 @@ See [`pi/global/README.md`](pi/global/README.md) for the full Ollama setup guide
 ---
 
 ## Skills
+
+This toolkit is organized in two folders. `skills/team/` contains skills and agents I use in production work and consider shareable — patterns extracted from years of enterprise .NET, legacy modernization, and AI-augmented development on regulated-industry codebases. It also incorporates several vendored workflow-primitive skills from Matt Pocock's repo (see [Companion Skills](#companion-skills) below). `skills/personal/` contains skills I run on myself: deliberate practice loops for architecture and code review, and learning scaffolds for domains I'm actively building hands-on skill in (edge AI, robotics, sensor integration). The split exists because conflating "what I ship" with "how I sharpen" weakens both.
+
+## Companion Skills
+
+This toolkit incorporates several skills from Matt Pocock's [skills repo](https://github.com/mattpocock/skills) alongside my own. Vendored copies carry `source: mattpocock/skills` in their frontmatter along with the upstream commit hash they were pulled from, so the provenance is traceable. Matt updates frequently — periodically check his repo and re-vendor when meaningful changes land.
+
+Matt's skills cover the **workflow primitives** that apply to any project regardless of stack: grilling a plan until it's coherent (`grill-me`), driving the red-green-refactor loop (`to-prd`, `to-issues`), zooming out to understand a call chain (`zoom-out`), switching to a compressed communication mode (`caveman`), and improving a codebase's module structure (`improve-codebase-architecture`). They're small, composable, and deliberately stack-agnostic — exactly the layer my own skills don't try to replicate.
+
+The skills I've written cover the **domain-specific layers** that sit on top: enterprise .NET patterns (vertical slice, CQRS, EF Core migrations, federal-compliance security review), AI/ML infrastructure (RAG pipelines, MCP server scaffolding, local LLM workflows), edge AI and robotics (Jetson deployment, sensor integration, CV pipelines), and the coaching loops I run on myself to keep architectural and review judgment sharp.
+
+The two layers are non-overlapping by design. Where they look adjacent — Matt's `to-prd` vs. my `triage-issue`, his `improve-codebase-architecture` vs. my `architecture-review` — each is solving a different layer. Matt's is the workflow primitive; mine is the domain-calibrated, opinionated version for a specific stack or practice context.
+
+See `.matt-pocock-attribution.yml` at the repo root for the full provenance manifest, including modification notes for each vendored skill.
+
+## skills/team/
 
 ### TDD Suite
 
@@ -116,6 +151,7 @@ See [`pi/global/README.md`](pi/global/README.md) for the full Ollama setup guide
 | `dotnet-security-review-federal` | Federal compliance overlay (NIST 800-53, DOE, CUI, FIPS) extending the base security review. |
 | `minimal-api-scaffolder` | .NET 10 minimal API scaffolding with OpenAPI documentation, versioning, and security patterns. |
 | `4d-schema-migration` | 4D (4th Dimension) to SQL Server/EF Core/Blazor full-stack migration specialist. |
+| _(planned)_ `shared-kernel-generator` | .NET shared kernel scaffolding — not yet implemented. |
 
 ### Python Suite
 
@@ -142,16 +178,7 @@ See [`pi/global/README.md`](pi/global/README.md) for the full Ollama setup guide
 | `axum-scaffolder` | Production-ready Axum HTTP APIs with utoipa OpenAPI, JWT middleware, rate limiting, and CORS. |
 | `cargo-package-scaffold` | Rust crate scaffolding — Cargo.toml metadata, CI, test harness, CHANGELOG, crates.io publish workflow. |
 
-### Edge / IoT / Robotics Suite
-
-| Skill | Description |
-|-------|-------------|
-| `edge-cv-pipeline` | OpenCV + TFLite computer vision pipeline for Jetson and Raspberry Pi with model conversion and profiling. |
-| `jetson-deploy` | Jetson Orin Nano deployment with TensorRT optimization, containerization, and power management. |
-| `sensor-integration` | Sensor data pipeline with I2C, SPI, UART, and GPIO. Calibration and anomaly detection. |
-| `picar-x-behavior` | Composable robot behaviors for SunFounder Picar-X — subsumption architecture and behavior trees. |
-
-### AI / ML Suite
+### AI/ML Bridge Suite
 
 | Skill | Description |
 |-------|-------------|
@@ -159,6 +186,72 @@ See [`pi/global/README.md`](pi/global/README.md) for the full Ollama setup guide
 | `rag-pipeline-dotnet` | RAG with Microsoft Semantic Kernel, vector store options, and embedding models (.NET). |
 | `mcp-server-scaffold` | Custom MCP server creation with FastMCP (Python), testing patterns, and protocol reference. |
 | `ollama-model-workflow` | Local LLM management — Modelfile config, quantization, benchmarking. |
+
+### RPI Workflow Suite
+
+A structured Research → Plan → Implement loop with parallel subagents and session isolation.
+
+| Skill | Description |
+|-------|-------------|
+| `rpi-research` | Parallel codebase exploration using subagents to gather context before planning. |
+| `rpi-plan` | Converts a research artifact into a phased implementation plan with discrete, testable steps. |
+| `rpi-implement` | Executes a phased implementation plan mechanically, one step at a time. |
+| `rpi-iterate` | Surgically updates an existing plan based on new discoveries or scope changes. |
+
+### Requirements & Workflow Suite
+
+| Skill | Description |
+|-------|-------------|
+| `capture-consolidate` | Consolidates multiple capture documents (transcripts, emails, SOWs) into a unified requirements registry. |
+| `email-capture` | Extracts requirements, decisions, and action items from email threads and converts them to structured captures. |
+| `transcript-capture` | Converts meeting transcripts or Zoom/Slack summaries into structured capture documents. |
+| `triage-issue` | Triages a GitHub or Jira issue — classifies severity, identifies root cause area, recommends priority and owner. |
+| `domain-model` | DDD domain modeling consultant — enforces CONTEXT.md vocabulary, surfaces code/plan contradictions, records decisions as ADRs sparingly. |
+
+### Docs, Jira & Confluence
+
+| Skill | Description |
+|-------|-------------|
+| `jira-review` | Jira ticket review with complexity scoring and requirements extraction. |
+| `jira-comment-writer` | Plain-language Jira comment drafter — translates technical updates into stakeholder language. |
+| `confluence-guide-writer` | Reads Confluence spec pages and/or source code, generates well-formatted technical guides. |
+
+### Agent Design & Meta
+
+| Skill | Description |
+|-------|-------------|
+| `skill-creator` | Creates, revises, and scores SKILL.md definitions against the 10-section gold standard. |
+| `spec-implement` | Converts a spec or acceptance criteria into a working implementation, test-first. |
+
+### Agent Support Suite (Team)
+
+| Skill | Description | Used By |
+|-------|-------------|---------|
+| `automated-code-review` | Autonomous review checklists — security, correctness, performance, maintainability, style | code-review-agent |
+| `test-scaffold` | Test generation conventions, AAA naming, mock patterns for FreeMediator/repositories | test-generation-agent |
+| `doc-sync` | Documentation staleness detection, XML doc generation, README sync | documentation-agent |
+| `supply-chain-audit` | NuGet/npm/pip vulnerability scanning, license matrix, CVE correlation | dependency-audit-agent |
+| `environment-health` | Docker health checks, service monitoring, container lifecycle | environment-health-agent |
+| `research-synthesis` | Multi-source cross-referencing, source credibility scoring, briefing formats | research-agent |
+| `session-context` | Git change summarization, ADR relevance matching, pattern applicability | context-builder-agent |
+| `task-decomposition` | Goal breakdown heuristics, dependency DAGs, sub-agent assignment protocols | task-decomposition-agent |
+
+### Workflow Primitives (vendored from mattpocock/skills)
+
+Vendored copies of workflow-primitive skills from [Matt Pocock's skills repo](https://github.com/mattpocock/skills). Each carries `source: mattpocock/skills` in its frontmatter. See [Companion Skills](#companion-skills) for the rationale and re-vendoring guidance.
+
+| Skill | Description | Upstream path |
+|-------|-------------|---------------|
+| `grill-me` | Relentless plan/design interview — one question at a time with recommended answers. | `skills/productivity/grill-me/SKILL.md` |
+| `zoom-out` | Map callers, dependents, and module relationships before continuing. | `skills/engineering/zoom-out/SKILL.md` |
+| `caveman` | Terse, keyword-driven communication mode — cuts token usage ~75%. Persistent once triggered. | `skills/productivity/caveman/SKILL.md` |
+| `improve-codebase-architecture` | Deep module refactoring using APOSD vocabulary — eliminates shallow modules, information leakage, naming mismatches. | `skills/engineering/improve-codebase-architecture/SKILL.md` |
+| `to-prd` | Converts context into a structured PRD with goals, user stories, and binary acceptance criteria. | `skills/engineering/to-prd/SKILL.md` |
+| `to-issues` | Converts a PRD into atomic GitHub Issues ordered by dependency. | `skills/engineering/to-issues/SKILL.md` |
+
+---
+
+## skills/personal/
 
 ### Coaching & Learning Suite
 
@@ -174,72 +267,32 @@ See [`pi/global/README.md`](pi/global/README.md) for the full Ollama setup guide
 | `pr-feedback-writer` | Review communication coach — blocking vs suggestion vs nit, constructive framing, explaining the "why". |
 | `technical-debt-assessor` | Debt quantification — deliberate vs accidental, cost-to-fix vs cost-to-carry, business case building. |
 | `architecture-journal` | Lightweight ADR templates with retrospective prompts at 30/90/180 days. |
-| `grill-me` | Relentless plan/design interview — one question at a time with recommended answers, walking every branch of the decision tree. ([source](https://github.com/mattpocock/skills/tree/main/grill-me)) |
-| `zoom-out` | Zooms out from current code to map callers, dependents, and module relationships before continuing. ([source](https://github.com/mattpocock/skills)) |
-| `caveman` | Switches to terse, keyword-driven communication mode — cuts token usage ~75%. Persistent once triggered. ([source](https://github.com/mattpocock/skills)) |
-| `improve-codebase-architecture` | Deep module refactoring using APOSD vocabulary — eliminates shallow modules, information leakage, and naming mismatches. ([source](https://github.com/mattpocock/skills)) |
+| `spec-coach` | Interactive spec design coach — vision, PRD structure, INVEST story quality, specification by example, three-tier guardrails. |
 
-### DDD Suite
+### Edge/IoT/Robotics Suite
 
 | Skill | Description |
 |-------|-------------|
-| `domain-model` | DDD domain modeling consultant — enforces CONTEXT.md vocabulary, surfaces code/plan contradictions, records decisions as ADRs sparingly. ([source](https://github.com/mattpocock/skills)) |
+| `edge-cv-pipeline` | OpenCV + TFLite computer vision pipeline for Jetson and Raspberry Pi with model conversion and profiling. |
+| `jetson-deploy` | Jetson Orin Nano deployment with TensorRT optimization, containerization, and power management. |
+| `sensor-integration` | Sensor data pipeline with I2C, SPI, UART, and GPIO. Calibration and anomaly detection. |
+| `picar-x-behavior` | Composable robot behaviors for SunFounder Picar-X — subsumption architecture and behavior trees. |
 
-### Product & GitHub Workflow Suite
-
-| Skill | Description |
-|-------|-------------|
-| `to-prd` | Converts meeting notes or feature requests into a structured PRD with goals, user stories, and binary acceptance criteria. ([source](https://github.com/mattpocock/skills)) |
-| `to-issues` | Converts a PRD into atomic GitHub Issues ordered by dependency — infrastructure first, features next, polish last. ([source](https://github.com/mattpocock/skills)) |
-| `triage-issue` | Triages a GitHub Issue or bug report — classifies severity, identifies root cause area, recommends priority and owner. |
-
-### Agent Support Suite
+### Agent Support Suite (Personal)
 
 | Skill | Description | Used By |
 |-------|-------------|---------|
-| `automated-code-review` | Autonomous review checklists — security, correctness, performance, maintainability, style | code-review-agent |
-| `test-scaffold` | Test generation conventions, AAA naming, mock patterns for FreeMediator/repositories | test-generation-agent |
-| `doc-sync` | Documentation staleness detection, XML doc generation, README sync | documentation-agent |
-| `supply-chain-audit` | NuGet/npm/pip vulnerability scanning, license matrix, CVE correlation | dependency-audit-agent |
-| `environment-health` | Docker health checks, service monitoring, container lifecycle | environment-health-agent |
 | `model-optimization` | Quantization workflows, TensorRT/TFLite conversion, accuracy/latency benchmarking | model-optimization-agent |
 | `anomaly-detection` | Statistical anomaly detection, drift algorithms, alert/log/calibrate decision trees | sensor-anomaly-agent |
 | `fleet-management` | Rolling deployment strategies, multi-device coordination, rollback triggers | fleet-deployment-agent |
-| `research-synthesis` | Multi-source cross-referencing, source credibility scoring, briefing formats | research-agent |
-| `session-context` | Git change summarization, ADR relevance matching, pattern applicability | context-builder-agent |
-| `task-decomposition` | Goal breakdown heuristics, dependency DAGs, sub-agent assignment protocols | task-decomposition-agent |
-
-### Agent Design Suite
-
-| Skill | Description |
-|-------|-------------|
-| `spec-coach` | Interactive spec design coach — vision, PRD structure, INVEST story quality, specification by example, three-tier guardrails. |
-| `skill-creator` | Creates, revises, and scores SKILL.md definitions against the 10-section gold standard. |
-
-### RPI Workflow Suite
-
-A structured Research → Plan → Implement loop with parallel subagents and session isolation.
-
-| Skill | Description |
-|-------|-------------|
-| `rpi-research` | Parallel codebase exploration using subagents to gather context before planning. |
-| `rpi-plan` | Converts a research artifact into a phased implementation plan with discrete, testable steps. |
-| `rpi-implement` | Executes a phased implementation plan mechanically, one step at a time. |
-| `rpi-iterate` | Surgically updates an existing plan based on new discoveries or scope changes. |
-
-### Other Skills
-
-| Skill | Description |
-|-------|-------------|
-| `jira-review` | Jira ticket review with complexity scoring and requirements extraction. |
-| `jira-comment-writer` | Plain-language Jira comment drafter — translates technical updates into stakeholder language. |
-| `confluence-guide-writer` | Reads Confluence spec pages and/or source code, generates well-formatted technical guides. |
 
 ---
 
 ## Agents
 
-Autonomous agents that make decisions and take actions independently. Each exists in both Claude Code and OpenCode format.
+Autonomous agents that make decisions and take actions independently. Each exists in both Claude Code (`claude/agents/`) and OpenCode (`opencode/agents/`) format. Agents are split into `team/` and `personal/` subdirectories mirroring the skill split.
+
+## claude/agents/team/ and opencode/agents/team/ (32 agents)
 
 ### Development & DevOps
 
@@ -255,15 +308,7 @@ Autonomous agents that make decisions and take actions independently. Each exist
 | `migration-orchestrator` | Semi-autonomous migration orchestration — EF Core and .NET Framework migrations with approval gates. | ef-migration-manager, legacy-migration-analyzer |
 | `environment-health-agent` | Autonomous environment health monitoring — Docker, services, connections, recovery. | environment-health |
 | `task-decomposition-agent` | Meta-orchestrator — decomposes complex goals into sub-tasks, assigns to specialized agents. | task-decomposition |
-| `pm-capture-agent` | Converts meeting transcripts, Slack summaries, and SOWs into structured capture documents. | |
-
-### Domain-Specific
-
-| Agent | Description | Skills |
-|-------|-------------|--------|
-| `model-optimization-agent` | Autonomous model optimization — quantization, format conversion, benchmarking for edge. | model-optimization |
-| `sensor-anomaly-agent` | Autonomous sensor anomaly detection — statistical outliers, drift monitoring, recalibration. | anomaly-detection |
-| `fleet-deployment-agent` | Semi-autonomous fleet deployment — canary, staged rollout, health gates, rollback. | fleet-management |
+| `pm-capture-agent` | Converts meeting transcripts, Slack summaries, and SOWs into structured capture documents. | transcript-capture, email-capture, capture-consolidate |
 | `research-agent` | Autonomous research — multi-source investigation, credibility scoring, structured briefings. | research-synthesis |
 | `context-builder-agent` | Autonomous context assembly — git change summarization, ADR matching, dependency mapping. | session-context |
 
@@ -273,6 +318,7 @@ Autonomous agents that make decisions and take actions independently. Each exist
 |-------|-------------|
 | `python-security-agent` | OWASP Python security review with bandit, pip-audit, and executive summary. |
 | `python-federal-security-agent` | Federal Python security review — NIST 800-53, FISMA, FIPS compliance. |
+| `python-modernization-agent` | Legacy Python modernization analysis — Python 2→3, sync→async, Flask→FastAPI. |
 | `rust-arch-checklist-agent` | Rust architecture review — ownership, trait design, error handling, unsafe audit, Clippy. |
 | `rust-security-agent` | OWASP Rust security review with cargo-audit, cargo-deny, unsafe block audit. |
 | `rust-migration-agent` | C/C++ to Rust migration analysis and Rust modernization planning. |
@@ -291,6 +337,14 @@ Autonomous agents that make decisions and take actions independently. Each exist
 | `sqlx-migration-agent` | SQLx migration lifecycle — create, review, rollback test, apply, regenerate offline cache. |
 
 > RPI workflow subagents (`rpi-planner`, `rpi-implement`, `rpi-code-analyzer`, `rpi-file-locator`, `rpi-pattern-finder`) are spawned automatically by the RPI skills — not invoked directly.
+
+## claude/agents/personal/ and opencode/agents/personal/ (3 agents)
+
+| Agent | Description | Skills |
+|-------|-------------|--------|
+| `model-optimization-agent` | Autonomous model optimization — quantization, format conversion, benchmarking for edge. | model-optimization |
+| `sensor-anomaly-agent` | Autonomous sensor anomaly detection — statistical outliers, drift monitoring, recalibration. | anomaly-detection |
+| `fleet-deployment-agent` | Semi-autonomous fleet deployment — canary, staged rollout, health gates, rollback. | fleet-management |
 
 ---
 
@@ -351,17 +405,23 @@ The `project-templates/` directory contains per-project context files based on t
 
 ```
 ai-toolkit/
-├── skills/                     # 83 skills (SKILL.md + references/ per skill)
+├── skills/
+│   ├── team/                   # 62 team skills (shareable, production-ready)
+│   └── personal/               # 18 personal skills (deliberate practice + edge learning)
 ├── claude/
-│   ├── agents/                 # 35 Claude Code agent definitions
-│   ├── commands/               # 8 slash commands with shell injection
+│   ├── agents/
+│   │   ├── team/               # 32 Claude Code team agents
+│   │   └── personal/           # 3 Claude Code personal agents
+│   ├── commands/               # 9 slash commands with shell injection
 │   └── global/                 # Global config → ~/.claude/
 │       ├── CLAUDE.md           # Global instructions (every project)
 │       ├── settings.json       # Hooks: credential stop + post-write build/lint gates
 │       └── settings.local.json # Permissions: bash allow/deny, read allow/deny
 ├── opencode/
-│   ├── agents/                 # 35 OpenCode agent definitions
-│   ├── commands/               # 8 slash commands with agent routing
+│   ├── agents/
+│   │   ├── team/               # 32 OpenCode team agents
+│   │   └── personal/           # 3 OpenCode personal agents
+│   ├── commands/               # 9 slash commands with agent routing
 │   └── global/                 # Global config → ~/.config/opencode/
 │       ├── AGENTS.md           # Global instructions (every project)
 │       └── opencode.json       # Providers, MCP, permissions, temperatures
