@@ -12,9 +12,9 @@ mkdir -p "${CLAUDE_DIR}/agents"
 mkdir -p "${CLAUDE_DIR}/skills"
 mkdir -p "${CLAUDE_DIR}/commands"
 
-cp -v "${REPO_ROOT}/claude/agents/"*.md "${CLAUDE_DIR}/agents/"
+find "${REPO_ROOT}/claude/agents" -name "*.md" -exec cp -v {} "${CLAUDE_DIR}/agents/" \;
 cp -rv "${REPO_ROOT}/skills/"* "${CLAUDE_DIR}/skills/"
-cp -v "${REPO_ROOT}/claude/commands/"*.md "${CLAUDE_DIR}/commands/"
+find "${REPO_ROOT}/claude/commands" -name "*.md" -exec cp -v {} "${CLAUDE_DIR}/commands/" \;
 cp -v "${REPO_ROOT}/claude/global/statusline.sh" "${CLAUDE_DIR}/statusline.sh"
 chmod +x "${CLAUDE_DIR}/statusline.sh"
 

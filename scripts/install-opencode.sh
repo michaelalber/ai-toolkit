@@ -12,9 +12,9 @@ mkdir -p "${OPENCODE_DIR}/agents"
 mkdir -p "${OPENCODE_DIR}/skills"
 mkdir -p "${OPENCODE_DIR}/commands"
 
-cp -v "${REPO_ROOT}/opencode/agents/"*.md "${OPENCODE_DIR}/agents/"
+find "${REPO_ROOT}/opencode/agents" -name "*.md" -exec cp -v {} "${OPENCODE_DIR}/agents/" \;
 cp -rv "${REPO_ROOT}/skills/"* "${OPENCODE_DIR}/skills/"
-cp -v "${REPO_ROOT}/opencode/commands/"*.md "${OPENCODE_DIR}/commands/"
+find "${REPO_ROOT}/opencode/commands" -name "*.md" -exec cp -v {} "${OPENCODE_DIR}/commands/" \;
 
 echo "Done."
 echo "  Agents   → ${OPENCODE_DIR}/agents/"
