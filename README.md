@@ -94,6 +94,10 @@ ln -sf /path/to/ai-toolkit/skills/personal/*/ ~/.config/opencode/skills/
 mkdir -p ~/.config/opencode/agents
 ln -sf /path/to/ai-toolkit/opencode/agents/team/*.md ~/.config/opencode/agents/
 ln -sf /path/to/ai-toolkit/opencode/agents/personal/*.md ~/.config/opencode/agents/
+
+# Commands
+mkdir -p ~/.config/opencode/commands
+ln -sf /path/to/ai-toolkit/opencode/commands/*.md ~/.config/opencode/commands/
 ```
 
 See [`opencode/global/README.md`](opencode/global/README.md) for provider config, Ollama tuning, and permissions.
