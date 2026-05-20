@@ -1,11 +1,11 @@
 # AI Toolkit
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Skills](https://img.shields.io/badge/skills-80-blue)](#skills)
+[![Skills](https://img.shields.io/badge/skills-81-blue)](#skills)
 [![Agents](https://img.shields.io/badge/agents-35-blue)](#agents)
 [![Platforms](https://img.shields.io/badge/platforms-Claude%20Code%20%7C%20OpenCode%20%7C%20Pi-informational)](#platforms)
 
-**80 skills, 35 agents, and 10 slash commands for AI-assisted software development — spanning TDD, .NET, Python, PHP, Rust, edge AI, security, DDD, and more.**
+**81 skills, 35 agents, and 10 slash commands for AI-assisted software development — spanning TDD, .NET, Python, PHP, Rust, edge AI, security, DDD, and more.**
 
 Works with [Claude Code](https://claude.ai/code), [OpenCode](https://opencode.ai/), and [Pi](https://pi.dev) (Ollama local models).
 
@@ -29,7 +29,7 @@ This toolkit encodes that expertise as reusable primitives. Each skill is an opi
 
 | | Count |
 |--|-------|
-| Skills (team) | 62 |
+| Skills (team) | 63 |
 | Skills (personal) | 18 |
 | Agents (Claude Code) | 35 |
 | Agents (OpenCode) | 35 |
