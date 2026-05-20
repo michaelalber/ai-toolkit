@@ -33,6 +33,7 @@ Use `search_knowledge` (grounded-code-mcp) to ground decisions in authoritative 
 | `search_knowledge("unit test AAA arrange act assert pattern")` | When reviewing the failing test before implementing — confirms test structure is sound |
 | `search_knowledge("Python implementation patterns type hints")` | For Python projects — idiomatic implementation patterns |
 | `search_knowledge("C# implementation patterns minimal")` | For .NET projects — idiomatic implementation patterns |
+| `search_knowledge("PHP implementation patterns type hints")` | For PHP projects — idiomatic implementation patterns |
 
 **Protocol:** Search at the start of a GREEN phase session to confirm the implementation strategy. Cite the source path in your response.
 
@@ -233,6 +234,7 @@ Never say "tests pass" without actually running them:
 See reference files for idioms:
 - [Minimal Patterns](references/minimal-patterns.md) - Language-agnostic minimal implementation
 - [.NET Idioms](references/dotnet-idioms.md) - C#/.NET specific patterns
+- [PHP Idioms](references/php-idioms.md) - PHP specific patterns (PHPUnit / Pest)
 - [Python Idioms](references/python-idioms.md) - Python specific patterns
 - [TypeScript Idioms](references/typescript-idioms.md) - TypeScript/JavaScript patterns
 

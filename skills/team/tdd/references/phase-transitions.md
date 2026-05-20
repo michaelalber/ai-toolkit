@@ -26,6 +26,12 @@ Precondition Check:
 # .NET
 dotnet test --filter "FullyQualifiedName~TestName" --no-build
 
+# PHP (PHPUnit)
+./vendor/bin/phpunit --filter test_method_name --stop-on-failure
+
+# PHP (Pest)
+./vendor/bin/pest --filter "test name" --bail
+
 # Python (pytest)
 pytest -x -v tests/test_file.py::test_name
 

@@ -107,6 +107,46 @@ it('creates an OrderCreated event when order is saved', async () => {
 
 ---
 
+## PHP
+
+### Example: Service Sending Notification
+
+**WRONG — verifies internal call (over-mocked)**
+
+```php
+public function test_order_notifies_on_save(): void
+{
+    $mailer = $this->createMock(MailerInterface::class);
+    $mailer->expects($this->once())
+           ->method('send')
+           ->with($this->stringContains('order-confirmation'));
+
+    $service = new OrderService($mailer);
+    $service->placeOrder(new Order($this->testItems));
+    // tests that a specific internal method was called
+}
+```
+
+If the service is refactored to queue emails instead of sending inline, this test breaks
+even if the confirmation email still gets sent.
+
+**RIGHT — tests the observable side effect**
+
+```php
+public function test_order_sends_confirmation_email(): void
+{
+    $outbox = new InMemoryOutbox();
+    $service = new OrderService($outbox);
+
+    $service->placeOrder(new Order($this->testItems));
+
+    $messages = $outbox->messagesFor('order-confirmation');
+    $this->assertNotEmpty($messages);
+}
+```
+
+---
+
 ## The Mental Test
 
 Before committing a test, ask: *"If I renamed every private method and field in the
