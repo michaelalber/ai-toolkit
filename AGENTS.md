@@ -18,7 +18,7 @@
 ## Project Overview
 
 - **Name:** AI Toolkit
-- **Purpose:** A collection of 84+ shareable skills and autonomous agents for AI-assisted software development. Supports Claude Code and OpenCode.
+- **Purpose:** A collection of 81+ shareable skills and autonomous agents for AI-assisted software development. Supports Claude Code and OpenCode.
 - **Phase:** Maintain — stable toolkit; work consists of adding new skills/agents, fixing existing ones, and keeping platform parity.
 - **Jira project key:** N/A — task specs are tracked in conversation context or ad hoc
 - **Definition of success:** Every skill and agent installs cleanly, follows the 10-section template exactly, and works out of the box without requiring external documentation.
