@@ -5,7 +5,7 @@
 [![Agents](https://img.shields.io/badge/agents-35-blue)](#agents)
 [![Platforms](https://img.shields.io/badge/platforms-Claude%20Code%20%7C%20OpenCode%20%7C%20Pi-informational)](#platforms)
 
-**80 skills, 35 agents, and 9 slash commands for AI-assisted software development — spanning TDD, .NET, Python, Rust, edge AI, security, DDD, and more.**
+**80 skills, 35 agents, and 9 slash commands for AI-assisted software development — spanning TDD, .NET, Python, PHP, Rust, edge AI, security, DDD, and more.**
 
 Works with [Claude Code](https://claude.ai/code), [OpenCode](https://opencode.ai/), and [Pi](https://pi.dev) (Ollama local models).
 
@@ -133,7 +133,7 @@ See `.matt-pocock-attribution.yml` at the repo root for the full provenance mani
 |-------|-------------|
 | `tdd` | Canonical RED-GREEN-REFACTOR inner loop. Enforces behavioral, structure-insensitive tests and prohibits horizontal slicing. |
 | `evaluate-tests` | Evaluates existing test suites against behavioral and structure-insensitive criteria. Produces a prioritized rewrite list. |
-| `tdd-implementer` | GREEN phase specialist. Implements minimal code using Fake It, Obvious Implementation, or Triangulation. |
+| `tdd-implementer` | GREEN phase specialist. Implements minimal code using Fake It, Obvious Implementation, or Triangulation. Stack-specific idioms for .NET, PHP (PHPUnit / Pest), Python, and TypeScript. |
 | `tdd-refactor` | REFACTOR phase specialist. Safely improves structure while keeping tests green. Code smell detection and refactoring recipes. |
 | `tdd-agent` | Fully autonomous TDD. AI drives all phases with strict guardrails and verification at each step. |
 | `tdd-pair` | Collaborative TDD with role-based pairing — Ping-Pong, Navigator, and Teaching modes. |
