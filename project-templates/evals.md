@@ -84,8 +84,9 @@ Evals answer: *"Is the output actually good?"* — not *"does it look reasonable
 | # | Pattern to Reject | Why It Fails | Rule |
 |---|---|---|---|
 | 1 | Output that "looks right" but isn't grounded in project context | Generic output wastes time — requires cleanup that defeats delegation | Always anchor recommendations to a specific fact from AGENTS.md or the active Jira spec |
-| 2 | [Pattern] | [Why it fails] | [Rule going forward] |
-| 3 | [Pattern] | [Why it fails] | [Rule going forward] |
+| 2 | Nullable column on main entity for optional grouped data (e.g., `Address?` columns on `Customer`) | Should be owned entity on separate table; nullable columns introduce 3VL into the principal query | For any optional multi-field concept, default to `OwnsOne(..., pb => pb.ToTable(...))` |
+| 3 | Enum-like states encoded as `bool?` or `string?` (e.g., `IsApproved?`) | Bool/string nullable flattens multiple states into ambiguous NULL; broke filter queries in prod | Use an explicit enum property with a named `NotApplicable` or `Pending` variant instead |
+| 4 | [Pattern] | [Why it fails] | [Rule going forward] |
 
 ---
 

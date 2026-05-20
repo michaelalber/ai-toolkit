@@ -83,6 +83,9 @@
 
 | Date | Decision | Rationale |
 |---|---|---|
+| YYYY-MM-DD | NRT enabled project-wide (`<Nullable>enable</Nullable>`) | Single source of truth: C# nullability flows directly to EF model and DB schema. |
+| YYYY-MM-DD | Optional multi-field data → owned entity on separate table | Vertical decomposition eliminates nullable columns and SQL 3VL from the principal table. |
+| YYYY-MM-DD | Semantically distinct absence states → enum, not NULL | NULL collapses distinct states (pending/N/A/unknown) into one value; enums keep them queryable and readable. |
 | YYYY-MM-DD | [e.g., Vertical slice over layered architecture] | [Why] |
 
 ---

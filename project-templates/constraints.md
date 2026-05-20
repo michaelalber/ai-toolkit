@@ -24,6 +24,12 @@
 - Confirm understanding before executing any irreversible action (delete, deploy, send, push).
 - End every agentic run with a passing test state and an updated domain-memory.md (dark factory only).
 - Add a `# VERIFY:` comment rather than guess when uncertain about a function signature, API, or behavior.
+- Enable `<Nullable>enable</Nullable>` project-wide before writing any entity or migration.
+- Use `required` keyword (C# 11+) for required reference-type properties on entities.
+- For optional multi-field data (e.g., address, profile): use an owned entity on a separate table (`OwnsOne(..., pb => pb.ToTable(...))`) — not nullable columns on the main table.
+- Encode semantically distinct absence states (Pending, N/A, Unknown) as an enum property — not as a nullable column.
+- Owned entities sharing a table with their principal must have at least one `required` property so EF Core can detect presence vs. all-null absence.
+- Initialize collection navigations to empty (`= new List<T>()`) — never leave them nullable.
 - [PROJECT-SPECIFIC MUST]
 - [PROJECT-SPECIFIC MUST]
 
@@ -43,6 +49,10 @@
 - Do not move a Jira issue to Done or Closed — that is a human action only.
 - For each tool or data source this agent needs: confirm it has an MCP interface, or computer-use
   is explicitly enabled as a fallback. Tools covered by neither are out of scope for agent execution.
+- Do not add nullable columns to distinguish "unknown" from "not applicable" — they collapse to a single NULL value and corrupt aggregates via SQL three-valued logic.
+- Do not create an optional owned entity on a shared table without at least one required property (EF Core 6+ will warn or throw; the query result is unpredictable before that).
+- Do not use `= NULL` in raw SQL predicates — use `IS NULL` / `IS NOT NULL`.
+- Do not make a reference-type navigation property nullable purely to suppress compiler warnings — use `= null!` with the null-forgiving operator and document why.
 - [PROJECT-SPECIFIC PROHIBITION]
 - [PROJECT-SPECIFIC PROHIBITION]
 
