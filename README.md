@@ -412,7 +412,7 @@ The `project-templates/` directory contains per-project context files based on t
 ```
 ai-toolkit/
 ├── skills/
-│   ├── team/                   # 62 team skills (shareable, production-ready)
+│   ├── team/                   # 63 team skills (shareable, production-ready)
 │   └── personal/               # 18 personal skills (deliberate practice + edge learning)
 ├── claude/
 │   ├── agents/
