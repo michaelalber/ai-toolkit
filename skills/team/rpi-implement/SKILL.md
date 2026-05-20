@@ -139,7 +139,7 @@ Full templates: `references/implementation-templates.md`
 | `rpi-iterate` | Updates the plan when this skill encounters gaps, ambiguities, or out-of-scope issues during execution. |
 | `rpi-research` | If implementation reveals something the research missed: stop → rpi-iterate the plan → rpi-implement resumes. |
 | `ef-migration-manager` | When phases involve EF Core migrations — migration execution safety, dry-run verification, rollback commands. |
-| `tdd-cycle` | If the plan includes writing tests before implementation, use tdd-cycle to manage RED-GREEN-REFACTOR within each phase. |
+| `tdd` | Mandatory inner loop for every implementation phase. Each item in a phase follows one test → one implementation → refactor. Write the failing test, write minimal code to pass it, refactor, then advance to the next item. |
 | `session-context` | Before resuming an interrupted implementation, load session-context to understand what changed in git since the last session. |
 
 ## .NET/Blazor Adapter Notes

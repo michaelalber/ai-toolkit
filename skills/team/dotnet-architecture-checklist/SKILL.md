@@ -203,7 +203,7 @@ Full templates (Session Opening, Checklist Results Table, Finding Details, Sessi
 
 **Mixed CQRS and repository patterns**: Do NOT recommend removing repositories immediately. Report the inconsistency as HIGH. Recommend: new features use CQRS exclusively; existing repository features migrate incrementally. Flag any handlers that inject repositories (double indirection) as a separate finding.
 
-**Legacy code without tests**: Report as HIGH (not critical). Recommend "test-forward" strategy: all new features and bug fixes include tests. Identify highest-risk handlers as priority candidates for retroactive testing. Reference `tdd-cycle` for methodology.
+**Legacy code without tests**: Report as HIGH (not critical). Recommend "test-forward" strategy: all new features and bug fixes include tests. Identify highest-risk handlers as priority candidates for retroactive testing. Reference `tdd` for methodology.
 
 **Blazor Interactive Auto with unclear render mode boundaries**: Flag components without explicit `@rendermode` directives as MEDIUM. Identify components accessing server-only resources (DbContext, file system) — these must be Server-rendered. Recommend explicit `@rendermode InteractiveServer` or `@rendermode InteractiveWebAssembly` on every interactive component.
 

@@ -301,7 +301,7 @@ class UserRepository:
 
 ## Integration with Other Skills
 
-- **`tdd-cycle`** — Orchestrates when this skill is invoked; confirms a failing test exists before handing off to GREEN
+- **`tdd`** — The canonical inner loop; orchestrates when this skill is invoked and confirms a failing test exists before handing off to GREEN
 - **`tdd-agent`** — Calls this skill during its autonomous GREEN phase
 - **`tdd-pair`** — Calls this skill when it is the AI's turn to implement in ping-pong mode
 - **`tdd-refactor`** — Invoked immediately after GREEN is complete; receives code that is working but possibly unclean

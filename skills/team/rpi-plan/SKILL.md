@@ -140,7 +140,7 @@ Full templates: `references/plan-artifact-template.md` | Phase verification comm
 | `task-decomposition` | For very large features, break the plan into parallel workstreams for concurrent execution. |
 | `ef-migration-manager` | For phases involving EF Core migrations — safety checks, dry-run verification, rollback procedures. |
 | `dotnet-vertical-slice` | When planning new vertical slices in .NET — canonical file/folder structure and DI registration pattern. |
-| `tdd-cycle` | When planning phases requiring RED-GREEN-REFACTOR discipline — structure test-write → implement → refactor steps. |
+| `tdd` | When planning phases requiring RED-GREEN-REFACTOR discipline — structure test-write → implement → refactor steps. |
 
 ## .NET/Blazor Adapter Notes
 

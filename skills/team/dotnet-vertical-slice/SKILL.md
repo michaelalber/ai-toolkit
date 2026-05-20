@@ -184,7 +184,7 @@ See [Telerik Blazor Templates](references/telerik-blazor-templates.md) for Teler
 ## Integration with Other Skills
 
 - **`ef-migration-manager`** — When a slice requires schema changes, plan the migration alongside the feature. Define the entity first, then create the migration.
-- **`tdd-cycle`** — Each slice is an ideal TDD unit. Write a failing handler test (RED), implement minimally (GREEN), refactor. Handler isolation makes testing straightforward without mocking half the application.
+- **`tdd`** — Each slice is an ideal TDD unit. Write a failing handler test (RED), implement minimally (GREEN), refactor. Handler isolation makes testing straightforward without mocking half the application.
 - **`tdd-agent`** — For autonomous vertical slice development: scaffold the folder, write handler tests RED, implement GREEN, refactor.
 
 ## Reference Files

@@ -251,7 +251,7 @@ next_action: Write test_should_raise_validation_error_when_email_is_invalid
 ## Integration with Other Skills
 
 - **`architecture-review`** — When structural problems appear (circular dependencies, unclear boundaries, module coupling), use architecture-review for Socratic design critique. This skill enforces code-level quality; architecture-review examines design-level quality.
-- **`tdd-cycle`** — For language-agnostic TDD coaching or when the TDD process itself needs pedagogical support. This skill adds Python-specific tooling and quality gates on top.
+- **`tdd`** — For language-agnostic TDD coaching or when the TDD process itself needs pedagogical support. This skill adds Python-specific tooling and quality gates on top.
 - **`security-review-trainer`** — When bandit findings reveal recurring patterns, use security-review-trainer to build the habit of writing secure code by default.
 - **`dependency-mapper`** — When circular imports appear, use dependency-mapper to generate a concrete dependency graph and compare against intended clean architecture boundaries.
 

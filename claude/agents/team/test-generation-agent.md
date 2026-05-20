@@ -5,7 +5,7 @@ tools: Read, Edit, Write, Bash, Grep, Glob
 model: inherit
 skills:
   - tdd-implementer
-  - tdd-cycle
+  - tdd
   - dotnet-vertical-slice
   - test-scaffold
 ---

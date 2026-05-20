@@ -151,7 +151,7 @@ next_action: [what should happen next]
 
 ## Integration with Other Skills
 
-- **`tdd-cycle`** — Audit a session orchestrated by tdd-cycle; full-cycle commit history provides the richest evidence
+- **`tdd`** — Audit a session run under the canonical tdd inner loop; full-cycle commit history (one test → one implementation → refactor → commit) provides the richest evidence
 - **`tdd-agent`** — Run tdd-verify after an autonomous tdd-agent session to confirm discipline was followed
 - **`tdd-pair`** — Run tdd-verify at the end of a pair session to score compliance and surface improvement areas
 - **`tdd-refactor`** — If tdd-verify finds implementation-coupled tests, invoke tdd-refactor to decouple them safely

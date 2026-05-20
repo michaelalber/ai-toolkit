@@ -359,5 +359,5 @@ Actions:
 
 - **`sensor-integration`** -- Use for building and calibrating sensor pipelines (ultrasonic filtering, grayscale normalization, camera capture). Feed processed sensor data into Picar-X behaviors.
 - **`edge-cv-pipeline`** -- Use for building computer vision pipelines (object detection, lane detection, sign recognition) that run on the Raspberry Pi. Vision behaviors consume CV pipeline outputs.
-- **`tdd-cycle`** / **`tdd-agent`** -- Apply TDD discipline when implementing behavior classes. Write failing tests for sensor-to-actuator logic before implementing the behavior. Especially valuable for static tests with mocked hardware.
+- **`tdd`** / **`tdd-agent`** -- Apply TDD discipline when implementing behavior classes. Write failing tests for sensor-to-actuator logic before implementing the behavior. Especially valuable for static tests with mocked hardware.
 - **`jetson-deploy`** -- If offloading heavy CV inference to a Jetson device, use this skill for deployment. The Picar-X communicates with the Jetson over the network for inference results.

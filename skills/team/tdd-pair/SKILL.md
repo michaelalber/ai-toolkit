@@ -185,7 +185,7 @@ Full templates (Turn Handoff, Session Summary): `references/pairing-patterns.md`
 
 ## Integration with Other Skills
 
-- **`tdd-cycle`** — Provides the phase state machine and transition rules used in every pairing mode
+- **`tdd`** — The canonical inner loop; provides the phase state machine, transition rules, and the two critical test properties (behavioral, structure-insensitive)
 - **`tdd-implementer`** — Invoked when it is the AI's turn to write implementation in ping-pong mode
 - **`tdd-refactor`** — Invoked during the shared REFACTOR step
 - **`tdd-verify`** — Run after the session to audit TDD compliance and generate a scorecard

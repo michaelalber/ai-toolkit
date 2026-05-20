@@ -52,7 +52,7 @@ Three distinct primitives compose the toolkit:
 User types /tdd-cycle
     → command injects live dotnet test output
     → model reads failing tests
-    → tdd-cycle skill drives RED-GREEN-REFACTOR
+    → tdd skill drives RED-GREEN-REFACTOR
     → hooks run dotnet build after every file write
 ```
 
@@ -131,7 +131,8 @@ See `.matt-pocock-attribution.yml` at the repo root for the full provenance mani
 
 | Skill | Description |
 |-------|-------------|
-| `tdd-cycle` | Orchestrates RED-GREEN-REFACTOR. Maintains phase state and enforces transitions. |
+| `tdd` | Canonical RED-GREEN-REFACTOR inner loop. Enforces behavioral, structure-insensitive tests and prohibits horizontal slicing. |
+| `evaluate-tests` | Evaluates existing test suites against behavioral and structure-insensitive criteria. Produces a prioritized rewrite list. |
 | `tdd-implementer` | GREEN phase specialist. Implements minimal code using Fake It, Obvious Implementation, or Triangulation. |
 | `tdd-refactor` | REFACTOR phase specialist. Safely improves structure while keeping tests green. Code smell detection and refactoring recipes. |
 | `tdd-agent` | Fully autonomous TDD. AI drives all phases with strict guardrails and verification at each step. |
@@ -298,9 +299,9 @@ Autonomous agents that make decisions and take actions independently. Each exist
 
 | Agent | Description | Skills |
 |-------|-------------|--------|
-| `tdd-agent` | Autonomous TDD — drives the complete RED-GREEN-REFACTOR cycle with strict guardrails. | tdd-cycle, tdd-implementer, tdd-refactor, tdd-verify |
+| `tdd-agent` | Autonomous TDD — drives the complete RED-GREEN-REFACTOR cycle with strict guardrails. | tdd, tdd-implementer, tdd-refactor, tdd-verify |
 | `code-review-agent` | Autonomous code review — security, correctness, performance, maintainability, style. | code-review-coach, security-review-trainer, pr-feedback-writer, automated-code-review |
-| `test-generation-agent` | Autonomous test generation — analyzes code, identifies gaps, generates tests with TDD patterns. | tdd-implementer, tdd-cycle, test-scaffold |
+| `test-generation-agent` | Autonomous test generation — analyzes code, identifies gaps, generates tests with TDD patterns. | tdd-implementer, tdd, test-scaffold |
 | `documentation-agent` | Autonomous documentation sync — detects staleness, generates XML docs, updates READMEs. | architecture-journal, doc-sync |
 | `dependency-audit-agent` | Autonomous dependency auditing — vulnerability scanning, license compliance, upgrade paths. | supply-chain-audit, technical-debt-assessor |
 | `spec-extractor-agent` | Extracts structured agent specs from natural-language descriptions or existing code. | spec-coach |

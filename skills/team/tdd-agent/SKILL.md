@@ -215,7 +215,7 @@ See [Autonomous Protocol](references/autonomous-protocol.md) for extended workfl
 
 ## Integration with Other Skills
 
-- **`tdd-cycle`** — Orchestrates the phase state machine; invoke at session start to configure mode (autonomous vs. pair) and manage transitions
+- **`tdd`** — The canonical inner loop; defines the two critical properties (behavioral, structure-insensitive) and the per-cycle self-check this skill enforces
 - **`tdd-implementer`** — Called during GREEN phase for implementation strategy selection (Fake It / Obvious / Triangulation)
 - **`tdd-refactor`** — Called during REFACTOR phase for smell identification and safe step-by-step improvement
 - **`tdd-verify`** — Run after the session to audit TDD compliance, score commit history, and identify anti-patterns

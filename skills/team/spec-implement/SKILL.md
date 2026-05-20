@@ -226,7 +226,7 @@ Full templates (Session Opening, Criterion Announcement, RED/GREEN/REFACTOR comp
 | Skill | Relationship |
 |-------|-------------|
 | `spec-coach` | Produces specs that this skill consumes. Run `spec-coach` first on greenfield features, then hand the output here. |
-| `tdd-cycle` | Manages RED-GREEN-REFACTOR phase transitions within each criterion. Load when a single criterion's implementation becomes complex enough to need explicit phase tracking. |
+| `tdd` | Mandatory inner loop for every criterion in IMPLEMENT. RED-GREEN-REFACTOR is not optional or an escalation path — it is the implementation discipline for every criterion regardless of complexity. |
 | `rpi-research` | When spec-implement discovers unexpected complexity, switch to research first. Bring the artifact back to spec-implement to resume. |
 | `rpi-plan` | For specs large enough (10+ criteria with significant dependencies) that a formal phased plan is warranted, use rpi-plan + rpi-implement instead. |
 | `architecture-review` | When the spec describes a significant system design, run architecture-review before spec-implement begins. Architecture vulnerabilities found after implementation are expensive. |

@@ -18,7 +18,7 @@
 ## Project Overview
 
 - **Name:** AI Toolkit
-- **Purpose:** A collection of 83+ shareable skills and autonomous agents for AI-assisted software development. Supports Claude Code and OpenCode.
+- **Purpose:** A collection of 84+ shareable skills and autonomous agents for AI-assisted software development. Supports Claude Code and OpenCode.
 - **Phase:** Maintain — stable toolkit; work consists of adding new skills/agents, fixing existing ones, and keeping platform parity.
 - **Jira project key:** N/A — task specs are tracked in conversation context or ad hoc
 - **Definition of success:** Every skill and agent installs cleanly, follows the 10-section template exactly, and works out of the box without requiring external documentation.
@@ -90,7 +90,7 @@
 
 ## Open Loops
 
-- [ ] Skill count (currently 83) — update this file and README when skills are added or removed
+- [ ] Skill count (currently 84) — update this file and README when skills are added or removed
 - [ ] Agent count parity — Claude Code (35) vs. OpenCode (33); identify and add the missing OpenCode agent
 - [x] Commands layer — `claude/commands/` (9 commands) and `opencode/commands/` (9 commands) — added 2026-04-24
 
@@ -259,7 +259,7 @@ Key difference: Claude uses `skills:` array in frontmatter; OpenCode uses `skill
 
 | Suite | Skills | Focus |
 |-------|--------|-------|
-| TDD | tdd-cycle, tdd-implementer, tdd-refactor, tdd-agent, tdd-pair, tdd-verify | Test-Driven Development lifecycle |
+| TDD | tdd, tdd-implementer, tdd-refactor, tdd-agent, tdd-pair, tdd-verify, evaluate-tests | Test-Driven Development lifecycle |
 | Enterprise .NET | dotnet-vertical-slice, ef-migration-manager, nuget-package-scaffold, legacy-migration-analyzer, dotnet-architecture-checklist, dotnet-security-review, dotnet-security-review-federal, minimal-api-scaffolder, 4d-schema-migration | .NET patterns, migrations, security |
 | Edge/IoT | edge-cv-pipeline, jetson-deploy, sensor-integration, picar-x-behavior | Edge computing, CV, robotics |
 | AI/ML | rag-pipeline-python, rag-pipeline-dotnet, mcp-server-scaffold, ollama-model-workflow | RAG, MCP servers, local LLMs |

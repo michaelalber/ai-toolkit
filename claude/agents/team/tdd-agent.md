@@ -4,7 +4,7 @@ description: Autonomous TDD with strict guardrails. Use proactively when impleme
 tools: Read, Edit, Write, Bash, Grep, Glob
 model: inherit
 skills:
-  - tdd-cycle
+  - tdd
   - tdd-implementer
   - tdd-refactor
   - tdd-verify
