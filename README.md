@@ -5,7 +5,7 @@
 [![Agents](https://img.shields.io/badge/agents-35-blue)](#agents)
 [![Platforms](https://img.shields.io/badge/platforms-Claude%20Code%20%7C%20OpenCode%20%7C%20Pi-informational)](#platforms)
 
-**80 skills, 35 agents, and 9 slash commands for AI-assisted software development — spanning TDD, .NET, Python, PHP, Rust, edge AI, security, DDD, and more.**
+**80 skills, 35 agents, and 10 slash commands for AI-assisted software development — spanning TDD, .NET, Python, PHP, Rust, edge AI, security, DDD, and more.**
 
 Works with [Claude Code](https://claude.ai/code), [OpenCode](https://opencode.ai/), and [Pi](https://pi.dev) (Ollama local models).
 
@@ -33,7 +33,7 @@ This toolkit encodes that expertise as reusable primitives. Each skill is an opi
 | Skills (personal) | 18 |
 | Agents (Claude Code) | 35 |
 | Agents (OpenCode) | 35 |
-| Slash commands (per platform) | 9 |
+| Slash commands (per platform) | 10 |
 | Platforms | Claude Code, OpenCode, Pi |
 
 ---
@@ -49,7 +49,7 @@ Three distinct primitives compose the toolkit:
 **Commands** — User-triggered slash commands (type `/command-name`) that inject live shell state before the model acts. Live in `claude/commands/` and `opencode/commands/`.
 
 ```
-User types /tdd-cycle
+User types /tdd
     → command injects live dotnet test output
     → model reads failing tests
     → tdd skill drives RED-GREEN-REFACTOR
@@ -351,11 +351,12 @@ Autonomous agents that make decisions and take actions independently. Each exist
 
 ## Commands
 
-Nine slash commands per platform. Each injects live shell state before the model acts — the model sees real output, not a description of it.
+Ten slash commands per platform. Each injects live shell state before the model acts — the model sees real output, not a description of it.
 
 | Command | Injects | What it does |
 |---------|---------|--------------|
-| `/tdd-cycle` | `dotnet test` output | Runs the TDD cycle against live failing tests |
+| `/tdd` | `dotnet test` output | Runs the TDD cycle against live failing tests |
+| `/evaluate-tests [path]` | — | Audits existing tests for coupling, fragility, and theater |
 | `/code-review` | `git diff` | Reviews staged or branch changes |
 | `/security-review [path]` | — | OWASP security review scoped to a path |
 | `/arch-review [component]` | — | Socratic architecture challenge |
@@ -370,7 +371,7 @@ Nine slash commands per platform. Each injects live shell state before the model
 ## Usage
 
 ```
-/tdd-cycle                         # runs TDD cycle with live test output
+/tdd                               # runs TDD cycle with live test output
 /code-review                       # reviews git diff
 /security-review src/              # OWASP scan scoped to src/
 /arch-review OrderService          # Socratic challenge of a component
@@ -413,7 +414,7 @@ ai-toolkit/
 │   ├── agents/
 │   │   ├── team/               # 32 Claude Code team agents
 │   │   └── personal/           # 3 Claude Code personal agents
-│   ├── commands/               # 9 slash commands with shell injection
+│   ├── commands/               # 10 slash commands with shell injection
 │   └── global/                 # Global config → ~/.claude/
 │       ├── CLAUDE.md           # Global instructions (every project)
 │       ├── settings.json       # Hooks: credential stop + post-write build/lint gates
@@ -422,7 +423,7 @@ ai-toolkit/
 │   ├── agents/
 │   │   ├── team/               # 32 OpenCode team agents
 │   │   └── personal/           # 3 OpenCode personal agents
-│   ├── commands/               # 9 slash commands with agent routing
+│   ├── commands/               # 10 slash commands with agent routing
 │   └── global/                 # Global config → ~/.config/opencode/
 │       ├── AGENTS.md           # Global instructions (every project)
 │       └── opencode.json       # Providers, MCP, permissions, temperatures
