@@ -143,7 +143,14 @@
 
     "edit": "ask",
 
-    // bash: catch-all "ask" is the primary RCE defense (OWASP T2, T11).
+    // bash: this config operates at Level 4 of the Five Levels of Bash Security — deny by
+    // default ("*": "ask"), allow only explicitly named prefixes. Known residual Level 3 risk:
+    // prefix matching cannot parse shell metacharacters, so an allowed prefix like "find*"
+    // still auto-approves "find . -exec bash -c '<payload>' \;" and "grep*" auto-approves
+    // "grep x | bash". Mitigation: the "*": "ask" catch-all forces review for unlisted
+    // commands; remaining risk is chaining WITHIN an allowed prefix. Users MUST read proposed
+    // commands before approving — do not click through. (OWASP ASI05, LLM01, T2, T11)
+    //
     // Note: OpenCode pattern matching uses simple glob prefix — pipe/semicolon
     // metacharacters are NOT evaluated. Pipe-to-shell defense depends entirely
     // on the "ask" approval prompt and user review.
@@ -164,7 +171,13 @@
       "systemctl status*": "allow",
       "systemctl cat*": "allow",
       "nvidia-smi*": "allow",
-      "env*": "allow",
+
+      // env / echo: prefix matching cannot see shell metacharacters, so "env*" auto-approves
+      // "env bash -c <payload>" and "echo x && rm -rf dir". Require user review (OWASP ASI05,
+      // Level 3 bypass — Five Levels of Bash Security). Defense relies on the "*": "ask" catch-all
+      // for anything not starting with an approved prefix, but chaining within an approved prefix
+      // still bypasses — users MUST review suggested commands before approving.
+      "env*": "ask",
       "echo*": "allow",
       "find*": "allow",
       "grep*": "allow",
@@ -181,7 +194,9 @@
 
       // Package / MCP tooling
       "grounded-code-mcp ingest*": "allow",
-      "pipx run*": "allow",
+      // pipx run installs and executes arbitrary PyPI packages — supply chain risk (OWASP T17).
+      // Require explicit user approval each time; do not auto-allow.
+      "pipx run*": "ask",
 
       // Narrow sudo exceptions — MUST appear before "sudo *" deny below so the
       // more-specific pattern wins. Each exception is intentional and scoped.
