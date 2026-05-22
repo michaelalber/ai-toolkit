@@ -22,6 +22,15 @@
     ],
     "PostToolUse": [
       {
+        "matcher": "Bash(*)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "ts=$(date -u '+%Y-%m-%dT%H:%M:%SZ'); cmd=\"${CLAUDE_TOOL_INPUT_COMMAND:-}\"; mkdir -p \"$HOME/.claude/logs\" && printf '[%s] %s\\n' \"$ts\" \"$cmd\" >> \"$HOME/.claude/logs/bash-audit.log\"; exit 0"
+          }
+        ]
+      },
+      {
         "matcher": "Write(*.cs)",
         "hooks": [
           {
