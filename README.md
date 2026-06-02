@@ -1,11 +1,11 @@
 # AI Toolkit
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Skills](https://img.shields.io/badge/skills-81-blue)](#skills)
-[![Agents](https://img.shields.io/badge/agents-35-blue)](#agents)
+[![Skills](https://img.shields.io/badge/skills-86-blue)](#skills)
+[![Agents](https://img.shields.io/badge/agents-37-blue)](#agents)
 [![Platforms](https://img.shields.io/badge/platforms-Claude%20Code%20%7C%20OpenCode%20%7C%20Pi-informational)](#platforms)
 
-**81 skills, 35 agents, and 10 slash commands for AI-assisted software development — spanning TDD, .NET, Python, PHP, Rust, edge AI, security, DDD, and more.**
+**86 skills, 37 agents, and 15 slash commands for AI-assisted software development — spanning TDD, .NET, Python, PHP, Rust, edge AI, security, DDD, and more.**
 
 Works with [Claude Code](https://claude.ai/code), [OpenCode](https://opencode.ai/), and [Pi](https://pi.dev) (Ollama local models).
 
@@ -29,11 +29,11 @@ This toolkit encodes that expertise as reusable primitives. Each skill is an opi
 
 | | Count |
 |--|-------|
-| Skills (team) | 63 |
+| Skills (team) | 68 |
 | Skills (personal) | 18 |
-| Agents (Claude Code) | 35 |
-| Agents (OpenCode) | 35 |
-| Slash commands (per platform) | 10 |
+| Agents (Claude Code) | 37 |
+| Agents (OpenCode) | 37 |
+| Slash commands (per platform) | 15 |
 | Platforms | Claude Code, OpenCode, Pi |
 
 ---
@@ -42,7 +42,7 @@ This toolkit encodes that expertise as reusable primitives. Each skill is an opi
 
 Three distinct primitives compose the toolkit:
 
-**Skills** — Structured, opinionated prompt files that encode domain expertise. Model-invoked autonomously. Live in `skills/<name>/SKILL.md`. Each follows a strict 10-section template.
+**Skills** — Structured, opinionated prompt files that encode domain expertise. Model-invoked autonomously. Live in `skills/{team,personal}/<name>/SKILL.md`. Each follows a strict 10-section template.
 
 **Agents** — Autonomous executors that combine skills with tool access and guardrails. Operate independently within defined boundaries. Live in `claude/agents/` and `opencode/agents/`.
 
@@ -192,7 +192,27 @@ See `.matt-pocock-attribution.yml` at the repo root for the full provenance mani
 | `mcp-server-scaffold` | Custom MCP server creation with FastMCP (Python), testing patterns, and protocol reference. |
 | `ollama-model-workflow` | Local LLM management — Modelfile config, quantization, benchmarking. |
 
-### RPI Workflow Suite
+### QRSPI Workflow Suite
+
+A structured Questions → Research → Spec → Plan → Implement loop — the instruction-budget-disciplined
+replacement for RPI. Correct behavior is the default through artifact gates (no magic words): each phase
+refuses to run until the prior artifact exists. Driven by the `qrspi-orchestrator` (alignment) and
+`qrspi-implement` (execution) agents, with shared read-only `research-*` subagents. Artifacts co-locate in
+`thoughts/shared/qrspi/YYYY-MM-DD-{slug}/`.
+
+| Skill | Description |
+|-------|-------------|
+| `qrspi-questions` | Surfaces what the agent doesn't know as targeted technical questions; stops for human answers before research. |
+| `qrspi-research` | Ticket-hidden codebase research — spawns the `research-*` subagents in parallel, writes objective facts only (no recommendations). |
+| `qrspi-spec` | Design Brain-Dump → human "brain-surgery" alignment loop → vertical-slice Structure Outline. |
+| `qrspi-plan` | Converts the spec into a vertically-sliced tactical plan; refuses horizontal-layer plans. |
+| `qrspi-implement` | Executes an approved plan slice-by-slice through strict Red-Green-Refactor, checkpointing per slice. |
+
+### RPI Workflow Suite _(deprecated — use QRSPI)_
+
+> **Deprecated 2026-06-02; superseded by the QRSPI Workflow Suite above.** These skills carry
+> `disable-model-invocation: true` and are scheduled for removal at sunset ~2026-09-01. Listed for
+> reference during the transition window.
 
 A structured Research → Plan → Implement loop with parallel subagents and session isolation.
 
@@ -297,7 +317,7 @@ Vendored copies of workflow-primitive skills from [Matt Pocock's skills repo](ht
 
 Autonomous agents that make decisions and take actions independently. Each exists in both Claude Code (`claude/agents/`) and OpenCode (`opencode/agents/`) format. Agents are split into `team/` and `personal/` subdirectories mirroring the skill split.
 
-## claude/agents/team/ and opencode/agents/team/ (32 agents)
+## claude/agents/team/ and opencode/agents/team/ (34 agents)
 
 ### Development & DevOps
 
@@ -341,7 +361,9 @@ Autonomous agents that make decisions and take actions independently. Each exist
 | `alembic-migration-agent` | Full Alembic migration lifecycle with safety checks and rollback planning. |
 | `sqlx-migration-agent` | SQLx migration lifecycle — create, review, rollback test, apply, regenerate offline cache. |
 
-> RPI workflow subagents (`rpi-planner`, `rpi-implement`, `rpi-code-analyzer`, `rpi-file-locator`, `rpi-pattern-finder`) are spawned automatically by the RPI skills — not invoked directly.
+> QRSPI workflow agents (`qrspi-orchestrator`, `qrspi-implement`) and the shared read-only research subagents (`research-file-locator`, `research-code-analyzer`, `research-pattern-finder`) are spawned automatically by the QRSPI skills/commands — not invoked directly.
+>
+> **Deprecated** RPI workflow agents (`rpi-planner`, `rpi-implement`) are superseded by the QRSPI agents above and scheduled for removal at sunset ~2026-09-01.
 
 ## claude/agents/personal/ and opencode/agents/personal/ (3 agents)
 
@@ -355,7 +377,7 @@ Autonomous agents that make decisions and take actions independently. Each exist
 
 ## Commands
 
-Ten slash commands per platform. Each injects live shell state before the model acts — the model sees real output, not a description of it.
+Fifteen slash commands per platform. Each injects live shell state before the model acts — the model sees real output, not a description of it.
 
 | Command | Injects | What it does |
 |---------|---------|--------------|
@@ -369,6 +391,11 @@ Ten slash commands per platform. Each injects live shell state before the model 
 | `/research [topic]` | — | Multi-source research briefing |
 | `/context-prime` | `git log`, `git status`, `git diff` | Primes session from current repo state |
 | `/grill-me [plan]` | — | Relentless one-question-at-a-time plan/design interview with recommended answers |
+| `/qrspi-questions [feature]` | `ls` of the feature folder | Surfaces open technical questions; stops for human answers before research |
+| `/qrspi-research [feature]` | `ls` of the feature folder | Ticket-hidden parallel codebase research → objective `research.md` |
+| `/qrspi-spec [feature]` | `ls` of the feature folder | Design Brain-Dump → brain-surgery loop → vertical-slice Structure Outline |
+| `/qrspi-plan [feature]` | `ls` of the feature folder | Vertically-sliced tactical plan; refuses horizontal-layer plans |
+| `/qrspi-implement [feature]` | Feature folder + existing slice logs | Executes an approved plan slice-by-slice with Red-Green-Refactor |
 
 ---
 
@@ -412,22 +439,22 @@ The `project-templates/` directory contains per-project context files based on t
 ```
 ai-toolkit/
 ├── skills/
-│   ├── team/                   # 63 team skills (shareable, production-ready)
+│   ├── team/                   # 68 team skills (shareable, production-ready)
 │   └── personal/               # 18 personal skills (deliberate practice + edge learning)
 ├── claude/
 │   ├── agents/
-│   │   ├── team/               # 32 Claude Code team agents
+│   │   ├── team/               # 34 Claude Code team agents
 │   │   └── personal/           # 3 Claude Code personal agents
-│   ├── commands/               # 10 slash commands with shell injection
+│   ├── commands/               # 15 slash commands with shell injection
 │   └── global/                 # Global config → ~/.claude/
 │       ├── CLAUDE.md           # Global instructions (every project)
 │       ├── settings.json       # Hooks: credential stop + post-write build/lint gates
 │       └── settings.local.json # Permissions: bash allow/deny, read allow/deny
 ├── opencode/
 │   ├── agents/
-│   │   ├── team/               # 32 OpenCode team agents
+│   │   ├── team/               # 34 OpenCode team agents
 │   │   └── personal/           # 3 OpenCode personal agents
-│   ├── commands/               # 10 slash commands with agent routing
+│   ├── commands/               # 15 slash commands with agent routing
 │   └── global/                 # Global config → ~/.config/opencode/
 │       ├── AGENTS.md           # Global instructions (every project)
 │       └── opencode.json       # Providers, MCP, permissions, temperatures

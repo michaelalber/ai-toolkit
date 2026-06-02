@@ -1,10 +1,12 @@
 ---
 name: rpi-research
 audience: team
+disable-model-invocation: true
 description: >
-  RPI Research phase -- parallel codebase exploration using subagents to produce a compact,
-  objective research artifact. Use for "/rpi-research topic", "research the codebase for X",
-  "understand how X works before planning", "document what exists for topic".
+  **DEPRECATED — use QRSPI (qrspi-research) instead.** RPI Research phase -- parallel codebase
+  exploration using subagents to produce a compact, objective research artifact. Use for
+  "/rpi-research topic", "research the codebase for X", "understand how X works before planning",
+  "document what exists for topic".
 ---
 
 # RPI Research
@@ -76,9 +78,9 @@ SCOPE
 
 DELEGATE (parallel)
     Spawn concurrently using Task tool:
-    ├── @rpi-file-locator — "Find all files related to: {topic}"
-    ├── @rpi-code-analyzer — "Analyze the implementation of: {topic}"
-    └── @rpi-pattern-finder — "Find patterns and conventions related to: {topic}"
+    ├── @research-file-locator — "Find all files related to: {topic}"
+    ├── @research-code-analyzer — "Analyze the implementation of: {topic}"
+    └── @research-pattern-finder — "Find patterns and conventions related to: {topic}"
     Wait for ALL THREE before proceeding.
 
         |
@@ -265,8 +267,8 @@ The system uses CQRS with MediatR (`Features/*/Commands/*Command.cs`,
 
 ```
 Symptoms:
-- rpi-file-locator returns "no files found"
-- rpi-code-analyzer returns "no implementation located"
+- research-file-locator returns "no files found"
+- research-code-analyzer returns "no implementation located"
 
 Recovery:
 1. Widen the topic -- try parent concept, domain synonyms, common abbreviations

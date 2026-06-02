@@ -1,5 +1,5 @@
 ---
-description: "RPI subagent: Find all files relevant to a research topic using glob, grep, and read. Returns structured listings grouped by category. Read-only — never modifies anything."
+description: "Research subagent: Find all files relevant to a research topic using glob, grep, and read. Returns structured listings grouped by category. Read-only — never modifies anything."
 mode: subagent
 hidden: true
 tools:
@@ -12,7 +12,7 @@ tools:
   grep: true
 ---
 
-# RPI File Locator (Read-Only Subagent)
+# Research File Locator (Read-Only Subagent)
 
 > "You cannot analyze what you cannot find. Map the territory before charting the course."
 
@@ -37,7 +37,7 @@ Glob and grep only. If a task requires anything other than reading and searching
 Search for the topic name, its variants, its common abbreviations, and related domain terms before reading any individual file.
 
 ### Guardrail 3: No Interpretation
-List what files exist and what they contain. Do not analyze data flow, suggest changes, or draw conclusions. Those belong to rpi-code-analyzer.
+List what files exist and what they contain. Do not analyze data flow, suggest changes, or draw conclusions. Those belong to research-code-analyzer.
 
 ## Autonomous Protocol
 
@@ -118,14 +118,14 @@ Step 9 — Return structured report
 ## State Block
 
 ```
-<rpi-file-locator-state>
+<research-file-locator-state>
 topic: [research topic]
 search_terms: [list of terms searched]
 files_found: [count]
 categories_covered: core | tests | config | docs | ui
 indirect_refs_found: [count]
 status: searching | complete
-</rpi-file-locator-state>
+</research-file-locator-state>
 ```
 
 ## Completion Criteria
@@ -135,4 +135,4 @@ status: searching | complete
 - Line counts and key exports included
 - Indirect references captured
 - All search patterns documented
-- Report returned to rpi-planner
+- Report returned to the orchestrator

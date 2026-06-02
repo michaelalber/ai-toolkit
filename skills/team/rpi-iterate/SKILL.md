@@ -1,10 +1,13 @@
 ---
 name: rpi-iterate
 audience: team
+disable-model-invocation: true
 description: >
+  **DEPRECATED — QRSPI has no iterate phase; edit spec.md and re-run /qrspi-plan instead.**
   RPI Iterate phase -- surgically updates an existing implementation plan based on feedback
-  without starting over. Use when updating an existing plan based on new feedback or constraints. Trigger phrases: "/rpi-iterate feedback", "update the plan", "the plan needs
-  to change because X", "adjust the plan for Y", "add Z to the plan".
+  without starting over. Use when updating an existing plan based on new feedback or constraints.
+  Trigger phrases: "/rpi-iterate feedback", "update the plan", "the plan needs to change because
+  X", "adjust the plan for Y", "add Z to the plan".
 ---
 
 # RPI Iterate
@@ -85,8 +88,8 @@ ASSESS
 RESEARCH (if needed)
     If feedback requires understanding new code areas:
     Spawn targeted subagents ONLY for those areas (not the whole topic)
-    @rpi-file-locator: "Find files related to: [specific new area]"
-    @rpi-code-analyzer: "Analyze: [specific new component]"
+    @research-file-locator: "Find files related to: [specific new area]"
+    @research-code-analyzer: "Analyze: [specific new component]"
 
         |
         v
@@ -154,7 +157,7 @@ Impact assessment:
 Approach change? [YES — rebuilding Phase 3 | NO — surgical update to Phase 3]
 Escalate to plan-v1 archive? [YES — >50% of phases affected | NO]
 
-[If targeted research needed]: Spawning @rpi-code-analyzer for [specific area]...
+[If targeted research needed]: Spawning @research-code-analyzer for [specific area]...
 ```
 
 ### Change Log Entry
@@ -241,7 +244,7 @@ User feedback: "We also need to handle the case where the user has no email addr
 Agent: Feedback classification: NEW REQUIREMENT (the plan does not cover this case at all).
 Inserting Phase 2a: "Handle null email in notification path."
 Phases 1, 2 complete — preserved. Phase 3 onwards unaffected by insertion.
-Spawning @rpi-code-analyzer for notification path to understand null handling conventions...
+Spawning @research-code-analyzer for notification path to understand null handling conventions...
 ```
 
 ### REQUIRED: Use Letter Suffixes for Inserted Phases

@@ -1,5 +1,5 @@
 ---
-description: "RPI subagent: Find similar patterns, conventions, naming standards, test patterns, and precedents relevant to a research topic. Read-only — never modifies anything."
+description: "Research subagent: Find similar patterns, conventions, naming standards, test patterns, and precedents relevant to a research topic. Read-only — never modifies anything."
 mode: subagent
 hidden: true
 tools:
@@ -12,7 +12,7 @@ tools:
   grep: true
 ---
 
-# RPI Pattern Finder (Read-Only Subagent)
+# Research Pattern Finder (Read-Only Subagent)
 
 > "The best new code looks like it was always there. Convention is invisible when followed, glaring when violated."
 
@@ -123,14 +123,14 @@ From `AGENTS.md`:
 ## State Block
 
 ```
-<rpi-pattern-finder-state>
+<research-pattern-finder-state>
 topic: [research topic]
 standards_files_read: [list]
 similar_features_found: [count]
 conventions_documented: [list of areas covered]
 test_patterns_found: true | false
 status: searching | analyzing | complete
-</rpi-pattern-finder-state>
+</research-pattern-finder-state>
 ```
 
 ## Completion Criteria
@@ -140,4 +140,4 @@ status: searching | analyzing | complete
 - Naming and organization conventions documented
 - DI and error handling patterns found
 - Test patterns captured
-- Report returned to rpi-planner
+- Report returned to the orchestrator

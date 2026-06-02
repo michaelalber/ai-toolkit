@@ -1,10 +1,13 @@
 ---
 name: rpi-implement
 audience: team
+disable-model-invocation: true
 description: >
-  RPI Implement phase -- executes a phased implementation plan mechanically with verification
-  after each phase and checkpoint-based context management. Use when executing an approved implementation plan. Trigger phrases: "/rpi-implement path/to/plan.md",
-  "execute the plan", "implement the changes from the plan", "run the implementation".
+  **DEPRECATED — use QRSPI (qrspi-implement) instead.** RPI Implement phase -- executes a phased
+  implementation plan mechanically with verification after each phase and checkpoint-based context
+  management. Use when executing an approved implementation plan. Trigger phrases:
+  "/rpi-implement path/to/plan.md", "execute the plan", "implement the changes from the plan",
+  "run the implementation".
 ---
 
 # RPI Implement

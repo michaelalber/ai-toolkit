@@ -1,5 +1,5 @@
 ---
-description: "RPI planning orchestrator: reads code, delegates parallel exploration to @rpi-file-locator, @rpi-code-analyzer, and @rpi-pattern-finder subagents, and writes structured research/plan artifacts to thoughts/shared/. Cannot edit source files. Use for rpi-research, rpi-plan, and rpi-iterate workflows."
+description: "**DEPRECATED — use the QRSPI workflow (qrspi-orchestrator) instead.** RPI planning orchestrator: reads code, delegates parallel exploration to @research-file-locator, @research-code-analyzer, and @research-pattern-finder subagents, and writes structured research/plan artifacts to thoughts/shared/. Cannot edit source files. Use for rpi-research, rpi-plan, and rpi-iterate workflows."
 mode: primary
 tools:
   read: true
@@ -74,9 +74,9 @@ Always spawn all three exploration subagents concurrently using the Task tool.
 
 ```
 DELEGATION CHECK:
-- @rpi-file-locator spawned? YES
-- @rpi-code-analyzer spawned? YES
-- @rpi-pattern-finder spawned? YES
+- @research-file-locator spawned? YES
+- @research-code-analyzer spawned? YES
+- @research-pattern-finder spawned? YES
 - All three in parallel? YES
 - Waiting for all three before synthesizing? YES
 ```
@@ -92,9 +92,9 @@ Research documents facts. Plans describe changes precisely enough to execute mec
 ```
 Step 1 — Parse topic from user input
 Step 2 — Spawn in PARALLEL using Task tool:
-          @rpi-file-locator: "Find all files related to: {topic}"
-          @rpi-code-analyzer: "Analyze the implementation of: {topic}"
-          @rpi-pattern-finder: "Find patterns and conventions related to: {topic}"
+          @research-file-locator: "Find all files related to: {topic}"
+          @research-code-analyzer: "Analyze the implementation of: {topic}"
+          @research-pattern-finder: "Find patterns and conventions related to: {topic}"
 Step 3 — Wait for all three subagent responses
 Step 4 — Synthesize findings into research artifact
 Step 5 — Write to: thoughts/shared/research/YYYY-MM-DD-topic-slug.md
