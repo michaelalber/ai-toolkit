@@ -47,9 +47,9 @@ Load the skill for the phase you are running:
 | `skill({ name: "qrspi-spec" })` | At the start of a SPEC session for the brain-surgery loop and the `spec.md` template |
 | `skill({ name: "qrspi-plan" })` | At the start of a PLAN session for the vertical-not-horizontal gate and the `plan.md` template |
 
-> The Implement agent (`qrspi-implement`) comes online in a later slice; until then this
-> orchestrator drives Questions, Research, Spec, and Plan, and hands the feature folder forward
-> to a fresh Implement session.
+> The Implement phase runs in a separate agent, `qrspi-implement` (edit access, loads `tdd`). This
+> orchestrator drives the Questions, Research, Spec, and Plan alignment phases, then hands the
+> approved feature folder forward to a fresh `/qrspi-implement` session.
 
 ## Guardrails
 
@@ -64,7 +64,8 @@ SEQUENCE CHECK (the chain is artifact-gated, not phrase-gated):
   QUESTIONS  -> writes questions.md
   RESEARCH   -> requires answered questions.md (or a stated topic fallback) -> writes research.md
   SPEC       -> requires research.md (status: complete) -> writes spec.md
-  PLAN       -> requires spec.md (status: approved)   (later slice)
+  PLAN       -> requires spec.md (status: approved) -> writes plan.md
+  IMPLEMENT  -> requires plan.md (status: approved) -> runs in the qrspi-implement agent
 Never advance to a phase whose input artifact is missing. If missing, STOP and route the user
 to the prior phase.
 ```
