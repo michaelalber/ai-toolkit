@@ -33,7 +33,7 @@ Add the change log at the very end of the plan file, after the Notes section.
 - Removed from "What we're NOT doing": [if scope was expanded, with rationale]
 
 **Research conducted:**
-- [If targeted subagent research was done]: Spawned @rpi-code-analyzer for [area]; found [key discovery]
+- [If targeted subagent research was done]: Spawned @research-code-analyzer for [area]; found [key discovery]
 - [If no research needed]: No additional research required
 ```
 
@@ -84,7 +84,7 @@ None — no phases were complete at time of iteration.
 None
 
 **Research conducted:**
-Spawned @rpi-file-locator for "EmailQueueService". Found:
+Spawned @research-file-locator for "EmailQueueService". Found:
 - `Infrastructure/Email/EmailQueueService.cs` (88 lines) — implements `IEmailQueueService`
 - Registered in `Infrastructure/ServiceExtensions.cs:61`
 ```

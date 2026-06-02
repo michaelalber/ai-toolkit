@@ -8,25 +8,25 @@ The three subagents have complementary, non-overlapping jobs:
 
 | Subagent | Job | Key Output |
 |----------|-----|------------|
-| `@rpi-file-locator` | Find all relevant files | Categorized file listing with line counts and key exports |
-| `@rpi-code-analyzer` | Understand how the code works | Type signatures, data/control flow, integration points |
-| `@rpi-pattern-finder` | Understand how new code should be written | Naming conventions, DI patterns, test patterns, precedents |
+| `@research-file-locator` | Find all relevant files | Categorized file listing with line counts and key exports |
+| `@research-code-analyzer` | Understand how the code works | Type signatures, data/control flow, integration points |
+| `@research-pattern-finder` | Understand how new code should be written | Naming conventions, DI patterns, test patterns, precedents |
 
 ## Parallel Spawning (Task Tool)
 
 Always spawn all three concurrently. In OpenCode, use the Task tool with the agent name:
 
 ```
-Task(@rpi-file-locator, "Find all files related to: [topic]")
-Task(@rpi-code-analyzer, "Analyze the implementation of: [topic]")
-Task(@rpi-pattern-finder, "Find patterns and conventions related to: [topic]")
+Task(@research-file-locator, "Find all files related to: [topic]")
+Task(@research-code-analyzer, "Analyze the implementation of: [topic]")
+Task(@research-pattern-finder, "Find patterns and conventions related to: [topic]")
 ```
 
 Wait for all three before synthesizing.
 
 ## Writing Effective Prompts
 
-### For @rpi-file-locator
+### For @research-file-locator
 
 The prompt should specify the topic clearly. Include domain vocabulary if available.
 
@@ -43,7 +43,7 @@ The prompt should specify the topic clearly. Include domain vocabulary if availa
 "Find everything about auth"       ← too broad
 ```
 
-### For @rpi-code-analyzer
+### For @research-code-analyzer
 
 The prompt should specify the implementation aspect to analyze. Reference the file-locator output if sequential, but usually run in parallel with a topic-based prompt.
 
@@ -59,7 +59,7 @@ The prompt should specify the implementation aspect to analyze. Reference the fi
 "Analyze the notification system"  ← too vague about what to trace
 ```
 
-### For @rpi-pattern-finder
+### For @research-pattern-finder
 
 The prompt should specify the type of change being researched (new feature, migration, refactor, etc.) so the agent knows what analogues to look for.
 
