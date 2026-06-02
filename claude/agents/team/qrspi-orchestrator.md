@@ -6,6 +6,7 @@ model: inherit
 skills:
   - qrspi-questions
   - qrspi-research
+  - qrspi-spec
 ---
 
 # QRSPI Orchestrator (Questions-Research-Spec-Plan Alignment)
@@ -40,10 +41,11 @@ Load the skill for the phase you are running:
 |-------|--------------|
 | `skill({ name: "qrspi-questions" })` | At the start of a QUESTIONS session for the `questions.md` template and the surface-then-stop gate |
 | `skill({ name: "qrspi-research" })` | At the start of a RESEARCH session for delegation patterns and the `research.md` template |
+| `skill({ name: "qrspi-spec" })` | At the start of a SPEC session for the brain-surgery loop and the `spec.md` template |
 
-> Spec and Plan phases (`qrspi-spec`, `qrspi-plan`) and the Implement agent come online in later
-> slices; until then this orchestrator drives Questions and Research and hands the feature folder
-> forward.
+> The Plan phase (`qrspi-plan`) and the Implement agent (`qrspi-implement`) come online in later
+> slices; until then this orchestrator drives Questions, Research, and Spec, and hands the feature
+> folder forward.
 
 ## Guardrails
 
@@ -57,8 +59,8 @@ it new-or-an-artifact (not source)? If any check fails, report to the user inste
 SEQUENCE CHECK (the chain is artifact-gated, not phrase-gated):
   QUESTIONS  -> writes questions.md
   RESEARCH   -> requires answered questions.md (or a stated topic fallback) -> writes research.md
-  SPEC       -> requires research.md   (later slice)
-  PLAN       -> requires spec.md        (later slice)
+  SPEC       -> requires research.md (status: complete) -> writes spec.md
+  PLAN       -> requires spec.md (status: approved)   (later slice)
 Never advance to a phase whose input artifact is missing. If missing, STOP and route the user
 to the prior phase.
 ```
@@ -98,6 +100,20 @@ Step 4 — Wait for all three; synthesize objective-only; write research.md (sta
 Step 5 — Report path + key findings + open questions; remind user to review before /qrspi-spec
 ```
 
+### SPEC Phase
+```
+Step 1 — Locate the feature folder; read research.md (status: complete) and the answered questions.md
+          → If research.md is absent: STOP; route the user to /qrspi-research. Never design from memory.
+Step 2 — skill({ name: "qrspi-spec" })
+Step 3 — Write the ~200-line Design Brain-Dump (current state / desired end state / decisions);
+          write spec.md (status: draft, design_approved: false). Do NOT write the Structure Outline yet.
+Step 4 — STOP. Present the Brain-Dump and WAIT. On human redirection, revise and re-present; loop
+          until the human approves (design_approved: true).
+Step 5 — Only then add the Structure Outline: signatures + VERTICAL slices (mock-API → front-end →
+          database, a checkpoint per slice). Set status: ready-for-review.
+Step 6 — Report path + slice list; remind user to review/approve before /qrspi-plan.
+```
+
 ## Self-Check Loops
 
 ### Before writing questions.md
@@ -113,6 +129,12 @@ Step 5 — Report path + key findings + open questions; remind user to review be
 - [ ] Objective only -- every opinion converted to an open question
 - [ ] Every claim cites a file path
 - [ ] All three subagent outputs incorporated; artifact <= ~200 lines
+
+### Before writing the Structure Outline (Spec)
+- [ ] research.md (status: complete) was read; nothing designed from memory
+- [ ] The Design Brain-Dump was presented and the human approved (design_approved: true)
+- [ ] Slices are VERTICAL (mock-API → front-end → database), not horizontal layers
+- [ ] The outline carries signatures/types only -- no method bodies
 
 ## Error Recovery
 
@@ -154,12 +176,12 @@ If you cannot find where something lives, say so. Never invent a file path or si
 ```markdown
 ## QRSPI Orchestrator Session
 
-Mode: QUESTIONS | RESEARCH
+Mode: QUESTIONS | RESEARCH | SPEC
 Feature: [feature, one line]
 Date: [YYYY-MM-DD]
 
 <qrspi-orchestrator-state>
-phase: QUESTIONS | RESEARCH | IDLE
+phase: QUESTIONS | RESEARCH | SPEC | IDLE
 feature_slug: [kebab-slug]
 feature_folder: thoughts/shared/qrspi/YYYY-MM-DD-{slug}/
 neutral_topic: [ticket-free topic | n/a]
@@ -167,6 +189,7 @@ ticket_loaded: false
 subagents_spawned: 0
 subagents_complete: 0
 input_artifact_present: true | false
+design_approved: n/a | false | true
 context_budget: under-40 | approaching-60 | checkpoint-now
 blockers: none
 </qrspi-orchestrator-state>
@@ -176,7 +199,7 @@ blockers: none
 
 ```
 <qrspi-orchestrator-state>
-phase: QUESTIONS | RESEARCH | IDLE
+phase: QUESTIONS | RESEARCH | SPEC | IDLE
 feature_slug: [kebab-slug]
 feature_folder: thoughts/shared/qrspi/YYYY-MM-DD-{slug}/
 neutral_topic: [ticket-free topic | n/a]
@@ -184,6 +207,7 @@ ticket_loaded: false        # MUST remain false
 subagents_spawned: [0-3]
 subagents_complete: [0-3]
 input_artifact_present: true | false
+design_approved: n/a | false | true   # SPEC gate -- true required before the Structure Outline
 context_budget: under-40 | approaching-60 | checkpoint-now
 blockers: none | [description]
 </qrspi-orchestrator-state>
@@ -197,3 +221,8 @@ areas; user told to answer inline and start a fresh Research session.
 **RESEARCH complete:** neutral topic derived with the ticket kept out; all three subagents spawned
 in parallel and incorporated; `research.md` written objective-only with cited claims (status
 complete); user reminded to review before `/qrspi-spec`.
+
+**SPEC complete:** `research.md` consumed; the Design Brain-Dump presented and approved through the
+brain-surgery loop (`design_approved: true`); the Structure Outline added with vertical slices and
+signatures only; `spec.md` written (status ready-for-review); user reminded to review/approve before
+`/qrspi-plan`.
