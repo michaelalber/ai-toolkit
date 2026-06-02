@@ -18,7 +18,7 @@
 ## Project Overview
 
 - **Name:** AI Toolkit
-- **Purpose:** A collection of 81+ shareable skills and autonomous agents for AI-assisted software development. Supports Claude Code and OpenCode.
+- **Purpose:** A collection of 86+ shareable skills and autonomous agents for AI-assisted software development. Supports Claude Code and OpenCode.
 - **Phase:** Maintain — stable toolkit; work consists of adding new skills/agents, fixing existing ones, and keeping platform parity.
 - **Jira project key:** N/A — task specs are tracked in conversation context or ad hoc
 - **Definition of success:** Every skill and agent installs cleanly, follows the 10-section template exactly, and works out of the box without requiring external documentation.
@@ -41,7 +41,7 @@
   - `claude/global/CLAUDE.md` + `opencode/global/AGENTS.md` + `pi/global/AGENTS.md` — universal standards, installed once globally
   - `CLAUDE.md` (root) + `AGENTS.md` (root) — this repo's context only
 - **Key directories:**
-  - `skills/<name>/` — skill definition (`SKILL.md`) + supporting docs (`references/`)
+  - `skills/{team,personal}/<name>/` — skill definition (`SKILL.md`) + supporting docs (`references/`); the `team`/`personal` subdirectory is selected by the skill's `audience:` frontmatter
   - `claude/agents/` — Claude Code agent definitions (`.md` with `skills:` frontmatter array)
   - `opencode/agents/` — OpenCode agent definitions (`.md` with boolean tool flags + `skill()` body calls)
   - `claude/commands/` — Claude Code user-invoked slash commands with shell injection
@@ -59,7 +59,7 @@
 
 | File | Why It Matters |
 |---|---|
-| `skills/architecture-review/SKILL.md` | Gold standard for the 10-section skill template |
+| `skills/personal/architecture-review/SKILL.md` | Gold standard for the 10-section skill template |
 | `project-templates/AGENTS.md` | Template pattern this file follows |
 | `claude/global/CLAUDE.md` | Global Claude Code standards — do not duplicate here |
 | `opencode/global/AGENTS.md` | Global OpenCode standards — do not duplicate here |
@@ -74,7 +74,7 @@
 
 | Date | Decision | Rationale |
 |---|---|---|
-| 2026-03-01 | 10-section template for skills and agents | Enforces completeness; gold standard is `skills/architecture-review/SKILL.md` |
+| 2026-03-01 | 10-section template for skills and agents | Enforces completeness; gold standard is `skills/personal/architecture-review/SKILL.md` |
 | 2026-03-01 | Claude Code uses `skills:` frontmatter array; OpenCode uses `skill()` body calls | Platform format requirements differ; behavior must be identical |
 | 2026-04-18 | Specs live in Jira / Confluence, not local `spec.md` | Professional dev workflow; `spec.md` creates stale duplicates |
 | 2026-04-18 | `project-templates/` renamed from `templates/` | "project-templates" makes the scope explicit — these are not global files |
@@ -85,14 +85,18 @@
 | 2026-04-25 | Two-tier skill system: minimal (≤ 100 lines, ≥ 1 reference) and full-template (10 sections, ≤ 400 lines, ≥ 2 references) | Ported from mattpocock/skills — minimal tier handles mode switches, conversational tools, and single-instruction skills without the overhead of the 10-section template. |
 | 2026-04-25 | `disable-model-invocation: true` frontmatter for interactive/conversational skills | Ported from mattpocock/skills — prevents auto-invocation by the model; grill-me, domain-model, zoom-out, caveman use this. |
 | 2026-04-26 | Global template files (`claude/global/`, `opencode/global/`) must contain only generic, domain-level descriptions — no specific book titles, personal document names, or user-specific tool references | These files are public templates installable by any user. Personal enrichment belongs in the installed copies (`~/.claude/CLAUDE.md`, `~/.config/opencode/AGENTS.md`), not the repo source. |
+| 2026-06-02 | QRSPI replaces RPI: deprecate the 4 rpi-* skills + `rpi-planner`/`rpi-implement` agents now (`disable-model-invocation: true` on skills + `DEPRECATED` description prefix); remove all rpi-* files at sunset ~2026-09-01 (Slice 7). The 3 read-only subagents were renamed `research-*` (workflow-neutral) and kept. | RPI delivered poor results (instruction-budget overflow, magic-words dependency, plan-reading illusion). Coexistence leaves the poor-outcome path discoverable; QRSPI is its replacement, so RPI is deprecated then removed. |
+| 2026-06-02 | QRSPI vendors **0 new primitive skills** — `qrspi-implement` references the existing `tdd` skill as its inner loop; `qrspi-spec`/`qrspi-plan` carry the vertical-slice gate in their own content; all five cross-link `tdd` and the `*-feature-slice` scaffolders via Integration | `tdd` already IS the canonical RED-GREEN-REFACTOR loop purpose-built as a shared inner loop; a new `red-green-refactor` skill would be ~100% duplication. Honors DRY and the "Companion Skills" non-overlap doctrine. |
+| 2026-06-02 | Minimal-tier definition broadened to include **thin, self-sufficient workflow-phase drivers (≤ ~40 imperative directives)**. All five `qrspi-*` phase skills use the minimal tier (≤ 100 lines, ≥ 1 reference), self-sufficient when invoked directly, overflow pushed to `references/` loaded just-in-time | QRSPI exists because prompts past ~150–200 instructions degrade; the full 10-section template reproduces the exact bloat QRSPI was created to fix, and is worst on smaller local models. Every section is an always-on per-invocation token tax. |
+| 2026-06-02 | QRSPI artifacts co-locate in a per-feature folder `thoughts/shared/qrspi/YYYY-MM-DD-{slug}/` (`questions.md`, `research.md`, `spec.md`, `plan.md`, `implementation/slice-NN-*.md`) rather than scattering across `thoughts/shared/research|plans/` | QRSPI produces five tightly-coupled artifacts per feature; co-locating them makes a fresh session cheap (read the folder, not the transcript) and gives each slice log a clean resumption point. `spec.md`/`plan.md` carry a lifecycle `status:` (the `approved` gate blocks `qrspi-implement`). |
 
 ---
 
 ## Open Loops
 
-- [ ] Skill count (currently 81) — update this file and README when skills are added or removed
-- [x] Agent count parity — Claude Code (35) vs. OpenCode (35) — resolved 2026-05-19
-- [x] Commands layer — `claude/commands/` (10 commands) and `opencode/commands/` (10 commands) — added 2026-04-24; tdd-cycle → tdd rename + evaluate-tests added 2026-05-19
+- [ ] Skill count (currently 86) — update this file and README when skills are added or removed. QRSPI added 5 phase skills 2026-06-02 (was 81); the 4 deprecated `rpi-*` skills remain on disk until sunset ~2026-09-01 (Slice 7 → 82).
+- [x] Agent count parity — Claude Code (37) vs. OpenCode (37) — QRSPI added `qrspi-orchestrator` + `qrspi-implement` 2026-06-02 (was 35/35, resolved 2026-05-19); sunset removes `rpi-planner`/`rpi-implement` ~2026-09-01 → 35/35
+- [x] Commands layer — `claude/commands/` (15 commands) and `opencode/commands/` (15 commands) — QRSPI added 5 (`/qrspi-questions`…`/qrspi-implement`) 2026-06-02 (was 10/10; added 2026-04-24; tdd-cycle → tdd rename + evaluate-tests 2026-05-19)
 
 ---
 
@@ -123,13 +127,16 @@ At the start of every session:
 
 ## Skill Conventions
 
-Each skill lives in `skills/<name>/` with a `SKILL.md` and a `references/` directory.
+Each skill lives in `skills/team/<name>/` or `skills/personal/<name>/` with a `SKILL.md` and a
+`references/` directory. The `team` vs. `personal` subdirectory is selected by the `audience:`
+frontmatter field and applied by `scripts/add_frontmatter.py` (which walks `skills/{team,personal}/*/`).
 
 ### SKILL.md Frontmatter
 
 ```yaml
 ---
 name: skill-name
+audience: team  # team | personal — selects the skills/<audience>/ install subdirectory
 description: >
   What the skill does. Trigger phrases like "keyword1", "keyword2".
 disable-model-invocation: true  # optional: prevents auto-invocation; use for interactive or conversational skills
@@ -184,7 +191,7 @@ description: >
 9. **Error Recovery** -- 3-4 scenarios with symptoms and numbered recovery steps
 10. **Integration with Other Skills** -- Cross-references to related skills
 
-Gold standard template: `skills/architecture-review/SKILL.md`
+Gold standard template: `skills/personal/architecture-review/SKILL.md`
 
 ### References Directory
 
@@ -268,7 +275,8 @@ Key difference: Claude uses `skills:` array in frontmatter; OpenCode uses `skill
 | Product & GitHub | to-prd, to-issues, triage-issue | PRD creation, issue decomposition, bug triage |
 | Agent Support | automated-code-review, test-scaffold, doc-sync, supply-chain-audit, environment-health, model-optimization, anomaly-detection, fleet-management, research-synthesis, session-context, task-decomposition | Domain knowledge for agents |
 | Agent Design | spec-coach | Interactive spec design coach — skills, agents, PRDs, and GitHub Spec Kit |
-| RPI Workflow | rpi-research, rpi-plan, rpi-implement, rpi-iterate | Research-Plan-Implement with session isolation and parallel subagents |
+| QRSPI Workflow | qrspi-questions, qrspi-research, qrspi-spec, qrspi-plan, qrspi-implement | Questions-Research-Spec-Plan-Implement: instruction-budget-disciplined replacement for RPI. No-magic-words artifact gates, ticket-hidden research, Design Brain-Dump → Structure Outline, vertical-slice plans, per-slice Red-Green-Refactor. Driven by the `qrspi-orchestrator` (alignment) + `qrspi-implement` (execution) agents and the renamed `research-*` read-only subagents. |
+| RPI Workflow _(DEPRECATED — use QRSPI)_ | rpi-research, rpi-plan, rpi-implement, rpi-iterate | **Deprecated 2026-06-02; superseded by the QRSPI Workflow.** Research-Plan-Implement with session isolation and parallel subagents. Skills carry `disable-model-invocation: true`; scheduled for removal at sunset ~2026-09-01 (Slice 7). |
 | Python | python-security-review, python-security-review-federal, python-feature-slice, alembic-migration-manager, python-modernization-analyzer, fastapi-scaffolder, pypi-package-scaffold | Python patterns, migrations, security, packaging |
 | Rust | rust-architecture-checklist, rust-security-review, rust-feature-slice, sqlx-migration-manager, rust-migration-analyzer, axum-scaffolder, cargo-package-scaffold | Rust architecture, security, migrations, API scaffolding, packaging |
 | Other | python-arch-review, jira-review, jira-comment-writer, confluence-guide-writer | Language/tool-specific reviews and documentation generation |

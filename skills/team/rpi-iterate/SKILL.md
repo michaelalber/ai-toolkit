@@ -1,10 +1,13 @@
 ---
 name: rpi-iterate
 audience: team
+disable-model-invocation: true
 description: >
+  **DEPRECATED — QRSPI has no iterate phase; edit spec.md and re-run /qrspi-plan instead.**
   RPI Iterate phase -- surgically updates an existing implementation plan based on feedback
-  without starting over. Use when updating an existing plan based on new feedback or constraints. Trigger phrases: "/rpi-iterate feedback", "update the plan", "the plan needs
-  to change because X", "adjust the plan for Y", "add Z to the plan".
+  without starting over. Use when updating an existing plan based on new feedback or constraints.
+  Trigger phrases: "/rpi-iterate feedback", "update the plan", "the plan needs to change because
+  X", "adjust the plan for Y", "add Z to the plan".
 ---
 
 # RPI Iterate

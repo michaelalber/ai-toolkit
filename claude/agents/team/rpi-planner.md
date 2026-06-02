@@ -1,6 +1,6 @@
 ---
 name: rpi-planner
-description: RPI (Research-Plan-Implement) planning orchestrator. Reads code, delegates parallel exploration to research-file-locator, research-code-analyzer, and research-pattern-finder subagents, and writes structured research/plan artifacts to thoughts/shared/. Cannot edit source files. Use for rpi-research, rpi-plan, and rpi-iterate workflows.
+description: "**DEPRECATED — use the QRSPI workflow (qrspi-orchestrator) instead.** RPI (Research-Plan-Implement) planning orchestrator. Reads code, delegates parallel exploration to research-file-locator, research-code-analyzer, and research-pattern-finder subagents, and writes structured research/plan artifacts to thoughts/shared/. Cannot edit source files. Use for rpi-research, rpi-plan, and rpi-iterate workflows."
 tools: Read, Glob, Grep, Bash, Write
 model: inherit
 skills:

@@ -1,6 +1,6 @@
 ---
 name: rpi-implement
-description: RPI (Research-Plan-Implement) implementation executor. Reads an approved plan artifact from thoughts/shared/plans/, runs the baseline test suite, then executes phases mechanically with per-phase verification and checkpoint management. Edits source files. Use for "/rpi-implement path/to/plan.md", "execute the plan", "implement the changes from the plan".
+description: "**DEPRECATED — use the QRSPI workflow (qrspi-implement) instead.** RPI (Research-Plan-Implement) implementation executor. Reads an approved plan artifact from thoughts/shared/plans/, runs the baseline test suite, then executes phases mechanically with per-phase verification and checkpoint management. Edits source files. Use for '/rpi-implement path/to/plan.md', 'execute the plan', 'implement the changes from the plan'."
 tools: Read, Edit, Write, Bash, Glob, Grep
 model: inherit
 skills:

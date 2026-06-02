@@ -1,10 +1,12 @@
 ---
 name: rpi-research
 audience: team
+disable-model-invocation: true
 description: >
-  RPI Research phase -- parallel codebase exploration using subagents to produce a compact,
-  objective research artifact. Use for "/rpi-research topic", "research the codebase for X",
-  "understand how X works before planning", "document what exists for topic".
+  **DEPRECATED — use QRSPI (qrspi-research) instead.** RPI Research phase -- parallel codebase
+  exploration using subagents to produce a compact, objective research artifact. Use for
+  "/rpi-research topic", "research the codebase for X", "understand how X works before planning",
+  "document what exists for topic".
 ---
 
 # RPI Research

@@ -1,5 +1,5 @@
 ---
-description: "RPI planning orchestrator: reads code, delegates parallel exploration to @research-file-locator, @research-code-analyzer, and @research-pattern-finder subagents, and writes structured research/plan artifacts to thoughts/shared/. Cannot edit source files. Use for rpi-research, rpi-plan, and rpi-iterate workflows."
+description: "**DEPRECATED — use the QRSPI workflow (qrspi-orchestrator) instead.** RPI planning orchestrator: reads code, delegates parallel exploration to @research-file-locator, @research-code-analyzer, and @research-pattern-finder subagents, and writes structured research/plan artifacts to thoughts/shared/. Cannot edit source files. Use for rpi-research, rpi-plan, and rpi-iterate workflows."
 mode: primary
 tools:
   read: true
