@@ -2,7 +2,7 @@
 """
 Add audience:, source:, and source_commit: frontmatter fields to all SKILL.md files.
 - audience: team  → skills/team/*/SKILL.md
-- audience: personal → skills/personal/*/SKILL.md
+- audience: professional → skills/professional/*/SKILL.md
 - source + source_commit + source_note → Matt-derived skills per .matt-pocock-attribution.yml
 Inserts after the name: line. Does NOT clobber existing audience: fields.
 """
@@ -82,7 +82,7 @@ def main():
     manifest = load_manifest()
     changed = 0
 
-    for audience in ("team", "personal"):
+    for audience in ("team", "professional"):
         skill_dir = REPO_ROOT / "skills" / audience
         for skill_path in sorted(skill_dir.glob("*/SKILL.md")):
             skill_name = skill_path.parent.name

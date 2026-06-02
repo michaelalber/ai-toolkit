@@ -41,7 +41,7 @@
   - `claude/global/CLAUDE.md` + `opencode/global/AGENTS.md` + `pi/global/AGENTS.md` — universal standards, installed once globally
   - `CLAUDE.md` (root) + `AGENTS.md` (root) — this repo's context only
 - **Key directories:**
-  - `skills/{team,personal}/<name>/` — skill definition (`SKILL.md`) + supporting docs (`references/`); the `team`/`personal` subdirectory is selected by the skill's `audience:` frontmatter
+  - `skills/{team,professional}/<name>/` — skill definition (`SKILL.md`) + supporting docs (`references/`); the `team`/`professional` subdirectory is selected by the skill's `audience:` frontmatter
   - `claude/agents/` — Claude Code agent definitions (`.md` with `skills:` frontmatter array)
   - `opencode/agents/` — OpenCode agent definitions (`.md` with boolean tool flags + `skill()` body calls)
   - `claude/commands/` — Claude Code user-invoked slash commands with shell injection
@@ -59,7 +59,7 @@
 
 | File | Why It Matters |
 |---|---|
-| `skills/personal/architecture-review/SKILL.md` | Gold standard for the 10-section skill template |
+| `skills/professional/architecture-review/SKILL.md` | Gold standard for the 10-section skill template |
 | `project-templates/AGENTS.md` | Template pattern this file follows |
 | `claude/global/CLAUDE.md` | Global Claude Code standards — do not duplicate here |
 | `opencode/global/AGENTS.md` | Global OpenCode standards — do not duplicate here |
@@ -74,7 +74,7 @@
 
 | Date | Decision | Rationale |
 |---|---|---|
-| 2026-03-01 | 10-section template for skills and agents | Enforces completeness; gold standard is `skills/personal/architecture-review/SKILL.md` |
+| 2026-03-01 | 10-section template for skills and agents | Enforces completeness; gold standard is `skills/professional/architecture-review/SKILL.md` |
 | 2026-03-01 | Claude Code uses `skills:` frontmatter array; OpenCode uses `skill()` body calls | Platform format requirements differ; behavior must be identical |
 | 2026-04-18 | Specs live in Jira / Confluence, not local `spec.md` | Professional dev workflow; `spec.md` creates stale duplicates |
 | 2026-04-18 | `project-templates/` renamed from `templates/` | "project-templates" makes the scope explicit — these are not global files |
@@ -127,16 +127,16 @@ At the start of every session:
 
 ## Skill Conventions
 
-Each skill lives in `skills/team/<name>/` or `skills/personal/<name>/` with a `SKILL.md` and a
-`references/` directory. The `team` vs. `personal` subdirectory is selected by the `audience:`
-frontmatter field and applied by `scripts/add_frontmatter.py` (which walks `skills/{team,personal}/*/`).
+Each skill lives in `skills/team/<name>/` or `skills/professional/<name>/` with a `SKILL.md` and a
+`references/` directory. The `team` vs. `professional` subdirectory is selected by the `audience:`
+frontmatter field and applied by `scripts/add_frontmatter.py` (which walks `skills/{team,professional}/*/`).
 
 ### SKILL.md Frontmatter
 
 ```yaml
 ---
 name: skill-name
-audience: team  # team | personal — selects the skills/<audience>/ install subdirectory
+audience: team  # team | professional — selects the skills/<audience>/ install subdirectory
 description: >
   What the skill does. Trigger phrases like "keyword1", "keyword2".
 disable-model-invocation: true  # optional: prevents auto-invocation; use for interactive or conversational skills
@@ -191,7 +191,7 @@ description: >
 9. **Error Recovery** -- 3-4 scenarios with symptoms and numbered recovery steps
 10. **Integration with Other Skills** -- Cross-references to related skills
 
-Gold standard template: `skills/personal/architecture-review/SKILL.md`
+Gold standard template: `skills/professional/architecture-review/SKILL.md`
 
 ### References Directory
 

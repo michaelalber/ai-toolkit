@@ -30,7 +30,7 @@ This toolkit encodes that expertise as reusable primitives. Each skill is an opi
 | | Count |
 |--|-------|
 | Skills (team) | 68 |
-| Skills (personal) | 18 |
+| Skills (professional) | 18 |
 | Agents (Claude Code) | 37 |
 | Agents (OpenCode) | 37 |
 | Slash commands (per platform) | 15 |
@@ -42,7 +42,7 @@ This toolkit encodes that expertise as reusable primitives. Each skill is an opi
 
 Three distinct primitives compose the toolkit:
 
-**Skills** — Structured, opinionated prompt files that encode domain expertise. Model-invoked autonomously. Live in `skills/{team,personal}/<name>/SKILL.md`. Each follows a strict 10-section template.
+**Skills** — Structured, opinionated prompt files that encode domain expertise. Model-invoked autonomously. Live in `skills/{team,professional}/<name>/SKILL.md`. Each follows a strict 10-section template.
 
 **Agents** — Autonomous executors that combine skills with tool access and guardrails. Operate independently within defined boundaries. Live in `claude/agents/` and `opencode/agents/`.
 
@@ -69,18 +69,18 @@ User types /tdd
 ### Claude Code
 
 ```bash
-# Skills (both team and personal by default)
+# Skills (both team and professional by default)
 mkdir -p ~/.claude/skills
 ln -sf /path/to/ai-toolkit/skills/team/*/ ~/.claude/skills/
-ln -sf /path/to/ai-toolkit/skills/personal/*/ ~/.claude/skills/
+ln -sf /path/to/ai-toolkit/skills/professional/*/ ~/.claude/skills/
 
 # Agents
 mkdir -p ~/.claude/agents
 ln -sf /path/to/ai-toolkit/claude/agents/team/*.md ~/.claude/agents/
-ln -sf /path/to/ai-toolkit/claude/agents/personal/*.md ~/.claude/agents/
+ln -sf /path/to/ai-toolkit/claude/agents/professional/*.md ~/.claude/agents/
 ```
 
-To install only the team-facing skills (e.g. when sharing this with a colleague), omit the `personal/` lines.
+To install only the team-facing skills (e.g. when sharing this with a colleague), omit the `professional/` lines.
 
 See [`claude/global/README.md`](claude/global/README.md) for global config setup (hooks, permissions, commands).
 
@@ -89,11 +89,11 @@ See [`claude/global/README.md`](claude/global/README.md) for global config setup
 ```bash
 mkdir -p ~/.config/opencode/skills
 ln -sf /path/to/ai-toolkit/skills/team/*/ ~/.config/opencode/skills/
-ln -sf /path/to/ai-toolkit/skills/personal/*/ ~/.config/opencode/skills/
+ln -sf /path/to/ai-toolkit/skills/professional/*/ ~/.config/opencode/skills/
 
 mkdir -p ~/.config/opencode/agents
 ln -sf /path/to/ai-toolkit/opencode/agents/team/*.md ~/.config/opencode/agents/
-ln -sf /path/to/ai-toolkit/opencode/agents/personal/*.md ~/.config/opencode/agents/
+ln -sf /path/to/ai-toolkit/opencode/agents/professional/*.md ~/.config/opencode/agents/
 
 # Commands
 mkdir -p ~/.config/opencode/commands
@@ -115,7 +115,7 @@ See [`pi/global/README.md`](pi/global/README.md) for the full Ollama setup guide
 
 ## Skills
 
-This toolkit is organized in two folders. `skills/team/` contains skills and agents I use in production work and consider shareable — patterns extracted from years of enterprise .NET, legacy modernization, and AI-augmented development on regulated-industry codebases. It also incorporates several vendored workflow-primitive skills from Matt Pocock's repo (see [Companion Skills](#companion-skills) below). `skills/personal/` contains skills I run on myself: deliberate practice loops for architecture and code review, and learning scaffolds for domains I'm actively building hands-on skill in (edge AI, robotics, sensor integration). The split exists because conflating "what I ship" with "how I sharpen" weakens both.
+This toolkit is organized in two folders. `skills/team/` contains skills and agents I use in production work and consider shareable — patterns extracted from years of enterprise .NET, legacy modernization, and AI-augmented development on regulated-industry codebases. It also incorporates several vendored workflow-primitive skills from Matt Pocock's repo (see [Companion Skills](#companion-skills) below). `skills/professional/` contains skills I run on myself: deliberate practice loops for architecture and code review, and learning scaffolds for domains I'm actively building hands-on skill in (edge AI, robotics, sensor integration). The split exists because conflating "what I ship" with "how I sharpen" weakens both.
 
 ## Companion Skills
 
@@ -276,7 +276,7 @@ Vendored copies of workflow-primitive skills from [Matt Pocock's skills repo](ht
 
 ---
 
-## skills/personal/
+## skills/professional/
 
 ### Coaching & Learning Suite
 
@@ -303,7 +303,7 @@ Vendored copies of workflow-primitive skills from [Matt Pocock's skills repo](ht
 | `sensor-integration` | Sensor data pipeline with I2C, SPI, UART, and GPIO. Calibration and anomaly detection. |
 | `picar-x-behavior` | Composable robot behaviors for SunFounder Picar-X — subsumption architecture and behavior trees. |
 
-### Agent Support Suite (Personal)
+### Agent Support Suite (Professional)
 
 | Skill | Description | Used By |
 |-------|-------------|---------|
@@ -315,7 +315,7 @@ Vendored copies of workflow-primitive skills from [Matt Pocock's skills repo](ht
 
 ## Agents
 
-Autonomous agents that make decisions and take actions independently. Each exists in both Claude Code (`claude/agents/`) and OpenCode (`opencode/agents/`) format. Agents are split into `team/` and `personal/` subdirectories mirroring the skill split.
+Autonomous agents that make decisions and take actions independently. Each exists in both Claude Code (`claude/agents/`) and OpenCode (`opencode/agents/`) format. Agents are split into `team/` and `professional/` subdirectories mirroring the skill split.
 
 ## claude/agents/team/ and opencode/agents/team/ (34 agents)
 
@@ -365,7 +365,7 @@ Autonomous agents that make decisions and take actions independently. Each exist
 >
 > **Deprecated** RPI workflow agents (`rpi-planner`, `rpi-implement`) are superseded by the QRSPI agents above and scheduled for removal at sunset ~2026-09-01.
 
-## claude/agents/personal/ and opencode/agents/personal/ (3 agents)
+## claude/agents/professional/ and opencode/agents/professional/ (3 agents)
 
 | Agent | Description | Skills |
 |-------|-------------|--------|
@@ -440,11 +440,11 @@ The `project-templates/` directory contains per-project context files based on t
 ai-toolkit/
 ├── skills/
 │   ├── team/                   # 68 team skills (shareable, production-ready)
-│   └── personal/               # 18 personal skills (deliberate practice + edge learning)
+│   └── professional/           # 18 professional skills (deliberate practice + edge learning)
 ├── claude/
 │   ├── agents/
 │   │   ├── team/               # 34 Claude Code team agents
-│   │   └── personal/           # 3 Claude Code personal agents
+│   │   └── professional/       # 3 Claude Code professional agents
 │   ├── commands/               # 15 slash commands with shell injection
 │   └── global/                 # Global config → ~/.claude/
 │       ├── CLAUDE.md           # Global instructions (every project)
@@ -453,7 +453,7 @@ ai-toolkit/
 ├── opencode/
 │   ├── agents/
 │   │   ├── team/               # 34 OpenCode team agents
-│   │   └── personal/           # 3 OpenCode personal agents
+│   │   └── professional/       # 3 OpenCode professional agents
 │   ├── commands/               # 15 slash commands with agent routing
 │   └── global/                 # Global config → ~/.config/opencode/
 │       ├── AGENTS.md           # Global instructions (every project)
