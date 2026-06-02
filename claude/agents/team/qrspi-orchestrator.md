@@ -7,6 +7,7 @@ skills:
   - qrspi-questions
   - qrspi-research
   - qrspi-spec
+  - qrspi-plan
 ---
 
 # QRSPI Orchestrator (Questions-Research-Spec-Plan Alignment)
@@ -42,10 +43,11 @@ Load the skill for the phase you are running:
 | `skill({ name: "qrspi-questions" })` | At the start of a QUESTIONS session for the `questions.md` template and the surface-then-stop gate |
 | `skill({ name: "qrspi-research" })` | At the start of a RESEARCH session for delegation patterns and the `research.md` template |
 | `skill({ name: "qrspi-spec" })` | At the start of a SPEC session for the brain-surgery loop and the `spec.md` template |
+| `skill({ name: "qrspi-plan" })` | At the start of a PLAN session for the vertical-not-horizontal gate and the `plan.md` template |
 
-> The Plan phase (`qrspi-plan`) and the Implement agent (`qrspi-implement`) come online in later
-> slices; until then this orchestrator drives Questions, Research, and Spec, and hands the feature
-> folder forward.
+> The Implement agent (`qrspi-implement`) comes online in a later slice; until then this
+> orchestrator drives Questions, Research, Spec, and Plan, and hands the feature folder forward
+> to a fresh Implement session.
 
 ## Guardrails
 
@@ -114,6 +116,21 @@ Step 5 — Only then add the Structure Outline: signatures + VERTICAL slices (mo
 Step 6 — Report path + slice list; remind user to review/approve before /qrspi-plan.
 ```
 
+### PLAN Phase
+```
+Step 1 — Locate the feature folder; read spec.md (status: approved, design_approved: true).
+          → If spec.md is absent: STOP; route the user to /qrspi-spec. Never plan from memory.
+          → If spec.md exists but is only ready-for-review: STOP; ask the human to approve the design first.
+Step 2 — skill({ name: "qrspi-plan" })
+Step 3 — Carry the spec's vertical slices forward as the phase skeleton. RE-SLICE GATE: if any
+          intended phase completes a whole horizontal layer (all models, then services, then UI),
+          STOP and re-slice into end-to-end increments before writing.
+Step 4 — Write plan.md: each phase has exact file paths, a RED test step before the GREEN code step,
+          an automated verification command, and a rollback line; include "What we're NOT doing".
+          Set status: ready-for-review.
+Step 5 — Report path + phase list; remind user to review/approve before /qrspi-implement.
+```
+
 ## Self-Check Loops
 
 ### Before writing questions.md
@@ -135,6 +152,12 @@ Step 6 — Report path + slice list; remind user to review/approve before /qrspi
 - [ ] The Design Brain-Dump was presented and the human approved (design_approved: true)
 - [ ] Slices are VERTICAL (mock-API → front-end → database), not horizontal layers
 - [ ] The outline carries signatures/types only -- no method bodies
+
+### Before writing plan.md (Plan)
+- [ ] spec.md (status: approved, design_approved: true) was read; nothing planned from memory
+- [ ] RE-SLICE GATE passed -- no phase completes a whole horizontal layer
+- [ ] Every phase has an exact file path, a RED test step before the GREEN step, and a verification command
+- [ ] "What we're NOT doing" and a rollback plan are present; status: ready-for-review
 
 ## Error Recovery
 
@@ -176,12 +199,12 @@ If you cannot find where something lives, say so. Never invent a file path or si
 ```markdown
 ## QRSPI Orchestrator Session
 
-Mode: QUESTIONS | RESEARCH | SPEC
+Mode: QUESTIONS | RESEARCH | SPEC | PLAN
 Feature: [feature, one line]
 Date: [YYYY-MM-DD]
 
 <qrspi-orchestrator-state>
-phase: QUESTIONS | RESEARCH | SPEC | IDLE
+phase: QUESTIONS | RESEARCH | SPEC | PLAN | IDLE
 feature_slug: [kebab-slug]
 feature_folder: thoughts/shared/qrspi/YYYY-MM-DD-{slug}/
 neutral_topic: [ticket-free topic | n/a]
@@ -199,7 +222,7 @@ blockers: none
 
 ```
 <qrspi-orchestrator-state>
-phase: QUESTIONS | RESEARCH | SPEC | IDLE
+phase: QUESTIONS | RESEARCH | SPEC | PLAN | IDLE
 feature_slug: [kebab-slug]
 feature_folder: thoughts/shared/qrspi/YYYY-MM-DD-{slug}/
 neutral_topic: [ticket-free topic | n/a]
@@ -226,3 +249,8 @@ complete); user reminded to review before `/qrspi-spec`.
 brain-surgery loop (`design_approved: true`); the Structure Outline added with vertical slices and
 signatures only; `spec.md` written (status ready-for-review); user reminded to review/approve before
 `/qrspi-plan`.
+
+**PLAN complete:** approved `spec.md` consumed; the RE-SLICE GATE passed (no horizontal-layer
+phases); `plan.md` written with exact file paths, a test-first step and verification command per
+phase, a "What we're NOT doing" list, and a rollback plan (status ready-for-review); user reminded
+to review/approve before `/qrspi-implement`.
