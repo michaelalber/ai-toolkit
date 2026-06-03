@@ -118,20 +118,12 @@
 
 ---
 
-## Available Tools
-
-- `grounded-code-mcp` — local knowledge base; preferred over training data for language idioms, security patterns, and framework APIs
-
----
-
 ## Project Boot Ritual
 
-At the start of every session:
-
-1. Read this file (`AGENTS.md`), `intent.md`, and `constraints.md`.
-2. Check the active task context (Jira issue or conversation) for the current spec and acceptance criteria.
-3. Confirm context — state: current phase, active task (if any), top 3 constraints, open loops.
-4. Do NOT begin work until context is confirmed.
+Follow the global Session Boot Ritual (see global `CLAUDE.md` / `AGENTS.md`). Repo-specific deltas:
+read this file plus `intent.md` and `constraints.md`, and confirm the **Persistent Decisions** and
+**Open Loops** below before starting. Tooling (grounded-code-mcp, Microsoft Learn MCP, grounding
+workflow) is defined globally — not repeated here.
 
 ---
 
