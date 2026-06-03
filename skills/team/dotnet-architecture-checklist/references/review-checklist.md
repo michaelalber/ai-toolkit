@@ -33,10 +33,15 @@ grep -rE "SharedKernel\." --include="*.csproj"
 ```
 
 ## 1. Solution Structure & Patterns
-- [ ] Project organization: vertical slices vs layered?
-- [ ] Dependency direction: pointing inward?
-- [ ] CQRS/Mediator: appropriate boundaries?
-- [ ] Feature cohesion: related code grouped?
+- [ ] **Architecture style detected first** — layered/N-tier controllers vs. vertical-slice CQRS? Grade against the project's OWN style; do not penalize the choice. Layered branch: `references/layered-ntier.md`.
+- [ ] Project organization coherent for its style (clean layers OR cohesive feature slices)?
+- [ ] Dependency direction: pointing inward; no layer-skipping?
+- [ ] CQRS/Mediator: appropriate boundaries? *(CQRS projects only — do not flag absence in layered projects.)*
+- [ ] Feature/layer cohesion: related code grouped consistently?
+
+> Sections 1a (CQRS) and 1b (Mapster) apply only to vertical-slice/CQRS projects. For
+> layered controller APIs, use the layered checklist in `references/layered-ntier.md` instead
+> (thin controllers, service-layer cohesion, DTO boundaries, consistent validation/errors).
 
 ## 1a. CQRS with FreeMediator (if applicable)
 - [ ] Using FreeMediator (not MediatR)?
