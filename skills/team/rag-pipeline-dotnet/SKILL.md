@@ -199,7 +199,7 @@ Verify Ollama: `curl http://localhost:11434/api/tags`. Confirm model pulled (`ol
 
 - **`rag-pipeline-python`** — Python counterpart using LangChain and Ollama. Core RAG principles are identical across both skills.
 - **`ollama-model-workflow`** — Select, pull, and benchmark local models for air-gapped RAG deployments. Benchmark `nomic-embed-text` vs `mxbai-embed-large` on domain corpus. Match `num_ctx` to expected retrieval context size plus prompt overhead.
-- **`dotnet-security-review-federal`** — Security review for federal RAG code: NIST SP 800-53 AC/AU controls, FIPS 140-2/3 compliance, CUI validation.
+- **`dotnet-security-review`** + **`security-review-federal`** — Security review for federal RAG code: run the .NET base review, then the shared federal overlay (NIST SP 800-53 AC/AU controls, FIPS 140-2/3 compliance, CUI validation).
 - **`mcp-server-scaffold`** — Expose the RAG pipeline as MCP tools (`search_knowledge_base`, `ask_knowledge_base`) for other AI agents to invoke.
 
 ## References

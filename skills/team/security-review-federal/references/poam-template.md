@@ -1,6 +1,6 @@
-# POA&M Entry Template — Python Federal Security Review
+# POA&M Entry Template — Federal Security Overlay
 
-Reference for the `python-security-review-federal` skill. Use during Phase 4 (POA&M GENERATION) to format findings as Plan of Action and Milestones entries for ATO package submission.
+Reference for the `security-review-federal` skill. Use during the REPORT phase to format findings as Plan of Action and Milestones entries for ATO package submission.
 
 ---
 

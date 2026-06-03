@@ -150,7 +150,7 @@ See `.matt-pocock-attribution.yml` at the repo root for the full provenance mani
 | `legacy-migration-analyzer` | .NET Framework to .NET 10 migration analysis with risk scoring, upgrade strategies, and incremental patterns. |
 | `dotnet-architecture-checklist` | .NET Blazor architecture review with CQRS/FreeMediator validation and grading. |
 | `dotnet-security-review` | OWASP-based .NET security review with Telerik specialization and manager-friendly reporting. |
-| `dotnet-security-review-federal` | Federal compliance overlay (NIST 800-53, DOE, CUI, FIPS) extending the base security review. |
+| `security-review-federal` | Shared, language-agnostic federal/gov overlay for any base security review — NIST 800-53, FIPS 140-2/3, CUI, POA&M, EO 14028, DOE 205.1B. |
 | `minimal-api-scaffolder` | .NET 10 minimal API scaffolding with OpenAPI documentation, versioning, and security patterns. |
 | `4d-schema-migration` | 4D (4th Dimension) to SQL Server/EF Core/Blazor full-stack migration specialist. |
 | _(planned)_ `shared-kernel-generator` | .NET shared kernel scaffolding — not yet implemented. |
@@ -161,7 +161,6 @@ See `.matt-pocock-attribution.yml` at the repo root for the full provenance mani
 |-------|-------------|
 | `python-architecture-checklist` | Python architecture checklist executor — clean-arch boundaries, type safety, complexity, config/secrets; graded report with ruff/mypy/radon evidence. |
 | `python-security-review` | OWASP-based Python security review (FastAPI, Django, Flask) with bandit and pip-audit. |
-| `python-security-review-federal` | Federal compliance overlay for Python — NIST 800-53, FIPS 140-2/3, CUI handling. |
 | `python-feature-slice` | Feature-based Python architecture using FastAPI routers, Pydantic v2, and a service layer. |
 | `alembic-migration-manager` | Full Alembic migration lifecycle with safety checks and rollback planning. |
 | `python-modernization-analyzer` | Legacy Python modernization — Python 2→3, sync→async, Flask→FastAPI paths. |
@@ -173,6 +172,7 @@ See `.matt-pocock-attribution.yml` at the repo root for the full provenance mani
 | Skill | Description |
 |-------|-------------|
 | `php-architecture-checklist` | PHP/Laravel architecture checklist executor — service-layer boundaries, strict typing, input validation, query safety, config/secrets; graded report with phpstan/php-cs-fixer evidence. |
+| `php-security-review` | OWASP-based PHP/Laravel security review — mass-assignment, query injection, Blade XSS, auth/session, file uploads; composer audit + psalm/phpstan; graded manager-friendly report. |
 
 ### Rust Suite
 

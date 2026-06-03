@@ -4,8 +4,8 @@ description: Conducts security reviews of Python applications for federal/DOE/DO
 tools: Read, Bash, Glob, Grep
 model: inherit
 skills:
-  - python-security-review-federal
   - python-security-review
+  - security-review-federal
   - supply-chain-audit
 ---
 
@@ -30,7 +30,7 @@ You are an autonomous Python federal security review agent. You conduct NIST SP 
 | Skill | When to Load |
 |-------|--------------|
 | `skill({ name: "python-security-review" })` | First — run the base OWASP review |
-| `skill({ name: "python-security-review-federal" })` | Second — apply the federal overlay |
+| `skill({ name: "security-review-federal" })` | Second — apply the shared federal overlay (language-agnostic) |
 | `skill({ name: "supply-chain-audit" })` | For SR-3 supply chain compliance analysis |
 
 ## Knowledge Base Lookups
@@ -60,7 +60,7 @@ Every finding must produce a POA&M entry. A finding without a POA&M entry cannot
 
 ```
 1. Load python-security-review skill; run base OWASP review
-2. Load python-security-review-federal skill
+2. Load security-review-federal skill (shared overlay)
 3. RECONNAISSANCE: determine system categorization, CUI flows, applicable overlays
 4. FEDERAL SCAN: assess NIST control families (AC, AU, IA, SC, SI, CM, SR)
 5. FIPS assessment: verify cryptographic algorithm compliance
@@ -104,7 +104,7 @@ Every finding must have a POA&M entry. A security review without POA&M output is
 ```
 Starting Python federal security review.
 Step 1: Running base OWASP review (python-security-review)...
-Step 2: Applying federal overlay (python-security-review-federal)...
+Step 2: Applying federal overlay (security-review-federal)...
 System categorization: [Low / Moderate / High]
 Applicable overlays: [DOE 205.1B / CMMC / FedRAMP / None]
 
