@@ -1,11 +1,11 @@
 # AI Toolkit
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Skills](https://img.shields.io/badge/skills-96-blue)](#skills)
-[![Agents](https://img.shields.io/badge/agents-43-blue)](#agents)
+[![Skills](https://img.shields.io/badge/skills-102-blue)](#skills)
+[![Agents](https://img.shields.io/badge/agents-49-blue)](#agents)
 [![Platforms](https://img.shields.io/badge/platforms-Claude%20Code%20%7C%20OpenCode%20%7C%20Pi-informational)](#platforms)
 
-**96 skills, 43 agents, and 22 slash commands for AI-assisted software development — spanning TDD, .NET, Python, PHP, Rust, edge AI, security, DDD, and more.**
+**102 skills, 49 agents, and 22 slash commands for AI-assisted software development — spanning TDD, .NET, Python, PHP, Rust, React, edge AI, security, DDD, and more.**
 
 Works with [Claude Code](https://claude.ai/code), [OpenCode](https://opencode.ai/), and [Pi](https://pi.dev) (Ollama local models).
 
@@ -190,6 +190,17 @@ See `.matt-pocock-attribution.yml` at the repo root for the full provenance mani
 | `axum-scaffolder` | Production-ready Axum HTTP APIs with utoipa OpenAPI, JWT middleware, rate limiting, and CORS. |
 | `cargo-package-scaffold` | Rust crate scaffolding — Cargo.toml metadata, CI, test harness, CHANGELOG, crates.io publish workflow. |
 
+### React Suite
+
+| Skill | Description |
+|-------|-------------|
+| `react-architecture-checklist` | React architecture checklist executor — hooks discipline, effect correctness, component cohesion, state placement, render performance, type safety, accessibility; graded report with eslint/tsc evidence. |
+| `react-security-review` | OWASP-based React/TypeScript front-end security review — XSS escape hatches, bundle-secret exposure, token storage, CSP, open redirects; npm audit + eslint-plugin-security; graded manager-friendly report. |
+| `react-feature-slice` | Feature-based React architecture — feature folders, presentational + container components, custom hooks, a typed data layer, and structural CQRS (query vs mutation hooks). |
+| `react-component-scaffolder` | Single React component/route scaffolding — typed props, co-located RTL test, accessibility baseline, optional Storybook story. |
+| `react-app-scaffolder` | Vite + React + TypeScript app skeleton — strict TS, Vitest + RTL, ESLint (hooks + a11y), router, error boundary, feature-folder layout. |
+| `react-modernization-analyzer` | Legacy React modernization — class→hooks, CRA→Vite, React 17→18→19, JS→TS, Enzyme→RTL, legacy Redux→RTK paths (assess & plan, no execution). |
+
 ### AI/ML Bridge Suite
 
 | Skill | Description |
@@ -347,7 +358,7 @@ Vendored copies of workflow-primitive skills from [Matt Pocock's skills repo](ht
 
 Autonomous agents that make decisions and take actions independently. Each exists in both Claude Code (`claude/agents/`) and OpenCode (`opencode/agents/`) format. Agents are split into `team/` and `professional/` subdirectories mirroring the skill split.
 
-## claude/agents/team/ and opencode/agents/team/ (38 agents)
+## claude/agents/team/ and opencode/agents/team/ (46 agents)
 
 ### Development & DevOps
 
@@ -377,6 +388,9 @@ Autonomous agents that make decisions and take actions independently. Each exist
 | `rust-arch-checklist-agent` | Rust architecture review — ownership, trait design, error handling, unsafe audit, Clippy. |
 | `rust-security-agent` | OWASP Rust security review with cargo-audit, cargo-deny, unsafe block audit. |
 | `rust-migration-agent` | C/C++ to Rust migration analysis and Rust modernization planning. |
+| `react-arch-checklist-agent` | React architecture review — hooks discipline, effects, state placement, render perf, type safety, accessibility. |
+| `react-security-agent` | OWASP React/front-end security review — XSS, bundle secrets, token storage, npm audit, executive summary. |
+| `react-modernization-agent` | Legacy React modernization analysis — class→hooks, CRA→Vite, React 17→18→19, JS→TS, Enzyme→RTL. |
 
 ### Scaffolding
 
@@ -394,6 +408,9 @@ Autonomous agents that make decisions and take actions independently. Each exist
 | `php-api-scaffold-agent` | Laravel API endpoints — API Resources, Sanctum auth, throttle rate limiting, URI versioning, OpenAPI, health checks. |
 | `php-package-agent` | Composer package scaffolding for Packagist — composer.json, PSR-4, matrix CI, semver tag publish workflow. |
 | `php-migration-agent` | Full Laravel migration lifecycle — tested down(), expand-contract, dangerous-operation guards, batched backfills. |
+| `react-feature-slice-agent` | Feature-based React architecture — feature folders, presentational + container components, custom hooks, typed data layer, structural CQRS. |
+| `react-component-scaffold-agent` | Single React component/route — typed props, co-located RTL test, accessibility baseline, optional Storybook story. |
+| `react-app-scaffold-agent` | Vite + React + TS app skeleton — strict TS, Vitest + RTL, ESLint (hooks + a11y), router, error boundary, feature-folder layout. |
 
 > QRSPI workflow agents (`qrspi-orchestrator`, `qrspi-implement`) and the shared read-only research subagents (`research-file-locator`, `research-code-analyzer`, `research-pattern-finder`) are spawned automatically by the QRSPI skills/commands — not invoked directly.
 >
