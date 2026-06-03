@@ -111,8 +111,8 @@ Step 2 — ARCHETYPE DETECT: match the ADR stack to references/archetypes/<arche
           the generic recipe. Record archetype.
 Step 3 — SCAFFOLD: repo layer (layout, CI, health check, observability, secure-by-default) (+) the
           matching *-feature-slice/*-scaffold skill for the ONE slice that walks every layer end-to-end
-Step 4 — GATE: load skill fitness-functions; author + wire each specified fitness function into CI as a
-          merge-blocking gate traced to its ADR id
+Step 4 — GATE: load skill fitness-functions; author + wire each specified fitness function into
+          CI as a merge-blocking gate traced to its ADR id
 Step 5 — VERIFY: run CI/test suite via Bash; require exit 0 (Guardrail 2); capture ci_command / ci_green
 Step 6 — WRITE skeleton.md (status: complete) with CI status + the SLICE BACKLOG for /qraspi-plan;
           suggest a commit; tell the user to review before /qraspi-plan
@@ -122,7 +122,7 @@ Step 6 — WRITE skeleton.md (status: complete) with CI status + the SLICE BACKL
 ```
 Step 1 — PRE-FLIGHT: locate the project folder; read skeleton.md (status: complete, ci_green: true) and
           plan-{slice}.md (status: approved) (Guardrail 1); run the baseline suite (tests + fitness
-          gates) → must be green; load skill qraspi-implement + tdd
+          gates) → must be green; load skill qraspi-implement + load skill tdd
 Step 2 — RESUME CHECK: implementation-log-{slice}.md present? → resume at the first unfinished phase.
           Else start at Phase 1 of plan-{slice}.md
 Step 3 — PHASE LOOP (each plan-{slice}.md phase = one vertical increment):
