@@ -269,7 +269,7 @@ A structured Research → Plan → Implement loop with parallel subagents and se
 | Skill | Description |
 |-------|-------------|
 | `skill-creator` | Creates, revises, and scores SKILL.md definitions against the 10-section gold standard. |
-| `spec-implement` | Converts a spec or acceptance criteria into a working implementation, test-first. |
+| `spec-implement` _(deprecated — use QRSPI/QRASPI)_ | Converts a spec or acceptance criteria into a working implementation, test-first. **Deprecated 2026-06-03**; `disable-model-invocation: true`; removal at sunset ~2026-09-01. |
 
 ### Agent Support Suite (Team)
 

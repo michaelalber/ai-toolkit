@@ -264,7 +264,7 @@ Always: [N] | Ask First: [N] | Never: [N] | Success criteria: [N] | Gaps: [N] [N
 ## Integration with Other Skills
 
 - **`spec-extractor-agent`** — Run on an existing codebase before STRUCTURE phase. Its draft pre-fills exact commands, conventions, and boundaries from actual files. Workflow: `spec-extractor-agent` (draft) → `spec-coach` (VISION + GUARDRAILS refinement).
-- **`spec-implement`** — Consumes specs produced by this skill. Translates acceptance criteria into GIVEN/WHEN/THEN tests and drives TDD implementation. Better criteria here → simpler PARSE phase there.
+- **QRSPI / QRASPI** — Consume specs produced by this skill. QRSPI (brownfield) and QRASPI (greenfield) translate acceptance criteria into per-slice Red-Green-Refactor implementation. Better criteria here → cleaner Plan and Implement phases there. (The former `spec-implement` consumer is deprecated; superseded by these workflows.)
 - **`task-decomposition`** — When scope expands beyond one domain, use this skill to decompose into multiple specs and define coordination between agents.
 - **`architecture-review`** — When a new agent introduces architectural decisions (new data flows, service boundaries, infrastructure dependencies), stress-test the design here.
 - **`architecture-journal`** — After a spec is finalized, record key design decisions as ADRs. The spec captures WHAT was decided; the journal captures WHY.

@@ -1,7 +1,9 @@
 ---
 name: spec-implement
 audience: team
+disable-model-invocation: true
 description: >
+  **DEPRECATED — use QRSPI (brownfield) or QRASPI (greenfield) instead.**
   Spec-driven TDD implementation for greenfield features and well-understood changes.
   Takes an existing spec (PRD, user stories, requirements doc, or acceptance criteria)
   and drives test-first implementation to verified completion. The unique step is
@@ -9,10 +11,16 @@ description: >
   starts. Use when implementing a greenfield feature from a spec, PRD, or acceptance criteria. Trigger phrases: "/spec-implement path/to/spec.md", "implement this spec", "implement
   from requirements", "turn this PRD into code", "greenfield feature from spec",
   "acceptance criteria to implementation". Do NOT use when the codebase is complex,
-  unfamiliar, or requires research before planning — use /rpi-research instead.
+  unfamiliar, or requires research before planning — use QRSPI (/qrspi-questions) instead.
 ---
 
 # Spec Implement
+
+> **DEPRECATED 2026-06-03; superseded by QRSPI/QRASPI.** Carries
+> `disable-model-invocation: true`, scheduled for removal at sunset ~2026-09-01. For an
+> existing codebase use **QRSPI** (`/qrspi-questions` → spec → plan → implement); for a new
+> system use **QRASPI** (`/qraspi-questions` → architecture → skeleton → plan → implement).
+> Both replace this skill's spec → criteria → TDD flow with artifact-gated phases.
 
 > "The spec is the budget. Implementation spends it. You cannot spend what isn't defined."
 > — Adapted from Frederick P. Brooks Jr., "The Mythical Man-Month"
@@ -26,9 +34,9 @@ This skill bridges the gap between a written spec and working, verified code. Th
 
 The skill exists because most spec-to-code failures happen before implementation begins. Requirements that say "the system should handle errors gracefully" cannot be tested. Requirements that say "when the API returns 500, the retry count increments and the error is logged with the request ID" can be.
 
-**What this skill IS:** A structured workflow from spec → verifiable criteria → TDD-first implementation → verified done. The greenfield counterpart to RPI: use this when you have a spec, use RPI when you have a codebase to research.
+**What this skill IS:** A structured workflow from spec → verifiable criteria → TDD-first implementation → verified done. For greenfield work use QRASPI; for an existing codebase use QRSPI — both subsume this flow.
 
-**What this skill is NOT:** A spec writer (use `spec-coach`); a planning tool for brownfield changes (use `/rpi-research`); a code generator that skips tests.
+**What this skill is NOT:** A spec writer (use `spec-coach`); a planning tool for brownfield changes (use QRSPI: `/qrspi-questions`); a code generator that skips tests.
 
 ## Domain Principles Table
 
@@ -205,7 +213,7 @@ Full templates (Session Opening, Criterion Announcement, RED/GREEN/REFACTOR comp
 | **Skipping Baseline** | Pre-existing failures become invisible; agent cannot tell if its changes caused them. | Always run baseline before writing the first test. Dirty baseline = stop signal. |
 | **Speccing During Implementation** | Scope creep with no specification; new behavior may conflict with confirmed criteria. | Log in deferred items register; address in a follow-up spec session. |
 | **Declaring Done Unilaterally** | User may have context the agent lacks; verification is a shared act. | Present the Verification Report and explicitly ask for user confirmation. |
-| **Using This Skill for Brownfield** | Criteria written without knowing existing behavior; tests fight the codebase. | Run `/rpi-research` first to understand existing code, then return to spec-implement. |
+| **Using This Skill for Brownfield** | Criteria written without knowing existing behavior; tests fight the codebase. | Use QRSPI (`/qrspi-questions`) — it researches existing code before planning. |
 
 ## Error Recovery
 
@@ -219,7 +227,7 @@ Full templates (Session Opening, Criterion Announcement, RED/GREEN/REFACTOR comp
 
 **Spec is a bullet list, not formal requirements**: Treat as raw material for PARSE. Convert each bullet to GIVEN/WHEN/THEN where possible. Flag items that cannot be formalized. Tell the user: "I have converted your notes into [N] criteria. [M] items need clarification before I can write tests for them."
 
-**Codebase is more complex than expected**: Stop immediately. Report: "I found [description]. This is more complex than greenfield. Run `/rpi-research [topic]` to understand existing code before continuing." Confirmed criteria remain valid; the implementation path needs research first.
+**Codebase is more complex than expected**: Stop immediately. Report: "I found [description]. This is more complex than greenfield. Switch to QRSPI (`/qrspi-questions`) to research existing code before continuing." Confirmed criteria remain valid; the implementation path needs research first.
 
 ## Integration with Other Skills
 
@@ -227,6 +235,6 @@ Full templates (Session Opening, Criterion Announcement, RED/GREEN/REFACTOR comp
 |-------|-------------|
 | `spec-coach` | Produces specs that this skill consumes. Run `spec-coach` first on greenfield features, then hand the output here. |
 | `tdd` | Mandatory inner loop for every criterion in IMPLEMENT. RED-GREEN-REFACTOR is not optional or an escalation path — it is the implementation discipline for every criterion regardless of complexity. |
-| `rpi-research` | When spec-implement discovers unexpected complexity, switch to research first. Bring the artifact back to spec-implement to resume. |
-| `rpi-plan` | For specs large enough (10+ criteria with significant dependencies) that a formal phased plan is warranted, use rpi-plan + rpi-implement instead. |
+| `qrspi-questions` … `qrspi-implement` | The brownfield replacement for this skill. When spec-implement discovers unexpected complexity, switch to QRSPI — it researches existing code before planning, then implements per-slice. |
+| `qraspi-questions` … `qraspi-implement` | The greenfield replacement for this skill. For a new system, QRASPI locks architecture and lands a walking skeleton before per-slice TDD implementation. |
 | `architecture-review` | When the spec describes a significant system design, run architecture-review before spec-implement begins. Architecture vulnerabilities found after implementation are expensive. |
