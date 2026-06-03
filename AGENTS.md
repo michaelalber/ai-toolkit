@@ -18,7 +18,7 @@
 ## Project Overview
 
 - **Name:** AI Toolkit
-- **Purpose:** A collection of 94+ shareable skills and autonomous agents for AI-assisted software development. Supports Claude Code and OpenCode.
+- **Purpose:** A collection of 91+ shareable skills and autonomous agents for AI-assisted software development. Supports Claude Code and OpenCode.
 - **Phase:** Maintain — stable toolkit; work consists of adding new skills/agents, fixing existing ones, and keeping platform parity.
 - **Jira project key:** N/A — task specs are tracked in conversation context or ad hoc
 - **Definition of success:** Every skill and agent installs cleanly, follows the 10-section template exactly, and works out of the box without requiring external documentation.
@@ -96,12 +96,13 @@
 | 2026-06-03 | QRASPI C4 diagrams use **Mermaid** `C4Context`/`C4Container` (Context + Container levels only). | The repo is markdown-native with no build system; Mermaid renders inline in GitHub/Codeberg/VS Code, is diffable, and is AI-generatable. Structurizr DSL is richer but needs tooling the repo lacks. |
 | 2026-06-03 | QRASPI Skeleton's exit gate is **CI green** — a real CI/test run (build + unit + lint + fitness gates) exiting 0, captured as `ci_green`, never a claim. Hardware archetypes: host gates green + device-deploy as a documented manual gate. | A walking skeleton is executable by definition; an aspirational scaffold defeats the phase. The fitness functions `qraspi-architecture` specified are wired by `fitness-functions` and must pass as part of CI green; `qraspi-implement` keeps them green per slice. |
 | 2026-06-03 | Deprecate `spec-implement` alongside RPI (`disable-model-invocation: true` + `DEPRECATED` description prefix; removal at sunset ~2026-09-01). Its `rpi-*` pointers in `spec-implement`, `tdd`, and `spec-coach` were scrubbed to QRSPI/QRASPI. | `spec-implement` was branded "the greenfield counterpart to RPI" and routed to the now-deprecated `/rpi-research` in five places; QRASPI (greenfield) and QRSPI (brownfield) subsume its spec → criteria → per-slice TDD flow with artifact-gated phases. Leaving it live keeps a stale path to a sunset workflow discoverable. |
+| 2026-06-03 | Consolidate the TDD cluster 8→5. **Delete** `tdd-implementer` and `tdd-refactor` — their per-phase content folds into the canonical `tdd` skill's GREEN/REFACTOR sections + `references/` (green idioms, `code-smells`, `refactoring-catalog`, loaded on demand). **Merge** `tdd-verify` into `evaluate-tests` as a second "TDD compliance" mode (commit-history scorecard + AI anti-patterns). **Keep** `tdd` (the one loop), `tdd-agent` + `tdd-pair` (operating modes that defer to `tdd`), `evaluate-tests`, `test-scaffold`. Agents `tdd-agent`/`test-generation-agent` updated; no agent/command count change. | Eight overlapping TDD skills created an unanswerable routing question ("for GREEN, use `tdd` or `tdd-implementer`?"). The per-phase skills re-derived single phases of the loop `tdd` already owned whole, and the two auditors (`tdd-verify`, `evaluate-tests`) overlapped. One loop + modes + one auditor is focused and token-efficient; depth moved to load-on-demand `references/`. TDD/RGR is critical to AI-agent coding — clarity of "which skill" matters most here. |
 
 ---
 
 ## Open Loops
 
-- [ ] Skill count (currently 94) — update this file and README when skills are added or removed. QRSPI added 5 phase skills 2026-06-02 (was 81); QRASPI added 8 (`fitness-functions` + the 7 phase/graduate skills) 2026-06-03 (was 86); the 4 deprecated `rpi-*` skills plus the deprecated `spec-implement` (2026-06-03) remain on disk until sunset ~2026-09-01 → 89.
+- [ ] Skill count (currently 91) — update this file and README when skills are added or removed. QRSPI added 5 phase skills 2026-06-02 (was 81); QRASPI added 8 (`fitness-functions` + the 7 phase/graduate skills) 2026-06-03 (was 86, → 94); TDD cluster consolidated 8→5 on 2026-06-03 (deleted `tdd-implementer`, `tdd-refactor`, `tdd-verify` → 91); the 4 deprecated `rpi-*` skills plus the deprecated `spec-implement` remain on disk until sunset ~2026-09-01 → 86.
 - [x] Agent count parity — Claude Code (39) vs. OpenCode (39) — QRSPI added `qrspi-orchestrator` + `qrspi-implement` 2026-06-02 (was 35/35, resolved 2026-05-19); QRASPI added `qraspi-orchestrator` + `qraspi-builder` 2026-06-03 (was 37/37); sunset removes `rpi-planner`/`rpi-implement` ~2026-09-01 → 37/37
 - [x] Commands layer — `claude/commands/` (22 commands) and `opencode/commands/` (22 commands) — QRSPI added 5 (`/qrspi-questions`…`/qrspi-implement`) 2026-06-02 (was 10/10); QRASPI added 7 (`/qraspi-questions`…`/qraspi-graduate`) 2026-06-03 (was 15/15). No `rpi-*` commands, so sunset leaves commands at 22.
 
@@ -273,7 +274,7 @@ Key difference: Claude uses `skills:` array in frontmatter; OpenCode uses `skill
 
 | Suite | Skills | Focus |
 |-------|--------|-------|
-| TDD | tdd, tdd-implementer, tdd-refactor, tdd-agent, tdd-pair, tdd-verify, evaluate-tests | Test-Driven Development lifecycle |
+| TDD | tdd (the canonical loop) + tdd-agent / tdd-pair (operating modes) + evaluate-tests (quality & compliance audit) | Test-Driven Development lifecycle |
 | Enterprise .NET | dotnet-vertical-slice, ef-migration-manager, nuget-package-scaffold, legacy-migration-analyzer, dotnet-architecture-checklist, dotnet-security-review, dotnet-security-review-federal, minimal-api-scaffolder, 4d-schema-migration | .NET patterns, migrations, security |
 | Edge/IoT | edge-cv-pipeline, jetson-deploy, sensor-integration, picar-x-behavior | Edge computing, CV, robotics |
 | AI/ML | rag-pipeline-python, rag-pipeline-dotnet, mcp-server-scaffold, ollama-model-workflow | RAG, MCP servers, local LLMs |

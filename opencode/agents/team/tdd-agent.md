@@ -31,15 +31,13 @@ Load these skills on-demand for detailed guidance. Use the `skill` tool when you
 
 | Skill | When to Load |
 |-------|--------------|
-| `skill({ name: "tdd" })` | At session start, or when unsure about phase transitions and state management |
-| `skill({ name: "tdd-implementer" })` | During GREEN phase for minimal implementation patterns and language-specific idioms |
-| `skill({ name: "tdd-refactor" })` | During REFACTOR phase for code smell detection and refactoring catalog |
-| `skill({ name: "tdd-verify" })` | When auditing TDD compliance or detecting anti-patterns |
+| `skill({ name: "tdd" })` | At session start, and during GREEN/REFACTOR — it carries the strategies, per-language idioms, and refactoring catalog in its `references/` |
+| `skill({ name: "evaluate-tests" })` | When auditing test quality or TDD compliance (commit-history scorecard, anti-patterns) |
 
 **Skill Loading Protocol:**
 1. Load `tdd` at the start of each TDD session for full protocol details
-2. Load phase-specific skills (implementer/refactor) when entering that phase
-3. Load `tdd-verify` if you suspect TDD violations or need to audit the session
+2. During GREEN/REFACTOR, load `tdd`'s `references/` (green idioms, code-smells, refactoring-catalog) on demand
+3. Load `evaluate-tests` if you suspect TDD violations or need to audit the session
 
 **Note:** Skills are located in `~/.config/opencode/skills/`.
 

@@ -215,11 +215,11 @@ See [Autonomous Protocol](references/autonomous-protocol.md) for extended workfl
 
 ## Integration with Other Skills
 
-- **`tdd`** — The canonical inner loop; defines the two critical properties (behavioral, structure-insensitive) and the per-cycle self-check this skill enforces
-- **`tdd-implementer`** — Called during GREEN phase for implementation strategy selection (Fake It / Obvious / Triangulation)
-- **`tdd-refactor`** — Called during REFACTOR phase for smell identification and safe step-by-step improvement
-- **`tdd-verify`** — Run after the session to audit TDD compliance, score commit history, and identify anti-patterns
-- **`tdd-pair`** — Alternative to this skill; use when a human partner drives and the AI navigates
+This skill is an *operating mode* of the canonical `tdd` loop, not a replacement for it.
+
+- **`tdd`** — The canonical inner loop this mode drives. Defines the two critical test properties (behavioral, structure-insensitive), the per-cycle self-check, the GREEN strategies (Fake It / Obvious / Triangulation, with per-language idioms in its `references/`), and the REFACTOR smell catalog (`references/code-smells.md`, `references/refactoring-catalog.md`). Load those on demand during GREEN/REFACTOR.
+- **`evaluate-tests`** — Run after the session to audit test quality and TDD compliance (commit-history scorecard, anti-pattern detection).
+- **`tdd-pair`** — The alternative mode; use when a human partner drives and the AI navigates.
 
 ## Error Recovery
 

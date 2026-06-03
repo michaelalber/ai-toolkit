@@ -5,9 +5,7 @@ tools: Read, Edit, Write, Bash, Grep, Glob
 model: inherit
 skills:
   - tdd
-  - tdd-implementer
-  - tdd-refactor
-  - tdd-verify
+  - evaluate-tests
 ---
 
 # TDD Agent (Autonomous Mode)

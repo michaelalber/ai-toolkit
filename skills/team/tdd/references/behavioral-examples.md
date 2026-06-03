@@ -1,7 +1,7 @@
 # Behavioral Examples
 
 Concrete before/after examples of tests that violate behavioral or structure-insensitive
-properties, and their correct rewrites. Sourced from tdd-implementer patterns.
+properties, and their correct rewrites.
 
 ---
 

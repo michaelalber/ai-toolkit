@@ -38,16 +38,14 @@ Load these skills on-demand for detailed guidance. Use the `skill` tool when you
 
 | Skill | When to Load |
 |-------|--------------|
-| `skill({ name: "tdd-implementer" })` | When generating tests that will drive implementation, or for minimal implementation patterns |
-| `skill({ name: "tdd" })` | When integrating test generation into a full TDD workflow with RED-GREEN-REFACTOR |
+| `skill({ name: "tdd" })` | When integrating test generation into a full TDD workflow with RED-GREEN-REFACTOR, or for minimal-implementation strategies/idioms (in its `references/`) |
 | `skill({ name: "dotnet-vertical-slice" })` | When generating tests for vertical slice architecture (handlers, validators, endpoints) |
 | `skill({ name: "test-scaffold" })` | When you need mock patterns, naming conventions, or test project structure guidance |
 
 **Skill Loading Protocol:**
 1. Load `test-scaffold` at session start for naming conventions and mock patterns
 2. Load `dotnet-vertical-slice` when testing handler/validator/endpoint patterns
-3. Load `tdd-implementer` if the session involves writing implementation alongside tests
-4. Load `tdd` if full TDD workflow is requested
+3. Load `tdd` if the session involves a full TDD workflow or writing implementation alongside tests
 
 **Note:** Skills are located in `~/.config/opencode/skills/`.
 

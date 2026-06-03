@@ -1,11 +1,11 @@
 # AI Toolkit
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Skills](https://img.shields.io/badge/skills-94-blue)](#skills)
+[![Skills](https://img.shields.io/badge/skills-91-blue)](#skills)
 [![Agents](https://img.shields.io/badge/agents-39-blue)](#agents)
 [![Platforms](https://img.shields.io/badge/platforms-Claude%20Code%20%7C%20OpenCode%20%7C%20Pi-informational)](#platforms)
 
-**94 skills, 39 agents, and 22 slash commands for AI-assisted software development — spanning TDD, .NET, Python, PHP, Rust, edge AI, security, DDD, and more.**
+**91 skills, 39 agents, and 22 slash commands for AI-assisted software development — spanning TDD, .NET, Python, PHP, Rust, edge AI, security, DDD, and more.**
 
 Works with [Claude Code](https://claude.ai/code), [OpenCode](https://opencode.ai/), and [Pi](https://pi.dev) (Ollama local models).
 
@@ -135,13 +135,10 @@ See `.matt-pocock-attribution.yml` at the repo root for the full provenance mani
 
 | Skill | Description |
 |-------|-------------|
-| `tdd` | Canonical RED-GREEN-REFACTOR inner loop. Enforces behavioral, structure-insensitive tests and prohibits horizontal slicing. |
-| `evaluate-tests` | Evaluates existing test suites against behavioral and structure-insensitive criteria. Produces a prioritized rewrite list. |
-| `tdd-implementer` | GREEN phase specialist. Implements minimal code using Fake It, Obvious Implementation, or Triangulation. Stack-specific idioms for .NET, PHP (PHPUnit / Pest), Python, and TypeScript. |
-| `tdd-refactor` | REFACTOR phase specialist. Safely improves structure while keeping tests green. Code smell detection and refactoring recipes. |
-| `tdd-agent` | Fully autonomous TDD. AI drives all phases with strict guardrails and verification at each step. |
-| `tdd-pair` | Collaborative TDD with role-based pairing — Ping-Pong, Navigator, and Teaching modes. |
-| `tdd-verify` | TDD compliance audit. Detects anti-patterns, scores test quality, generates compliance reports. |
+| `tdd` | Canonical RED-GREEN-REFACTOR inner loop — the one TDD skill. Enforces behavioral, structure-insensitive tests, prohibits horizontal slicing, and carries GREEN strategies + per-language idioms and the REFACTOR smell catalog in its `references/`. |
+| `tdd-agent` | Operating mode: AI drives all phases autonomously with strict guardrails and verification at each step. Defers to `tdd` for the loop. |
+| `tdd-pair` | Operating mode: collaborative TDD with role-based pairing — Ping-Pong, Navigator, and Teaching. Defers to `tdd` for the loop. |
+| `evaluate-tests` | Audits existing tests in two modes — test-file quality (prioritized rewrite list) and TDD compliance (commit-history scorecard + anti-patterns). |
 
 ### Enterprise .NET Suite
 
@@ -346,9 +343,9 @@ Autonomous agents that make decisions and take actions independently. Each exist
 
 | Agent | Description | Skills |
 |-------|-------------|--------|
-| `tdd-agent` | Autonomous TDD — drives the complete RED-GREEN-REFACTOR cycle with strict guardrails. | tdd, tdd-implementer, tdd-refactor, tdd-verify |
+| `tdd-agent` | Autonomous TDD — drives the complete RED-GREEN-REFACTOR cycle with strict guardrails. | tdd, evaluate-tests |
 | `code-review-agent` | Autonomous code review — security, correctness, performance, maintainability, style. | code-review-coach, security-review-trainer, pr-feedback-writer, automated-code-review |
-| `test-generation-agent` | Autonomous test generation — analyzes code, identifies gaps, generates tests with TDD patterns. | tdd-implementer, tdd, test-scaffold |
+| `test-generation-agent` | Autonomous test generation — analyzes code, identifies gaps, generates tests with TDD patterns. | tdd, test-scaffold |
 | `documentation-agent` | Autonomous documentation sync — detects staleness, generates XML docs, updates READMEs. | architecture-journal, doc-sync |
 | `dependency-audit-agent` | Autonomous dependency auditing — vulnerability scanning, license compliance, upgrade paths. | supply-chain-audit, technical-debt-assessor |
 | `spec-extractor-agent` | Extracts structured agent specs from natural-language descriptions or existing code. | spec-coach |
@@ -407,7 +404,7 @@ Fifteen slash commands per platform. Each injects live shell state before the mo
 | Command | Injects | What it does |
 |---------|---------|--------------|
 | `/tdd` | `dotnet test` output | Runs the TDD cycle against live failing tests |
-| `/evaluate-tests [path]` | — | Audits existing tests for coupling, fragility, and theater |
+| `/evaluate-tests [path]` | — | Audits existing tests: test-file quality (coupling, fragility, theater) and TDD compliance (commit-history scorecard) |
 | `/code-review` | `git diff` | Reviews staged or branch changes |
 | `/security-review [path]` | — | OWASP security review scoped to a path |
 | `/arch-review [component]` | — | Socratic architecture challenge |

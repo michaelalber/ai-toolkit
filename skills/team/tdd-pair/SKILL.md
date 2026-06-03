@@ -185,10 +185,10 @@ Full templates (Turn Handoff, Session Summary): `references/pairing-patterns.md`
 
 ## Integration with Other Skills
 
-- **`tdd`** — The canonical inner loop; provides the phase state machine, transition rules, and the two critical test properties (behavioral, structure-insensitive)
-- **`tdd-implementer`** — Invoked when it is the AI's turn to write implementation in ping-pong mode
-- **`tdd-refactor`** — Invoked during the shared REFACTOR step
-- **`tdd-verify`** — Run after the session to audit TDD compliance and generate a scorecard
-- **`tdd-agent`** — Alternative to this skill; use when the AI should drive all phases autonomously
+This skill is an *operating mode* of the canonical `tdd` loop, not a replacement for it.
+
+- **`tdd`** — The canonical inner loop this mode collaborates through. Provides the phase state machine, transition rules, the two critical test properties (behavioral, structure-insensitive), GREEN strategies, and the REFACTOR smell catalog (all in its `references/`). Used on the AI's implement turn and the shared REFACTOR step.
+- **`evaluate-tests`** — Run after the session to audit test quality and TDD compliance (scorecard + anti-patterns).
+- **`tdd-agent`** — The alternative mode; use when the AI should drive all phases autonomously.
 
 Reference files: [Pairing Patterns](references/pairing-patterns.md) | [Socratic Guidance](references/socratic-guidance.md)

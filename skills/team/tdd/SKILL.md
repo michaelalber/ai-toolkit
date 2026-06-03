@@ -57,13 +57,15 @@ and refactoring that was never constrained by a safety net. **Never accumulate u
 3. All other tests must still pass
 
 ### GREEN
-1. Write the minimum code to pass the failing test
+1. Write the minimum code to pass the failing test — nothing it does not require (no unrequested error handling, config, edge cases, or "while I'm here" features)
 2. Prefer: Fake It (hardcode) → Obvious Implementation → Triangulation
 3. Run the suite — all tests must pass
+4. Strategies & per-language idioms (.NET/Python/PHP/TS): [green idioms](references/green-minimal-patterns.md) on demand; for .NET test structure see `test-scaffold`
 
 ### REFACTOR
-1. One structural change at a time
+1. One structural change at a time — behavior must not change (no bug fixes, no new features; those start a new RED)
 2. Run tests after every change — revert immediately if red
+3. Smell→refactoring recipes: [code smells](references/code-smells.md) · [refactoring catalog](references/refactoring-catalog.md) on demand
 
 ## Per-Cycle Self-Check
 
@@ -85,16 +87,14 @@ tests_passing: true | false
 </tdd-state>
 ```
 
-## Roles
+## Modes & Companions
 
-| Mode | Skill |
+The one canonical loop (GREEN/REFACTOR depth in `references/` above). Companions are *modes* and *audits*, not alternatives:
+
+| Need | Skill |
 |------|-------|
-| Autonomous execution | `tdd-agent` |
-| Pair collaboration | `tdd-pair` |
-| GREEN strategies (Fake It / Obvious / Triangulation) | `tdd-implementer` |
-| REFACTOR smell catalog | `tdd-refactor` |
-| Compliance audit | `tdd-verify` |
-| Evaluate an existing test suite | `evaluate-tests` |
-| .NET test conventions (load on demand) | `test-scaffold` |
-
-Reference: [Behavioral Examples](references/behavioral-examples.md)
+| AI drives all phases autonomously (defers here for mechanics) | `tdd-agent` |
+| Human + AI pair — ping-pong / navigator / teaching (defers here) | `tdd-pair` |
+| Audit test quality or TDD compliance after the fact | `evaluate-tests` |
+| .NET test conventions — xUnit / AAA / mocks | `test-scaffold` |
+| RED before/after examples | [Behavioral Examples](references/behavioral-examples.md) |
