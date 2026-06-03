@@ -7,7 +7,7 @@ and persistent decisions.
 
 ## Quick Reference
 
-- **Skills:** `skills/team/<n>/SKILL.md` or `skills/professional/<n>/SKILL.md` — subdir chosen by `audience:` frontmatter. 10 mandatory sections, gold standard: `skills/professional/architecture-review/SKILL.md`
+- **Skills:** `skills/team/<n>/SKILL.md` or `skills/professional/<n>/SKILL.md` — subdir chosen by `audience:` frontmatter. 5-section lean layout (depth → `references/`), gold standard: `skills/team/cargo-package-scaffold/SKILL.md`
 - **Agents:** `claude/agents/{team,professional}/<n>.md` (Claude Code) | `opencode/agents/{team,professional}/<n>.md` (OpenCode) — must stay in parity
 - **Commands:** `claude/commands/<n>.md` (Claude Code) | `opencode/commands/<n>.md` (OpenCode) — flat, no audience subdir
 - **Global files:** `claude/global/` → installs to `~/.claude/` | `opencode/global/` → installs to `~/.config/opencode/`
@@ -25,7 +25,7 @@ No compiled artifacts. Validation is structural.
 # Count skills
 find skills -name "SKILL.md" | wc -l
 
-# Verify a skill has all 10 sections (in-fence template headers may push this slightly above 10)
+# Verify a full-template skill has the 5 lean sections (in-fence template headers may push this higher)
 grep -c "^## " skills/{team,professional}/<n>/SKILL.md
 
 # Check agent parity (counts must match) — agents live under team/ and professional/ subdirs
@@ -41,7 +41,7 @@ ls opencode/commands/*.md | wc -l
 
 **Choose a tier first:**
 - **Minimal** (≤ 100 lines): mode switches, conversational tools, single-instruction skills. No prescribed section structure. `≥ 1` reference file.
-- **Full-template** (≤ 400 lines): domain-expert skills. All 10 sections required. `≥ 2` reference files. Overflow goes to `references/`, not more sections.
+- **Full-template** (≤ 200 lines): domain-expert skills. 5-section lean layout. `≥ 2` reference files. Depth (principle tables, anti-patterns, discipline rules, error recovery, code/report templates) goes to `references/`, loaded just-in-time — not in SKILL.md.
 
 Set `audience:` in the frontmatter (`team` | `professional`) — it selects the
 `skills/<audience>/` install subdir, applied by `scripts/add_frontmatter.py`.
@@ -53,8 +53,8 @@ Set `audience:` in the frontmatter (`team` | `professional`) — it selects the
 4. Skip steps 3–6 below unless the skill is user-invocable
 
 **Full-template steps:**
-1. Copy gold standard: `cp -r skills/professional/architecture-review skills/<audience>/<new-name>`
-2. All 10 sections required — do not skip; ≥ 2 reference files
+1. Copy gold standard: `cp -r skills/team/cargo-package-scaffold skills/<audience>/<new-name>`
+2. 5-section lean layout — keep Core Philosophy/Workflow/State/Output Template/Integration in SKILL.md; push depth to `references/`; ≥ 2 reference files
 3. Add agent entries in **both** `claude/agents/<audience>/` and `opencode/agents/<audience>/`
 4. Add command entries in **both** `claude/commands/` and `opencode/commands/` if user-invocable
 5. Update README.md skill count and table

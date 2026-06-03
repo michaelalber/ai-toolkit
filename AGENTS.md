@@ -21,7 +21,7 @@
 - **Purpose:** A collection of 91+ shareable skills and autonomous agents for AI-assisted software development. Supports Claude Code and OpenCode.
 - **Phase:** Maintain — stable toolkit; work consists of adding new skills/agents, fixing existing ones, and keeping platform parity.
 - **Jira project key:** N/A — task specs are tracked in conversation context or ad hoc
-- **Definition of success:** Every skill and agent installs cleanly, follows the 10-section template exactly, and works out of the box without requiring external documentation.
+- **Definition of success:** Every skill and agent installs cleanly, follows its template (skills: the 5-section lean layout; agents: the agent section template), and works out of the box without requiring external documentation.
 
 ---
 
@@ -59,7 +59,7 @@
 
 | File | Why It Matters |
 |---|---|
-| `skills/professional/architecture-review/SKILL.md` | Gold standard for the 10-section skill template |
+| `skills/team/cargo-package-scaffold/SKILL.md` | Gold standard for the 5-section lean skill layout (depth in `references/`) |
 | `project-templates/AGENTS.md` | Template pattern this file follows |
 | `claude/global/CLAUDE.md` | Global Claude Code standards — do not duplicate here |
 | `opencode/global/AGENTS.md` | Global OpenCode standards — do not duplicate here |
@@ -99,6 +99,7 @@
 | 2026-06-03 | Cross-language **architecture + security parity** for .NET/Python/PHP/Rust. Architecture: four `<lang>-architecture-checklist` skills sharing an identical Core Values + `DETECT→SCAN→REPORT(A–F)→RECOMMEND` workflow + output, differing only in language checks/tooling; `python-arch-review` (a misfit TDD-authoring hybrid) renamed/re-scoped to `python-architecture-checklist`; `php-architecture-checklist` created. Security: four `<lang>-security-review` bases share an OWASP core; **gov collapses to ONE language-agnostic `security-review-federal` overlay** (NIST 800-53 · CUI · DOE · POA&M · EO 14028 + per-language FIPS table), replacing `dotnet-security-review-federal` + `python-security-review-federal`. All trimmed lean; depth in `references/`. | User wants the four languages "in sync" (same workflow/values, language-specific specifics) and lean. Per-language skills (not one detecting skill) preserve trigger routing and match every other family. The federal overlay is ~80% language-agnostic policy, so one shared skill gives gov parity for all four languages at once and one place to keep NIST/CUI/POA&M in sync — far leaner than duplicating it 4×. `python-arch-review` was the lone misfit whose triggers collided with `tdd`/`python-feature-slice`/`python-security-review`. |
 | 2026-06-03 | **React skill family** added (first frontend family), mirroring the .NET/Python/PHP/Rust families: `react-architecture-checklist`, `react-security-review`, `react-feature-slice`, `react-component-scaffolder`, `react-app-scaffolder`, `react-modernization-analyzer` (6 skills) + 6 agents in both runtimes (`react-feature-slice-agent`, `react-component-scaffold-agent`, `react-app-scaffold-agent`, `react-security-agent`, `react-modernization-agent`, `react-arch-checklist-agent`). React is a frontend library, so two backend archetypes were **remapped**: the HTTP `api-scaffolder` slot → `react-component-scaffolder` + `react-app-scaffolder` (the component/app is the front-end "unit"), and the DB `migration-manager` slot → `react-modernization-analyzer` (class→hooks, CRA→Vite, 17→18→19, JS→TS); the `*-package-scaffold` (npm) archetype was **dropped** to keep the family at the standard 6 skills. Federal overlay gained a React/TS FIPS row; `security-review` command dispatch adds `react`. | User asked for React "to mirror the php, python, etc." The remapping keeps the family the same size and shape while respecting that a frontend library has no HTTP endpoint or DB migration. **Grounding gap noted:** the KB has no React corpus (`grounded_javascript` is JS/TS + Vue, not React), so every React skill grounds TS via `collection="javascript"`, a11y via `collection="ui_ux"`, OWASP via `collection="internal"`, and cites **react.dev** as the primary authority. Follow-up (separate repo): add a `grounded_react` collection to grounded-code-mcp. |
 | 2026-06-03 | Consolidate the TDD cluster 8→5. **Delete** `tdd-implementer` and `tdd-refactor` — their per-phase content folds into the canonical `tdd` skill's GREEN/REFACTOR sections + `references/` (green idioms, `code-smells`, `refactoring-catalog`, loaded on demand). **Merge** `tdd-verify` into `evaluate-tests` as a second "TDD compliance" mode (commit-history scorecard + AI anti-patterns). **Keep** `tdd` (the one loop), `tdd-agent` + `tdd-pair` (operating modes that defer to `tdd`), `evaluate-tests`, `test-scaffold`. Agents `tdd-agent`/`test-generation-agent` updated; no agent/command count change. | Eight overlapping TDD skills created an unanswerable routing question ("for GREEN, use `tdd` or `tdd-implementer`?"). The per-phase skills re-derived single phases of the loop `tdd` already owned whole, and the two auditors (`tdd-verify`, `evaluate-tests`) overlapped. One loop + modes + one auditor is focused and token-efficient; depth moved to load-on-demand `references/`. TDD/RGR is critical to AI-agent coding — clarity of "which skill" matters most here. |
+| 2026-06-03 | **Full-template tier adopts the 5-section lean layout**, retiring the "10 Mandatory Sections" standard. SKILL.md keeps only Title+Epigraph · Core Philosophy (with a Non-Negotiable Constraints list) · Workflow · State Block · Output Template (pointers) · Integration. The four heavy sections — Domain Principles table, AI Discipline (WRONG/RIGHT), Anti-Patterns table, Error Recovery — plus all code/report templates move to `references/`, loaded just-in-time. Size budget drops 400 → 200 lines. Gold standard moves from `architecture-review` (10-section) to `qraspi-skeleton` + `cargo-package-scaffold`. Rollout migrates the heaviest full-template skills first (Tier A); pilot `cargo-package-scaffold` went 367 → 103 lines with zero information loss. | The 10-section template "reproduces the exact bloat QRSPI was created to fix" (2026-06-02 decision): every always-loaded section is a per-invocation token tax, worst on smaller local models. The qraspi/qrspi family proved the 5-section shape in production. Depth is preserved (relocated, not deleted) and stays discoverable via mandatory pointers in SKILL.md, so trigger reliability and authority are unaffected while the always-on token cost drops ~60–70%. |
 
 ---
 
@@ -149,11 +150,13 @@ disable-model-invocation: true  # optional: prevents auto-invocation; use for in
 
 | Tier | When to use | SKILL.md size | References required |
 |------|------------|--------------|---------------------|
-| **Minimal** | Mode switches, conversational tools, single-instruction skills | ≤ 100 lines | ≥ 1 file |
-| **Full-template** | Domain-expert skills with workflow, state tracking, and output templates | ≤ 400 lines (overflow → `references/`) | ≥ 2 files |
+| **Minimal** | Mode switches, conversational tools, single-instruction skills, thin workflow-phase drivers (≤ ~40 imperative directives) | ≤ 100 lines | ≥ 1 file |
+| **Full-template** | Domain-expert skills with workflow, state tracking, and output templates | ≤ 200 lines (depth → `references/`) | ≥ 2 files |
 
 Minimal-tier skills have no prescribed section structure — just focused instructions.
-Full-template skills follow the 10-section template; content that overflows 400 lines goes into `references/` files, not more sections.
+Full-template skills follow the **5-section lean layout** below. Every always-loaded section is a
+per-invocation token tax, so depth — principle tables, anti-patterns, discipline rules, recovery
+steps, and code/report templates — lives in `references/` and loads just-in-time, not in SKILL.md.
 
 ### Description Format
 
@@ -180,20 +183,28 @@ description: >
   Very useful for .NET developers.
 ```
 
-### 10 Mandatory Sections (in order)
+### 5-Section Lean Layout (in order)
 
-1. **Title + Epigraph** -- `# Skill Name` with 1-2 relevant quotes
-2. **Core Philosophy** -- Non-negotiable constraints and design rationale
-3. **Domain Principles Table** -- 10 principles with Priority, Description, Applied As columns
-4. **Workflow** -- Phased lifecycle (e.g., DETECT, SCAN, REPORT, RECOMMEND) with exit criteria
-5. **State Block** -- Unique XML tag (e.g., `<tdd-state>`, `<arch-review-state>`) for multi-turn tracking
-6. **Output Templates** -- Markdown report templates with tables and checklists
-7. **AI Discipline Rules** -- CRITICAL/REQUIRED rules with WRONG/RIGHT code examples
-8. **Anti-Patterns Table** -- 10 anti-patterns with "Why It Fails" and "Correct Approach"
-9. **Error Recovery** -- 3-4 scenarios with symptoms and numbered recovery steps
-10. **Integration with Other Skills** -- Cross-references to related skills
+A full-template SKILL.md carries only what the model needs to *act*. Everything else is depth that
+loads on demand from `references/`.
 
-Gold standard template: `skills/professional/architecture-review/SKILL.md`
+1. **Title + Epigraph** -- `# Skill Name` with 1 relevant quote
+2. **Core Philosophy** -- design rationale + a numbered **Non-Negotiable Constraints** list. The
+   Critical/High principles live here as constraints; the full principle table goes to `references/`.
+3. **Workflow** -- phased lifecycle (e.g., DETECT, SCAN, REPORT, RECOMMEND) in one compact block,
+   with exit criteria. Decision trees and long step prose go to `references/`.
+4. **State Block** -- unique XML tag (e.g., `<tdd-state>`, `<arch-review-state>`) for multi-turn tracking
+5. **Output Template** -- **pointers** to the report/code templates in `references/`, not the
+   templates inline
+6. **Integration with Other Skills** -- a table cross-referencing related skills
+
+**Pushed to `references/` (depth, loaded just-in-time):** the full Domain Principles table,
+Anti-Patterns table, AI Discipline (WRONG/RIGHT) rules, Error Recovery scenarios, and all
+code/report templates. These remain authoritative — they are relocated, not deleted, and every
+reference file is named by a pointer in SKILL.md so nothing becomes undiscoverable.
+
+Gold-standard lean examples: `skills/team/qraspi-skeleton/SKILL.md` (phase driver) and
+`skills/team/cargo-package-scaffold/SKILL.md` (domain scaffolder with `references/` depth).
 
 ### References Directory
 
@@ -254,7 +265,7 @@ Key difference: Claude uses `skills:` array in frontmatter; OpenCode uses `skill
 
 ## Editing Guidelines
 
-- Follow the 10-section template when creating or modifying skills.
+- Follow the 5-section lean layout when creating or modifying skills; push depth to `references/`.
 - Keep both `claude/agents/` and `opencode/agents/` versions in sync.
 - Every skill must have a `references/` directory with at least 2 supporting files.
 - State block XML tags must be unique across all skills and agents.

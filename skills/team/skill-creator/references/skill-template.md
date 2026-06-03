@@ -1,8 +1,11 @@
-# Skill Template — Blank Scaffold
+# Skill Template — Blank Scaffold (5-Section Lean Layout)
 
-This file is the canonical blank template for a new SKILL.md. All 10 sections are
-present as labeled stubs. Replace placeholder content with real content before
-marking the skill complete.
+This is the canonical blank template for a new full-template SKILL.md. The five sections below are
+all that belong in SKILL.md. **Depth — the full Domain Principles table, AI Discipline (WRONG/RIGHT)
+rules, Anti-Patterns table, Error Recovery scenarios, and code/report templates — goes in
+`references/`, not in SKILL.md.** Keep SKILL.md ≤ 200 lines; every always-loaded line is a
+per-invocation token tax. Each reference file must be named by a pointer in the Output Template
+section so nothing becomes undiscoverable.
 
 ---
 
@@ -26,136 +29,63 @@ description: >
 <2–4 sentences describing the skill's guiding philosophy and what makes it distinct.>
 
 **Non-Negotiable Constraints:**
-
-1. <Constraint 1 — a hard rule the agent must never violate.>
+1. <Constraint 1 — a hard rule the agent must never violate. Fold the Critical/High principles here.>
 2. <Constraint 2>
 3. <Constraint 3>
+4. <Constraint 4>
+5. <Constraint 5>
 
-## Domain Principles Table
-
-| # | Principle | Description | Applied As |
-|---|-----------|-------------|------------|
-| 1 | **<Principle Name>** | <Why this principle matters in this domain.> | <How the agent applies it concretely.> |
-| 2 | **<Principle Name>** | <Description> | <Applied As> |
-| 3 | **<Principle Name>** | <Description> | <Applied As> |
-| 4 | **<Principle Name>** | <Description> | <Applied As> |
-| 5 | **<Principle Name>** | <Description> | <Applied As> |
-| 6 | **<Principle Name>** | <Description> | <Applied As> |
-| 7 | **<Principle Name>** | <Description> | <Applied As> |
-| 8 | **<Principle Name>** | <Description> | <Applied As> |
-| 9 | **<Principle Name>** | <Description> | <Applied As> |
-| 10 | **<Principle Name>** | <Description> | <Applied As> |
+The full principle table, discipline rules, anti-patterns, and error recovery live in
+`references/conventions.md`.
 
 ## Workflow
 
-<For single-mode skills, use a flat step list. For multi-mode, label each mode.>
+​```
+PHASE 1   <imperative action>. If <condition>, then <action>; otherwise <action>.
+PHASE 2   <action>.  (Detail/templates in references/<file>.md.)
+PHASE 3   <action>.
+...
+​```
 
-### Mode: <MODE NAME> — <Brief Description>
-
-\`\`\`
-STEP 1: <action>
-STEP 2: If <condition>, then <action>. Otherwise, <action>.
-STEP 3: <action>
-
-Verification:
-[ ] <check 1>
-[ ] <check 2>
-\`\`\`
+**Exit criteria:** <the binary, verifiable condition that means the work is done.>
 
 ## State Block
 
-\`\`\`
+​```
 <<skill-name>-state>
-phase: <phase1> | <phase2> | <phase3>
+phase: <phase1> | <phase2> | <phase3> | COMPLETE
 <field1>: <description>
 <field2>: <description>
 last_action: [what was just completed]
 next_action: [what happens next]
 </<skill-name>-state>
-\`\`\`
+​```
 
-## Output Templates
+## Output Template
 
-### <Template 1 Name>
-
-\`\`\`markdown
-## <Output Section Title>
-
-<Template content with [PLACEHOLDER] markers for variable content>
-\`\`\`
-
-### <Template 2 Name>
-
-\`\`\`markdown
-<Template 2 content>
-\`\`\`
-
-## AI Discipline Rules
-
-### CRITICAL: <Rule Name>
-
-<One sentence describing the rule.>
-
-\`\`\`
-WRONG: <Description of the incorrect behavior. Specific, not generic.>
-
-RIGHT: <Description of the correct behavior. Specific, not generic.>
-\`\`\`
-
-### CRITICAL: <Rule 2 Name>
-
-\`\`\`
-WRONG: <wrong>
-
-RIGHT: <right>
-\`\`\`
-
-### CRITICAL: <Rule 3 Name>
-
-\`\`\`
-WRONG: <wrong>
-
-RIGHT: <right>
-\`\`\`
-
-## Anti-Patterns Table
-
-| # | Anti-Pattern | Why It Fails | Correct Approach |
-|---|-------------|-------------|-----------------|
-| 1 | **<Name>** | <Why this fails.> | <What to do instead.> |
-| 2 | **<Name>** | <Why> | <Correct> |
-| 3 | **<Name>** | <Why> | <Correct> |
-| 4 | **<Name>** | <Why> | <Correct> |
-| 5 | **<Name>** | <Why> | <Correct> |
-| 6 | **<Name>** | <Why> | <Correct> |
-| 7 | **<Name>** | <Why> | <Correct> |
-| 8 | **<Name>** | <Why> | <Correct> |
-
-## Error Recovery
-
-### <Scenario 1 Name>
-
-\`\`\`
-Symptom: <What the agent observes that indicates this error.>
-
-Recovery:
-1. <First recovery action>
-2. <Second recovery action>
-3. <Third recovery action>
-\`\`\`
-
-### <Scenario 2 Name>
-
-\`\`\`
-Symptom: <description>
-
-Recovery:
-1. <action>
-2. <action>
-\`\`\`
+- **<report/code template name>** — `references/<file>.md`.
+- **<another template or pattern catalog>** — `references/<file>.md`.
+- **Principle table, discipline rules, anti-patterns, error recovery** — `references/conventions.md`.
 
 ## Integration with Other Skills
 
-- **\`<skill-name>\`** — <How this skill relates to or hands off to the named skill.>
-- **\`<skill-name>\`** — <Relationship description.>
+| Skill | Relationship |
+|-------|-------------|
+| `<skill-name>` | <How this skill relates to or hands off to the named skill.> |
+| `<skill-name>` | <Relationship description.> |
 ```
+
+---
+
+## What goes in `references/` (not SKILL.md)
+
+Create at least two reference files. A common split:
+
+- **`conventions.md`** — the full Domain Principles table (10 rows), the AI Discipline rules with
+  WRONG/RIGHT examples, the Anti-Patterns table (≥ 8 rows), and the Error Recovery scenarios
+  (≥ 3, each with Symptom + numbered recovery). This is the depth the Core Philosophy constraints summarize.
+- **`<domain>-templates.md`** (or `output-templates.md`) — the report/code templates the skill
+  emits, as complete fenced blocks with labeled placeholders.
+
+Add more reference files for large pattern catalogs, decision matrices, or language-specific detail.
+Every reference file must be named by a pointer in the Output Template section of SKILL.md.

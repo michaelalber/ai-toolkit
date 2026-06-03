@@ -6,341 +6,74 @@ description: Test generation conventions, naming patterns, mock strategies, and 
 
 # Test Scaffold
 
-> "The ratio of time spent reading versus writing code is well over 10 to 1. Tests should be the most readable code in the project."
+> "The ratio of time spent reading versus writing code is well over 10 to 1. Tests should be the
+> most readable code in the project."
 > -- Robert C. Martin
 
 ## Core Philosophy
 
-This skill provides the conventions, patterns, and structural guidance for generating .NET test suites. It covers test naming, file organization, mock patterns, the AAA (Arrange-Act-Assert) structure, and test project setup. Apply these conventions consistently across all generated tests.
+This skill provides the conventions, patterns, and structural guidance for generating .NET test
+suites with xUnit, FluentAssertions, and NSubstitute: test naming, file organization, mock
+strategy, the AAA (Arrange-Act-Assert) structure, and test project setup. Apply these conventions
+consistently across every generated test. Tests are documentation of behavior — they must be the
+most readable code in the project, isolated, deterministic, and independent of execution order.
 
 **Non-Negotiable Constraints:**
+1. AAA ALWAYS — every test follows Arrange-Act-Assert with explicit comment markers; never mix Act and Assert in one expression.
+2. DESCRIPTIVE NAMING — every test name is `MethodName_Scenario_ExpectedResult`, a complete sentence describing what is tested.
+3. ONE CONCEPT PER TEST — each test verifies one logical concept (multiple asserts allowed only when they verify aspects of that same concept).
+4. NO INTERDEPENDENCE — tests never depend on order; each sets up its own state, runs in isolation, and cleans up.
+5. MOCK ONLY WHAT YOU OWN — mock interfaces you control; for third-party libraries use their test helpers or wrap them in your own interface first.
 
-1. **AAA Pattern Always** -- Every test method follows Arrange-Act-Assert with explicit comment markers separating each section. No exceptions.
-2. **Descriptive Naming** -- Every test method name follows `MethodName_Scenario_ExpectedResult` format. The name must be a complete sentence describing what is being tested.
-3. **One Assert Concept Per Test** -- Each test verifies one logical concept. Multiple assertions are acceptable when they all verify different aspects of the same single concept (e.g., multiple properties of a response object).
-4. **No Test Interdependence** -- Tests must not depend on execution order. Each test sets up its own state, executes in isolation, and cleans up after itself.
-5. **Mock Only What You Own** -- Mock interfaces you control. For third-party libraries, use their built-in test helpers or wrap them in your own interface first.
-
-## Test Project Structure
-
-### Standard .NET Test Project Layout
+## Workflow
 
 ```
-tests/
-  MyApp.Tests/
-    MyApp.Tests.csproj
-    GlobalUsings.cs
-    Features/                          # Mirrors src/MyApp/Features/
-      Orders/
-        CreateOrder/
-          CreateOrderHandlerTests.cs
-          CreateOrderValidatorTests.cs
-          CreateOrderEndpointTests.cs
-        GetOrderById/
-          GetOrderByIdHandlerTests.cs
-          GetOrderByIdEndpointTests.cs
-      Customers/
-        CreateCustomer/
-          CreateCustomerHandlerTests.cs
-          CreateCustomerValidatorTests.cs
-    Services/                          # Mirrors src/MyApp/Services/
-      EmailServiceTests.cs
-    Common/
-      Behaviors/
-        ValidationBehaviorTests.cs
-    Infrastructure/                    # Test utilities
-      TestDbContextFactory.cs
-      WebAppFactory.cs
-      Builders/                        # Test data builders
-        OrderBuilder.cs
-      Fakes/                           # Fake implementations
-        FakeEmailService.cs
+IDENTIFY   The unit under test (handler, validator, service, endpoint, pipeline behavior) and the
+           scenarios to cover: happy path, not-found, validation, exception, guard clause, edge,
+           state change, side effect.
+
+CHOOSE     The test type per scenario (decision table in references/test-patterns.md):
+           unit + mocks · validator TestValidate() · WebApplicationFactory integration ·
+           InMemory DbContext · mocked RequestHandlerDelegate for behaviors.
+
+SCAFFOLD   Place the test file mirroring src/ structure (naming-conventions.md). Write each test
+           AAA-structured, named MethodName_Scenario_ExpectedResult. Build data with builders;
+           mock only external boundaries (mock-patterns.md); use InMemory DbContext, not a mocked one.
+
+VERIFY     dotnet test passes; each test isolated and order-independent; no testing of private
+           methods or framework code; DbContext disposed; no hardcoded GUIDs/dates.
 ```
 
-### Test Project Dependencies (.csproj)
+**Exit criteria:** every identified scenario has an AAA-structured, correctly named, isolated test;
+the right test type per scenario; mocks limited to external boundaries; `dotnet test` green.
 
-```xml
-<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <IsPackable>false</IsPackable>
-    <IsTestProject>true</IsTestProject>
-  </PropertyGroup>
+## State Block
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.*" />
-    <PackageReference Include="xunit" Version="2.*" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.*" />
-    <PackageReference Include="FluentAssertions" Version="7.*" />
-    <PackageReference Include="NSubstitute" Version="5.*" />
-    <PackageReference Include="NSubstitute.Analyzers.CSharp" Version="1.*" />
-    <PackageReference Include="FluentValidation.TestHelper" Version="11.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="9.*" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.*" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\MyApp\MyApp.csproj" />
-  </ItemGroup>
-</Project>
+```
+<test-scaffold-state>
+phase: IDENTIFY | CHOOSE | SCAFFOLD | VERIFY | COMPLETE
+unit_under_test: [class/member]
+scenarios: [count identified]
+tests_written: [count]
+test_types: [unit | validator | integration | behavior | db]
+build_status: pass | fail | not-run
+last_action: [description]
+next_action: [description]
+</test-scaffold-state>
 ```
 
-### GlobalUsings.cs
+## Output Template
 
-```csharp
-global using Xunit;
-global using FluentAssertions;
-global using NSubstitute;
-```
+- **Project structure, .csproj, GlobalUsings, AAA example, data builders, InMemory factory,
+  FluentValidation, WebApplicationFactory, when-to-use table, pitfalls** — `references/test-patterns.md`.
+- **Mock/stub/fake patterns (repositories, mediator, HttpClient, DbContext)** — `references/mock-patterns.md`.
+- **Test naming patterns, file organization, project structure conventions** — `references/naming-conventions.md`.
 
-## AAA Pattern -- Arrange, Act, Assert
+## Integration with Other Skills
 
-Every test method must have three clearly separated sections:
-
-```csharp
-[Fact]
-public async Task Handle_WithValidCommand_CreatesOrderAndReturnsId()
-{
-    // Arrange
-    var repository = Substitute.For<IOrderRepository>();
-    var handler = new CreateOrderHandler(repository);
-    var command = new CreateOrderCommand(CustomerId: 1, ProductId: 10, Quantity: 2);
-
-    repository.AddAsync(Arg.Any<Order>(), Arg.Any<CancellationToken>())
-        .Returns(Task.FromResult(new Order { Id = 42 }));
-
-    // Act
-    var result = await handler.Handle(command, CancellationToken.None);
-
-    // Assert
-    result.OrderId.Should().Be(42);
-    await repository.Received(1).AddAsync(
-        Arg.Is<Order>(o => o.CustomerId == 1 && o.Quantity == 2),
-        Arg.Any<CancellationToken>());
-}
-```
-
-| Section | What Belongs Here | What Does NOT Belong |
-|---------|-------------------|----------------------|
-| **Arrange** | Object construction, mock setup, test data creation, database seeding | Assertions, method calls under test |
-| **Act** | ONE call to the method under test. Store the result or capture the exception. | Multiple calls, assertions, additional setup |
-| **Assert** | Assertions on the result, mock verification, state verification | Additional method calls, setup, side effects |
-
-Do not mix Act and Assert in the same expression (`repo.GetById(1).Should().NotBeNull()`). Store the result from Act first, then assert on the stored result separately.
-
-## Test Naming Convention
-
-### Pattern: `MethodName_Scenario_ExpectedResult`
-
-| Category | Test Name | What It Tests |
-|----------|-----------|---------------|
-| Happy path | `Handle_WithValidCommand_CreatesOrder` | Normal successful operation |
-| Not found | `Handle_WhenOrderNotFound_ReturnsNull` | Missing entity handling |
-| Validation | `Validate_WithEmptyName_HasValidationError` | Input validation rules |
-| Exception | `Handle_WhenRepositoryThrows_PropagatesException` | Error propagation |
-| Guard clause | `Handle_WithNullCommand_ThrowsArgumentNullException` | Null parameter check |
-| Edge case | `Handle_WithMaxIntQuantity_DoesNotOverflow` | Boundary condition |
-| State change | `Handle_CancelsPendingOrder_SetsStatusToCancelled` | State mutation |
-| Side effect | `Handle_AfterCreatingOrder_SendsConfirmationEmail` | External effect |
-
-| Source Class | Test Class | File Name |
-|-------------|------------|-----------|
-| `CreateOrderHandler` | `CreateOrderHandlerTests` | `CreateOrderHandlerTests.cs` |
-| `CreateOrderValidator` | `CreateOrderValidatorTests` | `CreateOrderValidatorTests.cs` |
-| `OrderService` | `OrderServiceTests` | `OrderServiceTests.cs` |
-
-## Mock Patterns
-
-### NSubstitute Fundamentals
-
-```csharp
-// Create a substitute (mock)
-var repository = Substitute.For<IOrderRepository>();
-
-// Configure return values
-repository.GetByIdAsync(1, Arg.Any<CancellationToken>())
-    .Returns(new Order { Id = 1, Status = OrderStatus.Pending });
-
-// Configure async return values
-repository.AddAsync(Arg.Any<Order>(), Arg.Any<CancellationToken>())
-    .Returns(Task.CompletedTask);
-
-// Verify a call was made
-await repository.Received(1).AddAsync(
-    Arg.Is<Order>(o => o.CustomerId == 1),
-    Arg.Any<CancellationToken>());
-
-// Verify a call was NOT made
-await repository.DidNotReceive().DeleteAsync(Arg.Any<int>(), Arg.Any<CancellationToken>());
-
-// Configure to throw
-repository.GetByIdAsync(Arg.Any<int>(), Arg.Any<CancellationToken>())
-    .ThrowsAsync(new DbException("Connection lost"));
-```
-
-### What to Mock and What Not To Mock
-
-| Component | Mock? | Reason |
-|-----------|-------|--------|
-| Repository interfaces | Yes | Isolates business logic from data access |
-| Email / SMS services | Yes | Avoids sending real messages in tests |
-| External HTTP APIs | Yes | Avoids network calls, controls responses |
-| FreeMediator `ISender` | Yes | When testing code that dispatches commands |
-| `ILogger<T>` | Usually no | Pass `NullLogger<T>.Instance` |
-| `DbContext` (EF Core) | No -- use InMemory | InMemoryDatabase is simpler and more realistic |
-| Value objects / records | No | Use real instances -- simple data containers |
-| Static utility methods | No | Wrap in an interface if mocking is needed |
-
-## Test Data Patterns
-
-### Builder Pattern for Test Data
-
-```csharp
-public class OrderBuilder
-{
-    private int _id = 1;
-    private int _customerId = 1;
-    private OrderStatus _status = OrderStatus.Pending;
-    private decimal _total = 100.00m;
-    private List<OrderItem> _items = new();
-
-    public OrderBuilder WithId(int id) { _id = id; return this; }
-    public OrderBuilder WithCustomerId(int id) { _customerId = id; return this; }
-    public OrderBuilder WithStatus(OrderStatus s) { _status = s; return this; }
-    public OrderBuilder WithTotal(decimal t) { _total = t; return this; }
-    public OrderBuilder WithItem(int productId, int qty, decimal price)
-    {
-        _items.Add(new OrderItem { ProductId = productId, Quantity = qty, UnitPrice = price });
-        return this;
-    }
-
-    public Order Build() => new()
-    {
-        Id = _id,
-        CustomerId = _customerId,
-        Status = _status,
-        TotalAmount = _total,
-        Items = _items,
-        CreatedAt = DateTime.UtcNow
-    };
-}
-```
-
-### InMemory DbContext Factory
-
-```csharp
-public static class TestDbContextFactory
-{
-    public static AppDbContext Create()
-    {
-        var options = new DbContextOptionsBuilder<AppDbContext>()
-            .UseInMemoryDatabase(Guid.NewGuid().ToString())
-            .Options;
-
-        var db = new AppDbContext(options);
-        db.Database.EnsureCreated();
-        return db;
-    }
-
-    public static AppDbContext CreateWithSeed(Action<AppDbContext> seed)
-    {
-        var db = Create();
-        seed(db);
-        db.SaveChanges();
-        return db;
-    }
-}
-```
-
-## FluentValidation Testing
-
-```csharp
-public class CreateOrderValidatorTests
-{
-    private readonly CreateOrderValidator _validator = new();
-
-    [Fact]
-    public void Validate_WithValidCommand_HasNoErrors()
-    {
-        var command = new CreateOrderCommand(CustomerId: 1, Items: new[] { ValidItem() });
-        var result = _validator.TestValidate(command);
-        result.ShouldNotHaveAnyValidationErrors();
-    }
-
-    [Fact]
-    public void Validate_WithZeroCustomerId_HasErrorForCustomerId()
-    {
-        var command = new CreateOrderCommand(CustomerId: 0, Items: new[] { ValidItem() });
-        var result = _validator.TestValidate(command);
-        result.ShouldHaveValidationErrorFor(x => x.CustomerId)
-            .WithErrorMessage("A valid customer is required.");
-    }
-
-    private static OrderItemDto ValidItem() =>
-        new(ProductId: 1, Quantity: 1, UnitPrice: 10.00m);
-}
-```
-
-## Integration Testing With WebApplicationFactory
-
-```csharp
-public class CreateOrderEndpointTests : IClassFixture<WebAppFactory>
-{
-    private readonly HttpClient _client;
-    private readonly WebAppFactory _factory;
-
-    public CreateOrderEndpointTests(WebAppFactory factory)
-    {
-        _factory = factory;
-        _client = factory.CreateClient();
-    }
-
-    [Fact]
-    public async Task Post_WithValidOrder_Returns201Created()
-    {
-        // Arrange
-        await _factory.SeedDataAsync(async db =>
-        {
-            db.Customers.Add(new Customer { Id = 1, Name = "Alice" });
-            await db.SaveChangesAsync();
-        });
-
-        var payload = new { CustomerId = 1, Items = new[] { new { ProductId = 10, Quantity = 2, UnitPrice = 25.00m } } };
-
-        // Act
-        var response = await _client.PostAsJsonAsync("/api/orders", payload);
-
-        // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.Created);
-        response.Headers.Location.Should().NotBeNull();
-    }
-}
-```
-
-## When to Use Each Test Type
-
-| Scenario | Test Type |
-|----------|-----------|
-| Handler's business logic in isolation | Unit test with mocked dependencies |
-| FluentValidation validator | Unit test using `TestValidate()` extension |
-| Full HTTP pipeline (endpoint → mediator → handler → DB) | Integration test with WebApplicationFactory |
-| Pipeline behavior (validation, logging, transactions) | Unit test with mocked `RequestHandlerDelegate` |
-| Database queries or EF Core mappings | Unit test with InMemory DbContext |
-| External service interaction | Unit test with mocked interface + optional integration test |
-
-## Common Pitfalls
-
-| Pitfall | Problem | Fix |
-|---------|---------|-----|
-| Testing private methods | Couples tests to implementation | Test through the public API |
-| Excessive mocking | Tests become brittle and hard to read | Mock only external boundaries |
-| Shared mutable state between tests | Tests fail intermittently | Each test creates its own state |
-| Not disposing DbContext | Memory leaks in test runner | Implement `IDisposable` on test class |
-| Hardcoded GUIDs/dates | Tests break across environments | Use `Guid.NewGuid()` and `DateTime.UtcNow` |
-| Testing framework code | Wasted effort | Test YOUR logic, trust the framework |
-
-## Reference Files
-
-- [Mock Patterns](references/mock-patterns.md) -- Mock, stub, and fake patterns for repositories, mediator, HttpClient, DbContext, and common .NET infrastructure
-- [Naming Conventions](references/naming-conventions.md) -- Test naming patterns, file organization rules, and test project structure conventions
+| Skill | Relationship |
+|-------|-------------|
+| `tdd` | The RED phase writes a failing test first; this skill supplies the conventions, naming, and structure those tests follow. |
+| `tdd-agent` / `tdd-pair` | Operating modes of the TDD loop that generate tests — they apply these scaffolding conventions. |
+| `dotnet-vertical-slice` | Scaffolds the feature handlers/validators/endpoints this skill writes tests for; the test tree mirrors the slice structure. |
+| `evaluate-tests` | Audits generated tests for TDD discipline and quality — run it after scaffolding to verify the suite. |
