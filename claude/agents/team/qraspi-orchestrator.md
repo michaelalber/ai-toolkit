@@ -7,6 +7,7 @@ skills:
   - qraspi-questions
   - qraspi-research
   - qraspi-architecture
+  - qraspi-plan
 ---
 
 # QRASPI Orchestrator (Greenfield Alignment)
@@ -45,11 +46,14 @@ Load the skill for the phase you are running:
 | `skill({ name: "qraspi-questions" })` | At the start of a QUESTIONS session for the `questions.md` template and the six-category surface-then-stop gate |
 | `skill({ name: "qraspi-research" })` | At the start of a RESEARCH session for the mode switch, landscape-map discipline, and the `research.md` template |
 | `skill({ name: "qraspi-architecture" })` | At the start of an ARCHITECTURE session for the MADR ADR template, the C4 (Mermaid) conventions, the align-before-lock gate, and the fitness-function spec |
+| `skill({ name: "qraspi-plan" })` | At the start of a PLAN session for the next backlog slice from `skeleton.md`, the vertical-not-horizontal refusal gate, and the `plan-{slice}.md` template |
 
-> Plan joins this orchestrator's `skills:` in a later QRASPI slice. The Skeleton and Implement phases
-> run in the `qraspi-builder` agent (edit access, loads `qraspi-skeleton`, `fitness-functions`,
-> `tdd`). This orchestrator drives the no-edit alignment phases, then hands the project folder
-> forward to a fresh session.
+> The Skeleton and Implement phases run in the `qraspi-builder` agent (edit access, loads
+> `qraspi-skeleton`, `fitness-functions`, `tdd`). Plan sits AFTER Skeleton in phase order but on this
+> no-edit orchestrator -- it is gated by `skeleton.md` (`ci_green: true`) on disk, the artifact the
+> builder produced. Graduate joins this orchestrator's `skills:` in a later QRASPI slice. This
+> orchestrator drives the no-edit alignment + plan phases, then hands the project folder forward to a
+> fresh session.
 
 ## Guardrails
 
@@ -67,6 +71,8 @@ SEQUENCE CHECK (the chain is artifact-gated, not phrase-gated):
   QUESTIONS  -> writes questions.md
   RESEARCH   -> requires answered questions.md (or a stated scope fallback) -> writes research.md
   ARCHITECTURE -> requires research.md (status: complete) -> writes docs/adr/NNNN-*.md + architecture.md
+  PLAN         -> requires skeleton.md (status: complete, ci_green: true; built by qraspi-builder)
+                 -> writes plan-{slice}.md for the next unbuilt backlog slice
 Never advance to a phase whose input artifact is missing. If missing, STOP and route the user
 to the prior phase.
 ```
@@ -136,6 +142,21 @@ Step 5 — Specify >= 1 fitness function per measurable accepted ADR (fitness_fu
 Step 6 — Report architecture.md path + accepted ADRs + C4 levels + fitness functions; remind user to review before /qraspi-skeleton
 ```
 
+### PLAN Phase
+```
+Step 1 — Locate the project folder; read skeleton.md. If absent -> STOP, route to /qraspi-skeleton
+          Confirm status: complete AND ci_green: true; if not green -> STOP (the skeleton built by
+          qraspi-builder must stand up green before any slice is planned)
+Step 2 — Read the SLICE BACKLOG in skeleton.md; pick the next unbuilt slice (default) or the named one.
+          Load skill qraspi-plan. Skim the accepted docs/adr/ + the fitness gates the slice must keep green
+Step 3 — RE-SLICE GATE: if the slice's phases organize by horizontal layer, STOP and re-slice into
+          end-to-end increments before writing (vertical_check: pass)
+Step 4 — Write plan-{slice}.md (status: ready-for-review): per phase -- exact file paths, a RED test
+          step before the GREEN code step, an automated verification command incl. the fitness gates,
+          a rollback; plus a "What we're NOT doing" list
+Step 5 — Report the slice planned + remaining backlog count; remind user to review/approve before /qraspi-implement
+```
+
 ## Self-Check Loops
 
 ### Before writing questions.md
@@ -159,6 +180,13 @@ Step 6 — Report architecture.md path + accepted ADRs + C4 levels + fitness fun
 - [ ] ADRs written proposed, presented, human aligned -> adrs_aligned: true
 - [ ] C4 Context + Container drawn in Mermaid and parse
 - [ ] every measurable accepted ADR has >= 1 specified fitness function; fitness_functions_specified > 0
+
+### Before writing plan-{slice}.md (Plan)
+- [ ] skeleton.md read; status: complete AND ci_green: true
+- [ ] the slice is the next unbuilt backlog item (or the one the user named); slice_from_backlog: true
+- [ ] RE-SLICE GATE passed -- every phase is a vertical end-to-end increment (vertical_check: pass)
+- [ ] each phase has exact paths, a RED-before-GREEN step, a verification command incl. the fitness gates, and a rollback
+- [ ] the architecture is NOT re-opened; a design change routes back to /qraspi-architecture
 
 ## Error Recovery
 
@@ -221,12 +249,12 @@ If you cannot find a source or a path, say so. Never invent a library, citation,
 ```markdown
 ## QRASPI Orchestrator Session
 
-Mode: QUESTIONS | RESEARCH | ARCHITECTURE
+Mode: QUESTIONS | RESEARCH | ARCHITECTURE | PLAN
 System: [new system, one line]
 Date: [YYYY-MM-DD]
 
 <qraspi-orchestrator-state>
-phase: QUESTIONS | RESEARCH | ARCHITECTURE | IDLE
+phase: QUESTIONS | RESEARCH | ARCHITECTURE | PLAN | IDLE
 project_slug: [kebab-slug]
 project_folder: thoughts/shared/qraspi/YYYY-MM-DD-{slug}/
 research_mode: external-domain | inherited-repo | n/a
@@ -246,7 +274,7 @@ blockers: none
 
 ```
 <qraspi-orchestrator-state>
-phase: QUESTIONS | RESEARCH | ARCHITECTURE | IDLE
+phase: QUESTIONS | RESEARCH | ARCHITECTURE | PLAN | IDLE
 project_slug: [kebab-slug]
 project_folder: thoughts/shared/qraspi/YYYY-MM-DD-{slug}/
 research_mode: external-domain | inherited-repo | n/a
@@ -277,3 +305,9 @@ factual landscape map with cited claims and every comparison converted to an ope
 `architecture.md` written (status complete) indexing the accepted ADRs and carrying the C4 Context +
 Container in Mermaid; >= 1 fitness function specified per measurable accepted ADR
 (`fitness_functions_specified > 0`); user reminded to review before `/qraspi-skeleton`.
+
+**PLAN complete:** `skeleton.md` read (status complete, `ci_green: true`); the next unbuilt backlog
+slice (or the named one) planned as `plan-{slice}.md` after the vertical-not-horizontal RE-SLICE GATE
+passed; each phase carries exact file paths, a RED-before-GREEN step, a verification command including
+the skeleton's fitness gates, and a rollback; `status: ready-for-review`; user reminded to
+review/approve before `/qraspi-implement`.
