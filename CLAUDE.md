@@ -7,9 +7,9 @@ and persistent decisions.
 
 ## Quick Reference
 
-- **Skills:** `skills/<n>/SKILL.md` — 10 mandatory sections, gold standard: `skills/architecture-review/SKILL.md`
-- **Agents:** `claude/agents/<n>.md` (Claude Code) | `opencode/agents/<n>.md` (OpenCode) — must stay in parity
-- **Commands:** `claude/commands/<n>.md` (Claude Code) | `opencode/commands/<n>.md` (OpenCode)
+- **Skills:** `skills/team/<n>/SKILL.md` or `skills/professional/<n>/SKILL.md` — subdir chosen by `audience:` frontmatter. 10 mandatory sections, gold standard: `skills/professional/architecture-review/SKILL.md`
+- **Agents:** `claude/agents/{team,professional}/<n>.md` (Claude Code) | `opencode/agents/{team,professional}/<n>.md` (OpenCode) — must stay in parity
+- **Commands:** `claude/commands/<n>.md` (Claude Code) | `opencode/commands/<n>.md` (OpenCode) — flat, no audience subdir
 - **Global files:** `claude/global/` → installs to `~/.claude/` | `opencode/global/` → installs to `~/.config/opencode/`
 - **Hooks:** `claude/global/settings.json` — credential stop (PreToolUse) + post-write build/lint gates (PostToolUse)
 - **Permissions:** `claude/global/settings.local.json` — bash allow/deny arrays, read allow/deny arrays
@@ -25,14 +25,14 @@ No compiled artifacts. Validation is structural.
 # Count skills
 find skills -name "SKILL.md" | wc -l
 
-# Verify a skill has all 10 sections
-grep -c "^## " skills/<n>/SKILL.md   # should return 10
+# Verify a skill has all 10 sections (in-fence template headers may push this slightly above 10)
+grep -c "^## " skills/{team,professional}/<n>/SKILL.md
 
-# Check agent parity (counts must match)
-ls claude/agents/*.md | wc -l
-ls opencode/agents/*.md | wc -l
+# Check agent parity (counts must match) — agents live under team/ and professional/ subdirs
+find claude/agents -name "*.md" | wc -l
+find opencode/agents -name "*.md" | wc -l
 
-# Check command parity (counts must match)
+# Check command parity (counts must match) — commands are flat
 ls claude/commands/*.md | wc -l
 ls opencode/commands/*.md | wc -l
 ```
@@ -41,18 +41,21 @@ ls opencode/commands/*.md | wc -l
 
 **Choose a tier first:**
 - **Minimal** (≤ 100 lines): mode switches, conversational tools, single-instruction skills. No prescribed section structure. `≥ 1` reference file.
-- **Full-template** (≤ 400 lines): domain-expert skills. All 10 sections required. Overflow goes to `references/`, not more sections.
+- **Full-template** (≤ 400 lines): domain-expert skills. All 10 sections required. `≥ 2` reference files. Overflow goes to `references/`, not more sections.
+
+Set `audience:` in the frontmatter (`team` | `professional`) — it selects the
+`skills/<audience>/` install subdir, applied by `scripts/add_frontmatter.py`.
 
 **Minimal-tier steps:**
-1. Create `skills/<new-name>/SKILL.md` with focused instructions (no template to copy)
+1. Create `skills/<audience>/<new-name>/SKILL.md` with focused instructions (no template to copy)
 2. Add `disable-model-invocation: true` for interactive or conversational skills
-3. Create `skills/<new-name>/references/` with ≥ 1 supporting file
+3. Create `skills/<audience>/<new-name>/references/` with ≥ 1 supporting file
 4. Skip steps 3–6 below unless the skill is user-invocable
 
 **Full-template steps:**
-1. Copy gold standard: `cp -r skills/architecture-review skills/<new-name>`
-2. All 10 sections required — do not skip
-3. Add agent entries in **both** `claude/agents/` and `opencode/agents/`
+1. Copy gold standard: `cp -r skills/professional/architecture-review skills/<audience>/<new-name>`
+2. All 10 sections required — do not skip; ≥ 2 reference files
+3. Add agent entries in **both** `claude/agents/<audience>/` and `opencode/agents/<audience>/`
 4. Add command entries in **both** `claude/commands/` and `opencode/commands/` if user-invocable
 5. Update README.md skill count and table
 6. Update AGENTS.md Open Loops section

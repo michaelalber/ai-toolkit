@@ -104,7 +104,7 @@
 
 ## Open Loops
 
-- [ ] Skill count (currently 102) — update this file and README when skills are added or removed. QRSPI added 5 phase skills 2026-06-02 (was 81); QRASPI added 8 (`fitness-functions` + the 7 phase/graduate skills) 2026-06-03 (was 86, → 94); TDD cluster consolidated 8→5 on 2026-06-03 (→ 91); cross-language architecture+security parity 2026-06-03 (renamed `python-arch-review`→`python-architecture-checklist`; +`php-architecture-checklist`, +`php-security-review`, +`security-review-federal`; −`dotnet-security-review-federal`, −`python-security-review-federal` → 92); PHP family parity 2026-06-03 (+`php-feature-slice`, +`php-api-scaffolder`, +`php-package-scaffold`, +`php-migration-manager` → 96); React family parity 2026-06-03 (+`react-architecture-checklist`, +`react-security-review`, +`react-feature-slice`, +`react-component-scaffolder`, +`react-app-scaffolder`, +`react-modernization-analyzer` → 102); the 4 deprecated `rpi-*` skills plus the deprecated `spec-implement` remain on disk until sunset ~2026-09-01 → 97.
+- [ ] Skill count (currently 103) — update this file and README when skills are added or removed. `dotnet-controller-api-scaffolder` added 2026-06-03 (was 102 → 103): controller-based Web API scaffolder that conforms to existing conventions; skill-only, no agent/command (matches the .NET family convention — `minimal-api-scaffolder` et al. have no agents). Same change made `dotnet-architecture-checklist` style-aware (layered/N-tier controller branch via `references/layered-ntier.md`) — no count change. QRSPI added 5 phase skills 2026-06-02 (was 81); QRASPI added 8 (`fitness-functions` + the 7 phase/graduate skills) 2026-06-03 (was 86, → 94); TDD cluster consolidated 8→5 on 2026-06-03 (→ 91); cross-language architecture+security parity 2026-06-03 (renamed `python-arch-review`→`python-architecture-checklist`; +`php-architecture-checklist`, +`php-security-review`, +`security-review-federal`; −`dotnet-security-review-federal`, −`python-security-review-federal` → 92); PHP family parity 2026-06-03 (+`php-feature-slice`, +`php-api-scaffolder`, +`php-package-scaffold`, +`php-migration-manager` → 96); React family parity 2026-06-03 (+`react-architecture-checklist`, +`react-security-review`, +`react-feature-slice`, +`react-component-scaffolder`, +`react-app-scaffolder`, +`react-modernization-analyzer` → 102); the 4 deprecated `rpi-*` skills plus the deprecated `spec-implement` remain on disk until sunset ~2026-09-01 → 97.
 - [x] Agent count parity — Claude Code (49) vs. OpenCode (49) — QRSPI added `qrspi-orchestrator` + `qrspi-implement` 2026-06-02 (was 35/35, resolved 2026-05-19); QRASPI added `qraspi-orchestrator` + `qraspi-builder` 2026-06-03 (was 37/37); PHP family parity 2026-06-03 added `php-feature-slice-agent`, `php-api-scaffold-agent`, `php-package-agent`, `php-migration-agent` in both runtimes (was 39/39, → 43/43); React family parity 2026-06-03 added `react-feature-slice-agent`, `react-component-scaffold-agent`, `react-app-scaffold-agent`, `react-security-agent`, `react-modernization-agent`, `react-arch-checklist-agent` in both runtimes (was 43/43, → 49/49); sunset removes `rpi-planner`/`rpi-implement` ~2026-09-01 → 47/47
 - [x] Commands layer — `claude/commands/` (22 commands) and `opencode/commands/` (22 commands) — QRSPI added 5 (`/qrspi-questions`…`/qrspi-implement`) 2026-06-02 (was 10/10); QRASPI added 7 (`/qraspi-questions`…`/qraspi-graduate`) 2026-06-03 (was 15/15). No `rpi-*` commands, so sunset leaves commands at 22.
 
@@ -118,20 +118,12 @@
 
 ---
 
-## Available Tools
-
-- `grounded-code-mcp` — local knowledge base; preferred over training data for language idioms, security patterns, and framework APIs
-
----
-
 ## Project Boot Ritual
 
-At the start of every session:
-
-1. Read this file (`AGENTS.md`), `intent.md`, and `constraints.md`.
-2. Check the active task context (Jira issue or conversation) for the current spec and acceptance criteria.
-3. Confirm context — state: current phase, active task (if any), top 3 constraints, open loops.
-4. Do NOT begin work until context is confirmed.
+Follow the global Session Boot Ritual (see global `CLAUDE.md` / `AGENTS.md`). Repo-specific deltas:
+read this file plus `intent.md` and `constraints.md`, and confirm the **Persistent Decisions** and
+**Open Loops** below before starting. Tooling (grounded-code-mcp, Microsoft Learn MCP, grounding
+workflow) is defined globally — not repeated here.
 
 ---
 

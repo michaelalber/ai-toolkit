@@ -5,7 +5,7 @@
 [![Agents](https://img.shields.io/badge/agents-49-blue)](#agents)
 [![Platforms](https://img.shields.io/badge/platforms-Claude%20Code%20%7C%20OpenCode%20%7C%20Pi-informational)](#platforms)
 
-**102 skills, 49 agents, and 22 slash commands for AI-assisted software development — spanning TDD, .NET, Python, PHP, Rust, React, edge AI, security, DDD, and more.**
+**103 skills, 49 agents, and 22 slash commands for AI-assisted software development — spanning TDD, .NET, Python, PHP, Rust, React, edge AI, security, DDD, and more.**
 
 Works with [Claude Code](https://claude.ai/code), [OpenCode](https://opencode.ai/), and [Pi](https://pi.dev) (Ollama local models).
 
@@ -148,10 +148,11 @@ See `.matt-pocock-attribution.yml` at the repo root for the full provenance mani
 | `ef-migration-manager` | EF Core migration lifecycle with safety checks, data loss detection, SQL review, and rollback verification. |
 | `nuget-package-scaffold` | NuGet package creation with multi-targeting, CI/CD pipelines, and semantic versioning. |
 | `legacy-migration-analyzer` | .NET Framework to .NET 10 migration analysis with risk scoring, upgrade strategies, and incremental patterns. |
-| `dotnet-architecture-checklist` | .NET Blazor architecture review with CQRS/FreeMediator validation and grading. |
+| `dotnet-architecture-checklist` | .NET architecture review — detects style and grades both layered/N-tier controller APIs and vertical-slice CQRS/Blazor. |
 | `dotnet-security-review` | OWASP-based .NET security review with Telerik specialization and manager-friendly reporting. |
 | `security-review-federal` | Shared, language-agnostic federal/gov overlay for any base security review — NIST 800-53, FIPS 140-2/3, CUI, POA&M, EO 14028, DOE 205.1B. |
 | `minimal-api-scaffolder` | .NET 10 minimal API scaffolding with OpenAPI documentation, versioning, and security patterns. |
+| `dotnet-controller-api-scaffolder` | Controller-based ASP.NET Core Web API scaffolding that detects and conforms to an existing codebase's conventions (base controller, validation, service/mediator boundary, response shape). |
 | `4d-schema-migration` | 4D (4th Dimension) to SQL Server/EF Core/Blazor full-stack migration specialist. |
 | _(planned)_ `shared-kernel-generator` | .NET shared kernel scaffolding — not yet implemented. |
 
