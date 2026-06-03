@@ -20,7 +20,7 @@ This toolkit encodes that expertise as reusable primitives. Each skill is an opi
 **Design decisions:**
 - **Three primitives, one toolkit** — skills (model-invoked expertise), agents (autonomous executors), commands (user-triggered with live shell context). Each has a distinct role.
 - **Platform parity** — every skill and agent exists in both Claude Code and OpenCode format with identical behavior. Pi gets its own Ollama-optimized config.
-- **Two-tier skill design** — full-template skills (10-section template: philosophy, principles, workflow, state, output templates, AI discipline rules, anti-patterns, error recovery, integrations) for domain-expert tools; minimal-tier skills (≤ 100 lines, focused instructions) for mode switches and conversational tools.
+- **Two-tier skill design** — full-template skills (5-section lean layout: philosophy, workflow, state, output-template pointers, integrations; depth such as principle tables, anti-patterns, and error recovery loads on demand from `references/`) for domain-expert tools; minimal-tier skills (≤ 100 lines, focused instructions) for mode switches and conversational tools.
 - **Global + project layered config** — global standards apply everywhere; project-level files add specificity without duplicating the global.
 
 ---
@@ -42,7 +42,7 @@ This toolkit encodes that expertise as reusable primitives. Each skill is an opi
 
 Three distinct primitives compose the toolkit:
 
-**Skills** — Structured, opinionated prompt files that encode domain expertise. Model-invoked autonomously. Live in `skills/{team,professional}/<name>/SKILL.md`. Each follows a strict 10-section template.
+**Skills** — Structured, opinionated prompt files that encode domain expertise. Model-invoked autonomously. Live in `skills/{team,professional}/<name>/SKILL.md`. Full-template skills follow a 5-section lean layout with depth in `references/`.
 
 **Agents** — Autonomous executors that combine skills with tool access and guardrails. Operate independently within defined boundaries. Live in `claude/agents/` and `opencode/agents/`.
 
@@ -287,7 +287,7 @@ A structured Research → Plan → Implement loop with parallel subagents and se
 
 | Skill | Description |
 |-------|-------------|
-| `skill-creator` | Creates, revises, and scores SKILL.md definitions against the 10-section gold standard. |
+| `skill-creator` | Creates, revises, and scores SKILL.md definitions against the 5-section lean gold standard. |
 | `spec-implement` _(deprecated — use QRSPI/QRASPI)_ | Converts a spec or acceptance criteria into a working implementation, test-first. **Deprecated 2026-06-03**; `disable-model-invocation: true`; removal at sunset ~2026-09-01. |
 
 ### Agent Support Suite (Team)

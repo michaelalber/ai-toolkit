@@ -24,7 +24,7 @@ Enable software development teams to immediately install and use high-quality AI
 
 ## Values (What We Optimize For)
 
-1. **Quality** — every skill and agent must be correct, complete, and follow the 10-section template exactly
+1. **Quality** — every skill must be correct, complete, and follow the 5-section lean layout (depth in `references/`); agents follow the agent template
 2. **Consistency** — conventions are enforced uniformly; no one-offs without documented rationale
 3. **Usability** — skills and agents must work out of the box; no configuration guessing
 4. **Completeness** — Claude Code and OpenCode versions stay in sync; references directories are populated
@@ -47,7 +47,7 @@ Enable software development teams to immediately install and use high-quality AI
 
 ### Decide Autonomously
 
-- Formatting and structure within the 10-section template
+- Formatting and structure within the 5-section lean layout
 - Selecting which references to include in a `references/` directory
 - Wording of skill descriptions and trigger phrases
 - File naming within established conventions
@@ -55,7 +55,7 @@ Enable software development teams to immediately install and use high-quality AI
 ### Escalate to Human
 
 - Adding a new skill suite or agent category not currently represented
-- Changing the 10-section template structure itself
+- Changing the 5-section lean layout structure itself
 - Breaking Claude Code / OpenCode parity intentionally
 - Modifying install scripts or global context files (`claude/global/` or `opencode/global/`)
 - Any change to `project-templates/` that would invalidate existing user copies
@@ -66,7 +66,7 @@ Enable software development teams to immediately install and use high-quality AI
 
 A good output for this project:
 
-- A new skill that passes all 10-section completeness checks, has 2+ reference files, and has a unique state block XML tag
+- A new skill that follows the 5-section lean layout (≤ 200 lines, depth in `references/`), has 2+ reference files, and has a unique state block XML tag
 - An agent that exists in both `claude/agents/` and `opencode/agents/` with consistent behavior and correct frontmatter format for each platform
 - A project-template file that a developer can copy into a new project and fill in within 15 minutes, without needing to read external documentation
 

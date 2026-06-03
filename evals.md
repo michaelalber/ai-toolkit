@@ -24,12 +24,16 @@ A passing eval would survive scrutiny from a developer seeing the skill for the 
 ### Test Case 1: New Skill Completeness
 
 - **Input:** A newly created or modified skill in `skills/<name>/SKILL.md`
-- **Known-Good Output:** `skills/architecture-review/SKILL.md` — the gold standard
+- **Known-Good Output:** `skills/team/cargo-package-scaffold/SKILL.md` — the gold standard
 - **Pass Criteria:**
-  - [ ] All 10 sections present and in order (Title+Epigraph, Philosophy, Principles, Workflow, State Block, Templates, Rules, Anti-Patterns, Error Recovery, Integration)
-  - [ ] Frontmatter has `name` and `description` with at least 2 trigger phrases
+  - [ ] The 5 lean sections present and in order (Core Philosophy, Workflow, State Block, Output Template, Integration), after the title + epigraph
+  - [ ] SKILL.md ≤ 200 lines; no inline principle/anti-pattern/error-recovery tables (depth lives in `references/`)
+  - [ ] Core Philosophy includes a numbered Non-Negotiable Constraints list (the Critical/High principles)
+  - [ ] Output Template names each report/code template with a `references/...` pointer
+  - [ ] Frontmatter has `name` and `description` with at least 2 trigger phrases and a "Do NOT use when..." clause
   - [ ] State block XML tag is unique — not used by any other skill or agent
-  - [ ] `references/` directory exists with at least 2 files
+  - [ ] `references/` directory exists with at least 2 files, each named by a pointer in SKILL.md
+  - [ ] `references/conventions.md` (or equivalents) carries the depth: principle table, ≥ 3 WRONG/RIGHT rules, ≥ 8-row anti-patterns table, ≥ 3 error-recovery scenarios
   - [ ] No placeholder text remaining (`TODO`, `[fill in]`, `[e.g., ...]`)
 - **Last Run:** — | **Result:** —
 - **Notes:** —
@@ -107,7 +111,7 @@ A passing eval would survive scrutiny from a developer seeing the skill for the 
   - [ ] No phase produces output that contradicts the skill's Core Philosophy or AI Discipline Rules
   - [ ] The skill reaches a natural conclusion (does not stall, loop, or produce an empty final report)
 - **Last Run:** — | **Result:** —
-- **Notes:** This is a manual spot-check, not automated. Run it on the gold-standard skill (`architecture-review`) after any structural template change to confirm baseline behavior holds, then run it on any new skill before marking it done. Structural completeness (TC1) is necessary but not sufficient — a skill can pass TC1 and still produce incoherent output.
+- **Notes:** This is a manual spot-check, not automated. Run it on the gold-standard skill (`cargo-package-scaffold`) after any structural template change to confirm baseline behavior holds, then run it on any new skill before marking it done. Structural completeness (TC1) is necessary but not sufficient — a skill can pass TC1 and still produce incoherent output.
 
 ---
 
@@ -157,13 +161,13 @@ This is a Markdown-only repo — there is no build or test runner. The CI gate c
 
 | # | Pattern to Reject | Why It Fails | Rule |
 |---|---|---|---|
-| 1 | Skill with fewer than 10 sections | Incomplete skills produce inconsistent agent behavior | Always verify against the gold standard before considering a skill done |
+| 1 | Skill that inlines depth or breaks the 5-section lean layout | Every always-loaded section is a per-invocation token tax; bloated SKILL.md degrades reliability, worst on small local models | Keep SKILL.md to the 5 sections (≤ 200 lines); push principle tables, anti-patterns, discipline rules, error recovery, and templates to `references/` |
 | 2 | Agent added to Claude only, no OpenCode version | Breaks parity; users on OpenCode get no equivalent | Always create both versions in the same task |
 | 3 | State block XML tag reused from another skill | Two skills competing for the same state tag corrupts multi-turn sessions | Search all `SKILL.md` and agent files for the tag before using it |
 | 4 | Project-template file that omits the global vs. project-level distinction | Users copy templates without understanding what the file replaces | Every CLAUDE.md and AGENTS.md template must include the file architecture note |
 | 5 | PyTorch evaluation mode method call in Python code examples | Triggers the security hook even in documentation context | Use `model.train(False)` or describe the call in prose only |
 | 6 | Modifying `claude/global/CLAUDE.md` or `opencode/global/AGENTS.md` without running TC5 | These files install globally — a silent structural regression affects every project the user opens | Always run TC5 checks and get explicit human approval before committing global config changes |
-| 7 | Declaring a new skill "done" based on TC1 alone | Structural completeness does not mean behavioral correctness — a 10-section skill can still produce incoherent output | Run TC6 (manual invocation spot-check) on any new or significantly revised skill before marking it done |
+| 7 | Declaring a new skill "done" based on TC1 alone | Structural completeness does not mean behavioral correctness — a structurally complete skill can still produce incoherent output | Run TC6 (manual invocation spot-check) on any new or significantly revised skill before marking it done |
 | 8 | Renaming or removing a skill without checking Integration sections | Cross-references in Integration sections silently break; other skills point to a name that no longer exists | After any rename or removal, grep `skills/*/SKILL.md` for the old name and update all references |
 
 ---

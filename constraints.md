@@ -11,7 +11,7 @@
 ## Must Do
 
 - Read `AGENTS.md` (root), `intent.md`, and this file before beginning any task.
-- Follow the 10-section skill template exactly — use `skills/architecture-review/SKILL.md` as the gold standard.
+- Follow the 5-section lean layout for skills — use `skills/team/cargo-package-scaffold/SKILL.md` as the gold standard; keep SKILL.md ≤ 200 lines and push depth (principle tables, anti-patterns, discipline rules, error recovery, templates) to `references/`.
 - Follow the 10-section agent template exactly — both Claude Code and OpenCode versions must be present.
 - Ensure every new skill has a `references/` directory with at least 2 supporting files.
 - Ensure every new state block XML tag is unique across all skills and agents before committing.
@@ -45,7 +45,7 @@
 
 ## Escalate Rather Than Decide
 
-- Any proposal to change the 10-section template structure itself.
+- Any proposal to change the 5-section lean layout structure itself.
 - Adding a new skill suite or agent category not currently in `AGENTS.md`.
 - Any change to `claude/global/` or `opencode/global/` files.
 - Any change to install scripts (`scripts/`) that affects the installation target paths.
