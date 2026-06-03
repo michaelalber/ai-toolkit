@@ -1,11 +1,11 @@
 # AI Toolkit
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Skills](https://img.shields.io/badge/skills-86-blue)](#skills)
-[![Agents](https://img.shields.io/badge/agents-37-blue)](#agents)
+[![Skills](https://img.shields.io/badge/skills-94-blue)](#skills)
+[![Agents](https://img.shields.io/badge/agents-39-blue)](#agents)
 [![Platforms](https://img.shields.io/badge/platforms-Claude%20Code%20%7C%20OpenCode%20%7C%20Pi-informational)](#platforms)
 
-**86 skills, 37 agents, and 15 slash commands for AI-assisted software development — spanning TDD, .NET, Python, PHP, Rust, edge AI, security, DDD, and more.**
+**94 skills, 39 agents, and 22 slash commands for AI-assisted software development — spanning TDD, .NET, Python, PHP, Rust, edge AI, security, DDD, and more.**
 
 Works with [Claude Code](https://claude.ai/code), [OpenCode](https://opencode.ai/), and [Pi](https://pi.dev) (Ollama local models).
 
@@ -29,11 +29,11 @@ This toolkit encodes that expertise as reusable primitives. Each skill is an opi
 
 | | Count |
 |--|-------|
-| Skills (team) | 68 |
+| Skills (team) | 76 |
 | Skills (professional) | 18 |
-| Agents (Claude Code) | 37 |
-| Agents (OpenCode) | 37 |
-| Slash commands (per platform) | 15 |
+| Agents (Claude Code) | 39 |
+| Agents (OpenCode) | 39 |
+| Slash commands (per platform) | 22 |
 | Platforms | Claude Code, OpenCode, Pi |
 
 ---
@@ -208,6 +208,29 @@ refuses to run until the prior artifact exists. Driven by the `qrspi-orchestrato
 | `qrspi-plan` | Converts the spec into a vertically-sliced tactical plan; refuses horizontal-layer plans. |
 | `qrspi-implement` | Executes an approved plan slice-by-slice through strict Red-Green-Refactor, checkpointing per slice. |
 
+### QRASPI Workflow Suite
+
+A structured Questions → Research → Architecture → Skeleton → Plan → Implement loop for **new systems** —
+the greenfield (V0/V1) counterpart to QRSPI. Where QRSPI maps an existing codebase and grows a feature,
+QRASPI maps a problem domain, locks the path-dependent decisions as MADR ADRs (with alternatives) +
+Mermaid C4, lands a runnable **walking skeleton** with fitness functions as merge-blocking CI gates,
+grows it slice-by-slice with Red-Green-Refactor, then **graduates** the result to QRSPI once real
+features begin. Same no-magic-words artifact gates; the Skeleton's exit gate is CI green, not a claim.
+Driven by the `qraspi-orchestrator` (no-edit Q/R/A/P/graduate) and `qraspi-builder` (edit
+Skeleton/Implement) agents. Artifacts co-locate in `thoughts/shared/qraspi/YYYY-MM-DD-{slug}/`; accepted
+ADRs live in the target repo's `docs/adr/`.
+
+| Skill | Description |
+|-------|-------------|
+| `qraspi-questions` | Surfaces unknowns across the six greenfield categories (functional · quality attributes · integration · compliance · deployment · domain); stops for human answers. |
+| `qraspi-research` | Maps the solution landscape (external-domain via `research-synthesis`, or inherited-repo via the `research-*` subagents) — factual, no recommendations. |
+| `qraspi-architecture` | Locks path-dependent decisions as MADR ADRs with ≥ 2 alternatives (align-before-lock), draws the C4 in Mermaid, and specifies the required fitness functions. |
+| `qraspi-skeleton` | Scaffolds a runnable walking skeleton from the ADRs (one slice through every layer) and lands the fitness functions as CI gates; the exit gate is CI green. |
+| `qraspi-plan` | Converts the next slice from the skeleton's backlog into a vertically-sliced `plan-{slice}.md`; refuses horizontal-layer plans. |
+| `qraspi-implement` | Grows the green skeleton one approved slice at a time with Red-Green-Refactor, keeping the fitness gates green; checkpoints per slice. |
+| `qraspi-graduate` | Terminal handoff — captures the repo + ADRs + skeleton state + fitness gates + stack into `graduation.md` and hands new feature work to QRSPI. |
+| `fitness-functions` | Authors architectural fitness functions and wires them into CI as merge-blocking gates (NetArchTest, import-linter, cargo-deny, Conftest). QRASPI's one new primitive. |
+
 ### RPI Workflow Suite _(deprecated — use QRSPI)_
 
 > **Deprecated 2026-06-02; superseded by the QRSPI Workflow Suite above.** These skills carry
@@ -363,6 +386,8 @@ Autonomous agents that make decisions and take actions independently. Each exist
 
 > QRSPI workflow agents (`qrspi-orchestrator`, `qrspi-implement`) and the shared read-only research subagents (`research-file-locator`, `research-code-analyzer`, `research-pattern-finder`) are spawned automatically by the QRSPI skills/commands — not invoked directly.
 >
+> QRASPI greenfield agents (`qraspi-orchestrator`, `qraspi-builder`) are spawned automatically by the QRASPI skills/commands — the orchestrator drives the no-edit Questions/Research/Architecture/Plan/Graduate phases, the builder the edit Skeleton/Implement phases. They reuse the same `research-*` subagents.
+>
 > **Deprecated** RPI workflow agents (`rpi-planner`, `rpi-implement`) are superseded by the QRSPI agents above and scheduled for removal at sunset ~2026-09-01.
 
 ## claude/agents/professional/ and opencode/agents/professional/ (3 agents)
@@ -396,6 +421,13 @@ Fifteen slash commands per platform. Each injects live shell state before the mo
 | `/qrspi-spec [feature]` | `ls` of the feature folder | Design Brain-Dump → brain-surgery loop → vertical-slice Structure Outline |
 | `/qrspi-plan [feature]` | `ls` of the feature folder | Vertically-sliced tactical plan; refuses horizontal-layer plans |
 | `/qrspi-implement [feature]` | Feature folder + existing slice logs | Executes an approved plan slice-by-slice with Red-Green-Refactor |
+| `/qraspi-questions [project]` | `ls` of the qraspi project folders | Surfaces unknowns across the six greenfield categories; stops for human answers |
+| `/qraspi-research [project]` | `ls` of the qraspi project folders | Maps the solution landscape (factual, no recommendations) |
+| `/qraspi-architecture [project]` | `ls` of the qraspi project folders | Locks decisions as MADR ADRs + Mermaid C4; specifies fitness functions |
+| `/qraspi-skeleton [project]` | `ls` of the qraspi project folders | Scaffolds a runnable walking skeleton with fitness-gate CI; exit gate is CI green |
+| `/qraspi-plan [project]` | `ls` of the qraspi project folders | Plans the next backlog slice; refuses horizontal-layer plans |
+| `/qraspi-implement [project]` | `ls` of the qraspi project folders | Grows the skeleton one approved slice at a time with Red-Green-Refactor |
+| `/qraspi-graduate [project]` | `ls` of the qraspi project folders | Terminal QRASPI→QRSPI handoff — writes `graduation.md` |
 
 ---
 
