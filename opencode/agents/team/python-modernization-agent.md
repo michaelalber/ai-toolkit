@@ -33,7 +33,7 @@ Load these skills on-demand for detailed guidance. Use the `skill` tool when you
 | Skill | When to Load |
 |-------|--------------|
 | `skill({ name: "python-modernization-analyzer" })` | At session start — load full assessment workflow and risk matrix |
-| `skill({ name: "python-arch-review" })` | When architecture quality assessment is needed alongside modernization |
+| `skill({ name: "python-architecture-checklist" })` | When architecture quality assessment is needed alongside modernization |
 
 **Note:** Skills are located in `~/.config/opencode/skills/`.
 

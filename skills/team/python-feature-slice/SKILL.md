@@ -334,4 +334,4 @@ Recovery:
 | `fastapi-scaffolder` | Provides endpoint-level scaffolding patterns (OpenAPI metadata, security, rate limiting). Use together when scaffolding a new feature with full endpoint quality. |
 | `alembic-migration-manager` | When a new feature requires database schema changes, use this skill to manage the migration lifecycle. |
 | `python-security-review` | After scaffolding, run a security review to verify the new feature's authentication, authorization, and input validation. |
-| `python-arch-review` | Architecture quality gate. Run after scaffolding multiple features to verify the feature isolation and coupling metrics. |
+| `python-architecture-checklist` | Architecture quality gate. Run after scaffolding multiple features to verify the feature isolation and coupling metrics. |

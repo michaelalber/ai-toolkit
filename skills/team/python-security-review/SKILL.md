@@ -347,6 +347,6 @@ Recovery:
 |-------|-------------|
 | `python-security-review-federal` | Federal overlay on this base review — NIST SP 800-53, FIPS 140-2/3, DOE Order 205.1B. Always run this review first. |
 | `supply-chain-audit` | Comprehensive dependency vulnerability analysis. Use when pip-audit findings require deeper CVE correlation or license compliance review. |
-| `python-arch-review` | Architecture quality gate. Run before security review to understand the codebase structure; security review findings are more actionable with architecture context. |
+| `python-architecture-checklist` | Architecture quality gate. Run before security review to understand the codebase structure; security review findings are more actionable with architecture context. |
 | `dotnet-security-review` | Cross-reference for teams with mixed Python/.NET stacks. OWASP categories are identical; tooling and patterns differ. |
 | `fastapi-scaffolder` | When remediation requires adding authentication, authorization, or input validation to FastAPI endpoints, use this skill for correct scaffold patterns. |

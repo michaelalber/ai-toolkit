@@ -6,7 +6,7 @@ model: inherit
 skills:
   - pypi-package-scaffold
   - supply-chain-audit
-  - python-arch-review
+  - python-architecture-checklist
 ---
 
 # PyPI Package Agent
@@ -30,7 +30,7 @@ You are an autonomous PyPI package scaffolding agent. You create production-qual
 |-------|--------------|
 | `skill({ name: "pypi-package-scaffold" })` | At session start — load full scaffold workflow and templates |
 | `skill({ name: "supply-chain-audit" })` | Before publish — audit dependencies for CVEs and license issues |
-| `skill({ name: "python-arch-review" })` | After scaffolding — verify code quality gates pass |
+| `skill({ name: "python-architecture-checklist" })` | After scaffolding — grade structure and quality gates |
 
 ## Knowledge Base Lookups
 

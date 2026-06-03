@@ -27,7 +27,7 @@ This skill assesses, quantifies, and plans — it does NOT perform the migration
 
 **What this skill is NOT:**
 - It is NOT a migration execution tool — it produces a plan, not code
-- It is NOT a code quality review — use `python-arch-review` for that
+- It is NOT a code quality review — use `python-architecture-checklist` for that
 - It is NOT a security review — use `python-security-review` for that
 
 ## Domain Principles
@@ -286,7 +286,7 @@ Recovery:
 
 | Skill | Relationship |
 |-------|-------------|
-| `python-arch-review` | Run architecture review after modernization to verify the new structure meets quality gates. |
+| `python-architecture-checklist` | Run architecture review after modernization to verify the new structure meets quality gates. |
 | `python-security-review` | Run security review after framework migration — new frameworks have different security patterns. |
 | `alembic-migration-manager` | Database migration is often part of modernization. Use this skill for the migration lifecycle. |
 | `fastapi-scaffolder` | When the modernization plan includes FastAPI adoption, use this skill for endpoint scaffolding. |

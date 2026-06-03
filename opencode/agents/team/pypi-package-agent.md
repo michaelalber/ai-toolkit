@@ -33,7 +33,7 @@ Load these skills on-demand for detailed guidance. Use the `skill` tool when you
 |-------|--------------|
 | `skill({ name: "pypi-package-scaffold" })` | At session start — load full scaffold workflow and templates |
 | `skill({ name: "supply-chain-audit" })` | Before publish — audit dependencies for CVEs and license issues |
-| `skill({ name: "python-arch-review" })` | After scaffolding — verify code quality gates pass |
+| `skill({ name: "python-architecture-checklist" })` | After scaffolding — grade structure and quality gates |
 
 **Note:** Skills are located in `~/.config/opencode/skills/`.
 

@@ -5,7 +5,7 @@ tools: Read, Bash, Glob, Grep
 model: inherit
 skills:
   - python-modernization-analyzer
-  - python-arch-review
+  - python-architecture-checklist
 ---
 
 # Python Modernization Agent
@@ -29,7 +29,7 @@ You are an autonomous Python modernization analysis agent. You assess legacy Pyt
 | Skill | When to Load |
 |-------|--------------|
 | `skill({ name: "python-modernization-analyzer" })` | At session start — load full assessment workflow and risk matrix |
-| `skill({ name: "python-arch-review" })` | When architecture quality assessment is needed alongside modernization |
+| `skill({ name: "python-architecture-checklist" })` | When architecture quality assessment is needed alongside modernization |
 
 ## Knowledge Base Lookups
 

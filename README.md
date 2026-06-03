@@ -1,11 +1,11 @@
 # AI Toolkit
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Skills](https://img.shields.io/badge/skills-91-blue)](#skills)
+[![Skills](https://img.shields.io/badge/skills-92-blue)](#skills)
 [![Agents](https://img.shields.io/badge/agents-39-blue)](#agents)
 [![Platforms](https://img.shields.io/badge/platforms-Claude%20Code%20%7C%20OpenCode%20%7C%20Pi-informational)](#platforms)
 
-**91 skills, 39 agents, and 22 slash commands for AI-assisted software development — spanning TDD, .NET, Python, PHP, Rust, edge AI, security, DDD, and more.**
+**92 skills, 39 agents, and 22 slash commands for AI-assisted software development — spanning TDD, .NET, Python, PHP, Rust, edge AI, security, DDD, and more.**
 
 Works with [Claude Code](https://claude.ai/code), [OpenCode](https://opencode.ai/), and [Pi](https://pi.dev) (Ollama local models).
 
@@ -159,7 +159,7 @@ See `.matt-pocock-attribution.yml` at the repo root for the full provenance mani
 
 | Skill | Description |
 |-------|-------------|
-| `python-arch-review` | Python architecture review with TDD, YAGNI, and code quality gates. |
+| `python-architecture-checklist` | Python architecture checklist executor — clean-arch boundaries, type safety, complexity, config/secrets; graded report with ruff/mypy/radon evidence. |
 | `python-security-review` | OWASP-based Python security review (FastAPI, Django, Flask) with bandit and pip-audit. |
 | `python-security-review-federal` | Federal compliance overlay for Python — NIST 800-53, FIPS 140-2/3, CUI handling. |
 | `python-feature-slice` | Feature-based Python architecture using FastAPI routers, Pydantic v2, and a service layer. |
@@ -167,6 +167,12 @@ See `.matt-pocock-attribution.yml` at the repo root for the full provenance mani
 | `python-modernization-analyzer` | Legacy Python modernization — Python 2→3, sync→async, Flask→FastAPI paths. |
 | `fastapi-scaffolder` | FastAPI endpoints with OpenAPI docs, Pydantic v2, JWT auth, rate limiting, and health checks. |
 | `pypi-package-scaffold` | Python package scaffolding for PyPI — pyproject.toml, CI/CD, test harness, supply chain checks. |
+
+### PHP Suite
+
+| Skill | Description |
+|-------|-------------|
+| `php-architecture-checklist` | PHP/Laravel architecture checklist executor — service-layer boundaries, strict typing, input validation, query safety, config/secrets; graded report with phpstan/php-cs-fixer evidence. |
 
 ### Rust Suite
 

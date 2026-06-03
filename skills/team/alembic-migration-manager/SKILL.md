@@ -333,6 +333,6 @@ Recovery:
 | Skill | Relationship |
 |-------|-------------|
 | `python-feature-slice` | When a new feature requires database schema changes, use this skill to manage the migration lifecycle. |
-| `python-arch-review` | Architecture review may identify schema design issues before migrations are generated. |
+| `python-architecture-checklist` | Architecture review may identify schema design issues before migrations are generated. |
 | `python-security-review` | Migration files may contain sensitive data (default values, seed data) — review for CUI and credentials. |
 | `ef-migration-manager` | Cross-reference for teams with mixed Python/.NET stacks. Safety philosophy is identical; commands differ. |

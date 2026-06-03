@@ -340,5 +340,5 @@ Recovery:
 |-------|-------------|
 | `supply-chain-audit` | After scaffolding, audit the package's dependencies for CVEs and license compliance. |
 | `python-security-review` | Review the package for security issues before publishing to PyPI. |
-| `python-arch-review` | Architecture review ensures the package's internal structure is maintainable. |
+| `python-architecture-checklist` | Architecture review ensures the package's internal structure is maintainable. |
 | `nuget-package-scaffold` | Cross-reference for teams publishing both Python and .NET packages. Philosophy is identical; tooling differs. |
