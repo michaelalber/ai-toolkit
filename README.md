@@ -1,11 +1,11 @@
 # AI Toolkit
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Skills](https://img.shields.io/badge/skills-92-blue)](#skills)
-[![Agents](https://img.shields.io/badge/agents-39-blue)](#agents)
+[![Skills](https://img.shields.io/badge/skills-96-blue)](#skills)
+[![Agents](https://img.shields.io/badge/agents-43-blue)](#agents)
 [![Platforms](https://img.shields.io/badge/platforms-Claude%20Code%20%7C%20OpenCode%20%7C%20Pi-informational)](#platforms)
 
-**92 skills, 39 agents, and 22 slash commands for AI-assisted software development — spanning TDD, .NET, Python, PHP, Rust, edge AI, security, DDD, and more.**
+**96 skills, 43 agents, and 22 slash commands for AI-assisted software development — spanning TDD, .NET, Python, PHP, Rust, edge AI, security, DDD, and more.**
 
 Works with [Claude Code](https://claude.ai/code), [OpenCode](https://opencode.ai/), and [Pi](https://pi.dev) (Ollama local models).
 
@@ -173,6 +173,10 @@ See `.matt-pocock-attribution.yml` at the repo root for the full provenance mani
 |-------|-------------|
 | `php-architecture-checklist` | PHP/Laravel architecture checklist executor — service-layer boundaries, strict typing, input validation, query safety, config/secrets; graded report with phpstan/php-cs-fixer evidence. |
 | `php-security-review` | OWASP-based PHP/Laravel security review — mass-assignment, query injection, Blade XSS, auth/session, file uploads; composer audit + psalm/phpstan; graded manager-friendly report. |
+| `php-feature-slice` | Feature-based Laravel architecture — feature folders, thin controllers, Form Requests, service/action layer, API Resources, structural CQRS. |
+| `php-api-scaffolder` | Laravel API endpoints with API Resources, Form Request validation, Sanctum auth, throttle rate limiting, URI versioning, OpenAPI, and health checks. |
+| `php-package-scaffold` | Composer package scaffolding for Packagist — composer.json, PSR-4, Pest/PHPUnit harness, GitHub Actions matrix CI, semver tag publish workflow. |
+| `php-migration-manager` | Full Laravel migration lifecycle — tested down(), expand-contract for zero-downtime, dangerous-operation guards, batched backfills. |
 
 ### Rust Suite
 
@@ -343,7 +347,7 @@ Vendored copies of workflow-primitive skills from [Matt Pocock's skills repo](ht
 
 Autonomous agents that make decisions and take actions independently. Each exists in both Claude Code (`claude/agents/`) and OpenCode (`opencode/agents/`) format. Agents are split into `team/` and `professional/` subdirectories mirroring the skill split.
 
-## claude/agents/team/ and opencode/agents/team/ (34 agents)
+## claude/agents/team/ and opencode/agents/team/ (38 agents)
 
 ### Development & DevOps
 
@@ -386,6 +390,10 @@ Autonomous agents that make decisions and take actions independently. Each exist
 | `pypi-package-agent` | Python package scaffolding for PyPI — pyproject.toml, CI/CD, supply chain checks. |
 | `alembic-migration-agent` | Full Alembic migration lifecycle with safety checks and rollback planning. |
 | `sqlx-migration-agent` | SQLx migration lifecycle — create, review, rollback test, apply, regenerate offline cache. |
+| `php-feature-slice-agent` | Feature-based Laravel architecture — feature folders, thin controllers, Form Requests, service layer, API Resources. |
+| `php-api-scaffold-agent` | Laravel API endpoints — API Resources, Sanctum auth, throttle rate limiting, URI versioning, OpenAPI, health checks. |
+| `php-package-agent` | Composer package scaffolding for Packagist — composer.json, PSR-4, matrix CI, semver tag publish workflow. |
+| `php-migration-agent` | Full Laravel migration lifecycle — tested down(), expand-contract, dangerous-operation guards, batched backfills. |
 
 > QRSPI workflow agents (`qrspi-orchestrator`, `qrspi-implement`) and the shared read-only research subagents (`research-file-locator`, `research-code-analyzer`, `research-pattern-finder`) are spawned automatically by the QRSPI skills/commands — not invoked directly.
 >
