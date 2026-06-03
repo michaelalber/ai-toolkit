@@ -3,7 +3,7 @@ name: security-review-federal
 audience: team
 description: >
   Federal / government security overlay applied ON TOP OF a base language security review
-  (dotnet/python/php/rust). Language-agnostic: adds NIST SP 800-53 control mapping, FIPS 140-2/3
+  (dotnet/python/php/rust/react). Language-agnostic: adds NIST SP 800-53 control mapping, FIPS 140-2/3
   cryptographic compliance (with a per-language crypto table), CUI handling, EO 14028 supply-chain
   requirements, and DOE Order 205.1B, and emits POA&M-ready findings with FIPS 199 impact levels.
   Use for federal/DOE/DOD/national-laboratory systems. Triggers on "federal security review",
@@ -19,7 +19,7 @@ description: >
 ## Core Philosophy
 
 This is a **language-agnostic federal overlay**, not a standalone review. It assumes the OWASP Top 10
-baseline has already been covered by a base `<lang>-security-review` (`.NET` / `Python` / `PHP` / `Rust`)
+baseline has already been covered by a base `<lang>-security-review` (`.NET` / `Python` / `PHP` / `Rust` / `React`)
 and adds the regulatory, cryptographic, and procedural requirements of U.S. federal systems —
 particularly DOE and national-laboratory environments.
 
@@ -61,6 +61,7 @@ REPORT         Emit the POA&M (references/poam-template.md) + federal executive 
 | **Python** | `cryptography` in FIPS mode; `hashlib` SHA-256+; `secrets`/`os.urandom` | `hashlib.md5/sha1` for security, `random` for tokens |
 | **PHP** | `openssl_*` with AES-GCM, `sodium_*`, `password_hash` (Argon2id) | `md5`, `sha1`, `mcrypt`, `mt_rand`/`uniqid` |
 | **Rust** | `ring` / `rustls` / `aws-lc-rs` (FIPS module); `sha2`, `getrandom` | custom crypto, `md5`/`sha1` crates for security |
+| **React/TS** | Do crypto **server-side** behind FIPS-validated TLS; `crypto.getRandomValues` / Web Crypto only for non-secret nonces; tokens in httpOnly cookies | any client-side encryption/hashing as a security control, `Math.random` for tokens, secrets shipped in the bundle (`VITE_`/`NEXT_PUBLIC_`) |
 
 Deeper FIPS module/algorithm detail: [fips crypto requirements](references/fips-crypto-requirements.md).
 
