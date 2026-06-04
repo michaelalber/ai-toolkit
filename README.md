@@ -1,7 +1,7 @@
 # AI Toolkit
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Skills](https://img.shields.io/badge/skills-102-blue)](#skills)
+[![Skills](https://img.shields.io/badge/skills-103-blue)](#skills)
 [![Agents](https://img.shields.io/badge/agents-49-blue)](#agents)
 [![Platforms](https://img.shields.io/badge/platforms-Claude%20Code%20%7C%20OpenCode%20%7C%20Pi-informational)](#platforms)
 
@@ -29,10 +29,10 @@ This toolkit encodes that expertise as reusable primitives. Each skill is an opi
 
 | | Count |
 |--|-------|
-| Skills (team) | 76 |
+| Skills (team) | 85 |
 | Skills (professional) | 18 |
-| Agents (Claude Code) | 39 |
-| Agents (OpenCode) | 39 |
+| Agents (Claude Code) | 49 |
+| Agents (OpenCode) | 49 |
 | Slash commands (per platform) | 22 |
 | Platforms | Claude Code, OpenCode, Pi |
 
@@ -431,7 +431,7 @@ Autonomous agents that make decisions and take actions independently. Each exist
 
 ## Commands
 
-Fifteen slash commands per platform. Each injects live shell state before the model acts — the model sees real output, not a description of it.
+Twenty-two slash commands per platform. Each injects live shell state before the model acts — the model sees real output, not a description of it.
 
 | Command | Injects | What it does |
 |---------|---------|--------------|
@@ -504,18 +504,18 @@ ai-toolkit/
 │   └── professional/           # 18 professional skills (deliberate practice + edge learning)
 ├── claude/
 │   ├── agents/
-│   │   ├── team/               # 34 Claude Code team agents
+│   │   ├── team/               # 46 Claude Code team agents
 │   │   └── professional/       # 3 Claude Code professional agents
-│   ├── commands/               # 15 slash commands with shell injection
+│   ├── commands/               # 22 slash commands with shell injection
 │   └── global/                 # Global config → ~/.claude/
 │       ├── CLAUDE.md           # Global instructions (every project)
 │       ├── settings.json       # Hooks: credential stop + post-write build/lint gates
 │       └── settings.local.json # Permissions: bash allow/deny, read allow/deny
 ├── opencode/
 │   ├── agents/
-│   │   ├── team/               # 34 OpenCode team agents
+│   │   ├── team/               # 46 OpenCode team agents
 │   │   └── professional/       # 3 OpenCode professional agents
-│   ├── commands/               # 15 slash commands with agent routing
+│   ├── commands/               # 22 slash commands with agent routing
 │   └── global/                 # Global config → ~/.config/opencode/
 │       ├── AGENTS.md           # Global instructions (every project)
 │       └── opencode.json       # Providers, MCP, permissions, temperatures
