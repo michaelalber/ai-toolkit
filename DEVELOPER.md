@@ -119,8 +119,17 @@ curl -fsSL https://ollama.com/install.sh | sh
 **Pull a model**
 
 ```bash
-ollama pull llama3.2
+# 7B — 8 GB VRAM (laptop / workstation)
+ollama pull qwen2.5-coder:7b
+
+# 20B+ — 16–24 GB VRAM (workstation / Mac Mini)
+ollama pull devstral-small-2:24b
+
+# Embeddings (used by grounded-code-mcp)
+ollama pull nomic-embed-text
 ```
+
+See [`pi/global/README.md`](pi/global/README.md) for VRAM budgets and the full model selection guide.
 
 **Docs**
 
@@ -173,6 +182,37 @@ curl -fsSL https://opencode.ai/install | bash
 
 - [OpenCode repository](https://github.com/sst/opencode)
 - [OpenCode docs](https://opencode.ai/docs)
+
+---
+
+## Pi
+
+Pi is a minimal terminal coding agent with native Ollama support — used to run this toolkit's skills and harnesses against local models at zero API cost.
+
+**Install**
+
+```bash
+curl -fsSL https://pi.dev/install.sh | sh
+```
+
+**Verify**
+
+```bash
+pi --version
+```
+
+**Install this toolkit's global Pi config**
+
+```bash
+bash scripts/install-pi.sh          # 7B-safe baseline
+bash scripts/install-pi.sh --full   # 20B variant
+```
+
+See [`pi/global/README.md`](pi/global/README.md) for the full setup guide — Modelfiles, `models.json` configuration, compaction tuning, and project context stack.
+
+**Docs**
+
+- [Pi homepage](https://pi.dev)
 
 ---
 
@@ -294,6 +334,23 @@ npm install -g pyright
 
 - [Pyright repository](https://github.com/microsoft/pyright)
 - [Configuration reference](https://github.com/microsoft/pyright/blob/main/docs/configuration.md)
+
+---
+
+## grounded-code-mcp
+
+A local MCP RAG server that injects authoritative documentation (books, standards, API references) into every AI coding session. Used by ~50 skills in this toolkit for knowledge grounding — security reviews, migration analysis, scaffolders, and architecture checklists all call it before generating code.
+
+**Install**
+
+```bash
+# Clone and follow the setup instructions in the repo README
+git clone https://codeberg.org/michaelkalber/grounded-code-mcp
+```
+
+See the [grounded-code-mcp README](https://codeberg.org/michaelkalber/grounded-code-mcp) for ingestion setup, collection configuration, and MCP registration for Claude Code and OpenCode.
+
+**Why it matters:** Without it, grounded skills silently fall back to the model's training data. For security reviews and migration skills, the grounded standard *is* the value — the fallback is meaningfully weaker.
 
 ---
 
