@@ -58,7 +58,7 @@ echo "  skills        → ${PI_DIR}/skills/"
 echo "  grounded-code-mcp CLI → ${GROUNDED_STATUS}"
 echo ""
 echo "Next steps:"
-echo "  1. Edit ${PI_DIR}/models.json — uncomment the models you have pulled."
+echo "  1. Edit ${PI_DIR}/models.json — delete entries for models you have not pulled."
 echo "  2. Create your Ollama model: ollama create my-coder -f pi/global/Modelfile-7b"
 echo "  3. Copy pi/global/SYSTEM.md to your project root and trim to one variant."
 if ! command -v grounded-code-mcp >/dev/null 2>&1; then

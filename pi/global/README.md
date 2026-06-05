@@ -68,7 +68,7 @@ The Modelfiles set `num_ctx`, cap output tokens, and tune temperature for code. 
 
 The install script copies `models.json` to `~/.pi/agent/models.json`. Pi reads this at startup and via the `/model` command (reloads dynamically — no restart needed).
 
-Edit `~/.pi/agent/models.json` to match the models you actually pulled:
+The installed file contains all five supported models. **Delete the entries for models you have not pulled.** Pi passes `contextWindow` as `num_ctx` in the API call, so the 32K/128K context is applied without a separate Modelfile:
 
 ```json
 {
@@ -83,11 +83,18 @@ Edit `~/.pi/agent/models.json` to match the models you actually pulled:
       },
       "models": [
         {
-          "id": "my-coder-7b",
+          "id": "qwen2.5-coder:7b",
           "name": "Qwen 2.5 Coder 7B",
           "input": ["text"],
           "contextWindow": 32768,
           "maxTokens": 2048
+        },
+        {
+          "id": "devstral-small-2:24b",
+          "name": "Devstral Small 2 24B",
+          "input": ["text"],
+          "contextWindow": 131072,
+          "maxTokens": 4096
         }
       ]
     }
@@ -95,7 +102,7 @@ Edit `~/.pi/agent/models.json` to match the models you actually pulled:
 }
 ```
 
-Use the model `id` you gave `ollama create` (e.g., `my-coder-7b`), not the base model name.
+**Alternative: use a custom Modelfile name.** If you ran `ollama create my-coder-7b -f Modelfile-7b` in Step 2, set `"id": "my-coder-7b"` instead of the base model name. Both approaches set `num_ctx` correctly — the Modelfile bakes it in, `contextWindow` passes it at request time.
 
 ---
 
@@ -201,6 +208,31 @@ For Q4_K_M models with `OLLAMA_KV_CACHE_TYPE=q8_0`. Includes ~0.8 GB overhead.
 | `models.json` | `~/.pi/agent/` or `.pi/` | Provider and model definitions |
 | `settings.json` | `~/.pi/agent/` or `.pi/` | Compaction, thinking level, default model |
 | `Modelfile-*` | (copy to use with `ollama create`) | Context window and parameter templates |
+
+---
+
+## Project-Type Harnesses (pi-packages)
+
+The global config in this directory installs Pi's **baseline rules and the full skill library**. For project-type harnesses — purpose-built skills, prompt templates, and Modelfiles tuned per language ecosystem — see the companion repo:
+
+**[codeberg.org/michaelkalber/pi-packages](https://codeberg.org/michaelkalber/pi-packages)**
+
+| Package | Stack |
+|---------|-------|
+| `pi-dotnet` | .NET / C# / ASP.NET Core / EF Core / SQL Server / React |
+| `pi-php` | PHP / Laravel / Vue.js |
+| `pi-python` | Python / FastAPI / SQLAlchemy / pytest |
+| `pi-robotics` | ROS 2 / Python / C++ / edge AI / MuJoCo / Isaac Lab |
+| `pi-industrial` | MODBUS / OPC UA / PLC (IEC 61131-3) / SCADA |
+
+Each package adds a `/skill:<type>` command, five prompt templates (`/fix`, `/review`, `/generate`, `/explain`, `/decompose`), and a pre-tuned Modelfile for that stack. Install only what you need:
+
+```bash
+pi install git:codeberg.org/michaelkalber/pi-packages/packages/pi-python
+pi install git:codeberg.org/michaelkalber/pi-packages/packages/pi-robotics
+```
+
+The `project-detect` extension in each package auto-loads the right skill from project signals (`.csproj`, `pyproject.toml`, `package.xml`, etc.).
 
 ---
 
