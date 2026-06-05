@@ -16,7 +16,10 @@
 - Ensure every new skill has a `references/` directory with at least 2 supporting files.
 - Ensure every new state block XML tag is unique across all skills and agents before committing.
 - Keep `claude/agents/` and `opencode/agents/` versions in sync — behavior must be identical, formats differ.
-- Update skill/agent counts in `AGENTS.md` (root) and `README.md` whenever a skill or agent is added or removed.
+- Update skill/agent counts whenever a skill or agent is added or removed. Exact locations:
+  - `README.md`: skills badge, at-a-glance table (Skills team, Agents Claude Code, Agents OpenCode), repo structure comments (team agent counts)
+  - `AGENTS.md` (root): skill and agent count references in the inventory section
+- Triage every new skill in `pi/SKILLS-local.md` with a Green / Yellow / Red rating and a one-line rationale before merging.
 - When modifying `project-templates/`, verify the change is backward-compatible with existing user copies or document the breaking change.
 
 ---
@@ -26,7 +29,7 @@
 - Do not leave placeholder text (e.g., "TODO", "[fill in]") in any committed skill or agent file.
 - Do not reuse a state block XML tag already in use by another skill or agent.
 - Do not add a skill to `claude/agents/` without a matching `opencode/agents/` entry (unless the agent is explicitly marked single-platform with a documented reason).
-- Do not modify `claude/global/CLAUDE.md` or `opencode/global/AGENTS.md` without explicit human approval — these are installed globally and affect all user projects.
+- Do not modify `claude/global/CLAUDE.md`, `opencode/global/AGENTS.md`, or any file under `pi/global/` without explicit human approval — all three are installed globally and affect every session on the user's machine.
 - Do not move a skill or agent without updating all cross-references in `AGENTS.md`, `README.md`, and any skills that reference it in their Integration section.
 - Do not call PyTorch's evaluation mode method in Python code examples — the security hook triggers on this string. Use `model.train(False)` instead.
 - Do not create a local `spec.md` — task specs live in your issue tracker or spec system.
@@ -47,7 +50,7 @@
 
 - Any proposal to change the 5-section lean layout structure itself.
 - Adding a new skill suite or agent category not currently in `AGENTS.md`.
-- Any change to `claude/global/` or `opencode/global/` files.
+- Any change to `claude/global/`, `opencode/global/`, or `pi/global/` files — all three are installed to user machines and affect every session.
 - Any change to install scripts (`scripts/`) that affects the installation target paths.
 - Breaking Claude Code / OpenCode agent parity intentionally.
 - Any change to `project-templates/` that would invalidate copies already in users' project roots.
