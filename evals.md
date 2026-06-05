@@ -75,18 +75,21 @@ A passing eval would survive scrutiny from a developer seeing the skill for the 
 
 - **Input:** Any commit that adds or removes a skill or agent
 - **Pass Criteria:**
-  - [ ] Skill count in `AGENTS.md` (root) matches actual count in `skills/`
-  - [ ] Agent count in `README.md` matches actual count in `claude/agents/` and `opencode/agents/`
-  - [ ] New skill appears in the correct suite table in `README.md`
+  - [ ] Skill count in `AGENTS.md` (root) Purpose line and Open Loops entry matches actual `find skills/ -maxdepth 2 -name SKILL.md | wc -l`
+  - [ ] Agent count in `README.md` at-a-glance table and `AGENTS.md` matches actual `find claude/agents opencode/agents -name '*.md' | wc -l`
+  - [ ] `README.md` badge counts (skills, agents) match the at-a-glance table
+  - [ ] `README.md` repo-structure comments (team agent counts, command counts) are current
+  - [ ] New skill appears in the correct suite row in **both** `README.md` and `AGENTS.md` Skill Suites table
   - [ ] New agent appears in the correct category table in `README.md`
+  - [ ] New skill has a Green / Yellow / Red entry in `pi/SKILLS-local.md` with a one-line rationale
 - **Last Run:** — | **Result:** —
-- **Notes:** —
+- **Notes:** Count drift is the most common regression here. The constraints.md now lists every exact location to update; this test case verifies they were all hit.
 
 ---
 
 ### Test Case 5: Global Config File Integrity
 
-- **Input:** Any commit that modifies `claude/global/CLAUDE.md`, `opencode/global/AGENTS.md`, `claude/global/settings.local.json`, or either `README.md` under `claude/global/` or `opencode/global/`
+- **Input:** Any commit that modifies `claude/global/CLAUDE.md`, `opencode/global/AGENTS.md`, `claude/global/settings.local.json`, any file under `pi/global/`, or either `README.md` under `claude/global/` or `opencode/global/`
 - **Known-Good Output:** Both global files retain all expected top-level sections; installation instructions in READMEs match actual platform paths; optional sections remain properly marked
 - **Pass Criteria:**
   - [ ] `claude/global/CLAUDE.md` still contains all mandatory sections: Session Boot Ritual, Core Philosophy, Intent Engineering, Prompting Patterns, Context Management, Project File Architecture, AI Agent Obligations, Evaluation Design, Security-By-Design, Code Quality Gates, and all language-standard sections
@@ -94,9 +97,11 @@ A passing eval would survive scrutiny from a developer seeing the skill for the 
   - [ ] Install paths in both READMEs (`~/.claude/` and `~/.config/opencode/`) are current and accurate for the respective platforms
   - [ ] Optional-dependency sections (Snyk, grounded-code-mcp, Jira) remain clearly marked as optional with removal instructions
   - [ ] No instruction in either global file contradicts a convention defined in `project-templates/CLAUDE.md` or `project-templates/AGENTS.md`
+  - [ ] `pi/global/AGENTS.md`, `pi/global/AGENTS-lite.md`, `pi/global/settings.json`, and `pi/global/models.json` are internally consistent — model IDs in `models.json` match Modelfile `FROM` lines; `settings.json` compaction values are within the context windows declared in `models.json`
+  - [ ] `pi/global/README.md` install steps match what `scripts/install-pi.sh` actually does
   - [ ] Human explicitly approved the change before it was committed (per `constraints.md`)
 - **Last Run:** — | **Result:** —
-- **Notes:** These files install globally and affect every project on the user's machine. A silent structural regression here is the highest blast-radius change this repo can make.
+- **Notes:** These files install globally and affect every project on the user's machine. A silent structural regression here is the highest blast-radius change this repo can make. `pi/global/` is a third install target alongside `claude/global/` and `opencode/global/` with identical blast radius.
 
 ---
 
@@ -152,6 +157,7 @@ This is a Markdown-only repo — there is no build or test runner. The CI gate c
 - **Link integrity (README):** All skill names in `README.md` suite tables resolve to actual `skills/<name>/` directories
 - **References population:** Every `skills/<name>/` has a `references/` subdirectory with ≥ 2 files
 - **No placeholder text:** `grep -r "TODO\|\[fill in\]\|\[e\.g\." skills/ claude/agents/ opencode/agents/` — must return no results in committed files
+- **Pi skills triage coverage:** Every `skills/team/` and `skills/professional/` directory name must appear in `pi/SKILLS-local.md` — `comm -23 <(find skills/team skills/professional -maxdepth 1 -mindepth 1 -type d -exec basename {} \; | sort) <(grep -oP '^\| \`\K[^`]+' pi/SKILLS-local.md | sort)` must return empty
 
 > Append CI gate results as a sub-item of each Test Case entry on every run.
 
@@ -166,7 +172,7 @@ This is a Markdown-only repo — there is no build or test runner. The CI gate c
 | 3 | State block XML tag reused from another skill | Two skills competing for the same state tag corrupts multi-turn sessions | Search all `SKILL.md` and agent files for the tag before using it |
 | 4 | Project-template file that omits the global vs. project-level distinction | Users copy templates without understanding what the file replaces | Every CLAUDE.md and AGENTS.md template must include the file architecture note |
 | 5 | PyTorch evaluation mode method call in Python code examples | Triggers the security hook even in documentation context | Use `model.train(False)` or describe the call in prose only |
-| 6 | Modifying `claude/global/CLAUDE.md` or `opencode/global/AGENTS.md` without running TC5 | These files install globally — a silent structural regression affects every project the user opens | Always run TC5 checks and get explicit human approval before committing global config changes |
+| 6 | Modifying `claude/global/CLAUDE.md`, `opencode/global/AGENTS.md`, or any `pi/global/` file without running TC5 | These files install globally — a silent structural regression affects every project the user opens | Always run TC5 checks and get explicit human approval before committing global config changes |
 | 7 | Declaring a new skill "done" based on TC1 alone | Structural completeness does not mean behavioral correctness — a structurally complete skill can still produce incoherent output | Run TC6 (manual invocation spot-check) on any new or significantly revised skill before marking it done |
 | 8 | Renaming or removing a skill without checking Integration sections | Cross-references in Integration sections silently break; other skills point to a name that no longer exists | After any rename or removal, grep `skills/*/SKILL.md` for the old name and update all references |
 
