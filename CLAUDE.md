@@ -10,7 +10,7 @@ and persistent decisions.
 - **Skills:** `skills/team/<n>/SKILL.md` or `skills/professional/<n>/SKILL.md` — subdir chosen by `audience:` frontmatter. 5-section lean layout (depth → `references/`), gold standard: `skills/team/cargo-package-scaffold/SKILL.md`
 - **Agents:** `claude/agents/{team,professional}/<n>.md` (Claude Code) | `opencode/agents/{team,professional}/<n>.md` (OpenCode) — must stay in parity
 - **Commands:** `claude/commands/<n>.md` (Claude Code) | `opencode/commands/<n>.md` (OpenCode) — flat, no audience subdir
-- **Global files:** `claude/global/` → installs to `~/.claude/` | `opencode/global/` → installs to `~/.config/opencode/`
+- **Global files:** `claude/global/` → installs to `~/.claude/` | `opencode/global/` → installs to `~/.config/opencode/` | `pi/global/` → installs to `~/.pi/agent/`
 - **Hooks:** `claude/global/settings.json` — credential stop (PreToolUse) + post-write build/lint gates (PostToolUse)
 - **Permissions:** `claude/global/settings.local.json` — bash allow/deny arrays, read allow/deny arrays
 - **Project templates:** `project-templates/` — copy into target project roots, do not edit globally
@@ -57,8 +57,8 @@ Set `audience:` in the frontmatter (`team` | `professional`) — it selects the
 2. 5-section lean layout — keep Core Philosophy/Workflow/State/Output Template/Integration in SKILL.md; push depth to `references/`; ≥ 2 reference files
 3. Add agent entries in **both** `claude/agents/<audience>/` and `opencode/agents/<audience>/`
 4. Add command entries in **both** `claude/commands/` and `opencode/commands/` if user-invocable
-5. Update README.md skill count and table
-6. Update AGENTS.md Open Loops section
+5. Update counts and tables: README.md badge + at-a-glance + structure comments; AGENTS.md Purpose line + Open Loops + Skill Suites table
+6. Add a Green / Yellow / Red entry for the new skill in `pi/SKILLS-local.md`
 
 ## When Adding a Command
 
@@ -106,8 +106,8 @@ These run regardless of model instruction. Exit code 2 blocks the tool call. Can
 
 ## Global File Caution
 
-Files in `claude/global/` and `opencode/global/` affect **every project on the user's machine** after install.
-Changes to global files require explicit review before committing.
+Files in `claude/global/`, `opencode/global/`, and `pi/global/` affect **every project on the user's machine** after install.
+Changes to any global file require explicit review before committing.
 Do not batch-edit them alongside skill or agent changes.
 
-**These files are public templates.** Do not embed specific book titles, personal document names, personal file paths, or user-specific tool references. Collection descriptions must describe topic domains only. Personal enrichment belongs in the installed copies (`~/.claude/CLAUDE.md`, `~/.config/opencode/AGENTS.md`), not the repo source.
+**These files are public templates.** Do not embed specific book titles, personal document names, personal file paths, or user-specific tool references. Collection descriptions must describe topic domains only. Personal enrichment belongs in the installed copies (`~/.claude/CLAUDE.md`, `~/.config/opencode/AGENTS.md`, `~/.pi/agent/AGENTS.md`), not the repo source.
