@@ -18,7 +18,7 @@
 ## Project Overview
 
 - **Name:** AI Toolkit
-- **Purpose:** A collection of 91+ shareable skills and autonomous agents for AI-assisted software development. Supports Claude Code and OpenCode.
+- **Purpose:** A collection of 103 shareable skills and autonomous agents for AI-assisted software development. Supports Claude Code, OpenCode, and Pi.
 - **Phase:** Maintain — stable toolkit; work consists of adding new skills/agents, fixing existing ones, and keeping platform parity.
 - **Jira project key:** N/A — task specs are tracked in conversation context or ad hoc
 - **Definition of success:** Every skill and agent installs cleanly, follows its template (skills: the 5-section lean layout; agents: the agent section template), and works out of the box without requiring external documentation.
@@ -28,8 +28,8 @@
 ## Technology Stack
 
 - **Content format:** Markdown + YAML frontmatter — no compiled language, no build system
-- **Agent platforms:** Claude Code (claude.ai/code) and OpenCode
-- **Global install targets:** `~/.claude/` (Claude Code) and `~/.config/opencode/` (OpenCode)
+- **Agent platforms:** Claude Code (claude.ai/code), OpenCode, and Pi (pi.dev / Ollama local models)
+- **Global install targets:** `~/.claude/` (Claude Code), `~/.config/opencode/` (OpenCode), `~/.pi/agent/` (Pi)
 - **Package manager:** None for skills/agents; `bun` used in `opencode/global/` for OpenCode config dependencies
 
 ---
@@ -280,7 +280,7 @@ Key difference: Claude uses `skills:` array in frontmatter; OpenCode uses `skill
 | Suite | Skills | Focus |
 |-------|--------|-------|
 | TDD | tdd (the canonical loop) + tdd-agent / tdd-pair (operating modes) + evaluate-tests (quality & compliance audit) | Test-Driven Development lifecycle |
-| Enterprise .NET | dotnet-vertical-slice, ef-migration-manager, nuget-package-scaffold, legacy-migration-analyzer, dotnet-architecture-checklist, dotnet-security-review, minimal-api-scaffolder, 4d-schema-migration | .NET patterns, migrations, security |
+| Enterprise .NET | dotnet-vertical-slice, ef-migration-manager, nuget-package-scaffold, legacy-migration-analyzer, dotnet-architecture-checklist, dotnet-controller-api-scaffolder, dotnet-security-review, minimal-api-scaffolder, 4d-schema-migration | .NET patterns, migrations, security |
 | Security (cross-language) | security-review-federal | Shared language-agnostic federal/gov overlay (NIST 800-53, FIPS, CUI, POA&M, EO 14028, DOE 205.1B) applied on top of any base `<lang>-security-review` |
 | Edge/IoT | edge-cv-pipeline, jetson-deploy, sensor-integration, picar-x-behavior | Edge computing, CV, robotics |
 | AI/ML | rag-pipeline-python, rag-pipeline-dotnet, mcp-server-scaffold, ollama-model-workflow | RAG, MCP servers, local LLMs |
@@ -293,6 +293,6 @@ Key difference: Claude uses `skills:` array in frontmatter; OpenCode uses `skill
 | QRASPI Workflow | fitness-functions, qraspi-questions, qraspi-research, qraspi-architecture, qraspi-skeleton, qraspi-plan, qraspi-implement, qraspi-graduate | Questions-Research-Architecture-Skeleton-Plan-Implement for a NEW system (greenfield V0/V1), then graduation to QRSPI. Locks path-dependent decisions as MADR ADRs with alternatives + Mermaid C4, lands a runnable walking skeleton with fitness functions as merge-blocking CI gates (CI-green exit gate), grows it slice-by-slice with Red-Green-Refactor, then hands off to QRSPI. Driven by `qraspi-orchestrator` (no-edit Q/R/A/P/graduate) + `qraspi-builder` (edit Skeleton/Implement); `fitness-functions` is the one extracted primitive. For a NEW system from scratch — the greenfield counterpart to QRSPI. |
 | RPI Workflow _(DEPRECATED — use QRSPI)_ | rpi-research, rpi-plan, rpi-implement, rpi-iterate | **Deprecated 2026-06-02; superseded by the QRSPI Workflow.** Research-Plan-Implement with session isolation and parallel subagents. Skills carry `disable-model-invocation: true`; scheduled for removal at sunset ~2026-09-01 (Slice 7). |
 | Python | python-architecture-checklist, python-security-review, python-feature-slice, alembic-migration-manager, python-modernization-analyzer, fastapi-scaffolder, pypi-package-scaffold | Python patterns, migrations, security, packaging |
-| PHP | php-architecture-checklist, php-security-review | PHP/Laravel architecture and security review |
+| PHP | php-architecture-checklist, php-security-review, php-feature-slice, php-api-scaffolder, php-package-scaffold, php-migration-manager | PHP/Laravel architecture, security, scaffolding, migrations |
 | Rust | rust-architecture-checklist, rust-security-review, rust-feature-slice, sqlx-migration-manager, rust-migration-analyzer, axum-scaffolder, cargo-package-scaffold | Rust architecture, security, migrations, API scaffolding, packaging |
 | Other | jira-review, jira-comment-writer, confluence-guide-writer | Language/tool-specific reviews and documentation generation |
