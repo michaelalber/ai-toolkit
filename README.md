@@ -541,7 +541,8 @@ ai-toolkit/
 Software engineer working across enterprise .NET, Python, Rust, edge AI, robotics, and federal security domains. I build tools that encode engineering standards into AI-assisted workflows — grounding AI output in deliberate practice rather than generic defaults.
 
 Related projects:
-- [grounded-code-mcp](https://codeberg.org/michaelkalber/grounded-code-mcp) — local MCP RAG server that grounds AI coding agents in the books and standards you actually trust
+- [grounded-code-mcp](https://codeberg.org/michaelkalber/grounded-code-mcp) — local RAG server that grounds AI coding agents in the books, standards, and docs you actually trust; 17 curated collections, fully local embeddings via Ollama
+- [pi-packages](https://codeberg.org/michaelkalber/pi-packages) — domain-specific Pi harnesses for local Ollama inference: hardware routing, RAG integration, context budgeting, and project-type auto-detection across six project types
 
 ---
 
