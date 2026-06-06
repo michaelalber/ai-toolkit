@@ -1,8 +1,17 @@
-# Coding Agent — Project Overlay
+# Coding Agent
 
-> Place in your project root as `AGENTS.md` when using 20B+ models.
-> Pi merges this with the global AGENTS-lite.md automatically — do not duplicate rules already in the global file.
-> For 7B models: skip this file; the global baseline is sufficient.
+> Global baseline — install as `~/.pi/agent/AGENTS.md`.
+> Optimized for 20B+ models. Includes full rules, quality gates, and knowledge grounding.
+> For 7B models or low-memory devices, use AGENTS-lite.md instead.
+
+---
+
+## Session Start
+
+1. Check for `intent.md` and `constraints.md` in the project root.
+2. If a task is in flight, read `domain-memory.md`.
+3. State: current task, open blockers, top constraints. Do NOT begin until confirmed.
+4. If `intent.md` is absent for a non-trivial project, ask before proceeding.
 
 ---
 
@@ -15,6 +24,27 @@ When no `intent.md` exists, apply these defaults:
 **Decide autonomously:** Formatting, naming within established conventions, read-only tool selection, refactoring within approved scope.
 
 **Always escalate:** Irreversible actions, external-facing output, scope changes beyond the stated task, when acceptance criteria cannot be met.
+
+---
+
+## Boundaries
+
+**Always:**
+- Read a file before editing it
+- Write a test before production code
+- One logical change per commit
+
+**Ask first:**
+- Before deleting files or directories
+- Before changing a public API or interface
+- Before creating a new abstraction or pattern
+- Before any irreversible action (deploy, force-push, drop table)
+
+**Never:**
+- Commit secrets, credentials, or API keys
+- Force-push main or master
+- Skip or delete failing tests
+- Invent function signatures or library APIs you are not certain exist
 
 ---
 
@@ -96,8 +126,8 @@ A local knowledge base of vetted documentation is available via the `grounded-co
 When the grounded-code-mcp extension is active, its tools call the CLI automatically. When running without the extension, invoke the CLI directly:
 
 ```bash
-grounded-code-mcp search "query" --collection python --json
-grounded-code-mcp search-code "query" --language python --json
+grounded-code-mcp search "query" --collection <name> --json
+grounded-code-mcp search-code "query" --language <lang> --json
 grounded-code-mcp list-sources --json
 grounded-code-mcp source-info <path> --json
 grounded-code-mcp query-graph <concept> --depth 2 --json
@@ -105,23 +135,23 @@ grounded-code-mcp query-graph <concept> --depth 2 --json
 
 Pass the bare collection suffix — the server prepends `grounded_` automatically:
 
-| `--collection` | What lives here |
+| `--collection` | Topic domain |
 |---|---|
 | `internal` | XP, TDD, CI/CD, DDD, Clean Architecture, OWASP, NIST AI; technical writing |
 | `patterns` | GoF, CQRS, DDD, Clean Architecture, DI, MADR |
-| `architecture` | DDIA, SRE, 12-Factor, AOSA, C4, arc42, distributed systems |
-| `systems_thinking` | Meadows leverage points, feedback loops, chaos engineering |
+| `architecture` | Software architecture: SRE, 12-Factor, C4, arc42, distributed systems |
+| `systems_thinking` | Feedback loops, leverage points, chaos engineering |
 | `ui_ux` | Laws of UX, Nielsen, WCAG 2.2, ARIA, USWDS, GOV.UK Design System |
-| `dotnet` | EF Core in Action, DI in .NET, Telerik UI for Blazor/MVC/Reporting |
-| `python` | Python 3.13, FastAPI, FastMCP, Pydantic v2, pytest, cosmicpython |
+| `dotnet` | Third-party .NET books and vendor component docs ingested into your local KB |
+| `python` | Python language, web frameworks, testing, and domain modeling docs |
 | `databases` | SQL, PostgreSQL indexing, relational theory |
-| `edge_ai` | RAG, embeddings, LLM application design, AI agents; LangSmith |
+| `edge_ai` | RAG, embeddings, LLM application design, AI agents |
 | `automation` | PLC, OPC UA, MODBUS, ICS security, Raspberry Pi, NIST 800-82 |
-| `4d_legacy` | 4D v18/v20 — source reference for 4D → .NET migration |
-| `php` | PHP manual, Laravel 5.5 / 6.x / 12.x |
-| `javascript` | JS/TS: Definitive Guide, TypeScript Handbook, Vue 2/3, ECMAScript 2024 |
+| `4d_legacy` | 4D v18/v20 — source reference for legacy migration work |
+| `php` | PHP manual and Laravel docs |
+| `javascript` | JavaScript, TypeScript, and frontend framework docs |
 | `gov` | NIST 800-53/171/218, DOE, Zero Trust, AI RMF, CUI |
-| `robotics` | ROS 2, MuJoCo, Isaac Lab, LeRobot, Spinning Up in Deep RL, VLA models |
+| `robotics` | ROS 2, simulation frameworks, reinforcement learning, VLA models |
 | `rust` | Rust ownership, async/Tokio, Cargo, error handling, Axum |
 | `api_design` | Zalando guidelines, Google AIP, Microsoft REST API guidelines |
 
@@ -132,3 +162,12 @@ Run `grounded-code-mcp list-sources --json` for the authoritative runtime list.
 ## AI-Generated Code Markers
 
 Wrap generated blocks with `<AI-Generated START>` / `<AI-Generated END>` using the language-appropriate comment syntax.
+
+---
+
+## Escape Hatch
+
+When you cannot complete a task accurately:
+> `[CANNOT COMPLETE]: <one sentence reason>`
+
+Provide what you can, marking uncertain parts with `# VERIFY: <what to check>`.

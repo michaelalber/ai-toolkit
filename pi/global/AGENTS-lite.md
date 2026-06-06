@@ -1,7 +1,8 @@
-# Coding Agent
+# Coding Agent — Lite
 
-> Global baseline — install as `~/.pi/agent/AGENTS.md`.
-> Works for all models. 7B-safe: ~25 imperative rules, no chain-of-thought.
+> Global baseline for 7B models and low-memory devices — install as `~/.pi/agent/AGENTS.md`.
+> Compact and imperative. No chain-of-thought. ~25 rules.
+> For 20B+ models, use AGENTS.md instead.
 
 ---
 
