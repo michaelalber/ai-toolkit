@@ -1,0 +1,92 @@
+# qwen3-30b-a3b-agent — fast MoE general agent, explore/search, title/summary work
+# Base model: qwen3:30b-a3b  (MoE — only ~3B params active per token, fast inference)
+# Customisations: thinking disabled (/no_think), <tool_call> XML format, agent-tuned params
+#
+# To recreate on a fresh Ollama install:
+#   ollama pull qwen3:30b-a3b
+#   ollama create qwen3-30b-a3b-agent:latest -f qwen3-30b-a3b-agent.Modelfile
+#
+# Mac Mini blob SHA (current): sha256-58574f2e94b99fb9e4391408b57e5aeaaaec10f6384e9a699fc2cb43a5c8eabf
+#
+# To update a single parameter without a full recreate (e.g. num_ctx):
+#   curl -s -X POST http://michaels-mac-mini.cosmach.net:11434/api/create \
+#     -H "Content-Type: application/json" \
+#     -d '{"model":"qwen3-30b-a3b-agent:latest","from":"qwen3-30b-a3b-agent:latest","parameters":{"num_ctx":65536}}'
+
+FROM qwen3:30b-a3b
+
+TEMPLATE """
+{{- $lastUserIdx := -1 -}}
+{{- range $idx, $msg := .Messages -}}
+{{- if eq $msg.Role "user" }}{{ $lastUserIdx = $idx }}{{ end -}}
+{{- end }}
+{{- if or .System .Tools }}<|im_start|>system
+{{ if .System }}
+{{ .System }}
+{{- end }}
+{{- if .Tools }}
+
+# Tools
+
+You may call one or more functions to assist with the user query.
+
+You are provided with function signatures within <tools></tools> XML tags:
+<tools>
+{{- range .Tools }}
+{"type": "function", "function": {{ .Function }}}
+{{- end }}
+</tools>
+
+CRITICAL INSTRUCTION - TOOL CALL FORMAT:
+You MUST use ONLY this exact format for every tool call. No exceptions.
+<tool_call>
+{"name": "<function-name>", "arguments": <args-json-object>}
+</tool_call>
+
+NEVER use any other format such as:
+- <function=name> ... </function>
+- <tool name="..."> ... </tool>
+- Any XML attribute-style formats
+
+Example of the ONLY correct format:
+<tool_call>
+{"name": "read", "arguments": {"path": "DEVELOPER.md"}}
+</tool_call>
+{{- end -}}
+<|im_end|>
+{{ end }}
+{{- range $i, $_ := .Messages }}
+{{- $last := eq (len (slice $.Messages $i)) 1 -}}
+{{- if eq .Role "user" }}<|im_start|>user
+{{ .Content }}
+{{- if eq $i $lastUserIdx }} /no_think{{- end }}<|im_end|>
+{{ else if eq .Role "assistant" }}<|im_start|>assistant
+<think>
+
+</think>
+
+{{ if .Content }}{{ .Content }}
+{{- else if .ToolCalls }}<tool_call>
+{{ range .ToolCalls }}{"name": "{{ .Function.Name }}", "arguments": {{ .Function.Arguments }}}
+{{ end }}</tool_call>
+{{- end }}{{ if not $last }}<|im_end|>
+{{ end }}
+{{- else if eq .Role "tool" }}<|im_start|>tool
+{{ .Content }}<|im_end|>
+{{ end }}
+{{- if and (ne .Role "assistant") $last }}<|im_start|>assistant
+<think>
+
+</think>
+
+{{ end }}
+{{- end }}"""
+
+PARSER qwen3
+PARAMETER num_ctx 65536
+PARAMETER repeat_penalty 1
+PARAMETER stop <|im_start|>
+PARAMETER stop <|im_end|>
+PARAMETER temperature 0.7
+PARAMETER top_k 20
+PARAMETER top_p 0.8
