@@ -1,5 +1,5 @@
 {
-  "complex": "macmini-ollama/qwen3-32b-agent:latest",
+  "complex": "macmini-ollama/qwen3-coder-30b-agent:latest",
   "plan": "macmini-ollama/qwen3-32b-agent:latest",
   "medium": "macmini-ollama/qwen3-30b-a3b-agent:latest",
   "explore": "macmini-ollama/qwen3-30b-a3b-agent:latest",
@@ -7,5 +7,5 @@
   "summary": "macmini-ollama/devstral-small-2:24b",
   "mac-mini-fast": "macmini-ollama/qwen2.5-coder:7b",
   "mac-mini-devstral": "macmini-ollama/devstral:latest",
-  "code-gen": "macmini-ollama/qwen3-coder-30b-agent:latest"
+  "coder": "macmini-ollama/qwen3-coder-30b-agent:latest"
 }
