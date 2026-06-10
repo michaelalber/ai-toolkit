@@ -4,5 +4,7 @@
     "enabled": true,
     "reserveTokens": 2048,
     "keepRecentTokens": 8192
-  }
+  },
+  "defaultProvider": "macmini-ollama",
+  "defaultModel": "qwen3-32b-agent:latest"
 }
