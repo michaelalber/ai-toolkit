@@ -6,7 +6,7 @@ allowed-tools: Bash(ls:*), Bash(date:*), Read
 <live_state>
 Today: !`date +%Y-%m-%d`
 QRSPI feature folders, artifacts, and any slice logs already written:
-!`for d in thoughts/shared/qrspi/*/; do echo "$d"; ls -1 "$d" 2>/dev/null | sed 's/^/  - /'; ls -1 "$d"implementation/ 2>/dev/null | sed 's/^/    · slice: /'; done 2>/dev/null || echo "(none yet)"`
+!`find thoughts/shared/qrspi -mindepth 1 -maxdepth 3 2>/dev/null | sort || echo "(none yet)"`
 </live_state>
 
 Run the QRSPI **Implement** phase for: $ARGUMENTS

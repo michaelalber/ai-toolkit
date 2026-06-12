@@ -6,7 +6,7 @@ allowed-tools: Bash(ls:*), Bash(date:*), Read
 <live_state>
 Today: !`date +%Y-%m-%d`
 QRASPI project folders and their artifacts:
-!`for d in thoughts/shared/qraspi/*/; do echo "$d"; ls -1 "$d" 2>/dev/null | sed 's/^/  - /'; done 2>/dev/null || echo "(none yet)"`
+!`find thoughts/shared/qraspi -mindepth 1 -maxdepth 2 2>/dev/null | sort || echo "(none yet)"`
 </live_state>
 
 Run the QRASPI **Skeleton** phase for the new system: $ARGUMENTS
