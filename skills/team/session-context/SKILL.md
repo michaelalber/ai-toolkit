@@ -85,4 +85,4 @@ next_action: [what should happen next]
 |-------|-------------|
 | `architecture-journal` | This skill surfaces relevant ADRs and overdue retrospectives; architecture-journal provides the templates and review protocols to act on them. |
 | `dependency-mapper` | This skill traces dependencies at summary level for blast radius; dependency-mapper provides full Martin metrics (Ca, Ce, I, A, D) when patterns look concerning. |
-| `rpi-research` / `qrspi-research` | Use session-context as a pre-step to seed research with recent-change context before deeper codebase exploration. |
+| `qrspi-research` / `qraspi-research` | Use session-context as a pre-step to seed research with recent-change context before deeper codebase exploration. |

@@ -10,7 +10,7 @@ phases: 3
 
 > Source: Full suite audit of 67 skills + 67 agents (2026-04-19).
 > Scope: CRITICAL and HIGH issues only.
-> Execution: Run `/rpi-implement docs/audit-remediation-plan.md` to begin.
+> Execution: This plan predates QRSPI; its original `/rpi-implement` runner was retired 2026-06-19. Execute manually or port the phases into a QRSPI plan.
 
 ## Summary
 

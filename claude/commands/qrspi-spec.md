@@ -1,5 +1,5 @@
 ---
-description: Start the QRSPI Spec phase -- a Design Brain-Dump the human redirects ("brain surgery"), then a vertically-sliced Structure Outline. Use for "/qrspi-spec <feature>". Reads research.md and writes spec.md. Distinct from the deprecated /rpi-plan.
+description: Start the QRSPI Spec phase -- a Design Brain-Dump the human redirects ("brain surgery"), then a vertically-sliced Structure Outline. Use for "/qrspi-spec <feature>". Reads research.md and writes spec.md.
 allowed-tools: Bash(ls:*), Bash(date:*), Read
 ---
 

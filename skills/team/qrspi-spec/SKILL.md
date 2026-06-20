@@ -6,7 +6,7 @@ description: >
   vertically-sliced Structure Outline. Use for "/qrspi-spec <feature>", "design discussion for X",
   "structure outline for X", "spec out X from the research". Do NOT use to write a product PRD
   (use to-prd) or for an open-ended design chat (use spec-coach); this phase consumes research.md
-  and produces an approved spec.md. Do NOT use for the deprecated RPI workflow.
+  and produces an approved spec.md.
 ---
 
 # QRSPI Spec
@@ -89,4 +89,3 @@ See `references/spec-template.md` for the full `spec.md` structure and frontmatt
 | `qrspi-plan` | Next phase. Consumes the approved `spec.md`; refuses to plan without it. |
 | `dotnet-vertical-slice` / `python-feature-slice` / `rust-feature-slice` | Stack scaffolders for the vertical slices the Structure Outline defines. |
 | `spec-coach` | Use instead for an open-ended interactive design chat; `qrspi-spec` is a gated brain-dump -> outline. |
-| `rpi-plan` | DEPRECATED sibling that folds design into planning. Route here for QRSPI's separate design gate. |

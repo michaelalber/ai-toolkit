@@ -1,5 +1,5 @@
 ---
-description: Start the QRSPI Implement phase -- execute an approved plan.md slice-by-slice with strict Red-Green-Refactor per slice. Use for "/qrspi-implement <feature>". Requires plan.md status: approved; writes per-slice proof logs. Distinct from the deprecated /rpi-implement.
+description: Start the QRSPI Implement phase -- execute an approved plan.md slice-by-slice with strict Red-Green-Refactor per slice. Use for "/qrspi-implement <feature>". Requires plan.md status: approved; writes per-slice proof logs.
 allowed-tools: Bash(ls:*), Bash(date:*), Read
 ---
 

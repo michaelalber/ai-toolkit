@@ -1,11 +1,11 @@
 # AI Toolkit
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Skills](https://img.shields.io/badge/skills-103-blue)](#skills)
-[![Agents](https://img.shields.io/badge/agents-49-blue)](#agents)
+[![Skills](https://img.shields.io/badge/skills-98-blue)](#skills)
+[![Agents](https://img.shields.io/badge/agents-47-blue)](#agents)
 [![Platforms](https://img.shields.io/badge/platforms-Claude%20Code%20%7C%20OpenCode%20%7C%20Pi-informational)](#platforms)
 
-**103 skills, 49 agents, and 22 slash commands for AI-assisted software development — spanning TDD, .NET, Python, PHP, Rust, React, edge AI, security, DDD, and more.**
+**98 skills, 47 agents, and 22 slash commands for AI-assisted software development — spanning TDD, .NET, Python, PHP, Rust, React, edge AI, security, DDD, and more.**
 
 Works with [Claude Code](https://claude.ai/code), [OpenCode](https://opencode.ai/), and [Pi](https://pi.dev) (Ollama local models).
 
@@ -250,21 +250,6 @@ ADRs live in the target repo's `docs/adr/`.
 | `qraspi-graduate` | Terminal handoff — captures the repo + ADRs + skeleton state + fitness gates + stack into `graduation.md` and hands new feature work to QRSPI. |
 | `fitness-functions` | Authors architectural fitness functions and wires them into CI as merge-blocking gates (NetArchTest, import-linter, cargo-deny, Conftest). QRASPI's one new primitive. |
 
-### RPI Workflow Suite _(deprecated — use QRSPI)_
-
-> **Deprecated 2026-06-02; superseded by the QRSPI Workflow Suite above.** These skills carry
-> `disable-model-invocation: true` and are scheduled for removal at sunset ~2026-09-01. Listed for
-> reference during the transition window.
-
-A structured Research → Plan → Implement loop with parallel subagents and session isolation.
-
-| Skill | Description |
-|-------|-------------|
-| `rpi-research` | Parallel codebase exploration using subagents to gather context before planning. |
-| `rpi-plan` | Converts a research artifact into a phased implementation plan with discrete, testable steps. |
-| `rpi-implement` | Executes a phased implementation plan mechanically, one step at a time. |
-| `rpi-iterate` | Surgically updates an existing plan based on new discoveries or scope changes. |
-
 ### Requirements & Workflow Suite
 
 | Skill | Description |
@@ -288,7 +273,6 @@ A structured Research → Plan → Implement loop with parallel subagents and se
 | Skill | Description |
 |-------|-------------|
 | `skill-creator` | Creates, revises, and scores SKILL.md definitions against the 5-section lean gold standard. |
-| `spec-implement` _(deprecated — use QRSPI/QRASPI)_ | Converts a spec or acceptance criteria into a working implementation, test-first. **Deprecated 2026-06-03**; `disable-model-invocation: true`; removal at sunset ~2026-09-01. |
 
 ### Agent Support Suite (Team)
 
@@ -359,7 +343,7 @@ Vendored copies of workflow-primitive skills from [Matt Pocock's skills repo](ht
 
 Autonomous agents that make decisions and take actions independently. Each exists in both Claude Code (`claude/agents/`) and OpenCode (`opencode/agents/`) format. Agents are split into `team/` and `professional/` subdirectories mirroring the skill split.
 
-## claude/agents/team/ and opencode/agents/team/ (46 agents)
+## claude/agents/team/ and opencode/agents/team/ (44 agents)
 
 ### Development & DevOps
 
@@ -416,8 +400,6 @@ Autonomous agents that make decisions and take actions independently. Each exist
 > QRSPI workflow agents (`qrspi-orchestrator`, `qrspi-implement`) and the shared read-only research subagents (`research-file-locator`, `research-code-analyzer`, `research-pattern-finder`) are spawned automatically by the QRSPI skills/commands — not invoked directly.
 >
 > QRASPI greenfield agents (`qraspi-orchestrator`, `qraspi-builder`) are spawned automatically by the QRASPI skills/commands — the orchestrator drives the no-edit Questions/Research/Architecture/Plan/Graduate phases, the builder the edit Skeleton/Implement phases. They reuse the same `research-*` subagents.
->
-> **Deprecated** RPI workflow agents (`rpi-planner`, `rpi-implement`) are superseded by the QRSPI agents above and scheduled for removal at sunset ~2026-09-01.
 
 ## claude/agents/professional/ and opencode/agents/professional/ (3 agents)
 
@@ -500,11 +482,11 @@ The `project-templates/` directory contains per-project context files based on t
 ```
 ai-toolkit/
 ├── skills/
-│   ├── team/                   # 68 team skills (shareable, production-ready)
+│   ├── team/                   # 80 team skills (shareable, production-ready)
 │   └── professional/           # 18 professional skills (deliberate practice + edge learning)
 ├── claude/
 │   ├── agents/
-│   │   ├── team/               # 46 Claude Code team agents
+│   │   ├── team/               # 44 Claude Code team agents
 │   │   └── professional/       # 3 Claude Code professional agents
 │   ├── commands/               # 22 slash commands with shell injection
 │   └── global/                 # Global config → ~/.claude/
@@ -513,7 +495,7 @@ ai-toolkit/
 │       └── settings.local.json # Permissions: bash allow/deny, read allow/deny
 ├── opencode/
 │   ├── agents/
-│   │   ├── team/               # 46 OpenCode team agents
+│   │   ├── team/               # 44 OpenCode team agents
 │   │   └── professional/       # 3 OpenCode professional agents
 │   ├── commands/               # 22 slash commands with agent routing
 │   └── global/                 # Global config → ~/.config/opencode/

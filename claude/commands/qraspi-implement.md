@@ -1,5 +1,5 @@
 ---
-description: Start the QRASPI Implement phase -- grow the green walking skeleton ONE approved slice at a time with strict Red-Green-Refactor per phase, keeping the skeleton's fitness gates green. Use for "/qraspi-implement <project>". Reads plan-{slice}.md (status approved) + skeleton.md (ci_green), writes implementation-log-{slice}.md. To implement a feature in an existing codebase use /qrspi-implement; for the deprecated RPI workflow use /rpi-implement.
+description: Start the QRASPI Implement phase -- grow the green walking skeleton ONE approved slice at a time with strict Red-Green-Refactor per phase, keeping the skeleton's fitness gates green. Use for "/qraspi-implement <project>". Reads plan-{slice}.md (status approved) + skeleton.md (ci_green), writes implementation-log-{slice}.md. To implement a feature in an existing codebase use /qrspi-implement.
 allowed-tools: Bash(ls:*), Bash(date:*), Read
 ---
 

@@ -1,5 +1,5 @@
 ---
-description: Start the QRSPI Research phase -- objective, ticket-hidden codebase mapping via parallel read-only subagents. Use for "/qrspi-research <feature>". Reads the answered questions.md and writes research.md. Distinct from the deprecated /rpi-research.
+description: Start the QRSPI Research phase -- objective, ticket-hidden codebase mapping via parallel read-only subagents. Use for "/qrspi-research <feature>". Reads the answered questions.md and writes research.md.
 allowed-tools: Bash(ls:*), Bash(date:*), Read
 ---
 

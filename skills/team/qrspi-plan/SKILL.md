@@ -4,9 +4,8 @@ audience: team
 description: >
   QRSPI Plan phase -- converts an approved spec.md into a mechanically executable, vertically
   sliced plan.md with exact file paths and per-phase verification. Use for "/qrspi-plan <feature>",
-  "qrspi plan X", "turn the spec into an implementation plan". Do NOT use for the deprecated RPI
-  workflow (use /rpi-plan) or to plan without a spec; this phase consumes spec.md and REFUSES
-  horizontal-layer plans.
+  "qrspi plan X", "turn the spec into an implementation plan". Not for planning without a spec; this
+  phase consumes spec.md and REFUSES horizontal-layer plans.
 ---
 
 # QRSPI Plan
@@ -94,4 +93,3 @@ worked example.
 | `qrspi-implement` | Next phase. Consumes the approved `plan.md`; refuses to execute without `status: approved`. |
 | `tdd` | The inner loop the Implement phase runs per phase; Plan's test-first steps map onto RED-GREEN-REFACTOR. |
 | `dotnet-vertical-slice` / `python-feature-slice` / `rust-feature-slice` | Stack scaffolders for the vertical slices each phase implements. |
-| `rpi-plan` | DEPRECATED sibling that folds design into planning. Route here for QRSPI's spec-gated, refuses-horizontal plan. |

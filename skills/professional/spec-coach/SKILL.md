@@ -3,14 +3,10 @@ name: spec-coach
 audience: professional
 description: >
   Interactive spec design coach. Guides through vision, PRD structure, three-tier boundary
-  definition, user story quality (INVEST), specification by example, and measurable success
+  definition, INVEST user-story quality, specification by example, and measurable success
   criteria to produce a complete, deployable spec. Use when designing a new skill, agent,
-  feature, or any AI system that needs explicit behavioral boundaries.
-  Use for "spec coach", "write agent spec", "create agent spec", "spec for ai agent",
-  "agent specification", "define agent", "new skill spec", "new agent spec",
-  "design agent behavior", "agent boundaries", "spec kit", "spec.md", "plan.md",
-  "github spec kit", "specify workflow", "write a spec", "software requirements spec",
-  "SRS", "write requirements", "design spec".
+  feature, or any AI system that needs explicit behavioral boundaries — writing an agent spec,
+  an SRS/requirements doc, a spec.md/plan.md, or running a spec-kit/specify workflow.
 ---
 
 # Spec Coach (Interactive Spec Design)
@@ -264,7 +260,7 @@ Always: [N] | Ask First: [N] | Never: [N] | Success criteria: [N] | Gaps: [N] [N
 ## Integration with Other Skills
 
 - **`spec-extractor-agent`** — Run on an existing codebase before STRUCTURE phase. Its draft pre-fills exact commands, conventions, and boundaries from actual files. Workflow: `spec-extractor-agent` (draft) → `spec-coach` (VISION + GUARDRAILS refinement).
-- **QRSPI / QRASPI** — Consume specs produced by this skill. QRSPI (brownfield) and QRASPI (greenfield) translate acceptance criteria into per-slice Red-Green-Refactor implementation. Better criteria here → cleaner Plan and Implement phases there. (The former `spec-implement` consumer is deprecated; superseded by these workflows.)
+- **QRSPI / QRASPI** — Consume specs produced by this skill. QRSPI (brownfield) and QRASPI (greenfield) translate acceptance criteria into per-slice Red-Green-Refactor implementation. Better criteria here → cleaner Plan and Implement phases there.
 - **`task-decomposition`** — When scope expands beyond one domain, use this skill to decompose into multiple specs and define coordination between agents.
 - **`architecture-review`** — When a new agent introduces architectural decisions (new data flows, service boundaries, infrastructure dependencies), stress-test the design here.
 - **`architecture-journal`** — After a spec is finalized, record key design decisions as ADRs. The spec captures WHAT was decided; the journal captures WHY.

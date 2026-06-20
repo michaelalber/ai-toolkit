@@ -4,9 +4,8 @@ audience: team
 description: >
   QRSPI Implement phase -- executes an approved plan.md slice-by-slice with strict Red-Green-Refactor
   per slice and a fresh-session checkpoint after each. Use for "/qrspi-implement <feature>", "execute
-  the qrspi plan", "build the approved plan slice by slice". Do NOT use for the deprecated RPI workflow
-  (use /rpi-implement) or to run a bare TDD cycle with no plan (use tdd); this phase requires plan.md
-  status: approved and writes per-slice logs.
+  the qrspi plan", "build the approved plan slice by slice". Not for a bare TDD cycle with no plan
+  (use tdd); this phase requires plan.md status: approved and writes per-slice logs.
 ---
 
 # QRSPI Implement
@@ -89,4 +88,3 @@ structure -- the RED proof, GREEN proof, files-changed list, and the resume note
 | `qrspi-plan` | Prior phase. Its approved `plan.md` is the contract this phase executes; refuses to run without `status: approved`. |
 | `tdd` | The inner loop. Each slice IS a RED-GREEN-REFACTOR cycle; load `tdd` for the test-first mechanics this skill enforces per slice. |
 | `dotnet-vertical-slice` / `python-feature-slice` / `rust-feature-slice` | Stack scaffolders for the slice each phase builds. |
-| `rpi-implement` | DEPRECATED sibling that checkpoints at 70% with no per-slice RGR proof. Route here for QRSPI's approved-gated, per-slice-RGR execution. |

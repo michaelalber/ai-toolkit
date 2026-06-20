@@ -1,17 +1,17 @@
 # RPI, QRSPI/QRASPI & Spec-Driven Development Overview
 
 The following are some of the ways I'm using AI in my daily software development workflow. The
-structured-workflow story has three generations: **RPI** (the original, now deprecated), **QRSPI**
+structured-workflow story has three generations: **RPI** (the original, now removed), **QRSPI**
 (its instruction-budget-disciplined replacement for *existing* codebases), and **QRASPI** (the
 greenfield counterpart for *new* systems). RPI → QRSPI was a replacement; QRSPI ↔ QRASPI are siblings
 that meet at a graduation seam.
 
-## RPI (Research-Plan-Implement) — _deprecated_
+## RPI (Research-Plan-Implement) — _removed_
 
-> **Deprecated 2026-06-02; superseded by QRSPI.** The four `rpi-*` skills and the
-> `rpi-planner`/`rpi-implement` agents carry `disable-model-invocation: true` and a `DEPRECATED`
-> prefix, scheduled for removal at sunset ~2026-09-01. The three read-only subagents were renamed
-> `research-*` (workflow-neutral) and kept.
+> **Deprecated 2026-06-02; removed 2026-06-19.** The four `rpi-*` skills and the
+> `rpi-planner`/`rpi-implement` agents were deleted once QRSPI/QRASPI fully replaced them; the early
+> sunset pulled the original ~2026-09-01 date forward. The three read-only subagents were renamed
+> `research-*` (workflow-neutral) and kept. This section is retained to document the lineage.
 
 A structured workflow that separates complex AI-assisted work into three clean phases — Research,
 Plan, Implement — each in its own session with a compact handoff artifact. It worked, but in practice
@@ -97,7 +97,6 @@ front door for designing a new skill, agent, or PRD from first principles.
 | `qraspi-questions` … `qraspi-graduate` | QRASPI (greenfield) | Seven phase/handoff skills: Questions, Research, Architecture, Skeleton, Plan, Implement, Graduate. MADR ADRs, Mermaid C4, runnable walking skeleton, CI-green gate. |
 | `fitness-functions` | QRASPI primitive | Authors architectural fitness functions and wires them into CI as merge-blocking gates (NetArchTest, import-linter, cargo-deny, Conftest). |
 | `spec-coach` | Spec-driven | Interactive specification of a new AI skill, agent, or PRD from first principles. |
-| `rpi-research`, `rpi-plan`, `rpi-implement`, `rpi-iterate` | RPI _(deprecated)_ | Superseded by QRSPI; `disable-model-invocation: true`; removal at sunset ~2026-09-01. |
 
 ## Agents
 
@@ -109,4 +108,3 @@ front door for designing a new skill, agent, or PRD from first principles.
 | `qraspi-builder` | QRASPI | Edit-access builder for the Skeleton (scaffold + CI-green) and Implement (per-slice RGR) phases. |
 | `research-file-locator` / `research-code-analyzer` / `research-pattern-finder` | shared | Read-only subagents spawned in parallel for codebase research; reused by both QRSPI and QRASPI. |
 | `spec-extractor-agent` | Spec-driven | Analyzes an existing codebase to produce a pre-filled draft agent spec, used before a `spec-coach` session. |
-| `rpi-planner`, `rpi-implement` | RPI _(deprecated)_ | Superseded by the QRSPI/QRASPI agents; removal at sunset ~2026-09-01. |

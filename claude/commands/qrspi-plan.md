@@ -1,5 +1,5 @@
 ---
-description: Start the QRSPI Plan phase -- convert an approved spec.md into a mechanically executable, vertically sliced plan.md. Use for "/qrspi-plan <feature>". Reads spec.md and writes plan.md. Distinct from the deprecated /rpi-plan.
+description: Start the QRSPI Plan phase -- convert an approved spec.md into a mechanically executable, vertically sliced plan.md. Use for "/qrspi-plan <feature>". Reads spec.md and writes plan.md.
 allowed-tools: Bash(ls:*), Bash(date:*), Read
 ---
 

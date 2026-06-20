@@ -1,5 +1,5 @@
 ---
-description: Start the QRASPI Plan phase -- convert the next slice from the skeleton's backlog into a mechanically executable, vertically-sliced plan-{slice}.md grown on the green walking skeleton. Use for "/qraspi-plan <project>". Reads skeleton.md, writes plan-{slice}.md (status ready-for-review). Refuses horizontal-layer plans. To plan a feature in an existing codebase use /qrspi-plan; for the deprecated RPI workflow use /rpi-plan.
+description: Start the QRASPI Plan phase -- convert the next slice from the skeleton's backlog into a mechanically executable, vertically-sliced plan-{slice}.md grown on the green walking skeleton. Use for "/qraspi-plan <project>". Reads skeleton.md, writes plan-{slice}.md (status ready-for-review). Refuses horizontal-layer plans. To plan a feature in an existing codebase use /qrspi-plan.
 allowed-tools: Bash(ls:*), Bash(date:*), Read
 ---
 

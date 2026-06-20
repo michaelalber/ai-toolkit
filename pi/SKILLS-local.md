@@ -170,11 +170,6 @@ model, but the unattended loop will drift).
 | qraspi-implement | | Slice-by-slice autonomous loop (greenfield) |
 | qrspi-research | 🧩 | Parallel read-only subagent fan-out |
 | qraspi-research | 🧩 | Parallel subagent fan-out (greenfield) |
-| rpi-research | ⚠️🧩 | Deprecated → use qrspi-research; also subagent-based |
-| rpi-plan | ⚠️ | Deprecated → use qrspi-plan |
-| rpi-implement | ⚠️ | Deprecated → use qrspi-implement |
-| rpi-iterate | ⚠️ | Deprecated → edit spec + re-run qrspi-plan |
-| spec-implement | ⚠️📚 | Deprecated → use QRSPI/QRASPI; autonomous |
 
 ---
 
@@ -195,9 +190,6 @@ collapse to single-threaded and lose their speed/coverage rationale.
 (`transcript-capture`, `email-capture`) and any skill that loads multiple long
 `references/` files mid-task — both can saturate the window and trip PI's compaction
 loop. The 24–32B/128K tier removes most of this risk.
-
-**Deprecated (⚠️).** The `rpi-*` and `spec-implement` skills are superseded by QRSPI
-(brownfield) and QRASPI (greenfield). Don't invest in local variants of these.
 
 ---
 

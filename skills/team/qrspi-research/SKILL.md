@@ -4,8 +4,7 @@ audience: team
 description: >
   QRSPI Research phase -- objective, ticket-hidden codebase mapping via parallel read-only
   subagents. Use for "/qrspi-research <feature>", "qrspi research X", "ticket-hidden research",
-  "map what exists for X before designing". Do NOT use for the deprecated RPI workflow
-  ("/rpi-research", "rpi research X") -- that routes to rpi-research, a different workflow.
+  "map what exists for X before designing". Reads the answered questions.md and writes research.md.
 ---
 
 # QRSPI Research
@@ -90,4 +89,3 @@ See `references/research-template.md` for the full `research.md` structure and f
 | `qrspi-questions` | Prior phase. Its answered `questions.md` is the neutral topic source. |
 | `qrspi-spec` | Next phase. Consumes `research.md` as the factual ground for design. |
 | `research-synthesis` | For research beyond the codebase (external systems, libraries): source credibility scoring and cross-referencing. |
-| `rpi-research` | DEPRECATED sibling with the same parallel-subagent mechanic. Route here for QRSPI; do not invoke the RPI version. |
