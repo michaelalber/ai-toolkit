@@ -19,18 +19,6 @@ attributions:
       is an explicit-invocation skill — auto-firing on every chat turn is
       disruptive. Re-apply this field if re-vendoring from upstream.
 
-  - skill: caveman
-    source: mattpocock/skills
-    source_commit: unknown
-    upstream_path: skills/productivity/caveman/SKILL.md
-    locally_modified: true
-    modifications_summary: >
-      Simplified rule set — removed upstream's detailed examples and
-      Auto-Clarity Exception section; added disable-model-invocation: true;
-      added references/response-patterns.md with before/after examples;
-      updated description to match local trigger phrases. Upstream has since
-      expanded significantly with examples and edge-case handling.
-
   - skill: to-prd
     source: mattpocock/skills
     source_commit: unknown

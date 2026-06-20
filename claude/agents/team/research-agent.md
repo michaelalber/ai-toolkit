@@ -4,7 +4,7 @@ description: Autonomous research agent that investigates technical questions by 
 tools: Read, Edit, Write, Bash, Grep, Glob
 model: inherit
 skills:
-  - rag-pipeline
+  - rag-pipeline-python
   - research-synthesis
 ---
 

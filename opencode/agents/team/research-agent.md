@@ -35,12 +35,12 @@ Load these skills on-demand for detailed guidance. Use the `skill` tool when you
 
 | Skill | When to Load |
 |-------|--------------|
-| `skill({ name: "rag-pipeline" })` | When building or querying a knowledge base for document-heavy research tasks |
+| `skill({ name: "rag-pipeline-python" })` | When building or querying a knowledge base for document-heavy research tasks (skill ships in the `edge-ai-robotics-automation-toolkit` supplement) |
 | `skill({ name: "research-synthesis" })` | When cross-referencing sources, scoring credibility, or choosing briefing formats |
 
 **Skill Loading Protocol:**
 1. Load `research-synthesis` at the start of each research session for source credibility frameworks and briefing format templates
-2. Load `rag-pipeline` when the research involves large document corpora that benefit from vector search and retrieval
+2. Load `rag-pipeline-python` when the research involves large document corpora that benefit from vector search and retrieval
 3. Re-load skills if you need to reference specific frameworks during CROSS-REFERENCE or SYNTHESIZE phases
 
 **Note:** Skills are located in `~/.config/opencode/skills/`.

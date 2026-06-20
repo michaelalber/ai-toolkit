@@ -117,6 +117,6 @@ CI status, landed gates, slice backlog) and the recipe-not-rigid-repo principle,
 | `qraspi-architecture` | Prior phase. Its `architecture.md` + accepted ADRs declare the stack and the fitness-function spec this phase instantiates. |
 | `fitness-functions` | Authors and wires each specified fitness function as a merge-blocking CI gate; their passing is part of CI green. |
 | `qraspi-plan` | Next phase. Consumes the slice backlog in `skeleton.md` to plan the next vertical increment on the skeleton. |
-| `dotnet-vertical-slice` / `python-feature-slice` / `rust-feature-slice` / `mcp-server-scaffold` | The feature-slice scaffolders invoked for the one walking slice; the archetype recipe supplies the repo+CI layer they do not. |
+| `dotnet-vertical-slice` / `python-feature-slice` / `rust-feature-slice` | The feature-slice scaffolders invoked for the one walking slice; the archetype recipe supplies the repo+CI layer they do not. |
 | `tdd` | Used from `/qraspi-implement` when growing later slices; the skeleton itself is scaffolded, not TDD'd into existence. |
 | `qrspi-implement` | Brownfield sibling's execution phase. Skeleton is greenfield-only -- it stands V0 up once, then features graduate to QRSPI. |

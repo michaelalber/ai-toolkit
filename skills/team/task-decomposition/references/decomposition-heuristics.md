@@ -54,15 +54,15 @@ Nouns: inventory, barcode, stock levels, alerts, supplier, reorder, portal
 Verbs: scan, track, alert, reorder
 
 Functional areas:
-  1. Barcode scanning (scan, track) -> sensor-integration domain
-  2. Stock level monitoring (track, alert) -> anomaly-detection domain
+  1. Barcode scanning (scan, track) -> device-integration domain
+  2. Stock level monitoring (track, alert) -> monitoring/alerting domain
   3. Supplier reorder portal (reorder, portal) -> web application domain
   4. Core inventory data model (shared by all three) -> prerequisite
 
 Sub-tasks:
   T1: Define inventory data model         -> tdd-agent
   T2: Implement barcode scanning service  -> tdd-agent [depends: T1]
-  T3: Build stock level monitoring        -> sensor-anomaly-agent [depends: T1]
+  T3: Build stock level monitoring        -> tdd-agent [depends: T1]
   T4: Build supplier reorder portal       -> tdd-agent [depends: T1]
   T5: Integration test full workflow      -> test-generation-agent [depends: T2, T3, T4]
   T6: Document API and user guides        -> documentation-agent [depends: T2, T3, T4]

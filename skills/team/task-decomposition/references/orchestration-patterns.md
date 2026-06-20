@@ -114,7 +114,7 @@ T1 ──>  │
 T1: Probe -- can model run on edge hardware?  -> model-optimization-agent
   IF T1 succeeds:
     T2a: Build optimized edge pipeline         -> model-optimization-agent
-    T3a: Deploy to edge fleet                  -> fleet-deployment-agent
+    T3a: Package and document the optimized model -> documentation-agent
   IF T1 fails:
     T2b: Research cloud inference alternatives  -> research-agent
     T3b: Build cloud inference pipeline         -> tdd-agent
@@ -159,7 +159,7 @@ T2: Evaluate model performance            -> model-optimization-agent
   IF accuracy < 90%:
     T2-retry: Adjust hyperparameters and retrain  (max 3 iterations)
   IF accuracy >= 90%:
-    T3: Deploy optimized model             -> fleet-deployment-agent
+    T3: Package and document optimized model -> documentation-agent
 ```
 
 **Coordination protocol:**

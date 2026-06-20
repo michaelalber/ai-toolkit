@@ -17,7 +17,7 @@ Python 3.10+, FastMCP, pytest, `pyproject.toml`. Confirm against the accepted AD
   Pydantic v2 at the tool boundary.
 
 ## Slice layer (delegate)
-Invoke `mcp-server-scaffold` for the one tool the skeleton walks. Do not scaffold the full tool
+Invoke `mcp-server-scaffold` (in the edge-ai-robotics-automation-toolkit supplement) for the one tool the skeleton walks. Do not scaffold the full tool
 surface -- one tool, end-to-end.
 
 ## Fitness gates typical here (wire via `fitness-functions`)

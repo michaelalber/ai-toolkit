@@ -74,6 +74,6 @@ next_action: [description]
 | Skill | Relationship |
 |-------|-------------|
 | `tdd` | The RED phase writes a failing test first; this skill supplies the conventions, naming, and structure those tests follow. |
-| `tdd-agent` / `tdd-pair` | Operating modes of the TDD loop that generate tests — they apply these scaffolding conventions. |
+| `tdd-agent` | Autonomous operating mode of the TDD loop that generates tests — it applies these scaffolding conventions. |
 | `dotnet-vertical-slice` | Scaffolds the feature handlers/validators/endpoints this skill writes tests for; the test tree mirrors the slice structure. |
 | `evaluate-tests` | Audits generated tests for TDD discipline and quality — run it after scaffolding to verify the suite. |

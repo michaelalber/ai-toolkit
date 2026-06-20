@@ -134,9 +134,7 @@ APPROVAL PROTOCOL:
 | `dependency-audit-agent` | Dependency scanning | Autonomous scan, approval for upgrades |
 | `migration-orchestrator` | .NET/DB migrations | Semi-autonomous (approval gates) |
 | `environment-health-agent` | Dev environment health | Fully autonomous (dev only) |
-| `model-optimization-agent` | ML model optimization | Fully autonomous |
-| `sensor-anomaly-agent` | Sensor anomaly detection | Autonomous detect, approval for recalibrate |
-| `fleet-deployment-agent` | Edge fleet deployment | Semi-autonomous (approval for full rollout) |
+| `model-optimization-agent` | ML model optimization (in the edge-ai-robotics-automation-toolkit supplement) | Fully autonomous |
 | `research-agent` | Technical research | Fully autonomous |
 | `context-builder-agent` | Session context assembly | Fully autonomous (read-only) |
 
@@ -148,9 +146,7 @@ APPROVAL PROTOCOL:
 - If the sub-task involves checking dependencies for vulnerabilities, assign to `dependency-audit-agent`
 - If the sub-task involves .NET migration or database schema changes, assign to `migration-orchestrator`
 - If the sub-task is diagnosing environment or infrastructure issues, assign to `environment-health-agent`
-- If the sub-task involves ML model tuning or optimization, assign to `model-optimization-agent`
-- If the sub-task involves sensor data anomaly detection, assign to `sensor-anomaly-agent`
-- If the sub-task involves deploying to edge devices, assign to `fleet-deployment-agent`
+- If the sub-task involves ML model tuning or optimization, assign to `model-optimization-agent` (requires the edge-ai-robotics-automation-toolkit supplement)
 - If the sub-task requires gathering technical information or evaluating options, assign to `research-agent`
 - If the sub-task is assembling context from a codebase for another agent, assign to `context-builder-agent`
 

@@ -42,7 +42,7 @@ uncertain; 32B can't sustain fan-out) · ⚠️ already deprecated in the toolki
 
 ---
 
-## 🟢 Green — ship as-is (40)
+## 🟢 Green — ship as-is (38)
 
 These get *more* reliable on a weak model because the skill carries the procedure.
 
@@ -52,7 +52,6 @@ These get *more* reliable on a weak model because the skill carries the procedur
 | nuget-package-scaffold | 📚 | Bounded scaffold; MCP only enriches conventions |
 | pypi-package-scaffold | 📚 | Bounded scaffold |
 | php-package-scaffold | 📚 | Bounded scaffold |
-| mcp-server-scaffold | | FastMCP template; deterministic structure |
 | axum-scaffolder | 📚 | Typed-endpoint scaffold, compile-time verified |
 | fastapi-scaffolder | 📚 | Router + Pydantic template |
 | minimal-api-scaffolder | 📚 | Endpoint template |
@@ -71,19 +70,14 @@ These get *more* reliable on a weak model because the skill carries the procedur
 | sqlx-migration-manager | 📚 | Lifecycle checklist + query verification |
 | php-migration-manager | 📚 | Lifecycle checklist |
 | environment-health | | Docker/service diagnostics; deterministic checks |
-| ollama-model-workflow | | Local LLM mgmt — *purpose-built* for this setup |
 | session-context | | Git summarization + ADR matching; bounded |
 | to-issues | | PRD → atomic issues; bounded decomposition |
 | triage-issue | | Severity/root-cause classification; bounded |
 | jira-review | | Readiness checklist; bounded |
 | jira-comment-writer | | Plain-language rewrite — bounded transform, ideal for local |
 | architecture-journal | 📚 | ADR template fill + retro prompts |
-| anomaly-detection | 📚 | Statistical detection code gen; procedural |
-| sensor-integration | 📚 | I2C/SPI/UART pipeline code; procedural |
-| picar-x-behavior | | Composable behavior code gen; bounded |
 | supply-chain-audit | 📚 | Tool-driven scan (cargo-audit/npm/pip); mechanical |
 | zoom-out | | Map callers/dependents; bounded read |
-| caveman | | Terse mode switch — *cuts* token use, a net win locally |
 | tdd | | The RED-GREEN-REFACTOR discipline — exactly the guardrail a weak model needs |
 | qrspi-questions | | Surface unknowns; bounded interactive Q&A |
 | qraspi-questions | | Surface unknowns (greenfield) |
@@ -91,7 +85,7 @@ These get *more* reliable on a weak model because the skill carries the procedur
 
 ---
 
-## 🟡 Yellow — usable, author a lite variant (52)
+## 🟡 Yellow — usable, author a lite variant (49)
 
 Single-pass but lean on judgment, synthesis, or large reference/input loads. The
 32B model produces the *structure* of a good result with shallower content. The
@@ -124,8 +118,6 @@ make steps explicit and imperative (the same treatment that produced `AGENTS-lit
 | react-modernization-analyzer | 📚 | Assessment + plan synthesis |
 | rust-migration-analyzer | 📚 | Assessment + plan synthesis |
 | 4d-schema-migration | 📚 | DDL gen is mechanical; UI/entity mapping is judgment |
-| rag-pipeline-dotnet | 📚 | Multi-step build, reference-heavy |
-| rag-pipeline-python | 📚 | Multi-step build (note: Ollama-native — good local fit) |
 | confluence-guide-writer | 📚 | Doc synthesis; bounded by source but prose-quality-sensitive |
 | transcript-capture | 📚 | **Large input** — full transcript can saturate a 32K window |
 | email-capture | 📚 | **Large input** — full thread can saturate a 32K window |
@@ -134,11 +126,6 @@ make steps explicit and imperative (the same treatment that produced `AGENTS-lit
 | pr-feedback-writer | | Communication coaching; needs nuance |
 | spec-coach | 📚 | Interactive coach — needs the model to coach well |
 | skill-creator | 📚 | Meta; must follow the 5-section template precisely |
-| tdd-pair | 📚 | Role-based collaboration; multi-turn nuance |
-| model-optimization | 📚 | Quantization/benchmark workflow; multi-step |
-| edge-cv-pipeline | 📚 | Multi-step CV pipeline build |
-| jetson-deploy | 📚 | Multi-step deploy + TensorRT conversion |
-| fleet-management | 📚 | Rollout/rollback strategy; complex |
 | research-synthesis | | Multi-source cross-referencing + credibility scoring |
 | system-design-kata | | Design practice; model must act as examiner |
 | pattern-tradeoff-analyzer | | Tradeoff reasoning |
@@ -204,5 +191,5 @@ loop. The 24–32B/128K tier removes most of this risk.
 4. **Suppress the 🔴 tier locally** (don't install, or mark them cloud-only) and reach
    for a cloud model when you need an autonomous loop or subagent fan-out.
 
-> Counts: 🟢 40 · 🟡 52 · 🔴 11 = 103. Revisit when skills are added/removed or the
+> Counts: 🟢 38 · 🟡 49 · 🔴 11 = 98. (AI/ML skills moved to edge-ai-robotics-automation-toolkit.) Revisit when skills are added/removed or the
 > primary local model changes.

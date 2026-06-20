@@ -26,7 +26,7 @@ matches, fall back to the generic recipe below.
    secure-by-default config. This is the gap the `*-feature-slice` scaffolders do NOT fill -- they
    scaffold a feature, not a full repo + CI + observability.
 2. **Slice layer (feature-slice scaffolder):** invoke `dotnet-vertical-slice` / `python-feature-slice`
-   / `rust-feature-slice` / `mcp-server-scaffold` for the ONE vertical slice the skeleton walks
+   / `rust-feature-slice` for the ONE vertical slice the skeleton walks
    end-to-end. One slice only -- breadth is later QRASPI Plan increments.
 
 ## Generic recipe (no archetype match)

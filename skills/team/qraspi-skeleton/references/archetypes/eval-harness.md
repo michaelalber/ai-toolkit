@@ -19,7 +19,7 @@ Python 3.10+, the ADR-chosen LLM/embedding stack (Ollama / cloud API), a vector 
   in source -- prompt templates live in versioned files, never f-strings.
 
 ## Slice layer (delegate)
-Invoke `rag-pipeline-python` (or `mcp-server-scaffold` if the tool is MCP-exposed) for the one
+Invoke `rag-pipeline-python` (or `mcp-server-scaffold` if the tool is MCP-exposed; both in the edge-ai-robotics-automation-toolkit supplement) for the one
 pipeline slice. Keep prompts in versioned template files per the AI/ML coding standards.
 
 ## evals vs fitness functions (name the boundary)

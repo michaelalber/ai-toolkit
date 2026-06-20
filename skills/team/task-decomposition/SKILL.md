@@ -56,7 +56,7 @@ Goal: "Build a pipeline that ingests sensor data, detects anomalies, and generat
 
   T1: Implement data ingestion layer     -> tdd-agent
   T2: Build anomaly detection model      -> model-optimization-agent [depends: T1]
-  T3: Configure sensor integrations      -> sensor-anomaly-agent [depends: T1]
+  T3: Implement the data validation layer -> tdd-agent [depends: T1]
   T4: Build report generation service    -> tdd-agent [depends: T2]
   T5: Generate test data and validate    -> test-generation-agent [depends: T1]
   T6: Document pipeline architecture     -> documentation-agent [depends: T2, T4]
@@ -83,16 +83,15 @@ Goal: "Migrate the payment service from .NET Framework 4.8 to .NET 10"
 Split by risk level, isolating uncertain or high-risk work into early probe sub-tasks for fast validation. Use when the goal involves significant technical uncertainty or some parts may be infeasible. Design probe sub-tasks to fail fast, then gate the remaining plan on probe results.
 
 ```
-Goal: "Integrate real-time video analytics on edge devices for the fleet"
+Goal: "Add a new payment provider whose API reliability and rate limits are unproven"
 
-  T1: Validate model runs on target hardware     -> model-optimization-agent [PROBE]
-  T2: Benchmark inference latency on edge device  -> research-agent [PROBE, parallel: T1]
-  T3: Test camera integration with SDK            -> sensor-anomaly-agent [PROBE, parallel: T1]
+  T1: Spike the provider SDK against the sandbox API    -> research-agent [PROBE]
+  T2: Validate rate limits and failure modes under load -> research-agent [PROBE, parallel: T1]
   --- GATE: All probes must pass before proceeding ---
-  T4: Build optimized inference pipeline          -> model-optimization-agent [depends: T1, T2]
-  T5: Implement edge capture and publish          -> tdd-agent [depends: T3]
-  T6: Deploy to test fleet                        -> fleet-deployment-agent [depends: T4, T5]
-  T7: Monitor and validate production metrics     -> sensor-anomaly-agent [depends: T6]
+  T3: Implement the provider client with retries        -> tdd-agent [depends: T1, T2]
+  T4: Audit the new SDK dependency for CVEs             -> dependency-audit-agent [parallel: T3]
+  T5: Review the integration for correctness/security   -> code-review-agent [depends: T3]
+  T6: Document the provider integration                 -> documentation-agent [depends: T3]
 ```
 
 ## Granularity Heuristics

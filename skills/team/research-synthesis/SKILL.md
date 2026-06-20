@@ -175,7 +175,7 @@ Full templates (Source Assessment Report, Cross-Reference Summary, Executive Sum
 
 ## Integration with Other Skills
 
-- **`rag-pipeline-python`** — When research involves large document corpora, use this skill to build a searchable knowledge base. Cross-reference retrieved passages against direct source consultation.
+- **`rag-pipeline-python`** (in the `edge-ai-robotics-automation-toolkit` supplement) — When research involves large document corpora, use this skill to build a searchable knowledge base. Cross-reference retrieved passages against direct source consultation.
 - **`research-agent`** — This skill is designed to be loaded by the `research-agent`. The agent handles SCOPE and GATHER; this skill provides frameworks for CROSS-REFERENCE, SYNTHESIZE, and DELIVER.
 
 Reference files: `references/source-credibility.md` (complete credibility scoring framework, recency weighting, authority evaluation) | `references/briefing-formats.md` (five structured output formats with templates and audience guidance)

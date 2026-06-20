@@ -21,8 +21,10 @@ accepted ADRs.
   device access.
 
 ## Slice layer (delegate)
-Compose the Edge/IoT skills: `edge-cv-pipeline` (OpenCV + TFLite), `jetson-deploy` or the Pi install
-target, `sensor-integration`, `model-optimization` per the ADR runtime.
+Build the capture -> inference -> publish slice directly against the ADR-chosen runtime (TFLite /
+TensorRT / ONNX) and transport (MQTT / HTTP). Use `model-optimization` (in the edge-ai-robotics-automation-toolkit supplement) to quantize/convert the model
+to the device's size and latency budget. (The toolkit no longer ships device-specific helper skills —
+ground hardware specifics against the vendor docs for the chosen Pi/Jetson board and runtime.)
 
 ## Fitness gates typical here (wire via `fitness-functions`)
 Host-runnable only: lint, type, coverage on the device-independent logic, model-size/latency budget

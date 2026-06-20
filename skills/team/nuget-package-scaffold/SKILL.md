@@ -201,8 +201,8 @@ Full templates: `references/cicd-templates.md`
 ## Integration with Other Skills
 
 - **`dotnet-vertical-slice`** -- use to structure the internal architecture, then use this skill to wrap it as a distributable NuGet package
-- **TDD skills** (`tdd`, `tdd-pair`, `tdd-agent`) -- develop the package internals using TDD workflows before progressing to the Pack step; the test project created by this scaffold integrates directly with TDD phase management
-- **`mcp-server-scaffold`** -- when building an MCP server that ships as a dotnet tool NuGet package, use this skill for the packaging and `mcp-server-scaffold` for the server implementation
+- **TDD skills** (`tdd`, `tdd-agent`) -- develop the package internals using TDD workflows before progressing to the Pack step; the test project created by this scaffold integrates directly with TDD phase management
+- **`mcp-server-scaffold`** (in the `edge-ai-robotics-automation-toolkit` supplement) -- when building an MCP server that ships as a dotnet tool NuGet package, use this skill for the packaging and `mcp-server-scaffold` for the server implementation
 
 ## Reference Files
 

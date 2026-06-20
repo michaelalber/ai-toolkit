@@ -1,11 +1,14 @@
 # AI Toolkit
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Skills](https://img.shields.io/badge/skills-98-blue)](#skills)
-[![Agents](https://img.shields.io/badge/agents-47-blue)](#agents)
+[![Skills](https://img.shields.io/badge/skills-85-blue)](#skills)
+[![Agents](https://img.shields.io/badge/agents-44-blue)](#agents)
 [![Platforms](https://img.shields.io/badge/platforms-Claude%20Code%20%7C%20OpenCode%20%7C%20Pi-informational)](#platforms)
 
-**98 skills, 47 agents, and 22 slash commands for AI-assisted software development — spanning TDD, .NET, Python, PHP, Rust, React, edge AI, security, DDD, and more.**
+**85 skills, 44 agents, and 22 slash commands for AI-assisted software development — spanning TDD, .NET, Python, PHP, Rust, React, security, DDD, and more.**
+
+> **Edge AI, robotics, ML, and industrial automation?** Those skills now live in the companion
+> [edge-ai-robotics-automation-toolkit](../edge-ai-robotics-automation-toolkit) — install it alongside this one.
 
 Works with [Claude Code](https://claude.ai/code), [OpenCode](https://opencode.ai/), and [Pi](https://pi.dev) (Ollama local models).
 
@@ -29,10 +32,10 @@ This toolkit encodes that expertise as reusable primitives. Each skill is an opi
 
 | | Count |
 |--|-------|
-| Skills (team) | 85 |
-| Skills (professional) | 18 |
-| Agents (Claude Code) | 49 |
-| Agents (OpenCode) | 49 |
+| Skills (team) | 74 |
+| Skills (professional) | 11 |
+| Agents (Claude Code) | 44 |
+| Agents (OpenCode) | 44 |
 | Slash commands (per platform) | 22 |
 | Platforms | Claude Code, OpenCode, Pi |
 
@@ -115,15 +118,15 @@ See [`pi/global/README.md`](pi/global/README.md) for the full Ollama setup guide
 
 ## Skills
 
-This toolkit is organized in two folders. `skills/team/` contains skills and agents I use in production work and consider shareable — patterns extracted from years of enterprise .NET, legacy modernization, and AI-augmented development on regulated-industry codebases. It also incorporates several vendored workflow-primitive skills from Matt Pocock's repo (see [Companion Skills](#companion-skills) below). `skills/professional/` is my professional-development track: deliberate-practice loops that sharpen engineering judgment (architecture critique, code review, pattern selection, refactoring prioritization) and learning scaffolds for the professional domains I'm actively growing into (edge AI, robotics, sensor integration). These are career-skill investments, not side projects — the split keeps "what I ship for the team" distinct from "the competencies I'm deliberately building."
+This toolkit is organized in two folders. `skills/team/` contains skills and agents I use in production work and consider shareable — patterns extracted from years of enterprise .NET, legacy modernization, and AI-augmented development on regulated-industry codebases. It also incorporates several vendored workflow-primitive skills from Matt Pocock's repo (see [Companion Skills](#companion-skills) below). `skills/professional/` is my professional-development track: deliberate-practice loops that sharpen engineering judgment (architecture critique, code review, pattern selection, refactoring prioritization) and learning scaffolds for the professional domains I'm actively growing into. (Edge AI, ML, robotics, and automation skills — including model optimization — now live in the companion [edge-ai-robotics-automation-toolkit](../edge-ai-robotics-automation-toolkit).) These are career-skill investments, not side projects — the split keeps "what I ship for the team" distinct from "the competencies I'm deliberately building."
 
 ## Companion Skills
 
 This toolkit incorporates several skills from Matt Pocock's [skills repo](https://github.com/mattpocock/skills) alongside my own. Vendored copies carry `source: mattpocock/skills` in their frontmatter along with the upstream commit hash they were pulled from, so the provenance is traceable. Matt updates frequently — periodically check his repo and re-vendor when meaningful changes land.
 
-Matt's skills cover the **workflow primitives** that apply to any project regardless of stack: grilling a plan until it's coherent (`grill-me`), driving the red-green-refactor loop (`to-prd`, `to-issues`), zooming out to understand a call chain (`zoom-out`), switching to a compressed communication mode (`caveman`), and improving a codebase's module structure (`improve-codebase-architecture`). They're small, composable, and deliberately stack-agnostic — exactly the layer my own skills don't try to replicate.
+Matt's skills cover the **workflow primitives** that apply to any project regardless of stack: grilling a plan until it's coherent (`grill-me`), driving the red-green-refactor loop (`to-prd`, `to-issues`), zooming out to understand a call chain (`zoom-out`), and improving a codebase's module structure (`improve-codebase-architecture`). They're small, composable, and deliberately stack-agnostic — exactly the layer my own skills don't try to replicate.
 
-The skills I've written cover the **domain-specific layers** that sit on top: enterprise .NET patterns (vertical slice, CQRS, EF Core migrations, federal-compliance security review), AI/ML infrastructure (RAG pipelines, MCP server scaffolding, local LLM workflows), edge AI and robotics (Jetson deployment, sensor integration, CV pipelines), and the coaching loops in my professional-development track that build architectural and review judgment.
+The skills I've written cover the **domain-specific layers** that sit on top: enterprise .NET patterns (vertical slice, CQRS, EF Core migrations, federal-compliance security review), AI/ML infrastructure (RAG pipelines, MCP server scaffolding, local LLM workflows, model optimization), and the coaching loops in my professional-development track that build architectural and review judgment.
 
 The two layers are non-overlapping by design. Where they look adjacent — Matt's `to-prd` vs. my `triage-issue`, his `improve-codebase-architecture` vs. my `architecture-review` — each is solving a different layer. Matt's is the workflow primitive; mine is the domain-calibrated, opinionated version for a specific stack or practice context.
 
@@ -137,7 +140,6 @@ See `.matt-pocock-attribution.yml` at the repo root for the full provenance mani
 |-------|-------------|
 | `tdd` | Canonical RED-GREEN-REFACTOR inner loop — the one TDD skill. Enforces behavioral, structure-insensitive tests, prohibits horizontal slicing, and carries GREEN strategies + per-language idioms and the REFACTOR smell catalog in its `references/`. |
 | `tdd-agent` | Operating mode: AI drives all phases autonomously with strict guardrails and verification at each step. Defers to `tdd` for the loop. |
-| `tdd-pair` | Operating mode: collaborative TDD with role-based pairing — Ping-Pong, Navigator, and Teaching. Defers to `tdd` for the loop. |
 | `evaluate-tests` | Audits existing tests in two modes — test-file quality (prioritized rewrite list) and TDD compliance (commit-history scorecard + anti-patterns). |
 
 ### Enterprise .NET Suite
@@ -204,12 +206,9 @@ See `.matt-pocock-attribution.yml` at the repo root for the full provenance mani
 
 ### AI/ML Bridge Suite
 
-| Skill | Description |
-|-------|-------------|
-| `rag-pipeline-python` | RAG scaffold with Ollama/cloud embeddings, chunking strategies, and vector stores (Python/LangChain/LlamaIndex). |
-| `rag-pipeline-dotnet` | RAG with Microsoft Semantic Kernel, vector store options, and embedding models (.NET). |
-| `mcp-server-scaffold` | Custom MCP server creation with FastMCP (Python), testing patterns, and protocol reference. |
-| `ollama-model-workflow` | Local LLM management — Modelfile config, quantization, benchmarking. |
+> Moved to the companion **[edge-ai-robotics-automation-toolkit](../edge-ai-robotics-automation-toolkit)** —
+> RAG pipelines (`rag-pipeline-python`, `rag-pipeline-dotnet`), `mcp-server-scaffold`, and
+> `ollama-model-workflow` now ship there alongside the edge-AI, robotics, and automation skills.
 
 ### QRSPI Workflow Suite
 
@@ -295,7 +294,6 @@ Vendored copies of workflow-primitive skills from [Matt Pocock's skills repo](ht
 |-------|-------------|---------------|
 | `grill-me` | Relentless plan/design interview — one question at a time with recommended answers. | `skills/productivity/grill-me/SKILL.md` |
 | `zoom-out` | Map callers, dependents, and module relationships before continuing. | `skills/engineering/zoom-out/SKILL.md` |
-| `caveman` | Terse, keyword-driven communication mode — cuts token usage ~75%. Persistent once triggered. | `skills/productivity/caveman/SKILL.md` |
 | `improve-codebase-architecture` | Deep module refactoring using APOSD vocabulary — eliminates shallow modules, information leakage, naming mismatches. | `skills/engineering/improve-codebase-architecture/SKILL.md` |
 | `to-prd` | Converts context into a structured PRD with goals, user stories, and binary acceptance criteria. | `skills/engineering/to-prd/SKILL.md` |
 | `to-issues` | Converts a PRD into atomic GitHub Issues ordered by dependency. | `skills/engineering/to-issues/SKILL.md` |
@@ -319,23 +317,6 @@ Vendored copies of workflow-primitive skills from [Matt Pocock's skills repo](ht
 | `technical-debt-assessor` | Debt quantification — deliberate vs accidental, cost-to-fix vs cost-to-carry, business case building. |
 | `architecture-journal` | Lightweight ADR templates with retrospective prompts at 30/90/180 days. |
 | `spec-coach` | Interactive spec design coach — vision, PRD structure, INVEST story quality, specification by example, three-tier guardrails. |
-
-### Edge/IoT/Robotics Suite
-
-| Skill | Description |
-|-------|-------------|
-| `edge-cv-pipeline` | OpenCV + TFLite computer vision pipeline for Jetson and Raspberry Pi with model conversion and profiling. |
-| `jetson-deploy` | Jetson Orin Nano deployment with TensorRT optimization, containerization, and power management. |
-| `sensor-integration` | Sensor data pipeline with I2C, SPI, UART, and GPIO. Calibration and anomaly detection. |
-| `picar-x-behavior` | Composable robot behaviors for SunFounder Picar-X — subsumption architecture and behavior trees. |
-
-### Agent Support Suite (Professional)
-
-| Skill | Description | Used By |
-|-------|-------------|---------|
-| `model-optimization` | Quantization workflows, TensorRT/TFLite conversion, accuracy/latency benchmarking | model-optimization-agent |
-| `anomaly-detection` | Statistical anomaly detection, drift algorithms, alert/log/calibrate decision trees | sensor-anomaly-agent |
-| `fleet-management` | Rolling deployment strategies, multi-device coordination, rollback triggers | fleet-deployment-agent |
 
 ---
 
@@ -400,14 +381,6 @@ Autonomous agents that make decisions and take actions independently. Each exist
 > QRSPI workflow agents (`qrspi-orchestrator`, `qrspi-implement`) and the shared read-only research subagents (`research-file-locator`, `research-code-analyzer`, `research-pattern-finder`) are spawned automatically by the QRSPI skills/commands — not invoked directly.
 >
 > QRASPI greenfield agents (`qraspi-orchestrator`, `qraspi-builder`) are spawned automatically by the QRASPI skills/commands — the orchestrator drives the no-edit Questions/Research/Architecture/Plan/Graduate phases, the builder the edit Skeleton/Implement phases. They reuse the same `research-*` subagents.
-
-## claude/agents/professional/ and opencode/agents/professional/ (3 agents)
-
-| Agent | Description | Skills |
-|-------|-------------|--------|
-| `model-optimization-agent` | Autonomous model optimization — quantization, format conversion, benchmarking for edge. | model-optimization |
-| `sensor-anomaly-agent` | Autonomous sensor anomaly detection — statistical outliers, drift monitoring, recalibration. | anomaly-detection |
-| `fleet-deployment-agent` | Semi-autonomous fleet deployment — canary, staged rollout, health gates, rollback. | fleet-management |
 
 ---
 
@@ -482,12 +455,11 @@ The `project-templates/` directory contains per-project context files based on t
 ```
 ai-toolkit/
 ├── skills/
-│   ├── team/                   # 80 team skills (shareable, production-ready)
-│   └── professional/           # 18 professional skills (deliberate practice + edge learning)
+│   ├── team/                   # 74 team skills (shareable, production-ready)
+│   └── professional/           # 11 professional skills (deliberate practice)
 ├── claude/
 │   ├── agents/
-│   │   ├── team/               # 44 Claude Code team agents
-│   │   └── professional/       # 3 Claude Code professional agents
+│   │   └── team/               # 44 Claude Code team agents
 │   ├── commands/               # 22 slash commands with shell injection
 │   └── global/                 # Global config → ~/.claude/
 │       ├── CLAUDE.md           # Global instructions (every project)
@@ -495,8 +467,7 @@ ai-toolkit/
 │       └── settings.local.json # Permissions: bash allow/deny, read allow/deny
 ├── opencode/
 │   ├── agents/
-│   │   ├── team/               # 44 OpenCode team agents
-│   │   └── professional/       # 3 OpenCode professional agents
+│   │   └── team/               # 44 OpenCode team agents
 │   ├── commands/               # 22 slash commands with agent routing
 │   └── global/                 # Global config → ~/.config/opencode/
 │       ├── AGENTS.md           # Global instructions (every project)

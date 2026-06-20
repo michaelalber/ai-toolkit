@@ -219,7 +219,6 @@ This skill is an *operating mode* of the canonical `tdd` loop, not a replacement
 
 - **`tdd`** — The canonical inner loop this mode drives. Defines the two critical test properties (behavioral, structure-insensitive), the per-cycle self-check, the GREEN strategies (Fake It / Obvious / Triangulation, with per-language idioms in its `references/`), and the REFACTOR smell catalog (`references/code-smells.md`, `references/refactoring-catalog.md`). Load those on demand during GREEN/REFACTOR.
 - **`evaluate-tests`** — Run after the session to audit test quality and TDD compliance (commit-history scorecard, anti-pattern detection).
-- **`tdd-pair`** — The alternative mode; use when a human partner drives and the AI navigates.
 
 ## Error Recovery
 
