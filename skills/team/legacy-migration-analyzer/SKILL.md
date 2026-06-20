@@ -1,7 +1,10 @@
 ---
 name: legacy-migration-analyzer
 audience: team
-description: Analyze .NET Framework to .NET 10 migration paths. Use when assessing legacy codebases for modernization, identifying breaking changes, and planning incremental migration strategies. Also triggers on "upgrade framework", "migrate to .net 10", "framework to core", "legacy .net", ".net framework upgrade", "modernize .net", "upgrade .net framework project", "convert csproj to sdk-style".
+description: >
+  Analyze .NET Framework to .NET 10 migration paths. Use when assessing legacy codebases for
+  modernization, identifying breaking changes, and planning incremental migration strategies.
+  Also
 ---
 
 # Legacy Migration Analyzer

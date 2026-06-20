@@ -1,7 +1,13 @@
 ---
 name: php-migration-manager
 audience: team
-description: Manages the full Laravel database migration lifecycle with safety checks and rollback planning. PHP analog of ef-migration-manager, alembic-migration-manager, and sqlx-migration-manager. Covers creating, reviewing, applying, and rolling back migrations; enforces a reversible down() method, expand-contract for zero-downtime changes, and guards against destructive operations in production. Use when creating or reviewing Laravel migrations, planning a schema change, applying or rolling back migrations, or designing a zero-downtime migration. Triggers on phrases like "laravel migration", "php database migration", "create migration laravel", "migrate rollback", "laravel schema change", "artisan migrate", "zero downtime migration laravel".
+description: >
+  Manages the full Laravel database migration lifecycle with safety checks and rollback planning
+  (PHP analog of ef-/alembic-/sqlx-migration-manager). Covers create, review, apply, and
+  rollback; enforces a reversible down(), expand-contract for zero-downtime changes, and guards
+  against destructive operations in production. Use when creating or reviewing Laravel
+  migrations, planning a schema change, applying/rolling back, or designing a zero-downtime
+  migration.
 ---
 
 # PHP Migration Manager (Laravel)

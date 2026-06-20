@@ -2,12 +2,12 @@
 name: qraspi-implement
 audience: team
 description: >
-  QRASPI Implement phase -- grows the green walking skeleton ONE approved slice at a time with strict
-  Red-Green-Refactor per phase, keeping the skeleton's fitness gates green, and writes a per-slice
-  proof log. Use for "/qraspi-implement <project>", "implement the slice on the skeleton", "build the
-  approved plan-{slice} with RGR". Do NOT use to implement a feature in an EXISTING codebase (use
-  qrspi-implement). Do NOT use for the deprecated RPI workflow (use /rpi-implement) or a bare TDD
-  cycle with no plan (use tdd); this phase requires plan-{slice}.md status: approved and a green skeleton.
+  QRASPI Implement phase — grows the green walking skeleton ONE approved slice at a time with
+  strict Red-Green-Refactor per phase, keeping fitness gates green, and writes a per-slice proof
+  log. Use for '/qraspi-implement <project>', 'implement the slice on the skeleton', 'build the
+  approved plan-{slice} with RGR'. Requires plan-{slice}.md status: approved and a green
+  skeleton. Not for a feature in an EXISTING codebase (qrspi-implement), the deprecated RPI
+  workflow, or a bare TDD cycle with no plan (tdd).
 ---
 
 # QRASPI Implement

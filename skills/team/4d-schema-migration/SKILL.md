@@ -2,12 +2,8 @@
 name: 4d-schema-migration
 audience: team
 description: >
-  Parses 4D application exports and generates SQL Server DDL, EF Core entities,
-  and Blazor UI guidance. Use when migrating from 4th Dimension (4D) platform to
-  .NET/SQL Server. Triggers on phrases like "migrate 4D", "4D to SQL Server",
-  "4D database conversion", "4D schema", "4th dimension", "convert 4D",
-  "4D application", "4D database", "4D to .NET", "4D to EF Core",
-  "4D forms to Blazor".
+  Parses 4D application exports and generates SQL Server DDL, EF Core entities, and Blazor UI
+  guidance. Use when migrating from 4th Dimension (4D) platform to .NET/SQL Server.
 references:
   - references/4d-to-sqlserver-typemap.md
   - references/4d-to-efcore-typemap.md

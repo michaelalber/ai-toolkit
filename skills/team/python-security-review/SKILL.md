@@ -2,14 +2,11 @@
 name: python-security-review
 audience: team
 description: >
-  OWASP-based security review of Python applications (FastAPI, Django, Flask). Detects the framework and
-  entry points, scans against the OWASP Top 10 (2025) mapped to Python patterns (injection, insecure
-  deserialization, SSTI, secrets, auth), runs bandit and pip-audit for evidence, and produces a
-  manager-friendly executive summary plus a graded technical findings table. Use to audit Python code for
-  vulnerabilities. Triggers on "python security review", "audit python code", "check python vulnerabilities",
-  "OWASP python", "bandit scan", "pip-audit", "fastapi security", "django security", "flask security".
-  For federal / gov / DOE / NIST / FIPS / CUI context, run security-review-federal after this base review.
-  Do NOT use to grade architecture/structure — use python-architecture-checklist.
+  OWASP-based security review of Python apps (FastAPI, Django, Flask). Detects framework and
+  entry points, scans the OWASP Top 10 (2025) mapped to Python patterns (injection, insecure
+  deserialization, SSTI, secrets, auth), runs bandit and pip-audit for evidence, and emits an
+  exec summary plus graded findings. Use to audit Python for vulnerabilities. Not for
+  architecture grading (python-architecture-checklist).
 ---
 
 # Python Security Review

@@ -2,18 +2,12 @@
 name: dotnet-controller-api-scaffolder
 audience: team
 description: >
-  Scaffolds controller-based ASP.NET Core Web API endpoints ([ApiController] /
-  ControllerBase) that CONFORM to an existing codebase's conventions — base
-  controller, validation approach (DataAnnotations or FluentValidation), service
-  layer vs. mediator, response envelope, routing, versioning, and DI registration.
-  Detect-and-match, never impose. Use when adding controllers or actions to an
-  existing controller-based Web API, or joining a team that ships controller APIs.
-  Triggers on "add controller", "scaffold controller", "web api controller",
-  "new api controller", "controller endpoint", "[ApiController]", "ControllerBase",
-  "add action to controller", "controller-based api".
-  Do NOT use for greenfield Minimal APIs — use minimal-api-scaffolder. Do NOT use
-  to introduce CQRS/vertical-slice into a layered project — use dotnet-vertical-slice
-  only when the team has chosen that style.
+  Scaffolds controller-based ASP.NET Core Web API endpoints ([ApiController]/ControllerBase)
+  that CONFORM to an existing codebase — base controller, validation (DataAnnotations or
+  FluentValidation), service layer vs. mediator, response envelope, routing, versioning, DI.
+  Detect-and-match, never impose. Use when adding controllers/actions to an existing
+  controller-based API. Not for greenfield Minimal APIs (minimal-api-scaffolder); use
+  dotnet-vertical-slice only when the team has chosen CQRS/vertical-slice.
 ---
 
 # ASP.NET Core Controller API Scaffolder

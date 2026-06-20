@@ -2,14 +2,11 @@
 name: dotnet-security-review
 audience: team
 description: >
-  OWASP-based security review of .NET / .NET Framework applications with Telerik UI specialization.
-  Detects the framework and entry points, scans against the OWASP Top 10 (2025) mapped to .NET patterns
-  (deserialization, injection, auth, Telerik, crypto, secrets), and produces a manager-friendly executive
-  summary plus a graded technical findings table. Use to audit .NET code for vulnerabilities. Triggers on
-  "dotnet security review", "OWASP audit", "check for vulnerabilities", "Telerik security", ".net security
-  posture", "security scan", "vulnerability assessment". For federal / gov / DOE / NIST / FIPS / CUI context,
-  run security-review-federal after this base review.
-  Do NOT use to grade architecture/structure — use dotnet-architecture-checklist.
+  OWASP-based security review of .NET/.NET Framework apps with Telerik UI specialization.
+  Detects framework and entry points, scans the OWASP Top 10 (2025) mapped to .NET patterns
+  (deserialization, injection, auth, Telerik, crypto, secrets), and emits an exec summary plus
+  graded findings. Use to audit .NET for vulnerabilities. Not for architecture grading
+  (dotnet-architecture-checklist).
 ---
 
 # .NET Security Review

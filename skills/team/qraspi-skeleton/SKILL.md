@@ -2,13 +2,12 @@
 name: qraspi-skeleton
 audience: team
 description: >
-  QRASPI Skeleton phase -- stand up a RUNNABLE walking skeleton for a NEW system: scaffold the repo
-  from the accepted ADRs, walk one vertical slice end-to-end through every layer, land the specified
-  fitness functions as CI gates, and prove it with a real CI run (exit 0). Use for "/qraspi-skeleton
-  <project>", "scaffold the walking skeleton for X", "stand up V0 of X with CI", "make the
-  architecture executable". The exit gate is CI green, not a claim. Do NOT use to scaffold a single
-  feature slice in an existing repo (use the *-feature-slice scaffolders). Do NOT use for QRSPI (an
-  existing codebase). Do NOT use for the deprecated RPI workflow.
+  QRASPI Skeleton phase — stands up a RUNNABLE walking skeleton for a NEW system: scaffolds the
+  repo from accepted ADRs, walks one vertical slice end-to-end through every layer, lands the
+  specified fitness functions as CI gates, and proves it with a real CI run (exit 0). Use for
+  '/qraspi-skeleton <project>', 'scaffold the walking skeleton for X', 'stand up V0 of X with
+  CI'. Exit gate is CI green, not a claim. Not for a single feature slice in an existing repo
+  (*-feature-slice scaffolders), QRSPI (existing codebase), or the deprecated RPI workflow.
 ---
 
 # QRASPI Skeleton

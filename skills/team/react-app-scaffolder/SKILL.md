@@ -1,7 +1,13 @@
 ---
 name: react-app-scaffolder
 audience: team
-description: Scaffolds a production-ready React + TypeScript application skeleton with Vite, a router, strict TypeScript, Vitest + React Testing Library, ESLint (hooks + jsx-a11y), Prettier, environment handling, an error boundary, and a feature-folder layout. React analog of an app/project scaffolder. Use when starting a new React app, bootstrapping a Vite + React + TypeScript project, setting up the testing/lint toolchain, or establishing the base folder structure and app shell. Triggers on phrases like "scaffold react app", "new react project", "bootstrap react typescript", "create vite react app", "set up react project", "react app skeleton", "react project structure".
+description: >
+  Scaffolds a production-ready React + TypeScript application skeleton with Vite, a router,
+  strict TypeScript, Vitest + React Testing Library, ESLint (hooks + jsx-a11y), Prettier,
+  environment handling, an error boundary, and a feature-folder layout. React analog of an
+  app/project scaffolder. Use when starting a new React app, bootstrapping a Vite + React +
+  TypeScript project, setting up the testing/lint toolchain, or establishing the base folder
+  structure and app shell.
 ---
 
 # React App Scaffolder

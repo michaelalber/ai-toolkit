@@ -1,7 +1,12 @@
 ---
 name: python-feature-slice
 audience: team
-description: Scaffolds feature-based Python architecture using FastAPI routers, Pydantic v2 models, and a service layer. Python analog of dotnet-vertical-slice — no mediator library, uses FastAPI Depends() for dependency injection and structural CQRS conventions. Use when creating feature-based Python projects, adding FastAPI features, scaffolding service layers, or organizing Python code by feature. Triggers on phrases like "scaffold python feature", "create python slice", "fastapi feature folder", "python vertical slice", "add python endpoint", "python feature architecture", "python service layer".
+description: >
+  Scaffolds feature-based Python architecture using FastAPI routers, Pydantic v2 models, and a
+  service layer. Python analog of dotnet-vertical-slice — no mediator library, uses FastAPI
+  Depends() for dependency injection and structural CQRS conventions. Use when creating
+  feature-based Python projects, adding FastAPI features, scaffolding service layers, or
+  organizing Python code by feature.
 ---
 
 # Python Feature Slice Architecture

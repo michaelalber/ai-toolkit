@@ -2,11 +2,12 @@
 name: jira-review
 audience: team
 description: >
-  Automatically review Jira issues for implementation readiness. Detects complexity
-  signals, parses acceptance criteria, and recommends clarification or planning mode
-  when needed. Use when asked to review a Jira issue for readiness, check if a ticket has enough detail to implement, assess acceptance criteria completeness, or evaluate a story before sprint planning. Do NOT use when implementation is already complete — this skill
-  reviews for readiness, not post-implementation accuracy; Do NOT use when the
-  issue tracker is not Jira.
+  Reviews Jira issues for implementation readiness. Detects complexity signals, parses
+  acceptance criteria, and recommends clarification or planning mode when needed. Use when
+  reviewing a Jira issue for readiness, checking whether a ticket has enough detail to
+  implement, assessing acceptance-criteria completeness, or evaluating a story before sprint
+  planning. Not for completed implementations (reviews readiness, not accuracy), or non-Jira
+  trackers.
 ---
 
 # Jira Issue Review

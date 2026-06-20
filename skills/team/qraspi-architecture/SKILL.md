@@ -2,14 +2,12 @@
 name: qraspi-architecture
 audience: team
 description: >
-  QRASPI Architecture phase -- lock the path-dependent decisions for a NEW system as MADR ADRs
-  with alternatives, draw the C4 Context + Container in Mermaid, and specify the required fitness
-  functions. Use for "/qraspi-architecture <project>", "write the ADRs for new X", "what
-  architecture for new X", "C4 for new system X", "lock the stack decisions for X". This is where
-  the picks happen, behind ADRs the human aligns on. Do NOT use to review or critique an EXISTING
-  system's architecture (use architecture-review). Do NOT use for retrospective ADR journaling
-  (use architecture-journal). Do NOT use to design a feature in an existing codebase (use
-  qrspi-spec). Do NOT use for the deprecated RPI workflow.
+  QRASPI Architecture phase — locks the path-dependent decisions for a NEW system as MADR ADRs
+  (with alternatives), draws the C4 Context + Container in Mermaid, and specifies required
+  fitness functions. Use for '/qraspi-architecture <project>', 'write the ADRs for new X', 'what
+  architecture for new X', 'lock the stack decisions for X'. Not for critiquing an EXISTING
+  system (architecture-review), retrospective ADR journaling (architecture-journal), a feature
+  in an existing codebase (qrspi-spec), or the deprecated RPI workflow.
 ---
 
 # QRASPI Architecture

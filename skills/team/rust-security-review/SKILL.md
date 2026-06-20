@@ -2,14 +2,11 @@
 name: rust-security-review
 audience: team
 description: >
-  OWASP-based security review of Rust applications with a memory-safety `unsafe` audit. Detects the crates,
-  async runtime, and entry points, scans against the OWASP Top 10 (2025) mapped to Rust patterns (injection,
-  unsafe-block memory safety, panic/DoS, deserialization, crypto, secrets), runs cargo-audit and cargo-deny
-  for evidence, and produces a manager-friendly executive summary plus a graded technical findings table.
-  Use to audit Rust code for vulnerabilities. Triggers on "rust security review", "audit rust vulnerabilities",
-  "cargo audit", "unsafe audit rust", "OWASP rust", "rust security scan". For federal / gov / DOE / NIST /
-  FIPS / CUI context, run security-review-federal after this base review.
-  Do NOT use to grade architecture/structure — use rust-architecture-checklist.
+  OWASP-based security review of Rust apps with a memory-safety `unsafe` audit. Detects crates,
+  async runtime, and entry points, scans the OWASP Top 10 (2025) mapped to Rust patterns
+  (injection, unsafe-block memory safety, panic/DoS, deserialization, crypto, secrets), runs
+  cargo-audit and cargo-deny for evidence, and emits an exec summary plus graded findings. Use
+  to audit Rust for vulnerabilities. Not for architecture grading (rust-architecture-checklist).
 ---
 
 # Rust Security Review

@@ -2,12 +2,12 @@
 name: qraspi-graduate
 audience: team
 description: >
-  QRASPI Graduation -- the terminal handoff from greenfield (QRASPI) to brownfield (QRSPI). Once the
-  walking skeleton is green and V0/V1 is shipped, capture the repo + accepted ADRs + skeleton state +
-  fitness functions + stack into graduation.md and hand new feature work to QRSPI. Use for
-  "/qraspi-graduate <project>", "graduate this to QRSPI", "the V1 is done, hand off to the feature
-  workflow". Do NOT fire mid-workflow or on a generic "we're done" / "ship it" -- this is the END of
-  QRASPI for a system. Do NOT use for the deprecated RPI workflow.
+  QRASPI Graduation — the terminal handoff from greenfield (QRASPI) to brownfield (QRSPI). Once
+  the walking skeleton is green and V0/V1 ships, captures repo + accepted ADRs + skeleton state
+  + fitness functions + stack into graduation.md and hands new feature work to QRSPI. Use for
+  '/qraspi-graduate <project>', 'graduate this to QRSPI', 'V1 is done, hand off to the feature
+  workflow'. Do not fire mid-workflow or on a generic 'we are done'/'ship it' — this is the END
+  of QRASPI. Not for the deprecated RPI workflow.
 ---
 
 # QRASPI Graduate

@@ -1,7 +1,12 @@
 ---
 name: react-modernization-analyzer
 audience: team
-description: Analyzes legacy React codebases and produces actionable modernization plans. Primary migration paths include class components to function components + hooks, Create React App to Vite, React 16/17 to 18 to 19, JavaScript to TypeScript, Enzyme to React Testing Library, legacy Redux to Redux Toolkit / Zustand / Context, and deprecated lifecycle/API removal. Does NOT perform the migration — assesses, quantifies risk, and plans. Triggers on phrases like "modernize react", "class to hooks", "upgrade react", "migrate CRA to vite", "react legacy migration", "react 17 to 18", "react js to typescript", "react technical debt", "enzyme to RTL".
+description: >
+  Analyzes legacy React codebases and produces actionable modernization plans. Primary migration
+  paths include class components to function components + hooks, Create React App to Vite, React
+  16/17 to 18 to 19, JavaScript to TypeScript, Enzyme to React Testing Library, legacy Redux to
+  Redux Toolkit / Zustand / Context, and deprecated lifecycle/API removal. Does NOT perform the
+  migration — assesses, quantifies risk, and plans.
 ---
 
 # React Modernization Analyzer

@@ -2,13 +2,12 @@
 name: security-review-federal
 audience: team
 description: >
-  Federal / government security overlay applied ON TOP OF a base language security review
-  (dotnet/python/php/rust/react). Language-agnostic: adds NIST SP 800-53 control mapping, FIPS 140-2/3
-  cryptographic compliance (with a per-language crypto table), CUI handling, EO 14028 supply-chain
-  requirements, and DOE Order 205.1B, and emits POA&M-ready findings with FIPS 199 impact levels.
-  Use for federal/DOE/DOD/national-laboratory systems. Triggers on "federal security review",
-  "NIST compliance", "NIST 800-53", "FISMA", "CUI", "FIPS audit", "DOE security", "POA&M", "ATO review".
-  Do NOT use alone — run the matching <lang>-security-review FIRST; this overlay maps and extends it.
+  Federal/government security overlay applied ON TOP OF a base language security review
+  (dotnet/python/php/rust/react). Language-agnostic: adds NIST SP 800-53 control mapping, FIPS
+  140-2/3 crypto compliance (per-language crypto table), CUI handling, EO 14028 supply-chain
+  requirements, and DOE Order 205.1B; emits POA&M-ready findings with FIPS 199 impact levels.
+  Use for federal/DOE/DOD/national-lab systems. Not standalone — run the matching
+  <lang>-security-review FIRST; this overlay maps and extends it.
 ---
 
 # Security Review — Federal Overlay

@@ -1,7 +1,13 @@
 ---
 name: php-feature-slice
 audience: team
-description: Scaffolds feature-based PHP / Laravel architecture using feature folders, thin controllers, Form Requests, a service/action layer, and API Resources. PHP analog of dotnet-vertical-slice and python-feature-slice — no mediator library; uses the Laravel service container for dependency injection and structural CQRS conventions. Use when creating feature-based PHP projects, adding Laravel features, scaffolding service layers, or organizing PHP code by feature rather than by technical layer. Triggers on phrases like "scaffold php feature", "create laravel slice", "laravel feature folder", "php vertical slice", "add laravel endpoint", "php feature architecture", "laravel service layer".
+description: >
+  Scaffolds feature-based PHP / Laravel architecture using feature folders, thin controllers,
+  Form Requests, a service/action layer, and API Resources. PHP analog of dotnet-vertical-slice
+  and python-feature-slice — no mediator library; uses the Laravel service container for
+  dependency injection and structural CQRS conventions. Use when creating feature-based PHP
+  projects, adding Laravel features, scaffolding service layers, or organizing PHP code by
+  feature rather than by technical layer.
 ---
 
 # PHP Feature Slice Architecture

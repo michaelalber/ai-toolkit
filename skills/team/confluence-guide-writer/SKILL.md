@@ -2,11 +2,11 @@
 name: confluence-guide-writer
 audience: team
 description: >
-  Reads Confluence spec pages and/or source code and generates well-formatted
-  tutorial and user guide content for a Confluence space's user guide section.
-  Targets client/end-user/stakeholder audiences. Use when writing Confluence user guides, generating tutorial or how-to pages for clients or end users, or producing stakeholder documentation from Confluence spec pages or source code. Trigger phrases: "write user guide", "generate confluence page", "create tutorial", "confluence docs for clients".
-  Do NOT use when the goal is to detect or reconcile stale pages — use
-  doc-sync instead.
+  Reads Confluence spec pages and/or source code and generates well-formatted tutorial and
+  user-guide content for a Confluence space's user-guide section, targeting
+  client/end-user/stakeholder audiences. Use when writing Confluence user guides, generating
+  tutorial or how-to pages for clients/end users, or producing stakeholder docs from spec pages
+  or source. Not for detecting or reconciling stale pages — use doc-sync.
 ---
 
 # Confluence User Guide Writer

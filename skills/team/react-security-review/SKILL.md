@@ -2,15 +2,11 @@
 name: react-security-review
 audience: team
 description: >
-  OWASP-based security review of React / TypeScript front-end applications. Detects the framework
-  (Vite/CRA/Next), entry points, and data flows, scans against the OWASP Top 10 (2025) mapped to React
-  client-side patterns (XSS via raw HTML, URL/protocol injection, secrets in the bundle, insecure token
-  storage, dependency CVEs, missing CSP, open redirects), and produces a manager-friendly executive
-  summary plus a graded technical findings table. Use to audit React code for vulnerabilities.
-  Triggers on "react security review", "frontend security audit", "audit react for vulnerabilities",
-  "owasp react", "react xss", "react security posture", "npm audit review".
-  For federal / gov / DOE / NIST / FIPS / CUI context, run security-review-federal after this base review.
-  Do NOT use to grade architecture/structure — use react-architecture-checklist.
+  OWASP-based security review of React/TypeScript front-ends. Detects framework (Vite/CRA/Next),
+  entry points, and data flows; scans the OWASP Top 10 (2025) mapped to React client-side risks
+  (raw-HTML XSS, URL/protocol injection, bundled secrets, insecure token storage, dependency
+  CVEs, missing CSP, open redirects); emits an exec summary plus graded findings. Use to audit
+  React for vulnerabilities. Not for architecture grading (react-architecture-checklist).
 ---
 
 # React Security Review

@@ -2,14 +2,11 @@
 name: python-architecture-checklist
 audience: team
 description: >
-  Checklist executor for Python 3 architecture reviews. Detects the Python version, framework
-  (FastAPI/Django/Flask), and package layout, then runs a systematic checklist covering clean-architecture
-  boundaries, type-safety discipline, complexity, dependency direction, and config/secrets hygiene —
-  producing a graded report with file:line evidence. Use to review or grade an existing Python codebase.
-  Triggers on "review this python project", "python architecture checklist", "audit python code",
-  "evaluate python codebase", "python code review", "grade this python architecture", "check python patterns".
-  Do NOT use for a Socratic design critique — use architecture-review. Do NOT use for a security audit —
-  use python-security-review. Do NOT use to write new code test-first — use tdd.
+  Grades an existing Python codebase. Detects Python version, framework (FastAPI/Django/Flask),
+  and package layout, then checks clean-architecture boundaries, type-safety discipline,
+  complexity, dependency direction, and config/secrets hygiene with file:line evidence. Use to
+  review or grade a Python codebase. Not for Socratic critique (architecture-review), security
+  audits (python-security-review), or new test-first code (tdd).
 ---
 
 # Python Architecture Checklist

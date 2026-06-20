@@ -2,13 +2,11 @@
 name: sqlx-migration-manager
 audience: team
 description: >
-  SQLx migration lifecycle management with safety checks and rollback planning.
-  Manages plain SQL migration files, compile-time query verification via sqlx prepare,
-  and the offline query cache. Use when creating, reviewing, or applying database
-  migrations in Rust/SQLx projects, managing sqlx migrate run/revert, regenerating
-  the sqlx offline cache after schema changes, or planning zero-downtime migrations.
-  Triggers on: "sqlx migration", "rust database migration", "create migration rust",
-  "sqlx migrate", "sqlx schema change", "sqlx prepare", "sqlx offline cache".
+  SQLx migration lifecycle management with safety checks and rollback planning. Manages plain
+  SQL migration files, compile-time query verification via sqlx prepare, and the offline query
+  cache. Use when creating, reviewing, or applying database migrations in Rust/SQLx projects,
+  managing sqlx migrate run/revert, regenerating the sqlx offline cache after schema changes, or
+  planning zero-downtime migrations.
 ---
 
 # SQLx Migration Manager

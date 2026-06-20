@@ -2,14 +2,11 @@
 name: rust-architecture-checklist
 audience: team
 description: >
-  Checklist executor for Rust architecture reviews. Detects the Rust edition, async runtime, and
-  workspace structure, then runs a systematic checklist covering ownership discipline, trait coherence,
-  error-handling conventions, unsafe-block justification, and crate-boundary hygiene — producing a graded
-  report with file:line evidence. Use to review or grade an existing Rust codebase.
-  Triggers on "review rust project", "rust architecture checklist", "audit rust code", "evaluate rust
-  codebase", "rust code review", "clippy review", "grade this rust architecture", "rust ownership review".
-  Do NOT use for a Socratic design critique — use architecture-review. Do NOT use for a security audit —
-  use rust-security-review. Do NOT use to write new code test-first — use tdd.
+  Grades an existing Rust codebase. Detects Rust edition, async runtime, and workspace
+  structure, then checks ownership discipline, trait coherence, error-handling conventions,
+  unsafe-block justification, and crate-boundary hygiene with file:line evidence. Use to review
+  or grade a Rust codebase. Not for Socratic critique (architecture-review), security audits
+  (rust-security-review), or new test-first code (tdd).
 ---
 
 # Rust Architecture Checklist

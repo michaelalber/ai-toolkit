@@ -1,7 +1,13 @@
 ---
 name: php-package-scaffold
 audience: team
-description: Scaffolds production-ready Composer packages for Packagist with a complete composer.json, PSR-4 autoloading, a Pest/PHPUnit test harness, GitHub Actions CI (PHP version matrix, PHPStan, PHP-CS-Fixer), and a semver tag-based publish workflow. PHP analog of nuget-package-scaffold, pypi-package-scaffold, and cargo-package-scaffold. Use when creating a reusable PHP library, configuring composer.json metadata, setting up Composer/Packagist publishing, or building a PHP package CI pipeline. Triggers on phrases like "scaffold php package", "create composer package", "publish to packagist", "composer.json setup", "php library scaffold", "php package metadata", "packagist publish workflow".
+description: >
+  Scaffolds production-ready Composer packages for Packagist with a complete composer.json,
+  PSR-4 autoloading, a Pest/PHPUnit test harness, GitHub Actions CI (PHP version matrix,
+  PHPStan, PHP-CS-Fixer), and a semver tag-based publish workflow. PHP analog of
+  nuget-package-scaffold, pypi-package-scaffold, and cargo-package-scaffold. Use when creating a
+  reusable PHP library, configuring composer.json metadata, setting up Composer/Packagist
+  publishing, or building a PHP package CI pipeline.
 ---
 
 # PHP Package Scaffold (Composer / Packagist)

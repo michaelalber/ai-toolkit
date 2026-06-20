@@ -1,7 +1,12 @@
 ---
 name: php-api-scaffolder
 audience: team
-description: Scaffolds Laravel API endpoints with API Resource responses, Form Request validation, Sanctum authentication, throttle-based rate limiting, URI versioning, OpenAPI documentation, and health checks. PHP analog of fastapi-scaffolder, minimal-api-scaffolder, and axum-scaffolder. Use when creating REST APIs in Laravel, adding API endpoints, setting up API routing and middleware, or configuring API infrastructure. Triggers on phrases like "scaffold laravel api", "create laravel endpoint", "laravel api resource", "add api route php", "laravel rest api", "php api versioning", "laravel sanctum endpoint", "laravel openapi".
+description: >
+  Scaffolds Laravel API endpoints with API Resource responses, Form Request validation, Sanctum
+  authentication, throttle-based rate limiting, URI versioning, OpenAPI documentation, and
+  health checks. PHP analog of fastapi-scaffolder, minimal-api-scaffolder, and axum-scaffolder.
+  Use when creating REST APIs in Laravel, adding API endpoints, setting up API routing and
+  middleware, or configuring API infrastructure.
 ---
 
 # PHP API Scaffolder (Laravel)

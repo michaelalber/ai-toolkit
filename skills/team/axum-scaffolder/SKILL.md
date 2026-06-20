@@ -2,16 +2,11 @@
 name: axum-scaffolder
 audience: team
 description: >
-  Scaffolds Axum HTTP endpoints with OpenAPI documentation (utoipa), Tower middleware,
-  JWT authentication, rate limiting, CORS, health checks, and versioning. Axum-first
-  approach: typed extractors, typed responses, and compile-time route verification.
-  Use when creating Rust REST APIs, scaffolding Axum endpoints, setting up Axum projects,
-  configuring Tower middleware, adding OpenAPI documentation to Axum, or implementing
-  JWT authentication in Axum.
-  Triggers on: "scaffold axum", "create axum endpoint", "axum router", "add axum route",
-  "rust rest api", "axum api", "axum openapi", "axum jwt", "axum middleware".
-  Do NOT use when the existing codebase uses Actix-web — scaffolding Axum into
-  an Actix project requires manual integration not covered here.
+  Scaffolds Axum HTTP endpoints with OpenAPI (utoipa), Tower middleware, JWT auth, rate
+  limiting, CORS, health checks, and versioning. Axum-first: typed extractors, typed responses,
+  compile-time route verification. Use when creating Rust REST APIs, scaffolding Axum
+  endpoints/projects, configuring Tower middleware, or adding OpenAPI/JWT to Axum. Not when the
+  codebase uses Actix-web — Axum-into-Actix needs manual integration not covered here.
 ---
 
 # Axum Scaffolder

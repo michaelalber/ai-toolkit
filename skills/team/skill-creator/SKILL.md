@@ -2,13 +2,10 @@
 name: skill-creator
 audience: team
 description: >
-  Create, modify, and audit AI agent skills in this toolkit. Use when scaffolding
-  a new SKILL.md from the 5-section lean layout, revising an existing skill to fix
-  structural defects, or scoring a skill against the 10-dimension rubric. Trigger
-  phrases: "create skill", "new skill", "scaffold skill", "write skill", "revise
-  skill", "update skill", "score skill", "audit skill quality".
-  Do NOT use when the goal is to run a skill (invoke the skill directly); do NOT
-  use when the goal is to create an agent definition (use AGENTS.md conventions).
+  Create, modify, and audit AI agent skills in this toolkit. Use when scaffolding a new SKILL.md
+  from the 5-section lean layout, revising an existing skill to fix structural defects, or
+  scoring a skill against the 10-dimension rubric. Not for running a skill (invoke it directly)
+  or creating an agent definition (use AGENTS.md conventions).
 ---
 
 # Skill Creator

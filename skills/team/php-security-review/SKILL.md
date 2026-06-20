@@ -2,14 +2,12 @@
 name: php-security-review
 audience: team
 description: >
-  OWASP-based security review of PHP / Laravel applications. Detects the framework and entry points,
-  scans against the OWASP Top 10 (2025) mapped to PHP/Laravel patterns (mass-assignment, query injection,
-  Blade XSS, auth/session, file uploads, secrets), and produces a manager-friendly executive summary plus
-  a graded technical findings table. Use to audit PHP code for vulnerabilities.
-  Triggers on "php security review", "laravel security audit", "audit php for vulnerabilities", "owasp php",
-  "php security posture", "check php vulnerabilities", "composer audit".
-  For federal / gov / DOE / NIST / FIPS / CUI context, run security-review-federal after this base review.
-  Do NOT use to grade architecture/structure — use php-architecture-checklist.
+  OWASP-based security review of PHP / Laravel applications. Detects the framework and entry
+  points, scans against the OWASP Top 10 (2025) mapped to PHP/Laravel patterns (mass-assignment,
+  query injection, Blade XSS, auth/session, file uploads, secrets), and produces a
+  manager-friendly executive summary plus a graded technical findings table. Use to audit PHP
+  code for vulnerabilities. Do NOT use to grade architecture/structure — use
+  php-architecture-checklist.
 ---
 
 # PHP Security Review

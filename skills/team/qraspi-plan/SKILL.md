@@ -2,12 +2,12 @@
 name: qraspi-plan
 audience: team
 description: >
-  QRASPI Plan phase -- converts the next slice from the skeleton's backlog into a mechanically
-  executable, vertically-sliced plan-{slice}.md with exact file paths and per-phase verification,
-  grown on top of the green walking skeleton. Use for "/qraspi-plan <project>", "plan the first
-  slice of new X", "plan the next increment on the skeleton". Do NOT use to plan a feature in an
-  EXISTING codebase (use qrspi-plan). Do NOT use for the deprecated RPI workflow. This phase consumes
-  skeleton.md and REFUSES horizontal-layer plans.
+  QRASPI Plan phase — converts the next slice from the skeleton backlog into a mechanically
+  executable, vertically-sliced plan-{slice}.md with exact file paths and per-phase
+  verification, grown on the green walking skeleton. Use for '/qraspi-plan <project>', 'plan the
+  first slice of new X', 'plan the next increment on the skeleton'. Consumes skeleton.md and
+  REFUSES horizontal-layer plans. Not for a feature in an EXISTING codebase (qrspi-plan) or the
+  deprecated RPI workflow.
 ---
 
 # QRASPI Plan

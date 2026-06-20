@@ -1,7 +1,13 @@
 ---
 name: react-feature-slice
 audience: team
-description: Scaffolds feature-based React / TypeScript architecture using feature folders, presentational + container components, custom hooks, a typed data layer, and structural CQRS (query hooks vs mutation hooks). React analog of dotnet-vertical-slice and python-feature-slice — no DI framework; uses props/context for dependency injection and a query cache for server state. Use when creating feature-based React projects, adding React features, organizing components by feature rather than by technical type, or scaffolding a feature's data layer. Triggers on phrases like "scaffold react feature", "create react slice", "react feature folder", "react vertical slice", "add react feature", "react feature architecture", "organize react by feature".
+description: >
+  Scaffolds feature-based React / TypeScript architecture using feature folders, presentational
+  + container components, custom hooks, a typed data layer, and structural CQRS (query hooks vs
+  mutation hooks). React analog of dotnet-vertical-slice and python-feature-slice — no DI
+  framework; uses props/context for dependency injection and a query cache for server state. Use
+  when creating feature-based React projects, adding React features, organizing components by
+  feature rather than by technical type, or scaffolding a feature's data layer.
 ---
 
 # React Feature Slice Architecture

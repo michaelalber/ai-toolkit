@@ -2,12 +2,10 @@
 name: tdd
 audience: team
 description: >
-  The canonical RED-GREEN-REFACTOR inner loop. Enforces behavioral,
-  structure-insensitive tests and prohibits horizontal slicing. Use when writing
-  any new code test-first, managing TDD phase transitions, or as the inner loop
-  for qrspi-implement, qraspi-implement, or any other implementation skill. Triggers on
-  "tdd", "red green refactor", "write a failing test", "test-first", "tdd cycle".
-  Do NOT use to audit existing test suites — use evaluate-tests instead.
+  The canonical RED-GREEN-REFACTOR inner loop. Enforces behavioral, structure-insensitive tests
+  and prohibits horizontal slicing. Use when writing any new code test-first, managing TDD phase
+  transitions, or as the inner loop for qrspi-implement, qraspi-implement, or any other
+  implementation skill. Do NOT use to audit existing test suites — use evaluate-tests instead.
 ---
 
 # TDD (Red-Green-Refactor)

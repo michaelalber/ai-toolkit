@@ -2,15 +2,11 @@
 name: react-architecture-checklist
 audience: team
 description: >
-  Checklist executor for React architecture reviews. Detects the React version, bundler (Vite/CRA/Next),
-  TypeScript usage, state-management library, and router, then runs a systematic checklist covering hooks
-  discipline, component cohesion, effect correctness, render performance, state-management boundaries,
-  accessibility, and type safety — producing a graded report with file:line evidence. Use to review or
-  grade an existing React/TypeScript codebase. Triggers on "review react project", "react architecture
-  checklist", "audit react code", "evaluate react codebase", "react code review", "check hooks", "react
-  component review", "grade this react architecture".
-  Do NOT use for a Socratic design critique — use architecture-review. Do NOT use for a security audit —
-  use react-security-review. Do NOT use to write new code test-first — use tdd.
+  Grades an existing React/TypeScript codebase. Detects React version, bundler (Vite/CRA/Next),
+  TypeScript usage, state library, and router, then checks hooks discipline, component cohesion,
+  effect correctness, render performance, state boundaries, accessibility, and type safety with
+  file:line evidence. Use to review or grade a React codebase. Not for Socratic critique
+  (architecture-review), security audits (react-security-review), or new test-first code (tdd).
 ---
 
 # React Architecture Checklist

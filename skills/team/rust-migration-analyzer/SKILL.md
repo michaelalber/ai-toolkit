@@ -2,18 +2,12 @@
 name: rust-migration-analyzer
 audience: team
 description: >
-  Analyzes Rust migration paths: C/C++ to Rust rewrites using incremental FFI-based
-  strangler fig, and Rust modernization (edition upgrades 2015→2018→2021, deprecated
-  crate replacement, sync-to-async migration). Assesses risk, quantifies effort, and
-  produces a phased migration plan. Does NOT perform the migration — assesses, plans,
-  and guides. Use when migrating C or C++ code to Rust, upgrading Rust editions,
-  modernizing legacy Rust codebases, replacing deprecated crates, or planning
-  sync-to-async migrations.
-  Triggers on: "rust migration", "c to rust", "c++ to rust", "rust edition upgrade",
-  "modernize rust", "rust legacy migration", "rust rewrite", "cargo fix edition".
-  Do NOT use when you want to execute the migration — this skill produces an
-  assessment artifact only; Do NOT use when the codebase is already on current
-  stable Rust with no legacy patterns.
+  Analyzes Rust migration paths: C/C++ to Rust rewrites via incremental FFI strangler fig, and
+  Rust modernization (edition upgrades 2015->2018->2021, deprecated-crate replacement, sync to
+  async). Assesses risk, quantifies effort, and produces a phased plan — does NOT perform the
+  migration. Use when migrating C/C++ to Rust, upgrading editions, modernizing legacy Rust,
+  replacing deprecated crates, or planning sync-to-async. Not when you want to execute the
+  migration (assessment only), or the codebase is already current stable Rust with no legacy.
 ---
 
 # Rust Migration Analyzer

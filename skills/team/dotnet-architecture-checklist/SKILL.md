@@ -2,17 +2,13 @@
 name: dotnet-architecture-checklist
 audience: team
 description: >
-  Checklist executor for .NET architecture reviews across BOTH styles — controller-based
-  layered/N-tier Web APIs AND vertical-slice CQRS (FreeMediator/Mapster) / Blazor. Detects the
-  target framework, hosting model, and architecture style FIRST, then grades against the style the
-  project actually uses (a layered controller API is not penalized for not being vertical-slice).
-  Covers architectural coherence, controller/handler discipline, EF Core lifetime, framework health,
-  and config/secrets hygiene — producing a graded report with file:line evidence. Use to review or
-  grade an existing .NET solution. Triggers on "review this .net project", "architecture checklist",
-  "audit this solution", "evaluate blazor project", "review web api controllers", "review cqrs patterns",
-  "check handlers", "grade this architecture", "shared kernel review".
-  Do NOT use for a Socratic design critique — use architecture-review. Do NOT use for a security audit —
-  use dotnet-security-review. Do NOT use to write new code test-first — use tdd.
+  Grades an existing .NET solution against the style it actually uses — controller-based
+  layered/N-tier Web API OR vertical-slice CQRS (FreeMediator/Mapster)/Blazor — detecting
+  framework, hosting model, and style FIRST (a layered API is not penalized for not being
+  vertical-slice), then checking architectural coherence, controller/handler discipline, EF Core
+  lifetimes, framework health, and config/secrets hygiene with file:line evidence. Use to review
+  or grade a .NET solution. Not for Socratic critique (architecture-review), security audits
+  (dotnet-security-review), or new test-first code (tdd).
 ---
 
 # .NET / Blazor Architecture Checklist

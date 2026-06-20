@@ -2,16 +2,13 @@
 name: evaluate-tests
 audience: team
 description: >
-  Audits existing tests in two modes: (1) test-file quality — evaluates tests against Beck's
+  Audits existing tests in two modes: (1) test-file quality — grades tests against Beck's
   behavioral and structure-insensitive criteria, flagging implementation-coupled, fragile, and
-  theater tests with a prioritized rewrite list; (2) TDD compliance — analyzes git commit history
-  for test-first discipline and produces a 0–25 compliance scorecard with AI anti-pattern findings.
-  Use when auditing inherited test suites, checking AI-generated tests before merge, preparing code
-  for safe refactoring, or verifying that TDD discipline was actually followed. Triggers on
-  "evaluate tests", "audit test quality", "test coupling", "are these tests behavioral", "check my
-  tests", "tdd compliance", "did we follow tdd", "tdd scorecard", "audit commits for tdd",
-  "tdd anti-patterns". Do NOT use to write new tests — use tdd for that. Do NOT use when the
-  codebase has no tests yet.
+  theater tests with a prioritized rewrite list; (2) TDD compliance — analyzes git history for
+  test-first discipline, producing a 0-25 scorecard with AI anti-pattern findings. Use when
+  auditing inherited suites, checking AI-generated tests before merge, prepping for safe
+  refactoring, or verifying TDD was followed. Not for writing new tests (tdd), or when there are
+  no tests yet.
 ---
 
 # Evaluate Tests

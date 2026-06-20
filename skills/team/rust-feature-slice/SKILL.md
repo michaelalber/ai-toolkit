@@ -2,16 +2,13 @@
 name: rust-feature-slice
 audience: team
 description: >
-  Feature-based vertical slice architecture for Rust using Axum routers, handler functions,
-  and service traits. No DI framework — dependencies are wired manually via Arc<dyn Trait>
-  in Axum State. CQRS via trait separation: reader traits for queries, writer traits for
-  commands. Use when scaffolding Rust features, creating Axum feature modules, implementing
-  vertical slice architecture in Rust, adding Rust service layers, or organizing Rust code
-  by feature rather than technical layer.
-  Triggers on: "scaffold rust feature", "axum feature folder", "rust vertical slice",
-  "add rust endpoint", "rust service layer", "rust feature module", "rust cqrs".
-  Do NOT use when designing microservice boundaries or inter-process architecture
-  — this skill scopes to module organization within a single Rust binary.
+  Feature-based vertical-slice architecture for Rust using Axum routers, handler functions, and
+  service traits. No DI framework — dependencies wired manually via Arc<dyn Trait> in Axum
+  State. CQRS via trait separation: reader traits for queries, writer traits for commands. Use
+  when scaffolding Rust features, creating Axum feature modules, adding service layers, or
+  organizing Rust code by feature rather than technical layer. Not for
+  microservice/inter-process boundaries — scopes to module organization within a single Rust
+  binary.
 ---
 
 # Rust Feature Slice Architecture

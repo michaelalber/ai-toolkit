@@ -1,7 +1,11 @@
 ---
 name: python-modernization-analyzer
 audience: team
-description: Analyzes legacy Python codebases and produces actionable modernization plans. Primary migration paths include Python 2 to 3.12+, sync to async, Flask/Django monolith to FastAPI, requirements.txt to pyproject.toml, and bare classes to Pydantic/dataclasses. Does NOT perform the migration — assesses, quantifies risk, and plans. Triggers on phrases like "modernize python", "python 2 to 3", "upgrade python", "migrate flask to fastapi", "python legacy migration", "async migration python", "python modernization", "upgrade python codebase", "python technical debt".
+description: >
+  Analyzes legacy Python codebases and produces actionable modernization plans. Primary
+  migration paths include Python 2 to 3.12+, sync to async, Flask/Django monolith to FastAPI,
+  requirements.txt to pyproject.toml, and bare classes to Pydantic/dataclasses. Does NOT perform
+  the migration — assesses, quantifies risk, and plans.
 ---
 
 # Python Modernization Analyzer

@@ -2,13 +2,10 @@
 name: minimal-api-scaffolder
 audience: team
 description: >
-  Scaffolds .NET 10 Minimal API endpoints with OpenAPI documentation, versioning
-  strategies, and security patterns. Use when creating REST APIs, adding endpoints,
-  setting up API projects, or configuring API infrastructure. Triggers on phrases
-  like "scaffold API", "minimal API", "create endpoint", "API versioning",
-  "api endpoint", "rest endpoint", "add route", "openapi", "create api".
-  Do NOT use when the project is controller-based MVC — use dotnet-vertical-slice
-  for handler architecture instead.
+  Scaffolds .NET 10 Minimal API endpoints with OpenAPI documentation, versioning strategies, and
+  security patterns. Use when creating REST APIs, adding endpoints, setting up API projects, or
+  configuring API infrastructure. Do NOT use when the project is controller-based MVC — use
+  dotnet-vertical-slice for handler architecture instead.
 ---
 
 # .NET 10 Minimal API Scaffolder

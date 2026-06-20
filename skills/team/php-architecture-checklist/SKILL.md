@@ -2,14 +2,11 @@
 name: php-architecture-checklist
 audience: team
 description: >
-  Checklist executor for PHP / Laravel architecture reviews. Detects the PHP version, framework
-  (Laravel/Symfony/plain), and autoloading layout, then runs a systematic checklist covering
-  service-layer boundaries, strict typing, input validation, query safety, and config/secrets hygiene —
-  producing a graded report with file:line evidence. Use to review or grade an existing PHP codebase.
-  Triggers on "review this php project", "php architecture checklist", "audit php code", "laravel
-  architecture review", "evaluate php codebase", "php code review", "grade this php architecture".
-  Do NOT use for a Socratic design critique — use architecture-review. Do NOT use for a security audit —
-  use php-security-review. Do NOT use to write new code test-first — use tdd.
+  Grades an existing PHP/Laravel codebase. Detects PHP version, framework
+  (Laravel/Symfony/plain), and autoloading layout, then checks service-layer boundaries, strict
+  typing, input validation, query safety, and config/secrets hygiene with file:line evidence.
+  Use to review or grade a PHP codebase. Not for Socratic critique (architecture-review),
+  security audits (php-security-review), or new test-first code (tdd).
 ---
 
 # PHP Architecture Checklist

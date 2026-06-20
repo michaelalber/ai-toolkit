@@ -1,7 +1,12 @@
 ---
 name: react-component-scaffolder
 audience: team
-description: Scaffolds a single React / TypeScript component or route with a typed props interface, a co-located React Testing Library test, an accessibility baseline, and an optional Storybook story. React analog of fastapi-scaffolder — the component/route is the front-end "unit". Use when creating a new React component, adding a route/page, generating a typed presentational or container component, or standing up a component with its test and story. Triggers on phrases like "scaffold react component", "create react component", "new react component", "add react route", "react page component", "react component with test", "react storybook component".
+description: >
+  Scaffolds a single React / TypeScript component or route with a typed props interface, a
+  co-located React Testing Library test, an accessibility baseline, and an optional Storybook
+  story. React analog of fastapi-scaffolder — the component/route is the front-end "unit". Use
+  when creating a new React component, adding a route/page, generating a typed presentational or
+  container component, or standing up a component with its test and story.
 ---
 
 # React Component Scaffolder
