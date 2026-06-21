@@ -1,11 +1,11 @@
 # AI Toolkit
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Skills](https://img.shields.io/badge/skills-85-blue)](#skills)
+[![Skills](https://img.shields.io/badge/skills-87-blue)](#skills)
 [![Agents](https://img.shields.io/badge/agents-44-blue)](#agents)
 [![Platforms](https://img.shields.io/badge/platforms-Claude%20Code%20%7C%20OpenCode%20%7C%20Pi-informational)](#platforms)
 
-**85 skills, 44 agents, and 22 slash commands for AI-assisted software development — spanning TDD, .NET, Python, PHP, Rust, React, security, DDD, and more.**
+**87 skills, 44 agents, and 24 slash commands for AI-assisted software development — spanning TDD, .NET, Python, PHP, Rust, React, security, DDD, knowledge management, and more.**
 
 > **Edge AI, robotics, ML, and industrial automation?** Those skills now live in the companion
 > [edge-ai-robotics-automation-toolkit](../edge-ai-robotics-automation-toolkit) — install it alongside this one.
@@ -32,11 +32,11 @@ This toolkit encodes that expertise as reusable primitives. Each skill is an opi
 
 | | Count |
 |--|-------|
-| Skills (team) | 74 |
+| Skills (team) | 76 |
 | Skills (professional) | 11 |
 | Agents (Claude Code) | 44 |
 | Agents (OpenCode) | 44 |
-| Slash commands (per platform) | 22 |
+| Slash commands (per platform) | 24 |
 | Platforms | Claude Code, OpenCode, Pi |
 
 ---
@@ -267,6 +267,17 @@ ADRs live in the target repo's `docs/adr/`.
 | `jira-comment-writer` | Plain-language Jira comment drafter — translates technical updates into stakeholder language. |
 | `confluence-guide-writer` | Reads Confluence spec pages and/or source code, generates well-formatted technical guides. |
 
+### Knowledge Management Suite (PARA)
+
+The PARA method (Tiago Forte) applied to documents across local folders, OneDrive/Teams synced
+paths, and Confluence/Jira. Both skills share a per-project `.para.yml` config and the
+actionability-first classification model (Projects → Areas → Resources → Archives).
+
+| Skill | Description |
+|-------|-------------|
+| `para-file` | Captures and files one incoming document into PARA by actionability — scaffolds the P/A/R/Archive tree if missing, classifies, summarizes + tags, and files via the matching backend (filesystem, OneDrive/Teams, Confluence, or Jira). User-invocable via `/para-file`. |
+| `para-review` | Periodic PARA review — hygiene audit (misfiled/stale/archivable/empty), the weekly review ritual, change summarization, and safe reversible archiving of completed/inactive items. User-invocable via `/para-review`. |
+
 ### Agent Design & Meta
 
 | Skill | Description |
@@ -455,12 +466,12 @@ The `project-templates/` directory contains per-project context files based on t
 ```
 ai-toolkit/
 ├── skills/
-│   ├── team/                   # 74 team skills (shareable, production-ready)
+│   ├── team/                   # 76 team skills (shareable, production-ready)
 │   └── professional/           # 11 professional skills (deliberate practice)
 ├── claude/
 │   ├── agents/
 │   │   └── team/               # 44 Claude Code team agents
-│   ├── commands/               # 22 slash commands with shell injection
+│   ├── commands/               # 24 slash commands with shell injection
 │   └── global/                 # Global config → ~/.claude/
 │       ├── CLAUDE.md           # Global instructions (every project)
 │       ├── settings.json       # Hooks: credential stop + post-write build/lint gates
@@ -468,7 +479,7 @@ ai-toolkit/
 ├── opencode/
 │   ├── agents/
 │   │   └── team/               # 44 OpenCode team agents
-│   ├── commands/               # 22 slash commands with agent routing
+│   ├── commands/               # 24 slash commands with agent routing
 │   └── global/                 # Global config → ~/.config/opencode/
 │       ├── AGENTS.md           # Global instructions (every project)
 │       └── opencode.json       # Providers, MCP, permissions, temperatures

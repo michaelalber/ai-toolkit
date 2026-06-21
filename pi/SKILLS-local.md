@@ -42,7 +42,7 @@ uncertain; 32B can't sustain fan-out) · ⚠️ already deprecated in the toolki
 
 ---
 
-## 🟢 Green — ship as-is (34)
+## 🟢 Green — ship as-is (35)
 
 These get *more* reliable on a weak model because the skill carries the procedure.
 
@@ -82,10 +82,11 @@ These get *more* reliable on a weak model because the skill carries the procedur
 | qrspi-questions | | Surface unknowns; bounded interactive Q&A |
 | qraspi-questions | | Surface unknowns (greenfield) |
 | qraspi-skeleton | | Walking-skeleton scaffold from accepted ADRs |
+| para-file | | Config-driven PARA filing; the actionability decision tree is encoded, so the model just executes it |
 
 ---
 
-## 🟡 Yellow — usable, author a lite variant (45)
+## 🟡 Yellow — usable, author a lite variant (46)
 
 Single-pass but lean on judgment, synthesis, or large reference/input loads. The
 32B model produces the *structure* of a good result with shallower content. The
@@ -139,6 +140,7 @@ make steps explicit and imperative (the same treatment that produced `AGENTS-lit
 | qraspi-plan | | Slice plan (greenfield) |
 | qraspi-architecture | | Lock ADRs + C4 diagrams; design judgment |
 | qraspi-graduate | | Greenfield→brownfield handoff; judgment |
+| para-review | | Multi-phase audit + weekly ritual + summarize + archive; works but drift-judgment is shallower locally — drive one mode at a time |
 
 ---
 
