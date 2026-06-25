@@ -5,7 +5,7 @@
 [![Agents](https://img.shields.io/badge/agents-44-blue)](#agents)
 [![Platforms](https://img.shields.io/badge/platforms-Claude%20Code%20%7C%20OpenCode%20%7C%20Pi-informational)](#platforms)
 
-**88 skills, 44 agents, and 24 slash commands for AI-assisted software development — spanning TDD, .NET, Python, PHP, Rust, React, security, DDD, knowledge management, and more.**
+**88 skills, 45 agents, and 25 slash commands for AI-assisted software development — spanning TDD, .NET, Python, PHP, Rust, React, security, DDD, knowledge management, and more.**
 
 > **Edge AI, robotics, ML, and industrial automation?** Those skills now live in the companion
 > [edge-ai-robotics-automation-toolkit](../edge-ai-robotics-automation-toolkit) — install it alongside this one.
@@ -34,9 +34,9 @@ This toolkit encodes that expertise as reusable primitives. Each skill is an opi
 |--|-------|
 | Skills (team) | 77 |
 | Skills (professional) | 11 |
-| Agents (Claude Code) | 44 |
-| Agents (OpenCode) | 44 |
-| Slash commands (per platform) | 24 |
+| Agents (Claude Code) | 45 |
+| Agents (OpenCode) | 45 |
+| Slash commands (per platform) | 25 |
 | Platforms | Claude Code, OpenCode, Pi |
 
 ---
@@ -336,7 +336,7 @@ Vendored copies of workflow-primitive skills from [Matt Pocock's skills repo](ht
 
 Autonomous agents that make decisions and take actions independently. Each exists in both Claude Code (`claude/agents/`) and OpenCode (`opencode/agents/`) format. Agents are split into `team/` and `professional/` subdirectories mirroring the skill split.
 
-## claude/agents/team/ and opencode/agents/team/ (44 agents)
+## claude/agents/team/ and opencode/agents/team/ (45 agents)
 
 ### Development & DevOps
 
@@ -369,6 +369,7 @@ Autonomous agents that make decisions and take actions independently. Each exist
 | `react-arch-checklist-agent` | React architecture review — hooks discipline, effects, state placement, render perf, type safety, accessibility. |
 | `react-security-agent` | OWASP React/front-end security review — XSS, bundle secrets, token storage, npm audit, executive summary. |
 | `react-modernization-agent` | Legacy React modernization analysis — class→hooks, CRA→Vite, React 17→18→19, JS→TS, Enzyme→RTL. |
+| `oss-vetting-agent` | Federal OSS/SBOM vetting — scores a package across security, supply chain, maintainership, license, and CUI suitability against EO 14028/SSDF/800-171/800-161; Confluence-ready Approve / Approve-with-conditions / Reject report. |
 
 ### Scaffolding
 
@@ -398,7 +399,7 @@ Autonomous agents that make decisions and take actions independently. Each exist
 
 ## Commands
 
-Twenty-two slash commands per platform. Each injects live shell state before the model acts — the model sees real output, not a description of it.
+Twenty-five slash commands per platform. Each injects live shell state before the model acts — the model sees real output, not a description of it.
 
 | Command | Injects | What it does |
 |---------|---------|--------------|
@@ -406,6 +407,7 @@ Twenty-two slash commands per platform. Each injects live shell state before the
 | `/evaluate-tests [path]` | — | Audits existing tests: test-file quality (coupling, fragility, theater) and TDD compliance (commit-history scorecard) |
 | `/code-review` | `git diff` | Reviews staged or branch changes |
 | `/security-review [path]` | — | OWASP security review scoped to a path |
+| `/oss-vetting [package@version]` | Detected dependency manifests | Vets an OSS/third-party package for federal use (LANL/DOE/CUI) — Approve / conditions / Reject report |
 | `/arch-review [component]` | — | Socratic architecture challenge |
 | `/new-feature [FeatureName]` | Project structure, `.csproj` files | Scaffolds a vertical slice feature |
 | `/migrate [MigrationName]` | `dotnet ef migrations list` | EF Core migration with safety checks |
@@ -471,16 +473,16 @@ ai-toolkit/
 │   └── professional/           # 11 professional skills (deliberate practice)
 ├── claude/
 │   ├── agents/
-│   │   └── team/               # 44 Claude Code team agents
-│   ├── commands/               # 24 slash commands with shell injection
+│   │   └── team/               # 45 Claude Code team agents
+│   ├── commands/               # 25 slash commands with shell injection
 │   └── global/                 # Global config → ~/.claude/
 │       ├── CLAUDE.md           # Global instructions (every project)
 │       ├── settings.json       # Hooks: credential stop + post-write build/lint gates
 │       └── settings.local.json # Permissions: bash allow/deny, read allow/deny
 ├── opencode/
 │   ├── agents/
-│   │   └── team/               # 44 OpenCode team agents
-│   ├── commands/               # 24 slash commands with agent routing
+│   │   └── team/               # 45 OpenCode team agents
+│   ├── commands/               # 25 slash commands with agent routing
 │   └── global/                 # Global config → ~/.config/opencode/
 │       ├── AGENTS.md           # Global instructions (every project)
 │       └── opencode.json       # Providers, MCP, permissions, temperatures
