@@ -86,7 +86,7 @@ These get *more* reliable on a weak model because the skill carries the procedur
 
 ---
 
-## 🟡 Yellow — usable, author a lite variant (46)
+## 🟡 Yellow — usable, author a lite variant (47)
 
 Single-pass but lean on judgment, synthesis, or large reference/input loads. The
 32B model produces the *structure* of a good result with shallower content. The
@@ -113,6 +113,7 @@ make steps explicit and imperative (the same treatment that produced `AGENTS-lit
 | rust-security-review | | Exploitability + `unsafe` audit judgment |
 | react-security-review | | Exploitability judgment |
 | security-review-federal | | NIST overlay on a base review; heavy reference load |
+| oss-vetting | 📚 | OSS/SBOM assessment across four frameworks + license matrix; structure holds, framework-mapping judgment is shallower locally |
 | automated-code-review | 📚 | Single-pass review engine; finding quality varies |
 | legacy-migration-analyzer | 📚 | Assessment + plan synthesis |
 | python-modernization-analyzer | 📚 | Assessment + plan synthesis |
