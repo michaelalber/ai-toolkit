@@ -100,3 +100,75 @@ class TestBuildMarkdown:
         page = ExtractedPage(page_number=1, blocks=[block])
         md = build_markdown([page], source_path=Path("t.pdf"), total_pages=1)
         assert "**Important**" in md
+
+    def test_italic_paragraph_rendered_with_single_asterisks(self) -> None:
+        block = Block(
+            spans=[_span("Emphasis", italic=True)],
+            block_type="text",
+            bbox=(0, 0, 100, 20),
+            page_number=1,
+        )
+        page = ExtractedPage(page_number=1, blocks=[block])
+        md = build_markdown([page], source_path=Path("t.pdf"), total_pages=1)
+        assert "*Emphasis*" in md
+        assert "**Emphasis**" not in md
+
+    def test_bold_italic_paragraph_rendered_with_triple_asterisks(self) -> None:
+        block = Block(
+            spans=[_span("Strong", bold=True, italic=True)],
+            block_type="text",
+            bbox=(0, 0, 100, 20),
+            page_number=1,
+        )
+        page = ExtractedPage(page_number=1, blocks=[block])
+        md = build_markdown([page], source_path=Path("t.pdf"), total_pages=1)
+        assert "***Strong***" in md
+
+    def test_mixed_style_spans_rendered_per_span(self) -> None:
+        block = Block(
+            spans=[_span("Run"), _span("config", mono=True), _span("now", bold=True)],
+            block_type="text",
+            bbox=(0, 0, 100, 20),
+            page_number=1,
+        )
+        page = ExtractedPage(page_number=1, blocks=[block])
+        md = build_markdown([page], source_path=Path("t.pdf"), total_pages=1)
+        assert "`config`" in md
+        assert "**now**" in md
+
+    def test_empty_block_produces_no_output(self) -> None:
+        block = Block(spans=[], block_type="text", bbox=(0, 0, 0, 0), page_number=1)
+        page = ExtractedPage(page_number=1, blocks=[block])
+        md = build_markdown([page], source_path=Path("t.pdf"), total_pages=1)
+        assert md == ""
+
+    def test_image_block_renders_reference(self) -> None:
+        img = Path("book_images/p1_img1.png")
+        block = Block(spans=[], block_type="image", bbox=(0, 0, 50, 50), page_number=1)
+        page = ExtractedPage(page_number=1, blocks=[block], image_paths=[img])
+        md = build_markdown([page], source_path=Path("book.pdf"), total_pages=1)
+        assert f"![image]({img})" in md
+
+    def test_table_block_inserts_table_at_position(self) -> None:
+        table = Table(
+            cells=[["H1", "H2"], ["a", "b"]],
+            page_number=1,
+            bbox=(0, 0, 100, 40),
+        )
+        # A suppressed text block (block_type="table") marks the insertion point,
+        # followed by a trailing body paragraph.
+        marker = Block(spans=[], block_type="table", bbox=(0, 0, 100, 40), page_number=1)
+        body = _block("After the table.")
+        page = ExtractedPage(page_number=1, blocks=[marker, body], tables=[table])
+        md = build_markdown([page], source_path=Path("t.pdf"), total_pages=1)
+        assert "| H1 | H2 |" in md
+        assert md.index("| H1 | H2 |") < md.index("After the table.")
+
+    def test_table_without_marker_appended_after_text(self) -> None:
+        table = Table(cells=[["X"], ["y"]], page_number=1, bbox=(0, 0, 50, 40))
+        body = _block("Body first.")
+        page = ExtractedPage(page_number=1, blocks=[body], tables=[table])
+        md = build_markdown([page], source_path=Path("t.pdf"), total_pages=1)
+        assert "Body first." in md
+        assert "| X |" in md
+        assert md.index("Body first.") < md.index("| X |")

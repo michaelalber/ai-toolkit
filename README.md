@@ -496,6 +496,8 @@ ai-toolkit/
 │       └── Modelfile-20b       # Modelfile template for 20B models
 ├── project-templates/          # Per-project context files — copy to your project root
 ├── scripts/                    # Install scripts (Bash + PowerShell)
+├── tools/                      # Standalone utilities (not skills/agents/commands)
+│   └── pdf2md/                 # PDF → Markdown converter for RAG ingestion
 └── docs/                       # Supplementary documentation
 ```
 
