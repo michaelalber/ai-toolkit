@@ -1,5 +1,30 @@
 # Autonomous Protocol Reference
 
+## Minimal Workflow Example
+
+RED → GREEN → REFACTOR for `Calculator.add()` (Python):
+
+**RED**: Write `test_add_two_numbers`, run pytest — `NameError: Calculator not defined`. Log failure. Update state: `phase: GREEN, iteration: 1`.
+
+**GREEN**: Implement `class Calculator: def add(self, a, b): return a + b`. Run pytest — 1 passed. Update state: `phase: REFACTOR`.
+
+**REFACTOR**: No smells detected. Code is minimal. No refactoring needed. Update state: `phase: RED, iteration: 2`.
+
+Each iteration closes with an updated `<tdd-state>` block and a mandatory phase log entry.
+
+## Quick Error-Recovery Reference
+
+**Tests Won't Run:** Check syntax and imports in the test file. Fix infrastructure issues first. Do not write any implementation until the test suite runs cleanly.
+
+**Wrong Test Failure:** Examine the actual error message — not the expected one. Fix the test if it has bugs. Proceed only when the failure is the expected one.
+
+**Can't Make Test Pass:** Re-read the test carefully. Check for typos in expectations. Verify setup and assertions. Ask for help if stuck — do not guess at the implementation.
+
+**State Confusion:** Run the full test suite. If all pass: begin REFACTOR or new RED. If one fails: you are in GREEN. Reconstruct the state block from observed evidence.
+
+The detailed step-by-step protocols for each of these (plus flaky-test detection) are in the
+**Error Recovery Protocols** section below.
+
 ## Complete Session Workflow
 
 ### Session Initialization

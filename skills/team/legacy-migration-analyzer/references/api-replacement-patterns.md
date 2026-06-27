@@ -606,3 +606,30 @@ public class MyBackgroundService : BackgroundService
 // Registration
 builder.Services.AddHostedService<MyBackgroundService>();
 ```
+
+## Error Recovery
+
+### Upgrade Assistant Fails to Analyze Solution
+1. Verify the solution builds on .NET Framework first
+2. Check for unsupported project types (SSDT, Fabric, native C++)
+3. Analyze projects individually if solution-level fails
+4. Fall back to manual analysis using the [Breaking Changes Catalog](breaking-changes-catalog.md)
+
+### NuGet Package Has No .NET 10 Version
+1. Check if open source — fork and compile for .NET 10
+2. Look for the functionality in the .NET 10 BCL
+3. Search for community-maintained alternatives
+4. As last resort, keep the dependency in a .NET Framework process; communicate via HTTP or gRPC
+
+### WCF Service Cannot Be Migrated
+1. Evaluate CoreWCF (supports many WCF server scenarios)
+2. For duplex contracts, consider SignalR or gRPC bidirectional streaming
+3. For MSMQ, consider Azure Service Bus, RabbitMQ
+4. If none work, keep WCF on .NET Framework behind an API gateway
+
+### Extensive System.Web Usage
+1. Count and categorize all `System.Web` usages by pattern
+2. Create an abstraction layer on .NET Framework first (equivalent of `IHttpContextAccessor`)
+3. Migrate all consumers to the abstraction
+4. Then swap the implementation to ASP.NET Core equivalents
+5. This is Phase 0 prerequisite work, not migration work

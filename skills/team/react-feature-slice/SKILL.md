@@ -47,33 +47,10 @@ state, never a library contract.
 - It is NOT prescriptive about a state library — Context, Zustand, or RTK all fit the conventions
 - It is NOT a styling system — bring your own (CSS Modules, Tailwind, etc.)
 
-## Domain Principles
-
-| # | Principle | Description | Applied As |
-|---|-----------|-------------|------------|
-| 1 | **Feature Isolation** | Each feature is a folder with its own components, hooks, data, types, and tests. No feature reaches into another feature's internals. | `features/checkout` never imports `features/cart/internal/cartMath` — only `features/cart` (barrel) or `shared/*` |
-| 2 | **Data-Layer Autonomy** | Each feature's data layer (an `api.ts` + query/mutation hooks) owns I/O. Components call hooks; hooks call the api client. | Component: `const { data } = useOrdersQuery();` — never `fetch('/api/orders')` in a component |
-| 3 | **Minimal Abstractions** | Add a context/provider only when prop-drilling actually hurts or a real second consumer exists. A single-use value stays a prop. | Introduce `CartProvider` when ≥3 levels drill the cart; otherwise pass props |
-| 4 | **DI via Props & Context** | Dependencies (services, config, the api client) flow through props or a context provider — never imported as module singletons inside presentational components. | `<OrderList onSelect={…} />`; cross-cutting deps via a provider at the feature root |
-| 5 | **Read/Write Separation** | Queries and commands are separate hooks. Structural CQRS — no library. Query hooks read+cache; mutation hooks mutate and invalidate. | `useOrdersQuery()`, `useOrderQuery(id)` vs `useCreateOrder()`, `useCancelOrder()` |
-| 6 | **Validation at the Boundary** | Inbound form data and API responses are validated/parsed at the edge (e.g. zod) into typed models before they enter the feature. | `OrderSchema.parse(res)` in `api.ts`; the component receives a typed `Order`, never `any` JSON |
-| 7 | **Presentational Purity** | Presentational components take data + callbacks and render. Container components/hooks own state and effects. | `OrderListView` (pure) vs `OrderList` (wires the query hook to the view) |
-| 8 | **Component Thinness** | A component renders; logic lives in hooks. If a component body grows branching business logic, extract a hook. | `useCheckout()` holds the flow; `<Checkout/>` renders its result |
-| 9 | **Strict Typing** | `strict: true`; props interfaces explicit; API models typed; no untyped `any` crossing a boundary. | `type OrderListProps = { orders: Order[]; onSelect: (id: string) => void }` |
-| 10 | **Test Proximity** | Tests live beside the slice. RTL tests render the component; hook tests use `renderHook`. | `features/orders/OrderList.test.tsx`, `features/orders/useCreateOrder.test.ts` |
-
-## Knowledge Base Lookups
-
-Use `search_knowledge` (grounded-code-mcp) to ground decisions. The KB has no React corpus — these queries
-cover TypeScript and accessible UI; cite **react.dev** for React-specific patterns.
-
-| Query | When to Call |
-|-------|--------------|
-| `search_knowledge("TypeScript discriminated unions narrowing", collection="javascript")` | When typing feature models and state |
-| `search_knowledge("TypeScript strict generics utility types", collection="javascript")` | When typing hooks and props |
-| `search_knowledge("accessible component keyboard focus", collection="ui_ux")` | When scaffolding interactive presentational components |
-| `search_knowledge("WCAG form labels error messaging", collection="ui_ux")` | When the slice includes a form |
-| `search_code_examples("react custom hook data fetching", language="typescript")` | When generating query/mutation hook skeletons |
+The 10 domain principles (applied-as examples) and the grounding query map live in
+`references/domain-principles.md`. The structural CQRS conventions live in `references/react-cqrs-conventions.md`.
+AI discipline rules, the anti-patterns catalog, and error-recovery procedures live in
+`references/discipline-and-recovery.md`.
 
 ## Workflow
 
@@ -157,156 +134,10 @@ grep -rn "features/" "src/features/<name>" | grep -v "features/<name>"
 </react-feature-slice-state>
 ```
 
-## Output Templates
+## Output Template
 
-### Feature Slice Scaffold: [Feature Name]
-
-```markdown
-## Feature Slice Scaffold: [Feature Name]
-
-### Files Created
-- [ ] `src/features/<name>/components/<Name>List.tsx` (container)
-- [ ] `src/features/<name>/components/<Name>ListView.tsx` (presentational)
-- [ ] `src/features/<name>/components/<Name>Form.tsx`
-- [ ] `src/features/<name>/hooks/use<Name>sQuery.ts` (read)
-- [ ] `src/features/<name>/hooks/useCreate<Name>.ts` (write)
-- [ ] `src/features/<name>/data/api.ts`
-- [ ] `src/features/<name>/data/schema.ts`
-- [ ] `src/features/<name>/types.ts`
-- [ ] `src/features/<name>/index.ts` (barrel)
-- [ ] `src/features/<name>/<Name>List.test.tsx`
-- [ ] `src/features/<name>/hooks/useCreate<Name>.test.ts`
-
-### Wiring
-- [ ] Route registered via the barrel import
-- [ ] Provider added only if prop-drilling warranted it
-
-### Verification
-- [ ] `tsc --noEmit` clean
-- [ ] `eslint` clean (hooks + a11y)
-- [ ] `vitest` green for the slice
-- [ ] No cross-feature imports detected
-```
-
-### Feature Folder Diagram
-
-```
-src/
-├── features/
-│   └── orders/
-│       ├── components/
-│       │   ├── OrderList.tsx        ← container: hook → view
-│       │   ├── OrderListView.tsx    ← presentational (pure)
-│       │   └── OrderForm.tsx        ← boundary validation
-│       ├── hooks/
-│       │   ├── useOrdersQuery.ts     ← read
-│       │   └── useCreateOrder.ts     ← write (invalidates cache)
-│       ├── data/
-│       │   ├── api.ts                ← the only I/O
-│       │   └── schema.ts             ← zod + inferred types
-│       ├── types.ts
-│       └── index.ts                  ← barrel (public surface)
-├── shared/                           ← cross-cutting code & UI primitives
-└── app/routes.tsx                    ← imports feature barrels only
-```
-
-## AI Discipline Rules
-
-### CRITICAL: No Data Fetching in Components
-
-**WRONG:**
-```tsx
-function OrderList() {
-  const [orders, setOrders] = useState<any[]>([]);          // untyped server state
-  useEffect(() => { fetch("/api/orders").then(r => r.json()).then(setOrders); }, []); // race, no cache
-  return <ul>{orders.map(o => <li key={o.id}>{o.total}</li>)}</ul>;
-}
-```
-
-**RIGHT:**
-```tsx
-function OrderList() {
-  const { data: orders = [], isLoading } = useOrdersQuery();  // query hook owns I/O + cache
-  if (isLoading) return <Spinner />;
-  return <OrderListView orders={orders} onSelect={…} />;       // presentational view
-}
-```
-
-### REQUIRED: Validate at the Boundary
-
-```ts
-// data/schema.ts
-export const OrderSchema = z.object({ id: z.string(), total: z.number() });
-export type Order = z.infer<typeof OrderSchema>;
-
-// data/api.ts — parse before the data enters the feature
-export async function fetchOrders(): Promise<Order[]> {
-  const res = await http.get("/api/orders");
-  return z.array(OrderSchema).parse(res.data);   // typed Order[], never `any` JSON
-}
-```
-
-### CRITICAL: No Cross-Feature Imports
-
-```ts
-// WRONG — in src/features/checkout/hooks/useCheckout.ts
-import { cartTotal } from "@/features/cart/internal/cartMath";   // reaching into internals
-
-// RIGHT — import the feature's barrel, or shared code
-import { useCart } from "@/features/cart";        // public surface
-import { formatMoney } from "@/shared/money";
-```
-
-## Anti-Patterns Table
-
-| # | Anti-Pattern | Why It Fails | Correct Approach |
-|---|-------------|-------------|-----------------|
-| 1 | **`fetch` inside a component** | Races, no cache, untestable | Move I/O to a query/mutation hook + api client |
-| 2 | **Server state in `useState`+`useEffect`** | Re-implements caching badly; stale data | Use a query cache (TanStack/RTK Query) |
-| 3 | **Cross-feature deep imports** | Hidden coupling; one feature breaks another | Import the barrel, or move code to `shared/` |
-| 4 | **`any` on props or API data** | No type safety; bugs surface at runtime | Type props; parse API data with zod at the boundary |
-| 5 | **God component** | 300-line component mixing fetch, state, render | Split container/presentational; extract hooks |
-| 6 | **Business logic in JSX** | Untestable, unreadable | Move to a custom hook |
-| 7 | **Global store for ephemeral UI state** | Couples unrelated UI; bloats store | Keep local `useState` |
-| 8 | **No barrel / importing internals** | Public surface undefined; refactors break consumers | Export the public API from `index.ts` |
-| 9 | **`key={index}` on dynamic lists** | Wrong reconciliation, state bleed | Use a stable id |
-| 10 | **Tests far from the slice** | Drift; orphaned tests | Co-locate `*.test.tsx` beside the component/hook |
-
-## Error Recovery
-
-### Cross-feature import detected
-
-```
-Symptoms: grep for `features/` inside one slice returns another feature's path.
-
-Recovery:
-1. Identify what is imported (a util, a type, a component).
-2. Shared util/type/primitive → move to src/shared and update both slices.
-3. Feature behavior → import the other feature's barrel (public surface), not its internals.
-4. Re-run the grep check until it prints nothing.
-```
-
-### Component grows too large
-
-```
-Symptoms: a component exceeds ~250 lines or mixes fetching, state, and presentation.
-
-Recovery:
-1. Extract data/state into a custom hook (use<Name>).
-2. Split the render into a pure presentational view component.
-3. The container becomes: call hook → pass props to the view.
-```
-
-### Server data is stale or double-fetched
-
-```
-Symptoms: data does not refresh after a mutation, or fetches fire twice under StrictMode.
-
-Recovery:
-1. Move the fetch into a query hook with a stable query key.
-2. In the mutation hook, invalidate that query key on success.
-3. Remove the useEffect-based fetch; StrictMode double-invoke is then handled by the cache.
-```
+Emit a "Feature Slice Scaffold" report (Files Created / Wiring / Verification checklist) plus the
+feature-folder diagram. Both full templates live in `references/output-templates.md`.
 
 ## Integration with Other Skills
 

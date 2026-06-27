@@ -771,3 +771,70 @@ After the migration is complete, verify the following:
 |   [ ] Documentation updated to reflect .NET 10                 |
 +--------------------------------------------------------------+
 ```
+
+## Domain Principles
+
+| # | Principle | Description | Priority |
+|---|-----------|-------------|----------|
+| 1 | **Risk Assessment First** | Scan the codebase to quantify breaking changes, unsupported APIs, and incompatible dependencies before planning. Risk drives the plan. | Critical |
+| 2 | **Incremental Migration** | Migrate one project, one layer, or one feature at a time. Each increment must be independently deployable and testable. | Critical |
+| 3 | **API Compatibility Analysis** | Use .NET Upgrade Assistant and API compatibility analyzers for machine-readable reports. Manual inspection misses edge cases. | Critical |
+| 4 | **Dependency Audit** | Catalog every NuGet package, COM reference, and P/Invoke call. For each: compatible version exists, replacement exists, or is a hard blocker. | Critical |
+| 5 | **Business Logic Isolation** | Separate business logic from framework-dependent infrastructure before migrating. Pure C# libraries migrate trivially; framework-coupled code does not. | High |
+| 6 | **Test Coverage Gate** | Do not migrate any project that lacks adequate test coverage. Write characterization tests against the legacy system first. | High |
+| 7 | **Configuration Migration** | Map every `web.config`/`app.config` key to `appsettings.json` and the Options pattern before migrating. | High |
+| 8 | **Authentication and Identity** | ASP.NET Membership, Forms Auth, and WIF require complete replacement. Plan these early — they are high-effort and high-risk. | High |
+| 9 | **Database Access Layer** | EF6 → EF Core is non-trivial. Lazy loading behavior, query translation differences, and migration history require careful planning. | Medium |
+| 10 | **Deployment Pipeline** | Legacy deployment (MSBuild scripts, IIS, manual) must be modernized alongside code migration. | Medium |
+
+## AI Discipline Rules
+
+**Never recommend a full rewrite without data.** Before suggesting a rewrite of any component, scan it, catalog breaking changes, and compare incremental vs. rewrite effort. Only recommend rewrite if incremental effort exceeds 3× the rewrite effort AND adequate test coverage exists to validate the rewrite.
+
+**Always scan dependencies first.** Run `dotnet list package` on every project, check against nuget.org for .NET 10 compatibility, and verify transitive dependencies — not just direct references.
+
+**Preserve business logic unchanged.** Migration is infrastructure only. Flag cases where framework differences could change behavior (culture defaults, floating-point, string comparison). Business logic changes go in separate PRs after migration is validated.
+
+**Never produce a migration plan without completing SCAN and ASSESS first.** SCAN must produce a complete inventory; ASSESS must produce a risk score for every project. Skipping these produces an uncredible roadmap.
+
+## Anti-Patterns
+
+| Anti-Pattern | Why It's Wrong | Correct Approach |
+|--------------|----------------|------------------|
+| **Big-bang rewrite** | 60–80% of large rewrites fail or exceed budget 2×. | Strangler fig or project-by-project with continuous deployment. |
+| **Migrating without tests** | Cannot verify behavior is preserved. | Write characterization tests first. Minimum 80% coverage on business logic. |
+| **Starting with the hardest project** | High risk of early failure demoralizes the team. | Start with the simplest leaf-node projects. Build patterns before high-risk components. |
+| **Ignoring transitive dependencies** | A compatible direct dependency may have incompatible transitive deps. | Use `dotnet list package --include-transitive`. Resolve before migrating. |
+| **Changing business logic during migration** | Conflates infrastructure modernization and feature changes. | Migration is infrastructure only; logic changes go in separate PRs after validation. |
+| **Skipping the Upgrade Assistant** | Manual analysis misses hundreds of breaking-change rules. | Always run `upgrade-assistant analyze` first. |
+| **Migrating database and application simultaneously** | Two high-risk changes at once; rollback is ambiguous. | Migrate data layer first (via `ef-migration-manager`), verify, then application layer. |
+
+## Output Report Template
+
+```markdown
+## Migration Inventory Report: [SolutionName]
+**Source**: [.NET Framework version] → **Target**: .NET 10 | **Date**: [date]
+
+| Metric | Count | | Package | .NET 10 Compatible | Replacement |
+|--------|-------|-|---------|-------------------|-------------|
+| Projects / NuGet Packages | [N] | | [name] | Yes/No/Partial | [replacement] |
+
+**Breaking Changes by Category**: [table of counts per category]
+**Hard Blockers**: [list with mitigation options]
+**Risk Score**: [0-10] → [Low/Medium/High/Critical] → [recommended approach]
+```
+
+## State Block Example
+
+```
+<migration-analysis-state>
+step: ASSESS
+source_framework: .NET Framework 4.8
+target_framework: .NET 10
+breaking_changes_found: 47
+risk_level: high
+last_action: Completed NuGet compatibility scan, 12 packages incompatible
+next_action: Score each project and determine migration approach
+blockers: WCF service project has no clear migration path for duplex contracts
+</migration-analysis-state>
+```

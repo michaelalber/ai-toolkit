@@ -673,3 +673,50 @@ dotnet list package --outdated
 # Check for .NET 10 incompatible packages
 dotnet list package --target-framework net10.0
 ```
+
+## .NET Framework Upgrade Specifics
+
+### Analysis Commands
+
+```bash
+find . -name "*.csproj" -o -name "*.vbproj"          # Find all project files
+grep -r "<TargetFramework" --include="*.csproj"        # Check target frameworks
+find . -name "*.csproj" -exec grep -L "Sdk=" {} \;    # Legacy projects (no SDK attr)
+find . -name "packages.config"                         # Needs migration to PackageReference
+grep -r "using System\.Web" --include="*.cs" | wc -l  # System.Web usage (major blocker)
+grep -r "using System\.ServiceModel" --include="*.cs"  # WCF (needs alternative)
+grep -r "ConfigurationManager" --include="*.cs"        # Needs replacement
+grep -r "BinaryFormatter" --include="*.cs"             # Security concern, not supported
+```
+
+### Upgrade Tools
+
+```bash
+# .NET Upgrade Assistant
+dotnet tool install -g upgrade-assistant
+upgrade-assistant analyze <solution.sln>
+upgrade-assistant upgrade <project.csproj>
+
+# try-convert (project file conversion)
+dotnet tool install -g try-convert
+try-convert -p <project.csproj>
+```
+
+### Complexity Classification
+
+| Level | Timeframe | Characteristics |
+|-------|-----------|-----------------|
+| Low | 1–2 weeks | Class libraries, console apps, SDK-style already, standard NuGet only |
+| Medium | 2–4 weeks | Web API (non-MVC), EF6→EF Core, limited System.Web, some config changes |
+| High | 4–8+ weeks | Full ASP.NET MVC, heavy System.Web, WCF, Windows-specific features, custom MSBuild |
+
+SDK-style `.csproj` target:
+```xml
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+</Project>
+```

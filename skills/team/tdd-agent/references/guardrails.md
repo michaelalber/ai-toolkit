@@ -1,5 +1,109 @@
 # Guardrails Reference
 
+## Summary
+
+Four hard gates govern the cycle. The brief form lives in SKILL.md; the full implementation
+detail, violation responses, and severity table follow below.
+
+1. **No Implementation Without Failure Proof** — verify a test exists for the behavior, it was just run, output shows failure, and the failure is logged. If any item is missing, stop.
+2. **Verify Before Claiming** — never claim tests pass or fail without running them and showing actual output. Show `[actual test output] All 15 tests pass` — not "the test should now pass."
+3. **Minimal Means Minimal** — during GREEN, ask: can I make this simpler? Am I adding anything the test doesn't require? Would a hardcoded value pass? If yes to any, simplify.
+4. **Rollback on Red** — if tests fail during REFACTOR, stop, revert the change immediately, verify tests pass again, then try a smaller step. Never fix a broken refactor forward.
+
+## Mandatory Phase-Log Templates
+
+Each iteration closes with an updated `<tdd-state>` block and a mandatory phase-log entry.
+
+### RED Phase Log
+
+```markdown
+### RED Phase — Iteration N
+
+**Behavior to test**: [description]
+**Test written**: `test_name` in `file`
+
+**Verification**: [actual test output showing failure]
+**Failure reason**: [e.g., "NameError: Calculator not defined"]
+
+Proceeding to GREEN phase.
+```
+
+### GREEN Phase Log
+
+```markdown
+### GREEN Phase — Iteration N
+
+**Test to satisfy**: `test_name`
+**Implementation strategy**: [Fake It | Obvious | Triangulation]
+**Code written**: [implementation code]
+
+**Verification**: [actual test output showing all pass]
+
+All tests passing. Proceeding to REFACTOR phase.
+```
+
+### REFACTOR Phase Log
+
+```markdown
+### REFACTOR Phase — Iteration N
+
+**Starting state**: All tests passing (N tests)
+**Improvement identified**: [e.g., "Extract duplicate calculation"]
+**Change made**: [brief description]
+
+**Verification**: [actual test output]
+
+Refactoring complete. [Continue refactoring | Ready for next feature]
+```
+
+## Self-Check Loops
+
+Run these checklists at each phase transition. Stop and correct if any item fails.
+
+**RED Self-Check:**
+- [ ] Test file exists and is syntactically valid
+- [ ] Test suite runs without error
+- [ ] New test fails for the expected reason
+- [ ] Only ONE new failing test
+- [ ] Existing tests still pass
+
+**GREEN Self-Check:**
+- [ ] Implementation is minimal — no features beyond test requirements
+- [ ] All tests pass
+- [ ] No other tests broke
+
+**REFACTOR Self-Check:**
+- [ ] Started with all tests passing
+- [ ] Made ONE small change
+- [ ] All tests still pass
+- [ ] No behavior was changed — only structure
+
+## Explicit Reasoning
+
+At each decision point, log options, reasoning, and choice before acting:
+
+```markdown
+**Decision Point**: How to implement Calculator.add(2, 3)?
+
+**Options**:
+1. Return hardcoded 5 (Fake It)
+2. Return a + b (Obvious Implementation)
+
+**Reasoning**: Single test for addition. Obvious implementation is safe — trivial algorithm, no edge cases.
+
+**Choice**: Obvious Implementation
+```
+
+## AI Discipline Rules
+
+**CRITICAL: Trust Nothing Without Verification** — Don't assume tests pass, don't assume tests fail, don't assume code works. Run and verify everything.
+
+**CRITICAL: Be Boringly Predictable** — Follow the protocol exactly. Log everything explicitly. Never skip steps. Never combine steps.
+
+**CRITICAL: Fail Loudly** — If something unexpected happens: stop immediately, report the anomaly, ask for guidance. Do not work around it.
+
+**CRITICAL: Prefer Smaller Steps** — When in doubt: smaller test, simpler implementation, one refactoring at a time, more iterations over fewer.
+
 ## Guardrail Implementation Details
 
 ### Guardrail 1: Failure Verification Gate

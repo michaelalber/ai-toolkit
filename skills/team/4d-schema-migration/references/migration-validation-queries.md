@@ -415,3 +415,39 @@ BEGIN
     RETURN 0;  -- Success
 END;
 ```
+
+---
+
+## Error Recovery
+
+(Relocated from SKILL.md.)
+
+**Type mapping failure** (INSERT/CONVERT fails with type conversion error): Query source to find offending values (`SELECT DISTINCT [Field], LEN([Field]) FROM [4DExport].[dbo].[Table] ORDER BY LEN([Field]) DESC`). Update the type mapping, regenerate DDL and migration script for the affected table, truncate the target table and re-run, then re-validate row counts and spot-check the affected field.
+
+**Data truncation** (string data silently truncated): Run `SELECT MAX(LEN([Field])) FROM [4DExport].[dbo].[Table]` to find actual max length. Compare against target column length. ALTER the target column, re-run the migration, and validate by comparing the longest source value against the target.
+
+**Referential integrity violations** (FK constraints fail): Run the orphan detection query above. If source orphan: create a placeholder parent, set the FK to NULL, or quarantine the row. If migration error: re-run the parent table migration first. Re-apply the foreign key constraint and log the resolution in `MigrationAudit`.
+
+**Blob corruption** (migrated images/binary data unreadable): Compare source and target blob sizes. If sizes differ, the data was truncated or re-encoded — use binary-safe export (BCP or SSIS with binary columns, not CSV). If sizes match, compute checksums on both sides and compare. Re-import and verify with a single record before bulk re-migration.
+
+## Validation Checklist
+
+Use this checklist as the final gate before each phase transition:
+
+- [ ] All tables mapped to SQL Server with correct types
+- [ ] All fields have verified type mappings (no assumptions)
+- [ ] All relationships preserved as foreign keys
+- [ ] Indexes recreated appropriately (B-Tree, Unique, Full-Text)
+- [ ] Multi-value fields decomposed into child tables
+- [ ] Blob strategy decided and tested (VARBINARY vs. external storage)
+- [ ] Auto-increment sequences preserved with legacy ID column
+- [ ] NULL vs. empty-string strategy documented per field
+- [ ] Business logic identified and assigned to CQRS handlers
+- [ ] Forms mapped to Blazor components with validation
+- [ ] Data migration scripts tested and repeatable
+- [ ] Row counts match source for every table
+- [ ] Aggregate values match source for key numeric fields
+- [ ] Foreign key relationships validated (zero orphans)
+- [ ] Key business reports produce identical output
+- [ ] Performance baselines captured and acceptable
+- [ ] Rollback plan documented and tested

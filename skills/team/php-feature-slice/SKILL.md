@@ -37,32 +37,10 @@ In PHP with Laravel, the mediator pattern (FreeMediator in .NET) is replaced by 
 - It is NOT prescriptive about feature count — start with the features you have
 - It is NOT a replacement for DDD — it is compatible with DDD but does not require it
 
-## Domain Principles
-
-| # | Principle | Description | Applied As |
-|---|-----------|-------------|------------|
-| 1 | **Feature Isolation** | Each feature is a namespace with its own controller, request, service, resource, and tests. No feature references another feature's internals. | `App\Features\Orders` never uses `App\Features\Users\OrderHelper` — only `App\Shared\*` |
-| 2 | **Service Autonomy** | Each feature's service owns its business logic. The controller calls the service; the service calls Eloquent or external APIs. | Controller: `return new OrderResource($this->service->create($request->toDto()));` |
-| 3 | **Minimal Abstractions** | Add an interface only when a second implementation or a test seam earns it. A single concrete service does not need an interface. | Bind `OrderWriteService::class` directly; introduce `OrderWriteContract` only when mocked or swapped |
-| 4 | **DI via the Container** | Constructor injection resolved by Laravel's container. No `new` of services in controllers, no facades for business logic, no service locator. | `public function __construct(private OrderWriteService $service) {}` |
-| 5 | **Read/Write Separation** | Queries and commands live in separate service classes. Structural CQRS — no library. Read services return Resources; write services mutate and return the changed aggregate. | `OrderReadService::show()`, `OrderReadService::list()` vs `OrderWriteService::create()`, `OrderWriteService::cancel()` |
-| 6 | **Validation at the Boundary** | All input validation lives in a `FormRequest`. The service receives an already-validated DTO, never the raw request. | `rules()` in `StoreOrderRequest`; controller passes `$request->toDto()` to the service |
-| 7 | **Explicit Output Shaping** | Responses go through an `JsonResource`. Eloquent models never leave the controller directly — that leaks schema and sensitive columns. | `return OrderResource::collection($orders);` |
-| 8 | **Controller Thinness** | A controller action contains: resolve input → call service → wrap response. If it exceeds ~10 lines, logic has leaked. | Action = `toDto()` → `service->...` → `new Resource(...)` |
-| 9 | **Strict Typing** | `declare(strict_types=1)`; every method parameter and return value is type-hinted. No `mixed` without justification. | `public function create(CreateOrderDto $dto): Order` |
-| 10 | **Test Proximity** | Feature tests mirror the slice. `tests/Feature/Orders/` mirrors `app/Features/Orders/`. Feature tests hit routes; unit tests mock the service. | `tests/Feature/Orders/CreateOrderTest.php`, `tests/Unit/Orders/OrderWriteServiceTest.php` |
-
-## Knowledge Base Lookups
-
-Use `search_knowledge` (grounded-code-mcp, `collection="php"`) to ground decisions in authoritative references.
-
-| Query | When to Call |
-|-------|--------------|
-| `search_knowledge("Laravel Form Request validation controller", collection="php")` | At DETECT — confirm validation and controller conventions for the detected version |
-| `search_knowledge("Laravel API Resource transform response", collection="php")` | When scaffolding the Resource layer |
-| `search_knowledge("Laravel service container constructor injection binding", collection="php")` | When wiring services into the container |
-| `search_knowledge("Laravel Eloquent query builder bound parameters", collection="php")` | When the service touches the database |
-| `search_code_examples("Laravel controller form request service", language="php")` | When generating controller/service skeletons |
+The 10 domain principles (Feature Isolation, Service Autonomy, Minimal Abstractions, DI via the
+Container, Read/Write Separation, Validation at the Boundary, Explicit Output Shaping, Controller
+Thinness, Strict Typing, Test Proximity) and the grounding `search_knowledge` query map live in
+`references/domain-principles.md`. CQRS naming conventions live in `references/laravel-cqrs-conventions.md`.
 
 ## Workflow
 
@@ -141,7 +119,7 @@ grep -rn "use App\\\\Features\\\\" app/Features/<Name> | grep -v "App\\\\Feature
 </php-feature-slice-state>
 ```
 
-## Output Templates
+## Output Template
 
 ### Feature Slice Scaffold: [Feature Name]
 
@@ -170,126 +148,10 @@ grep -rn "use App\\\\Features\\\\" app/Features/<Name> | grep -v "App\\\\Feature
 - [ ] No cross-feature imports detected
 ```
 
-### Feature Folder Diagram
-
-```
-app/
-├── Features/
-│   └── Orders/
-│       ├── Controllers/OrderController.php   ← thin: input → service → resource
-│       ├── Requests/StoreOrderRequest.php    ← rules() + toDto()
-│       ├── Services/OrderReadService.php      ← queries
-│       ├── Services/OrderWriteService.php      ← commands
-│       ├── Resources/OrderResource.php         ← output shaping
-│       └── Dtos/CreateOrderDto.php             ← readonly validated DTO
-├── Shared/                                     ← cross-cutting domain code
-└── Providers/AppServiceProvider.php            ← container bindings
-routes/features/orders.php                      ← slice route group
-tests/Feature/Orders/  tests/Unit/Orders/
-```
-
-## AI Discipline Rules
-
-### CRITICAL: No Business Logic in Controllers
-
-**WRONG:**
-```php
-public function store(Request $request)
-{
-    $request->validate(['item_id' => 'required']);          // validation in controller
-    $item = DB::select("SELECT * FROM items WHERE id = {$request->item_id}"); // SQL injection
-    if (!$item) { abort(404); }
-    $order = Order::create(['item_id' => $request->item_id]); // logic in controller
-    return $order;                                            // model leaked
-}
-```
-
-**RIGHT:**
-```php
-public function store(StoreOrderRequest $request): OrderResource
-{
-    return new OrderResource($this->writeService->create($request->toDto()));
-}
-```
-
-### REQUIRED: Form Request + DTO at the Boundary
-
-```php
-final class StoreOrderRequest extends FormRequest
-{
-    public function rules(): array
-    {
-        return ['item_id' => ['required', 'integer', 'exists:items,id'],
-                'quantity' => ['required', 'integer', 'min:1']];
-    }
-
-    public function toDto(): CreateOrderDto
-    {
-        return new CreateOrderDto($this->integer('item_id'), $this->integer('quantity'));
-    }
-}
-```
-
-### CRITICAL: No Cross-Feature Imports
-
-```php
-// WRONG — in app/Features/Orders/Services/OrderWriteService.php
-use App\Features\Users\Services\UserReadService;   // cross-feature coupling
-
-// RIGHT — depend on shared code, or inject via the container at the edge
-use App\Shared\Contracts\CurrentUser;
-```
-
-## Anti-Patterns Table
-
-| # | Anti-Pattern | Why It Fails | Correct Approach |
-|---|-------------|-------------|-----------------|
-| 1 | **Business logic in controllers** | Untestable; duplicated across actions | Move all logic to a service class |
-| 2 | **Cross-feature imports** | Hidden coupling; one feature breaks another | Use `App\Shared\*`; inject at the controller edge |
-| 3 | **Returning Eloquent models from controllers** | Leaks schema and hidden columns; no serialization control | Always return a `JsonResource` |
-| 4 | **Raw `$request->input()` in services** | Unvalidated, untyped data flows into business logic | Validate in a `FormRequest`; pass a typed DTO |
-| 5 | **`DB::raw` / string-concatenated SQL** | SQL injection | Eloquent or bound query-builder parameters only |
-| 6 | **Facades for business logic** | Hides dependencies; defeats injection and mocking | Constructor-inject the service |
-| 7 | **Mixing read and write in one service** | Service grows unbounded; different perf profiles | Separate `ReadService` and `WriteService` |
-| 8 | **No `declare(strict_types=1)`** | Silent type coercion hides bugs | First line of every PHP file |
-| 9 | **Tests under `app/Features/`** | Mixes production and test code; breaks autoloading | Tests live in `tests/Feature` and `tests/Unit` mirrors |
-| 10 | **One god service per feature** | Defeats cohesion; merge-conflict magnet | Split by sub-capability (`Fulfillment`, `Billing`) within the slice |
-
-## Error Recovery
-
-### Cross-feature import detected
-
-```
-Symptoms: grep for `use App\Features\` inside one slice returns another slice's namespace.
-
-Recovery:
-1. Identify what is imported (a model, a service, a value object).
-2. Shared model/value object → move to App\Shared and update both slices.
-3. Service behavior → inject the contract via the container at the controller edge, not inside the service.
-4. Re-run the grep check until it prints nothing.
-```
-
-### Service grows too large
-
-```
-Symptoms: a service exceeds ~200 lines or holds unrelated methods.
-
-Recovery:
-1. Identify sub-capabilities (e.g., Orders has Fulfillment and Billing).
-2. Split into OrderFulfillmentService / OrderBillingService — still inside the Orders slice.
-3. Update controller constructor injection to the specific service each action needs.
-```
-
-### Controller action grows too large
-
-```
-Symptoms: an action exceeds ~10 lines or contains conditionals.
-
-Recovery:
-1. Move the branching/business logic into the service.
-2. Action becomes: $request->toDto() → service call → Resource.
-3. If multiple service calls are needed, add one orchestration method to the service.
-```
+The feature folder diagram is in `references/domain-principles.md`. The AI discipline rules
+(no-logic-in-controllers, Form Request + DTO boundary, no cross-feature imports), the 10-row
+anti-patterns table, and the error-recovery procedures (cross-feature import, oversized service,
+oversized controller) live in `references/discipline-and-recovery.md`.
 
 ## Integration with Other Skills
 

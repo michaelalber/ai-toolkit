@@ -39,36 +39,10 @@ is the deliverable; execution is a separate task (often via `react-feature-slice
 4. **Dependencies are the real blockers** — a React 19 upgrade blocked by an unmaintained UI library is not viable
 5. **Every recommendation must cite evidence** — "this looks like class components" is not evidence; `grep -rn "extends React.Component"` is
 
-**What this skill is NOT:**
-- It is NOT a migration execution tool — it produces a plan, not code
-- It is NOT a code quality review — use `react-architecture-checklist` for that
-- It is NOT a security review — use `react-security-review` for that
+**What this skill is NOT:** not a migration execution tool (plan, not code); not a code quality review
+(use `react-architecture-checklist`); not a security review (use `react-security-review`).
 
-## Domain Principles
-
-| # | Principle | Description | Applied As |
-|---|-----------|-------------|------------|
-| 1 | **Risk Assessment First** | Every modernization carries risk; quantify it before recommending. A class→hooks migration on 400 components with no tests differs from 40 components at 80% coverage. | Score every path: Effort (S/M/L/XL), Risk (Low/Med/High/Critical), Blocker potential |
-| 2 | **Incremental Migration** | React supports class and function components side by side; TS and JS coexist; CRA→Vite can be staged. Every path must decompose into phases that each leave the app working. | Each recommendation has a phased approach with working checkpoints |
-| 3 | **Dependency Compatibility** | The migration is only as viable as its dependencies. A UI library with no React 18 peer support blocks the upgrade; an unmaintained `react-router@5` blocks routing changes. | Audit `react`/`react-dom` peer ranges of every dependency before recommending a version bump |
-| 4 | **Test Coverage Gate** | Characterization tests (RTL tests that document current behavior) must exist before risky migrations. Without them you cannot prove behavior was preserved. | Assess RTL coverage; recommend characterization tests as Phase 0 — especially before class→hooks |
-| 5 | **Tooling Before Framework** | CRA→Vite and JS→TS are tooling migrations that unblock everything else (fast feedback, type safety). Usually the highest-value early wins. | Sequence CRA→Vite and TS adoption early; they de-risk later phases |
-| 6 | **Strangler for State** | Legacy Redux → RTK/Zustand/Context is migrated slice by slice, not all at once. Server state moves to a query cache separately from client state. | Recommend per-slice store migration; split server-state extraction into its own phase |
-| 7 | **Version Gating** | React 18 (concurrent, automatic batching, `StrictMode` double-invoke) and 19 (Actions, `use()`, ref-as-prop) change behavior. Identify what each bump enables and breaks. | Map each version jump's breaking changes against the codebase |
-| 8 | **Test Framework Migration** | Enzyme has no React 18 adapter — it is a hard blocker for the version upgrade, migrated to RTL test by test. | Flag Enzyme as a React 18 blocker; plan Enzyme→RTL before/with the bump |
-| 9 | **Effects & Data Layer** | `componentDidMount`+`fetch` and `useEffect`+`useState` server-state patterns are fragile under concurrent React. Recommend a query cache as part of modernization. | Identify ad-hoc fetching; recommend TanStack/RTK Query migration as a phase |
-| 10 | **Build & Deploy Maturity** | Webpack ejected configs, Node-version pinning, and missing CI are modernization blockers. Assess them as prerequisites. | Flag ejected/aging build config and missing CI as prerequisites |
-
-## Knowledge Base Lookups
-
-Use `search_knowledge` (grounded-code-mcp). No React corpus — cover TS; cite **react.dev** upgrade guides for the rest.
-
-| Query | When to Call |
-|-------|--------------|
-| `search_knowledge("TypeScript migration from JavaScript gradual", collection="javascript")` | At ASSESS — confirm JS→TS gradual-adoption tooling |
-| `search_knowledge("TypeScript strict any incremental adoption", collection="javascript")` | When scoring the JS→TS path |
-| `search_knowledge("WCAG keyboard accessibility audit", collection="ui_ux")` | When the modernization should also close a11y gaps |
-| `search_code_examples("react class component to hooks", language="typescript")` | When estimating the class→hooks effort |
+The ten domain principles and the grounded-KB lookup table live in `references/domain-principles.md`.
 
 ## Workflow
 
@@ -116,7 +90,8 @@ grep -rn "useEffect" src/ | grep -c "fetch\|axios"
 | Legacy Redux → RTK / Zustand | store/reducer count | Per-slice migration; separate server-state extraction |
 | Ad-hoc fetch → query cache | `useEffect`+fetch / `componentDidMount` count | Identify fragile fetching under concurrent React |
 
-Use `references/migration-risk-matrix.md` for scoring guidance.
+Use `references/migration-risk-matrix.md` for scoring guidance and `references/react-version-migration.md`
+for per-version breaking-change detail.
 
 ### Phase 3: PLAN
 
@@ -133,8 +108,8 @@ Use `references/migration-risk-matrix.md` for scoring guidance.
 ### Phase 4: REPORT
 
 **Objective:** Deliver the plan with evidence, risk scores, and effort estimates.
-
-Use `references/migration-risk-matrix.md` for the risk scoring table.
+Use the template in `references/assessment-output-template.md` and the risk scoring table in
+`references/migration-risk-matrix.md`.
 
 ## State Block
 
@@ -155,131 +130,12 @@ Use `references/migration-risk-matrix.md` for the risk scoring table.
 </react-modernization-state>
 ```
 
-## Output Templates
+## Output Template
 
-### Modernization Assessment Summary
-
-```markdown
-## React Modernization Assessment: [Application Name]
-
-**Date:** YYYY-MM-DD
-**React Version:** [current]
-**Bundler:** [CRA / Vite / custom webpack / Next]
-**Language:** [JS / mixed / TS]   **Codebase Size:** [components, LOC]
-**Test Coverage:** [%]   **Test Framework:** [Enzyme / RTL / none]
-
-### Migration Paths Identified
-
-| Path | Effort | Risk | Blockers | Recommended Order |
-|------|--------|------|---------|------------------|
-| CRA → Vite | M | Low | [ejected webpack config] | 1 |
-| Introduce TypeScript (allowJs) | M | Low | None | 2 |
-| Enzyme → RTL | L | Med | None | 3 (before React 18) |
-| React 17 → 18 | M | Med | [Enzyme; lib X no 18 peer] | 4 |
-| Class → hooks | XL | Med | [low test coverage] | 5 |
-| Legacy Redux → RTK | L | Med | None | 6 |
-
-### Blockers
-
-| Blocker | Affected Path | Resolution |
-|---------|--------------|-----------|
-| Enzyme (no React 18 adapter) | React 17 → 18 | Migrate tests to RTL first |
-| [UI lib] — no React 18 peer | React 17 → 18 | Upgrade/replace before the bump |
-
-### Recommended Phased Plan
-
-**Phase 0 (Prerequisites — 1–2 weeks):**
-- [ ] Add RTL characterization tests on critical flows (≥ 60% on hot paths)
-- [ ] Ensure CI runs typecheck + tests
-
-**Phase 1 (Tooling — 1 week):**
-- [ ] CRA → Vite; map REACT_APP_* → VITE_*
-- [ ] Add TypeScript with allowJs; type new files going forward
-
-[Continue for each phase...]
-```
-
-## AI Discipline Rules
-
-### CRITICAL: Evidence Before Recommendation
-
-**WRONG:**
-```
-This looks like an old React app. I recommend upgrading to React 19.
-```
-
-**RIGHT:**
-```
-Version detection:
-  package.json → "react": "^17.0.2"
-  grep "extends Component" → 128 class components across 94 files
-  grep "from 'enzyme'" → 60 test files use Enzyme (no React 18 adapter)
-
-React 17 → 18 is viable but Enzyme is a hard blocker. Sequence Enzyme → RTL first.
-```
-
-### REQUIRED: Quantify Before Scoring
-
-**WRONG:** "The class→hooks migration is large."
-
-**RIGHT:** "128 class components (grep count); 41 use `componentDidMount` data fetching; test coverage 18%. Effort: XL. Risk: Med — raised by low coverage. Recommend characterization tests first."
-
-### CRITICAL: Incremental Plans Only
-
-**WRONG:** "Rewrite the app in Vite + TypeScript + hooks."
-
-**RIGHT:** "Phase 1: CRA→Vite (1wk). Phase 2: add TS via allowJs (ongoing). Phase 3: Enzyme→RTL (2wk). Phase 4: React 18 (1wk). Phase 5: class→hooks, ~15 components/week."
-
-## Anti-Patterns Table
-
-| # | Anti-Pattern | Why It Fails | Correct Approach |
-|---|-------------|-------------|-----------------|
-| 1 | **Big-bang rewrite recommendation** | Rewrites fail; behavior is lost; timeline explodes | Incremental migration with working checkpoints |
-| 2 | **Recommending class→hooks without tests** | Cannot verify behavior preserved | RTL characterization tests as Phase 0 |
-| 3 | **Ignoring dependency peer ranges** | A lib with no React 18 peer blocks the bump | Audit every dep's react peer range first |
-| 4 | **Missing the Enzyme blocker** | Enzyme has no React 18 adapter; the bump fails | Flag Enzyme → RTL as a prerequisite to React 18 |
-| 5 | **Combining version + class→hooks + JS→TS at once** | Unmanageable, untestable change set | Sequence: tooling → tests → version → components → state → types |
-| 6 | **No effort estimates** | A plan without estimates can't be scheduled | Every phase has S/M/L/XL or a day estimate |
-| 7 | **Assessing without running greps** | Counts are evidence; intuition is not | Always run the SCAN greps before scoring |
-| 8 | **Recommending React 19 features pre-upgrade** | Actions/`use()` don't exist on 17/18.0 | Gate feature recommendations to the post-upgrade version |
-| 9 | **Treating server state like client state in the plan** | Moving fetch into a store reinvents caching | Plan server-state → query cache as its own phase |
-| 10 | **Skipping the CRA→Vite tooling win** | Slow builds drag every later phase | Do the tooling migration early to speed feedback |
-
-## Error Recovery
-
-### Cannot determine a dependency's React peer support
-
-```
-Symptoms: a UI library's React 18/19 compatibility is unclear.
-
-Recovery:
-1. Check package.json peerDependencies on react/react-dom.
-2. Check the package's repo for recent releases and React 18/19 issues.
-3. Check for a maintained fork or a modern replacement.
-4. If unknown, mark "Unknown — manual investigation required" in the blockers table; do not assume.
-```
-
-### Test coverage is zero
-
-```
-Symptoms: no RTL/Jest tests found.
-
-Recovery:
-1. Document: "Coverage 0% — no behavioral tests."
-2. Phase 0 becomes mandatory: RTL characterization tests on critical flows before any risky migration.
-3. Flag this as the highest-risk factor; do not recommend class→hooks until Phase 0 is done.
-```
-
-### Build config is ejected / custom webpack
-
-```
-Symptoms: `npm run eject` was run, or a hand-rolled webpack config exists.
-
-Recovery:
-1. Inventory the custom webpack needs (loaders, aliases, env injection, proxies).
-2. Map each to its Vite equivalent (plugins, resolve.alias, define, server.proxy).
-3. Flag any need without a Vite equivalent as a blocker to resolve before the tooling migration.
-```
+The Modernization Assessment Summary — paths table, blockers table, and phased plan — is in
+`references/assessment-output-template.md`. The AI discipline rules (evidence before recommendation,
+quantify before scoring, incremental plans only), the anti-patterns catalog, and the error-recovery
+procedures live in `references/discipline-and-recovery.md`.
 
 ## Integration with Other Skills
 

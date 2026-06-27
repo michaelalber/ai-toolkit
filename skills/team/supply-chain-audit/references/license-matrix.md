@@ -253,3 +253,35 @@ Common mappings for ambiguous license names:
 | "Public Domain" | Check if CC0-1.0 or Unlicense applies |
 | "Free" or "Open Source" | NOT a license. Requires investigation. |
 | "" (empty) or "UNLICENSED" | No license. No permission granted. |
+
+---
+
+## Phase 2 Workflow: License Compliance
+
+**Objective:** Verify all dependency licenses are compatible with the project's distribution model.
+Relocated from `SKILL.md` (Phase 2).
+
+**License Detection Commands:**
+
+```bash
+# npm
+npx license-checker --json --production
+npx license-checker --onlyAllow "MIT;Apache-2.0;BSD-2-Clause;BSD-3-Clause;ISC"
+
+# pip
+pip-licenses --format=json
+pip-licenses --allow-only="MIT License;Apache Software License;BSD License"
+
+# NuGet -- check .nuspec or NuGet gallery manually
+dotnet list package --format=json
+```
+
+**License Classification:**
+
+| Category | Licenses | Corporate Risk |
+|----------|----------|---------------|
+| Permissive | MIT, Apache-2.0, BSD-2-Clause, BSD-3-Clause, ISC, Unlicense | Low |
+| Weak Copyleft | LGPL-2.1, LGPL-3.0, MPL-2.0, EPL-2.0 | Medium — restrictions on modifications to the library itself |
+| Strong Copyleft | GPL-2.0, GPL-3.0, AGPL-3.0 | High — may require source disclosure; AGPL extends to network use |
+| Proprietary / Custom | Commercial, EULA-based, custom terms | Requires legal review |
+| No License / Unknown | Unlisted, NOASSERTION | High — no license means no permission to use |
