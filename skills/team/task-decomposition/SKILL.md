@@ -30,9 +30,13 @@ The quality of a decomposition is not measured by how many sub-tasks it produces
 | 7 | **Recoverable Failures** | Design decompositions so a single sub-task failure does not cascade into total plan failure. Prefer independent parallel tracks over a single serial chain. |
 | 8 | **Stable Interfaces Between Sub-Tasks** | The inputs and outputs of each sub-task form a contract. Define these contracts before execution and do not change them mid-execution without re-planning. |
 
-## Decomposition Strategies
+## Workflow
 
-### Strategy 1: Functional Decomposition
+Decomposition proceeds in four moves: choose a strategy, set granularity, build the dependency DAG, then assign each sub-task to an agent.
+
+### Decomposition Strategies
+
+#### Strategy 1: Functional Decomposition
 
 Split by capability, feature, or functional area. Use when the goal describes a system with identifiable, separately-implementable features whose domains map cleanly to different agent types. Apply by listing functional requirements → grouping into areas → creating one sub-task per area → extracting shared prerequisites (database schemas, shared types, configuration) as their own prerequisite sub-tasks.
 
@@ -47,7 +51,7 @@ Goal: "Add user authentication and an admin dashboard to the application"
   T6: Document auth API and admin features               -> documentation-agent [depends: T2, T4]
 ```
 
-### Strategy 2: Data-Flow Decomposition
+#### Strategy 2: Data-Flow Decomposition
 
 Split by data transformation stages. Use when the goal describes a pipeline, ETL process, or data transformation where the work naturally flows from input to output through stages with clearly different technical concerns. Apply by tracing transformations from input to output → creating one sub-task per stage → identifying parallel branches.
 
@@ -62,7 +66,7 @@ Goal: "Build a pipeline that ingests sensor data, detects anomalies, and generat
   T6: Document pipeline architecture     -> documentation-agent [depends: T2, T4]
 ```
 
-### Strategy 3: Temporal Decomposition
+#### Strategy 3: Temporal Decomposition
 
 Split by lifecycle phase. Use when the goal spans the full development lifecycle (design through deployment) and earlier phases produce artifacts that later phases consume. Apply by identifying phases (research, design, implement, test, deploy, document) → creating sub-tasks per phase → applying functional or data-flow decomposition within each oversized phase → looking for cross-phase parallelization (documentation often starts during implementation).
 
@@ -78,7 +82,7 @@ Goal: "Migrate the payment service from .NET Framework 4.8 to .NET 10"
   T7: Update documentation for .NET 10             -> documentation-agent [depends: T4]
 ```
 
-### Strategy 4: Risk-Ordered Decomposition
+#### Strategy 4: Risk-Ordered Decomposition
 
 Split by risk level, isolating uncertain or high-risk work into early probe sub-tasks for fast validation. Use when the goal involves significant technical uncertainty or some parts may be infeasible. Design probe sub-tasks to fail fast, then gate the remaining plan on probe results.
 
@@ -94,7 +98,7 @@ Goal: "Add a new payment provider whose API reliability and rate limits are unpr
   T6: Document the provider integration                 -> documentation-agent [depends: T3]
 ```
 
-## Granularity Heuristics
+### Granularity Heuristics
 
 | Split When | Stop When |
 |-----------|-----------|
@@ -105,7 +109,7 @@ Goal: "Add a new payment provider whose API reliability and rate limits are unpr
 | Both autonomous and approval-required components exist | Sub-task is already a well-understood operation for the assigned agent |
 | Failure of one part would not block the other | — |
 
-## Dependency DAG Construction
+### Dependency DAG Construction
 
 Build the graph: for each sub-task T, list the inputs it requires → if an input is produced by another sub-task P, add edge P→T → if no sub-task produces a required input, flag as GAP. Verify every output is either consumed by a downstream sub-task or is a final deliverable.
 
@@ -113,7 +117,7 @@ Build the graph: for each sub-task T, list the inputs it requires → if an inpu
 
 **Critical path:** Assign effort weights (S=1, M=2, L=3) → find the longest path (sum of weights) → this is the minimum total duration → sub-tasks NOT on the critical path have slack. Focus monitoring on critical path sub-tasks.
 
-## Sub-Agent Assignment Protocol
+### Sub-Agent Assignment Protocol
 
 For each sub-task: identify the primary domain → select the agent whose domain best matches → if multiple agents fit, prefer tighter domain focus, then higher autonomy, then the agent already assigned other sub-tasks in the same track. If no agent matches, check if the sub-task can be decomposed further, merged with an adjacent sub-task that has a match, or the approach changed. If still unassignable, report the gap to the user — never assign to the wrong agent to avoid a gap.
 
@@ -138,7 +142,7 @@ next_action: [what should happen next]
 
 State transitions: UNDERSTAND → DECOMPOSE (goal analyzed) → ASSIGN (DAG constructed) → SEQUENCE (all assigned or flagged) → MONITOR (plan approved) → COMPLETE. Any state can return to UNDERSTAND if the goal changes; MONITOR can return to DECOMPOSE if a failure requires re-planning.
 
-## Output Templates
+## Output Template
 
 **Goal Analysis:** Stated goal | Deliverables (numbered) | Constraints (tech stack, conventions, timeline, scope) | Assumptions (with how to verify) | Open questions (blocking vs. non-blocking)
 

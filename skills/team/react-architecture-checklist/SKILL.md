@@ -14,7 +14,7 @@ description: >
 > "A checklist cannot fly a plane, but a pilot cannot fly safely without one."
 > — Atul Gawande
 
-## Core Architectural Values
+## Core Philosophy
 
 Shared across the `dotnet` / `python` / `php` / `rust` / `react` architecture checklists — same values, language-specific checks.
 

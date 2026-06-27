@@ -15,7 +15,7 @@ description: >
 > "Security is not a product, but a process."
 > — Bruce Schneier
 
-## Core Security Values
+## Core Philosophy
 
 Shared across the `dotnet` / `python` / `php` / `rust` security reviews — same values, language-specific threats.
 
