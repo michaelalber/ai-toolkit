@@ -1,5 +1,8 @@
 # web2md
 
+[![Tests](https://img.shields.io/badge/tests-49-green)](tests/)
+[![Coverage](https://img.shields.io/badge/coverage-92%25-green)](tests/)
+
 Convert web pages and documentation sites to **AI-agent-friendly Markdown** — structured output
 suitable for ingestion into a RAG knowledge base such as
 [grounded-code-mcp](https://codeberg.org/michaelkalber/grounded-code-mcp).
