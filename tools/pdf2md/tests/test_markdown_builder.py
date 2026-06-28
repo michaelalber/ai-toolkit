@@ -46,6 +46,13 @@ class TestTableToMarkdown:
         table = Table(cells=[], page_number=1, bbox=(0, 0, 0, 0))
         assert _table_to_markdown(table) == ""
 
+    def test_all_empty_cells_table_returns_empty_string(self) -> None:
+        # Layout-artifact grid: pipes only, no content — must not render.
+        table = Table(
+            cells=[["", "", ""], ["", "", ""]], page_number=1, bbox=(0, 0, 100, 40)
+        )
+        assert _table_to_markdown(table) == ""
+
     def test_none_cells_become_empty_strings(self) -> None:
         table = Table(cells=[["A", None], [None, "B"]], page_number=1, bbox=(0, 0, 100, 40))
         md = _table_to_markdown(table)
@@ -72,6 +79,13 @@ class TestBuildMarkdown:
         md = build_markdown([page], source_path=Path("test.pdf"), total_pages=1)
         assert "```" in md
         assert "def foo(): pass" in md
+
+    def test_code_block_fence_carries_language_tag(self) -> None:
+        block = _block("SELECT * FROM t;", code=True)
+        block.language = "sql"
+        page = ExtractedPage(page_number=1, blocks=[block])
+        md = build_markdown([page], source_path=Path("test.pdf"), total_pages=1)
+        assert "```sql\n" in md
 
     def test_metadata_front_matter_included(self) -> None:
         page = ExtractedPage(page_number=1, blocks=[_block("text")])

@@ -26,6 +26,10 @@ def _table_to_markdown(table: Table) -> str:
     if col_count == 0:
         return ""
 
+    # Drop fully empty grids (layout artifacts) — they render as pure pipe noise.
+    if not any(cell for row in clean_rows for cell in row):
+        return ""
+
     # Pad rows to uniform width
     padded = [row + [""] * (col_count - len(row)) for row in clean_rows]
 
@@ -60,15 +64,21 @@ def _render_block(block: Block) -> str:
     if not text:
         return ""
 
-    # Code block: wrap in fenced block
+    # Code block: wrap in fenced block, tagged with its detected language
     if block.is_code_block:
         code = "\n".join(span.text for span in block.spans)
-        return f"```\n{code}\n```"
+        lang = block.language or ""
+        return f"```{lang}\n{code}\n```"
 
     # Heading
     if block.heading_level is not None:
+        from pdf2md.heading_detector import strip_heading_noise
+
+        heading_text = strip_heading_noise(text)
+        if not heading_text:
+            return ""
         prefix = _HEADING_PREFIX.get(block.heading_level, "### ")
-        return f"{prefix}{text}"
+        return f"{prefix}{heading_text}"
 
     # Mixed inline: render spans individually
     all_same_style = len({(s.is_bold, s.is_italic, s.is_monospace) for s in block.spans}) == 1
@@ -123,7 +133,6 @@ def build_markdown(
         for block in page.blocks:
             if block.block_type == "image":
                 for img_path in page.image_paths:
-                    rel = img_path.name
                     parts.append(f"![image]({img_path})\n")
                 continue
 

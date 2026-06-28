@@ -45,6 +45,18 @@ class TestCLI:
         assert content.startswith("---")
         assert "source:" in content
 
+    def test_metadata_on_by_default(self, simple_pdf: Path, tmp_path: Path) -> None:
+        output = tmp_path / "out.md"
+        runner.invoke(app, [str(simple_pdf), str(output), "--no-images", "--engine", "fast"])
+        assert output.read_text().startswith("---")
+
+    def test_no_metadata_flag_omits_front_matter(self, simple_pdf: Path, tmp_path: Path) -> None:
+        output = tmp_path / "out.md"
+        runner.invoke(
+            app, [str(simple_pdf), str(output), "--no-images", "--no-metadata", "--engine", "fast"]
+        )
+        assert not output.read_text().startswith("---")
+
     def test_headings_pdf_contains_hash_headings(self, headings_pdf: Path, tmp_path: Path) -> None:
         output = tmp_path / "headings.md"
         runner.invoke(app, [str(headings_pdf), str(output), "--no-images", "--engine", "fast"])

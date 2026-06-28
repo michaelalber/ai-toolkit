@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from pdf2md.code_language import detect_language
 from pdf2md.models import Block, ExtractedPage
 
 
@@ -11,12 +12,16 @@ def _block_any_monospace(block: Block) -> bool:
     return any(span.is_monospace for span in block.spans)
 
 
-def annotate_code_blocks(pages: list[ExtractedPage]) -> None:
-    """Mutate blocks in-place to set ``is_code_block``.
+def annotate_code_blocks(
+    pages: list[ExtractedPage], default_language: str | None = None
+) -> None:
+    """Mutate blocks in-place to set ``is_code_block`` and ``language``.
 
     Merges adjacent all-monospace text blocks into a single code block by
     joining their spans.  Mixed blocks (some monospace, some not) are left
-    for the markdown builder to handle at the span level.
+    for the markdown builder to handle at the span level.  Each detected code
+    block is tagged with a heuristically classified language (falling back to
+    *default_language* when classification is inconclusive).
     """
     for page in pages:
         _merge_adjacent_code_blocks(page.blocks)
@@ -25,6 +30,8 @@ def annotate_code_blocks(pages: list[ExtractedPage]) -> None:
         for block in page.blocks:
             if block.block_type == "text" and _block_all_monospace(block):
                 block.is_code_block = True
+                code_text = "\n".join(span.text for span in block.spans)
+                block.language = detect_language(code_text, default=default_language)
 
 
 def _merge_adjacent_code_blocks(blocks: list[Block]) -> None:

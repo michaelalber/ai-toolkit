@@ -68,7 +68,7 @@ class FastEngine:
         annotate_headings(pages, stats)
 
         if not config.no_code_blocks:
-            annotate_code_blocks(pages)
+            annotate_code_blocks(pages, default_language=config.code_lang)
 
         if not config.no_tables:
             extract_tables(config.input_path, pages, page_indices, verbose=config.verbose)

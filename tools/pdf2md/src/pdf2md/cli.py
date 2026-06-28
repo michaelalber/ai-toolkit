@@ -67,8 +67,21 @@ def convert(
     ] = False,
     metadata: Annotated[
         bool,
-        typer.Option("--metadata", help="Prepend YAML front-matter block (source, pages, timestamp)."),
-    ] = False,
+        typer.Option(
+            "--metadata/--no-metadata",
+            help="Prepend YAML front-matter (source, pages, timestamp). On by default for RAG provenance.",
+        ),
+    ] = True,
+    code_lang: Annotated[
+        Optional[str],
+        typer.Option(
+            "--code-lang",
+            help=(
+                "Default language tag for code blocks whose language cannot be "
+                'auto-detected, e.g. "java". Detected languages still take precedence.'
+            ),
+        ),
+    ] = None,
     verbose: Annotated[
         bool,
         typer.Option("--verbose/--quiet", help="Show per-page progress."),
@@ -119,4 +132,5 @@ def convert(
         metadata=metadata,
         verbose=verbose,
         engine=engine,  # type: ignore[arg-type]
+        code_lang=code_lang,
     )

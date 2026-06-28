@@ -3,8 +3,31 @@ from __future__ import annotations
 
 import pytest
 
-from pdf2md.heading_detector import annotate_headings, compute_document_stats
+from pdf2md.heading_detector import (
+    annotate_headings,
+    compute_document_stats,
+    strip_heading_noise,
+)
 from pdf2md.models import Block, ExtractedPage, Span
+
+
+class TestStripHeadingNoise:
+    def test_removes_dotted_leader_and_page_number(self) -> None:
+        assert strip_heading_noise("Foundations .......... 1") == "Foundations"
+
+    def test_removes_trailing_folio(self) -> None:
+        assert strip_heading_noise("What is API security? 3") == "What is API security?"
+
+    def test_preserves_numeric_section_prefix(self) -> None:
+        assert strip_heading_noise("1.1 An analogy 4") == "1.1 An analogy"
+
+    def test_leaves_clean_heading_untouched(self) -> None:
+        assert strip_heading_noise("Secure API development") == "Secure API development"
+
+    def test_preserves_short_structural_heading_with_number(self) -> None:
+        # "OAuth 2" / "Chapter 2" must keep their number — not a TOC folio.
+        assert strip_heading_noise("OAuth 2") == "OAuth 2"
+        assert strip_heading_noise("Chapter 2") == "Chapter 2"
 
 
 def _make_span(text: str, size: float, bold: bool = False) -> Span:

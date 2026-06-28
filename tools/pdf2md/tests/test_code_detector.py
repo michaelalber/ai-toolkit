@@ -64,3 +64,20 @@ class TestAnnotateCodeBlocks:
         assert page.blocks[0].is_code_block is True
         assert page.blocks[1].is_code_block is False
         assert page.blocks[2].is_code_block is True
+
+    def test_detects_language_of_code_block(self) -> None:
+        block = _block(
+            [
+                _span("public class Main {", True),
+                _span("  System.out.println(x);", True),
+            ]
+        )
+        page = ExtractedPage(page_number=1, blocks=[block])
+        annotate_code_blocks([page])
+        assert block.language == "java"
+
+    def test_falls_back_to_default_language(self) -> None:
+        block = _block([_span("frobnicate the widget", True)])
+        page = ExtractedPage(page_number=1, blocks=[block])
+        annotate_code_blocks([page], default_language="java")
+        assert block.language == "java"

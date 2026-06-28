@@ -18,10 +18,19 @@ optional YAML front-matter block records provenance.
   - `auto` (default) — samples the first 3 pages; if the average extractable text per page
     falls below a threshold (a likely scanned PDF), it switches to `docling`, otherwise `fast`.
 - **Heading detection** from relative font sizes (median-based thresholds → H1–H3).
-- **Code-block detection** from monospace font runs → fenced ``` blocks.
-- **Table extraction** via pdfplumber → Markdown pipe tables.
+- **Code-block detection** from monospace font runs → fenced ``` blocks, with **automatic
+  language tagging** (` ```java `, ` ```sql `, ` ```bash `, ` ```json `, ` ```yaml `, ` ```xml `,
+  ` ```http `, …) via a heuristic classifier; `--code-lang` sets a fallback for ambiguous blocks.
+- **Artifact cleanup for clean RAG text** (fast engine): de-hyphenates words split
+  across line breaks (`neces- sary` → `necessary`), strips running headers/footers even
+  when they embed a varying page number, collapses letter-spaced text and dropped
+  small-caps capitals in headings (`M A N N I N G` → `MANNING`, `C HAPTER` → `CHAPTER`),
+  and removes table-of-contents folios/dotted leaders from headings.
+- **Table extraction** via pdfplumber → Markdown pipe tables, with shredded-diagram and
+  empty-grid tables filtered out (single-column / mostly-empty "tables" are dropped).
 - **Image extraction** to sidecar files (`<name>_images/`), referenced inline.
-- **YAML front-matter** (`--metadata`): `source`, `pages`, `extracted_at`, `tool`.
+- **YAML front-matter** (on by default; `--no-metadata` to disable): `source`, `pages`,
+  `extracted_at`, `tool` — provenance for RAG ingestion.
 - **Heading chunking** (`--chunk-by-heading`): one `.md` file per top-level (H1) section —
   convenient for chunked RAG ingestion.
 - **Page ranges**, **batch mode** (directory → directory), and password-protected-PDF skipping.
@@ -88,13 +97,16 @@ uv run pdf2md ./ebooks/
 
 ```bash
 uv run pdf2md ./ebooks/ ./markdown-out/ \
-    --metadata \           # provenance front-matter for each file
     --chunk-by-heading \   # one .md per H1 section → better retrieval granularity
+    --code-lang java \     # fallback fence tag for a single-language source
     --engine auto          # fast for digital, docling for scanned
 ```
 
-`--chunk-by-heading` writes `<name>_<section-slug>.md` files (e.g. `book_chapter-1-introduction.md`),
-splitting at every H1. Feed the resulting directory to your RAG ingestion pipeline.
+Provenance front-matter is **on by default** (`--no-metadata` to disable). `--chunk-by-heading`
+writes `<name>_<section-slug>.md` files (e.g. `book_chapter-1-introduction.md`), splitting at every
+H1. `--code-lang` sets a default language tag for code fences whose language can't be auto-detected
+(detected languages always win) — handy when a book is overwhelmingly one language. Feed the
+resulting directory to your RAG ingestion pipeline.
 
 ---
 
@@ -111,7 +123,8 @@ splitting at every H1. Feed the resulting directory to your RAG ingestion pipeli
 | `--no-code-blocks` | off | Skip monospace detection; render as plain paragraphs. |
 | `--image-format {png,jpg}` | `png` | Sidecar image format. |
 | `--chunk-by-heading` | off | Write one `.md` file per top-level (H1) heading. |
-| `--metadata` | off | Prepend a YAML front-matter block. |
+| `--metadata` / `--no-metadata` | on | Prepend a YAML front-matter provenance block. |
+| `--code-lang` | none | Default language tag for code fences when auto-detection is inconclusive (e.g. `java`). Detected languages take precedence. |
 | `--verbose` / `--quiet` | quiet | Per-page progress and warnings. |
 | `--version` | — | Print version and exit. |
 
@@ -151,7 +164,8 @@ def hello():
     │ code     (monospace) │
     │ tables   (pdfplumber)│
     │ images   (PyMuPDF)   │
-    │ clean    (de-header) │
+    │ clean    (de-header, │
+    │  de-hyphenate, etc.) │
     └──────────┬───────────┘
                ▼
         markdown_builder ──▶ Markdown
@@ -166,10 +180,11 @@ Module map (`src/pdf2md/`):
 | `engines/` | `select_engine` auto-detection + `FastEngine` / `DoclingEngine`. |
 | `extractor.py` | PyMuPDF span/block extraction. |
 | `heading_detector.py` | Median-font-size → heading-level annotation. |
-| `code_detector.py` | Monospace-run → code-block annotation. |
-| `table_detector.py` | pdfplumber table extraction + overlap suppression. |
+| `code_detector.py` | Monospace-run → code-block annotation + language tagging. |
+| `code_language.py` | Heuristic code-language classifier (`detect_language`, `tag_bare_fences`). |
+| `table_detector.py` | pdfplumber table extraction + overlap suppression + diagram/empty-table filtering. |
 | `image_extractor.py` | Sidecar image export. |
-| `cleaner.py` | Running-header/footer removal. |
+| `cleaner.py` | Header/footer removal, de-hyphenation, letter-spacing & small-caps collapse. |
 | `markdown_builder.py` | Assembles annotated blocks into Markdown. |
 | `models.py` | Dataclasses (`Span`, `Block`, `Table`, `ConversionConfig`, …). |
 
@@ -203,3 +218,13 @@ so no binary assets are committed.
   heading, that first section is written to `<name>_preamble.md` (there is no content
   preceding it to separate); every subsequent H1 is named from its heading text.
 - Password-protected PDFs are skipped with a warning, not decrypted.
+- **Cleanup passes are conservative by design** (fast engine). De-hyphenation rejoins on a
+  trailing-`-` + lowercase-continuation heuristic, so a compound that legitimately wrapped at
+  its hyphen (`well-` `known`) is merged to one word; small-caps collapse runs on headings
+  only (body text keeps forms like `C HAPTER` so that `A JSON` / `I GET` are never corrupted);
+  code blocks are never de-hyphenated. Multi-entry table-of-contents lines may still merge into a
+  single heading.
+- **Code-language tagging is heuristic.** The classifier scores a block against per-language signal
+  patterns; short or ambiguous fragments may be mislabeled or fall back to `--code-lang`. It covers
+  Java, Python, JavaScript, SQL, Bash, JSON, YAML, XML, and HTTP — other languages need
+  `--code-lang` or land untagged.

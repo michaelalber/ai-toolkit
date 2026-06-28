@@ -16,6 +16,30 @@ def _bboxes_overlap(a: tuple[float, float, float, float], b: tuple[float, float,
     return ax0 < bx1 and ax1 > bx0 and ay0 < by1 and ay1 > by0
 
 
+# A real table has at least 2 columns and 2 rows, and is not mostly empty.
+# Single-column or sparse "tables" are usually shredded diagrams / line-art,
+# which produce meaningless Markdown noise that hurts RAG ingestion.
+_MIN_TABLE_ROWS = 2
+_MIN_TABLE_COLS = 2
+_MIN_FILLED_RATIO = 0.3
+
+
+def _is_meaningful_table(cells: list[list[str | None]]) -> bool:
+    """Return True if *cells* looks like a real data table, not diagram noise."""
+    rows = len(cells)
+    if rows < _MIN_TABLE_ROWS:
+        return False
+    cols = max((len(row) for row in cells), default=0)
+    if cols < _MIN_TABLE_COLS:
+        return False
+
+    total = sum(len(row) for row in cells)
+    if total == 0:
+        return False
+    filled = sum(1 for row in cells for cell in row if (cell or "").strip())
+    return filled / total >= _MIN_FILLED_RATIO
+
+
 def extract_tables(
     pdf_path: Path,
     pages: list[ExtractedPage],
@@ -60,6 +84,10 @@ def extract_tables(
                         [cell if cell else "" for cell in row]
                         for row in raw_table
                     ]
+                    # Skip shredded diagrams / sparse line-art masquerading as
+                    # tables; leave their overlapping text blocks as prose.
+                    if not _is_meaningful_table(cells):
+                        continue
                     extracted.tables.append(
                         Table(cells=cells, page_number=idx + 1, bbox=bbox)
                     )

@@ -23,6 +23,7 @@ class Block:
     page_number: int
     heading_level: int | None = None  # None = body, 1-3 = H1-H3
     is_code_block: bool = False
+    language: str | None = None  # fenced-code language tag (None = bare fence)
 
 
 @dataclass
@@ -59,6 +60,7 @@ class ConversionConfig:
     no_code_blocks: bool = False
     image_format: Literal["png", "jpg"] = "png"
     chunk_by_heading: bool = False
-    metadata: bool = False
+    metadata: bool = True
     verbose: bool = False
     engine: Literal["auto", "fast", "docling"] = "auto"
+    code_lang: str | None = None  # default language for untagged code fences

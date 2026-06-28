@@ -55,4 +55,9 @@ class DoclingEngine:
         if config.no_tables:
             markdown = _TABLE_RE.sub("", markdown)
 
+        if not config.no_code_blocks:
+            from pdf2md.code_language import tag_bare_fences
+
+            markdown = tag_bare_fences(markdown, default=config.code_lang)
+
         return markdown

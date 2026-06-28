@@ -142,6 +142,7 @@ def run(
     metadata: bool,
     verbose: bool,
     engine: Literal["auto", "fast", "docling"],
+    code_lang: str | None = None,
 ) -> None:
     if input_path.is_dir():
         pdf_files = sorted(input_path.glob("*.pdf"))
@@ -165,6 +166,7 @@ def run(
                 metadata=metadata,
                 verbose=verbose,
                 engine=engine,
+                code_lang=code_lang,
             )
             _convert_single(cfg)
     else:
@@ -181,5 +183,6 @@ def run(
             metadata=metadata,
             verbose=verbose,
             engine=engine,
+            code_lang=code_lang,
         )
         _convert_single(cfg)

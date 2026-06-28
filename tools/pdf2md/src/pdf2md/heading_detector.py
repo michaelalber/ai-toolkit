@@ -1,8 +1,32 @@
 from __future__ import annotations
 
+import re
 import statistics
 
 from pdf2md.models import Block, DocumentStats, ExtractedPage
+
+# Table-of-contents leaders ("Title .......... 42") and trailing page folios
+# ("What is API security? 3") pollute the heading hierarchy used for chunking.
+_DOTTED_LEADER_RE = re.compile(r"\s*\.{2,}.*$")
+_TRAILING_FOLIO_RE = re.compile(r"(?:\s+\d+)+\s*$")
+# A folio is only stripped from prose-like headings (TOC entries). Short
+# structural headings ("OAuth 2", "Chapter 2", "Part 1") keep their number.
+_MIN_WORDS_FOR_FOLIO_STRIP = 3
+
+
+def strip_heading_noise(text: str) -> str:
+    """Remove TOC dotted leaders and trailing page numbers from a heading.
+
+    ``"Foundations .......... 1"`` → ``"Foundations"``;
+    ``"What is API security? 3"`` → ``"What is API security?"``.
+    Numeric section prefixes (``1.1 ...``) are preserved, and short structural
+    headings such as ``"OAuth 2"`` keep their trailing number.
+    """
+    text = _DOTTED_LEADER_RE.sub("", text).strip()
+    stripped = _TRAILING_FOLIO_RE.sub("", text).strip()
+    if stripped != text and len(stripped.split()) >= _MIN_WORDS_FOR_FOLIO_STRIP:
+        text = stripped
+    return text.strip()
 
 
 def compute_document_stats(pages: list[ExtractedPage]) -> DocumentStats:
