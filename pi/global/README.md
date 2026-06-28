@@ -151,7 +151,19 @@ Pi's Session Boot ritual (in `AGENTS-lite.md`) checks for `intent.md` and `const
 
 ---
 
-## Model Selection
+## Model Selection — You Pick the Model
+
+**Pi runs one model that you choose — there is no automatic per-task model switching.**
+The model Pi launches with is `defaultModel` (+ `defaultProvider`) in
+`~/.pi/agent/settings.json` (shipped default: `qwen3-coder-30b-agent:latest`). Change it
+at any time during a session with `/model` (Ctrl+L), or cycle favorites with Ctrl+P. Start
+with a specific model from the shell with `pi --model <provider>/<id>`.
+
+> **Optional: automatic per-task routing.** Pi can auto-route each task role (`complex`,
+> `plan`, `medium`, `explore`, `title`, `summary`) to a *different* model. That behavior is
+> **off by default**. To turn it on, copy `pi/global/router-config.json.example` to
+> `~/.pi/agent/router-config.json` (drop the `.example` suffix and the `_README` key). Leave
+> it absent to keep single-model manual selection.
 
 | Model | Tier | VRAM (Q4 + 32K) | Context | Tool Calling | Best for |
 |-------|------|-----------------|---------|-------------|----------|
@@ -206,7 +218,8 @@ For Q4_K_M models with `OLLAMA_KV_CACHE_TYPE=q8_0`. Includes ~0.8 GB overhead.
 | `AGENTS.md` | `~/.pi/agent/` or project root | Agent instructions (merged from all levels) |
 | `SYSTEM.md` | Project root | Replaces or appends to Pi's default system prompt |
 | `models.json` | `~/.pi/agent/` or `.pi/` | Provider and model definitions |
-| `settings.json` | `~/.pi/agent/` or `.pi/` | Compaction, thinking level, default model |
+| `settings.json` | `~/.pi/agent/` or `.pi/` | Compaction, thinking level, **default model** (the one model Pi runs) |
+| `router-config.json.example` | (opt-in — rename to `router-config.json` in `~/.pi/agent/`) | Per-task auto-routing map; **disabled by default** so you pick the model |
 | `Modelfile-*` | (copy to use with `ollama create`) | Context window and parameter templates |
 
 ---
