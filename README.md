@@ -3,6 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![Skills](https://img.shields.io/badge/skills-88-blue)](#skills)
 [![Agents](https://img.shields.io/badge/agents-44-blue)](#agents)
+[![Tools](https://img.shields.io/badge/tools-pdf2md%20%7C%20web2md-blue)](#repository-structure)
 [![Platforms](https://img.shields.io/badge/platforms-Claude%20Code%20%7C%20OpenCode%20%7C%20Pi-informational)](#platforms)
 
 **88 skills, 45 agents, and 25 slash commands for AI-assisted software development — spanning TDD, .NET, Python, PHP, Rust, React, security, DDD, knowledge management, and more.**
@@ -497,7 +498,8 @@ ai-toolkit/
 ├── project-templates/          # Per-project context files — copy to your project root
 ├── scripts/                    # Install scripts (Bash + PowerShell)
 ├── tools/                      # Standalone utilities (not skills/agents/commands)
-│   └── pdf2md/                 # PDF → Markdown converter for RAG ingestion
+│   ├── pdf2md/                 # PDF → Markdown converter for RAG ingestion
+│   └── web2md/                 # Web pages & docs sites → Markdown for RAG ingestion
 └── docs/                       # Supplementary documentation
 ```
 
