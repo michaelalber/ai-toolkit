@@ -51,7 +51,7 @@ repeated here. Related project context files: `intent.md` (goals, values, tradeo
   - `opencode/global/` — global OpenCode files installed to `~/.config/opencode/`
   - `pi/global/` — global Pi files installed to `~/.pi/agent/`; `SYSTEM.md` is a per-project template
   - `project-templates/` — context file templates users copy into their own project roots (do not edit globally)
-  - `tools/` — standalone runnable utilities that are not skills/agents/commands (e.g. `tools/pdf2md/`); excluded from primitive counts and parity checks
+  - `tools/` — standalone runnable utilities that are not skills/agents/commands (e.g. `tools/pdf2md/`, `tools/web2md/`); excluded from primitive counts and parity checks
 - **Non-obvious constraints:** `claude/global/`, `opencode/global/`, and `pi/global/` files affect every project on the user's machine — changes require explicit human approval before committing
 
 ---
@@ -81,6 +81,7 @@ repeated here. Related project context files: `intent.md` (goals, values, tradeo
 | `intent.md` | Goals, values, tradeoff hierarchy, and persistent decisions for this repo |
 | `constraints.md` | Contribution constraints — read before any task |
 | `tools/pdf2md/` | Standalone Python utility (not a skill/agent/command): converts PDFs to RAG-ready Markdown. Self-contained `pyproject.toml` + tests; see its `README.md`. |
+| `tools/web2md/` | Standalone Python utility: converts web pages and documentation sites to RAG-ready Markdown via docling. Supports single-page, crawl, and sitemap modes. Self-contained `pyproject.toml` + tests; see its `README.md`. |
 
 ---
 
