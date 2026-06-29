@@ -91,7 +91,7 @@ These get *more* reliable on a weak model because the skill carries the procedur
 Single-pass but lean on judgment, synthesis, or large reference/input loads. The
 32B model produces the *structure* of a good result with shallower content. The
 lite-variant recipe: trim SKILL.md, inline the output template, cut reference hops,
-make steps explicit and imperative (the same treatment that produced `AGENTS-lite.md`).
+make steps explicit and imperative (the same treatment that produced `AGENTS-7b.md`).
 
 | Skill | Flags | Local caveat |
 |-------|-------|--------------|

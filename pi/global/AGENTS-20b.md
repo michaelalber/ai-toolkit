@@ -1,8 +1,8 @@
-# Coding Agent
+# Coding Agent — 20B+
 
-> Global baseline — install as `~/.pi/agent/AGENTS.md`.
-> Optimized for 20B+ models. Includes full rules, quality gates, and knowledge grounding.
-> For 7B models or low-memory devices, use AGENTS-lite.md instead.
+> Standalone global for 20B+ models — copy to `~/.pi/agent/AGENTS.md`.
+> Self-contained: full rules, quality gates, and the complete grounded-code-mcp collection map.
+> For 7B models or low-memory devices, copy `AGENTS-7b.md` instead. Pick exactly one — these are not layered.
 
 ---
 

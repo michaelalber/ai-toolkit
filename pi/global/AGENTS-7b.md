@@ -1,8 +1,8 @@
-# Coding Agent — Lite
+# Coding Agent — 7B
 
-> Global baseline for 7B models and low-memory devices — install as `~/.pi/agent/AGENTS.md`.
-> Compact and imperative. No chain-of-thought. ~25 rules.
-> For 20B+ models, use AGENTS.md instead.
+> Standalone global for 7B models and low-memory devices — copy to `~/.pi/agent/AGENTS.md`.
+> Compact and imperative. No chain-of-thought. ~25 rules. Self-contained — no overlay required.
+> For 20B+ models, copy `AGENTS-20b.md` instead. Pick exactly one — these are not layered.
 
 ---
 
@@ -54,17 +54,25 @@
 
 ---
 
-## Knowledge Grounding
+## Knowledge Grounding (grounded-code-mcp)
 
-Before relying on training data, search the local knowledge base:
+Before relying on training data for any covered domain, search the local knowledge base:
 
 ```bash
 grounded-code-mcp search "query" --collection <name> --json
 grounded-code-mcp search-code "query" --language <lang> --json
-grounded-code-mcp list-sources --json   # see what's available
+grounded-code-mcp list-sources --json   # authoritative runtime list
 ```
 
-Collection map is in AGENTS.md (20B+ overlay).
+Pass the bare collection suffix (server prepends `grounded_`):
+
+`internal` (XP/TDD/CI-CD/DDD/OWASP, tech writing) · `patterns` (GoF/CQRS/DI/MADR) ·
+`architecture` (SRE/12-Factor/C4/distributed) · `systems_thinking` · `ui_ux` (WCAG/Nielsen/ARIA) ·
+`dotnet` · `python` · `javascript` · `php` · `rust` · `databases` (SQL/Postgres) ·
+`edge_ai` (RAG/embeddings/agents) · `automation` (PLC/OPC UA/MODBUS/Pi) · `4d_legacy` ·
+`gov` (NIST 800-53/171/218, CUI) · `robotics` (ROS 2/RL/VLA) · `api_design` (Zalando/Google AIP/MS REST)
+
+If the KB returns nothing useful, say so — do not silently fall back to training data.
 
 ---
 

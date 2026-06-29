@@ -2,8 +2,11 @@
 # Installs Pi global config from the repo into ~/.pi/agent/
 #
 # Usage:
-#   bash scripts/install-pi.sh          # installs AGENTS-lite.md (7B-safe default)
-#   bash scripts/install-pi.sh --full   # installs AGENTS.md (20B models)
+#   bash scripts/install-pi.sh          # installs AGENTS-7b.md  (7B-safe default)
+#   bash scripts/install-pi.sh --full   # installs AGENTS-20b.md (20B+ models)
+#
+# The two AGENTS files are standalone, self-contained globals — exactly one is
+# copied to ~/.pi/agent/AGENTS.md. They are NOT layered/merged.
 
 set -euo pipefail
 
@@ -22,12 +25,13 @@ echo "Installing Pi global config from: ${REPO_ROOT}"
 mkdir -p "${PI_DIR}"
 
 if [[ "${USE_FULL}" == true ]]; then
-  cp -v "${REPO_ROOT}/pi/global/AGENTS.md" "${PI_DIR}/AGENTS.md"
-  echo "Installed: AGENTS.md (20B variant)"
+  cp -v "${REPO_ROOT}/pi/global/AGENTS-20b.md" "${PI_DIR}/AGENTS.md"
+  echo "Installed: AGENTS-20b.md as AGENTS.md (20B+ variant)"
+  echo "  For 20B+ context, set settings.json compaction to reserveTokens 4096 / keepRecentTokens 24576."
 else
-  cp -v "${REPO_ROOT}/pi/global/AGENTS-lite.md" "${PI_DIR}/AGENTS.md"
-  echo "Installed: AGENTS-lite.md as AGENTS.md (7B-safe default)"
-  echo "  Run with --full to install the 20B variant instead."
+  cp -v "${REPO_ROOT}/pi/global/AGENTS-7b.md" "${PI_DIR}/AGENTS.md"
+  echo "Installed: AGENTS-7b.md as AGENTS.md (7B-safe default)"
+  echo "  Run with --full to install the 20B+ variant instead."
 fi
 
 cp -v "${REPO_ROOT}/pi/global/models.json" "${PI_DIR}/models.json"
@@ -42,7 +46,7 @@ cp -rv "${REPO_ROOT}/skills/"* "${PI_DIR}/skills/"
 
 # Knowledge grounding — Pi has no MCP support, so the 50 skills that ground
 # against the knowledge base call the grounded-code-mcp CLI directly (see the
-# Knowledge Grounding section of pi/global/AGENTS.md). Warn if it is missing.
+# Knowledge Grounding section of the installed AGENTS.md). Warn if it is missing.
 if command -v grounded-code-mcp >/dev/null 2>&1; then
   GROUNDED_STATUS="found on PATH"
 else

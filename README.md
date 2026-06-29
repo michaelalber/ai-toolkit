@@ -489,8 +489,8 @@ ai-toolkit/
 │       └── opencode.json       # Providers, MCP, permissions, temperatures
 ├── pi/
 │   └── global/                 # Global config → ~/.pi/agent/
-│       ├── AGENTS-lite.md      # 7B-safe global baseline (~25 rules)
-│       ├── AGENTS.md           # 20B project overlay (~50 rules)
+│       ├── AGENTS-7b.md        # Standalone 7B global (~25 rules, self-contained)
+│       ├── AGENTS-20b.md       # Standalone 20B+ global (full rules + collection map)
 │       ├── models.json         # Ollama provider config
 │       ├── settings.json       # Compaction tuned for local context windows
 │       ├── Modelfile-7b        # Modelfile template for 7B models
