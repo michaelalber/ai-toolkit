@@ -1,11 +1,5 @@
 # Global Development Rules
 
-## Security Scanning (Snyk)
-
-> **Optional** — requires Snyk CLI + MCP tool. Remove this section if you don't use Snyk.
-
-Always run `snyk_code_scan` for new first-party code in a Snyk-supported language. Fix any issues found; rescan until clean.
-
 ## Session Boot Ritual
 
 At the start of every session, before doing any work:
