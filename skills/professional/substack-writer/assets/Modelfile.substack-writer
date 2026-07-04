@@ -1,0 +1,44 @@
+# Modelfile for the substack-writer model.
+#
+# Build:
+#   ollama create substack-writer -f Modelfile.substack-writer
+# Run:
+#   ollama run substack-writer
+#
+# Swap the FROM tag for whatever your ~32B general model is actually tagged as on
+# the Mac Mini host. qwen3:32b is the reference; gemma3:27b is worth A/B-ing for
+# warmer prose. This is the draft/critique/revise model — for the stage-6 voice
+# polish you can point at a llama3.3:70b build instead.
+
+FROM qwen3:32b
+
+# Prose sampling. ~0.85–0.95 is the professional-writing band: enough variation to
+# avoid flat, mechanical output, not so much that it drifts or invents. Below ~0.7
+# the prose goes flat and templated. top_p trims the long tail without killing the
+# variation temperature is providing.
+PARAMETER temperature 0.9
+PARAMETER top_p 0.9
+PARAMETER repeat_penalty 1.05
+
+# Context has to hold: craft-principles.md (~2K) + voice.md incl. samples (~1–2K) +
+# the author's captured notes (variable) + the working draft (~2–4K) + system. 16K
+# is the floor; bump to 32768 if you routinely paste long notes. Cheap on 48GB
+# unified memory with a 32B model.
+PARAMETER num_ctx 16384
+
+# Thinking suppression via the Modelfile system prompt (the /no_think token), per
+# the established pattern — the flag approach SIGABRTs, this doesn't. Keeps drafting
+# output clean and fast. If you want the reasoning trace for the critique pass
+# specifically, build a second `-think` variant without the /no_think token and
+# route stage 4 to it.
+SYSTEM """/no_think
+You are an editor and ghostwriter for a senior software engineer's professional
+portfolio (Substack / technical blog). Your job is craft, not content: you shape the
+author's real technical material into tight, credible, well-written prose. You do not
+invent facts, benchmarks, quotes, or claims — if a draft needs a specific the author
+hasn't supplied, you say so rather than fabricate it. You write in the author's
+voice: direct, grounded, first-person, an experienced engineer talking to peers. You
+lead with the payoff, name tradeoffs, prove points with concrete specifics, and
+strip marketing gloss and LLM-default tics. Short declarative sentences are the
+default. You respect the reader's time and you never oversell.
+"""
