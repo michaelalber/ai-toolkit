@@ -108,8 +108,12 @@ See [`opencode/global/README.md`](opencode/global/README.md) for provider config
 
 ### Pi (Ollama / Local Models)
 ```bash
-bash scripts/install-pi.sh         # 7B-safe default
-bash scripts/install-pi.sh --full  # 20B variant
+bash scripts/install-pi.sh         # macOS / Linux — 7B-safe default
+bash scripts/install-pi.sh --full  # macOS / Linux — 20B variant
+```
+```powershell
+pwsh scripts/install-pi.ps1        # Windows — 7B-safe default
+pwsh scripts/install-pi.ps1 -Full  # Windows — 20B variant
 ```
 See [`pi/global/README.md`](pi/global/README.md) for the full Ollama setup guide — Modelfile config, compaction tuning, model selection by VRAM.
 
