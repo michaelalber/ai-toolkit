@@ -1,0 +1,36 @@
+# gemma4-31b-agent — general chat + agentic tool-use (non-CN alternate to qwen3-32b-agent)
+# Base model: gemma4:31b  (Google, 31.3B, Q4_K_M; capabilities: completion, vision, tools, thinking)
+# Customisations: num_ctx raised (Ollama default 2048) -> 65536; base template, tools, vision,
+#   and sampling preserved.
+#
+#   NOTE: unlike the qwen3-*-agent variants, thinking is NOT disabled here. gemma4 exposes a
+#   `thinking` capability and there is no clean PARAMETER to turn it off; forcing it off would
+#   mean hand-editing gemma4's chat template, which risks breaking its native tool-calling.
+#   Disable per-request instead with "think": false on /api/chat (Open WebUI: Advanced Params).
+#   Left ON so this stays a faithful base variant — the only load-bearing change is the context.
+#
+#   Why the context raise matters: Pi talks to Ollama's OpenAI-compatible /v1 endpoint, which
+#   cannot pass num_ctx per request — so without this the model is pinned to the 2048 default.
+#   Open WebUI uses native /api/chat and can override num_ctx in the UI, but baking it in gives
+#   a single durable default across Pi + WebUI + Goose. ~28-30 GB VRAM at 65K, fits the 48 GB M4 Pro.
+#
+# To recreate on a fresh Ollama install:
+#   ollama pull gemma4:31b
+#   ollama create gemma4-31b-agent:latest -f gemma4-31b-agent.Modelfile
+#
+# Mac Mini blob SHA (current): sha256-280af6832eca23cb322c4dcc65edfea98a21b8f8ab07dc7553bd6f7e6e7a3313
+#
+# To update a single parameter without a full recreate (e.g. num_ctx):
+#   curl -s -X POST http://michaels-mac-mini.cosmach.net:11434/api/create \
+#     -H "Content-Type: application/json" \
+#     -d '{"model":"gemma4-31b-agent:latest","from":"gemma4-31b-agent:latest","parameters":{"num_ctx":65536}}'
+
+FROM gemma4:31b
+
+PARAMETER num_ctx 65536
+
+# gemma4's published sampling defaults, pinned for reproducibility.
+# For more deterministic agent/tool runs, lower temperature (e.g. 0.2-0.6).
+PARAMETER temperature 1
+PARAMETER top_k 64
+PARAMETER top_p 0.95
