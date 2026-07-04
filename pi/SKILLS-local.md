@@ -86,7 +86,7 @@ These get *more* reliable on a weak model because the skill carries the procedur
 
 ---
 
-## 🟡 Yellow — usable, author a lite variant (47)
+## 🟡 Yellow — usable, author a lite variant (48)
 
 Single-pass but lean on judgment, synthesis, or large reference/input loads. The
 32B model produces the *structure* of a good result with shallower content. The
@@ -121,6 +121,7 @@ make steps explicit and imperative (the same treatment that produced `AGENTS-7b.
 | rust-migration-analyzer | 📚 | Assessment + plan synthesis |
 | 4d-schema-migration | 📚 | DDL gen is mechanical; UI/entity mapping is judgment |
 | confluence-guide-writer | 📚 | Doc synthesis; bounded by source but prose-quality-sensitive |
+| substack-writer | | Multi-pass editorial revision; prose-quality-sensitive, craft judgment shallower locally — drive one pass at a time |
 | transcript-capture | 📚 | **Large input** — full transcript can saturate a 32K window |
 | email-capture | 📚 | **Large input** — full thread can saturate a 32K window |
 | capture-consolidate | 📚 | Dedup + contradiction detection across docs; judgment |

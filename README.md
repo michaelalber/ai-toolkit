@@ -1,12 +1,12 @@
 # AI Toolkit
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Skills](https://img.shields.io/badge/skills-88-blue)](#skills)
+[![Skills](https://img.shields.io/badge/skills-89-blue)](#skills)
 [![Agents](https://img.shields.io/badge/agents-44-blue)](#agents)
 [![Tools](https://img.shields.io/badge/tools-pdf2md%20%7C%20web2md-blue)](#repository-structure)
 [![Platforms](https://img.shields.io/badge/platforms-Claude%20Code%20%7C%20OpenCode%20%7C%20Pi-informational)](#platforms)
 
-**88 skills, 45 agents, and 25 slash commands for AI-assisted software development — spanning TDD, .NET, Python, PHP, Rust, React, security, DDD, knowledge management, and more.**
+**89 skills, 45 agents, and 25 slash commands for AI-assisted software development — spanning TDD, .NET, Python, PHP, Rust, React, security, DDD, knowledge management, and more.**
 
 > **Edge AI, robotics, ML, and industrial automation?** Those skills now live in the companion
 > [edge-ai-robotics-automation-toolkit](../edge-ai-robotics-automation-toolkit) — install it alongside this one.
@@ -333,6 +333,12 @@ Vendored copies of workflow-primitive skills from [Matt Pocock's skills repo](ht
 | `architecture-journal` | Lightweight ADR templates with retrospective prompts at 30/90/180 days. |
 | `spec-coach` | Interactive spec design coach — vision, PRD structure, INVEST story quality, specification by example, three-tier guardrails. |
 
+### Writing & Portfolio
+
+| Skill | Description |
+|-------|-------------|
+| `substack-writer` | Multi-pass editorial pipeline that shapes the author's raw technical notes into publication-quality Substack/blog posts — keeps the human as the source of technical substance and applies editorial craft rather than generating generic filler. |
+
 ---
 
 ## Agents
@@ -473,7 +479,7 @@ The `project-templates/` directory contains per-project context files based on t
 ai-toolkit/
 ├── skills/
 │   ├── team/                   # 77 team skills (shareable, production-ready)
-│   └── professional/           # 11 professional skills (deliberate practice)
+│   └── professional/           # 12 professional skills (deliberate practice)
 ├── claude/
 │   ├── agents/
 │   │   └── team/               # 45 Claude Code team agents
