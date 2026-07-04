@@ -115,6 +115,17 @@ See [`pi/global/README.md`](pi/global/README.md) for the full Ollama setup guide
 
 **Working local-first?** [`LOCAL-FIRST-WORKFLOW.md`](LOCAL-FIRST-WORKFLOW.md) is the methodology for running ~80% of coding work on a self-hosted ~30B model and escalating the hard 20% to a frontier cloud model — the routing rule, escalation triggers, and how to adjust prompting for smaller local models. Its companion [`LOCAL-AI-CHEATSHEET.md`](LOCAL-AI-CHEATSHEET.md) is the tool picker — which local-AI tool (Pi, OpenCode, Open WebUI, Goose, …) to reach for per task.
 
+### Other agent tools (`~/.agents/skills/`)
+
+For any tool that discovers skills under the generic `~/.agents/skills/` directory, install the shared skills tree (both `team/` and `professional/`) with:
+
+```bash
+bash scripts/install-agents.sh        # macOS / Linux
+```
+```powershell
+pwsh scripts/install-agents.ps1       # Windows
+```
+
 **Other AI tools** (Cursor, Windsurf, Copilot, etc.): [`AGENTS.md`](AGENTS.md) follows the universal agent instructions standard and is auto-discovered from the project root.
 
 ---
