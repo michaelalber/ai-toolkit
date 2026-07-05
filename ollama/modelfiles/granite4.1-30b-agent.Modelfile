@@ -4,13 +4,16 @@
 #   sampling preserved.
 #
 #   NOTE: granite4.1 exposes NO thinking capability (verified via /api/show), so there is nothing
-#   to disable — this is purely a context-raised variant. The base model ships no sampling
-#   parameters, so Ollama's runtime defaults apply unless overridden below.
+#   to disable — this is purely a context-raised + retuned-sampling variant. The base model ships
+#   no sampling parameters by default; temperature/top_p below are now explicitly pinned rather
+#   than left to Ollama's runtime defaults, for more deterministic agent/tool runs.
 #
 #   Why the context raise matters: Pi talks to Ollama's OpenAI-compatible /v1 endpoint, which
 #   cannot pass num_ctx per request — so without this the model is pinned to the 2048 default.
 #   Open WebUI uses native /api/chat and can override num_ctx in the UI, but baking it in gives
-#   a single durable default across Pi + WebUI + Goose. ~26-28 GB VRAM at 65K, fits the 48 GB M4 Pro.
+#   a single durable default across Pi + WebUI + Goose. Raised again 65536 -> 131072 to match the
+#   other *-agent models' standard context (fits the 48 GB M4 Pro alongside the 40GB GPU wired
+#   memory ceiling).
 #
 # To recreate on a fresh Ollama install:
 #   ollama pull granite4.1:30b
@@ -21,8 +24,10 @@
 # To update a single parameter without a full recreate (e.g. num_ctx):
 #   curl -s -X POST http://michaels-mac-mini.cosmach.net:11434/api/create \
 #     -H "Content-Type: application/json" \
-#     -d '{"model":"granite4.1-30b-agent:latest","from":"granite4.1-30b-agent:latest","parameters":{"num_ctx":65536}}'
+#     -d '{"model":"granite4.1-30b-agent:latest","from":"granite4.1-30b-agent:latest","parameters":{"num_ctx":131072}}'
 
 FROM granite4.1:30b
 
-PARAMETER num_ctx 65536
+PARAMETER num_ctx 131072
+PARAMETER temperature 0.2
+PARAMETER top_p 0.9

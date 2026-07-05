@@ -1,0 +1,40 @@
+# qwen3.6-35b-a3b-agent — fast MoE general agent, explore/search, title/summary work (successor to qwen3-30b-a3b-agent)
+# Base model: qwen3.6:35b-a3b  (MoE, 36B total / ~3B active params per token, Q4_K_M;
+#   capabilities: completion, vision, tools, thinking)
+# Customisations: num_ctx raised (Ollama default 2048) -> 131072; sampling retuned for more
+#   deterministic agent/tool runs (temperature lowered from qwen3.6's published default of 1).
+#
+#   NOTE: uses Ollama's built-in RENDERER/PARSER qwen3.5 (qwen3.6 shares the qwen3.5 rendering
+#   format — there is no separate "qwen3.6" renderer as of this Ollama version), so no custom
+#   go-template override is needed (unlike the older qwen3-*-agent variants, which hand-roll a
+#   <tool_call> XML template + /no_think injection). Thinking is not disabled via template here;
+#   disable per-request instead with "think": false on /api/chat (Open WebUI: Advanced Params).
+#
+#   Why the context raise matters: Pi talks to Ollama's OpenAI-compatible /v1 endpoint, which
+#   cannot pass num_ctx per request — so without this the model is pinned to the 2048 default.
+#   Open WebUI uses native /api/chat and can override num_ctx in the UI, but baking it in gives
+#   a single durable default across Pi + WebUI + Goose. 131072 matches the other *-agent models'
+#   standard context; fits the 48 GB M4 Pro alongside the 40GB GPU wired memory ceiling.
+#
+# To recreate on a fresh Ollama install:
+#   ollama pull qwen3.6:35b-a3b
+#   ollama create qwen3.6-35b-a3b-agent:latest -f qwen3.6-35b-a3b-agent.Modelfile
+#
+# Mac Mini blob SHA (current): sha256-f5ee307a2982106a6eb82b62b2c00b575c9072145a759ae4660378acda8dcf2d
+#
+# To update a single parameter without a full recreate (e.g. num_ctx):
+#   curl -s -X POST http://michaels-mac-mini.cosmach.net:11434/api/create \
+#     -H "Content-Type: application/json" \
+#     -d '{"model":"qwen3.6-35b-a3b-agent:latest","from":"qwen3.6-35b-a3b-agent:latest","parameters":{"num_ctx":131072}}'
+
+FROM qwen3.6:35b-a3b
+
+RENDERER qwen3.5
+PARSER qwen3.5
+PARAMETER num_ctx 131072
+PARAMETER presence_penalty 1.5
+PARAMETER repeat_penalty 1
+PARAMETER temperature 0.2
+PARAMETER top_k 20
+PARAMETER top_p 0.9
+PARAMETER min_p 0

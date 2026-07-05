@@ -12,7 +12,7 @@
 # To update a single parameter without a full recreate (e.g. num_ctx):
 #   curl -s -X POST http://michaels-mac-mini.cosmach.net:11434/api/create \
 #     -H "Content-Type: application/json" \
-#     -d '{"model":"qwen3-coder-30b-agent:latest","from":"qwen3-coder-30b-agent:latest","parameters":{"num_ctx":65536}}'
+#     -d '{"model":"qwen3-coder-30b-agent:latest","from":"qwen3-coder-30b-agent:latest","parameters":{"num_ctx":131072}}'
 
 FROM qwen3-coder:30b
 
@@ -85,11 +85,11 @@ Example of the ONLY correct format:
 
 RENDERER qwen3-coder
 PARSER qwen3-coder
-PARAMETER num_ctx 65536
+PARAMETER num_ctx 131072
 PARAMETER repeat_penalty 1.05
 PARAMETER stop <|im_start|>
 PARAMETER stop <|im_end|>
 PARAMETER stop <|endoftext|>
-PARAMETER temperature 0.7
+PARAMETER temperature 0.2
 PARAMETER top_k 20
-PARAMETER top_p 0.8
+PARAMETER top_p 0.9
