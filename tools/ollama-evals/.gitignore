@@ -1,0 +1,21 @@
+# Local, non-committed config — this is where YOUR Ollama host (e.g. a Mac mini on the
+# LAN) lives. Keeps personal hostnames/IPs out of the public repo.
+models.local.yaml
+*.local.yaml
+
+# Run artifacts and generated reports
+runs/
+reports/
+*.run.jsonl
+
+# Python / tooling
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+dist/
+build/
+*.egg-info/
