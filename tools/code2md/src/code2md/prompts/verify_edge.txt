@@ -1,0 +1,19 @@
+You are verifying a SINGLE extracted relationship against the source code it was
+derived from. Decide only whether the code clearly SUPPORTS the claim. Be strict: if
+the code does not directly and unambiguously support the claim, answer false. Do not
+give the benefit of the doubt.
+
+Claim: "{{SUBJECT}}" {{RELATION}} "{{OBJECT}}"
+
+Return a single JSON object:
+
+{"supported": true, "evidence": "<the line or short reason it holds>"}
+
+or
+
+{"supported": false, "evidence": "<why the code does not support it>"}
+
+Output JSON only. No markdown, no commentary.
+
+Source ({{PATH}}):
+{{CODE}}
