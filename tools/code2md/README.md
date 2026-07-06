@@ -54,6 +54,13 @@ code2md scan ~/AppDev/myapp --name myapp
 code2md scan ~/AppDev/myapp --out /tmp/code2md/myapp --name myapp --verbose
 ```
 
+The output directory name is a **single, hyphenated slug** (`My App` → `my-app`) and
+becomes the ingested chunks' `source_path` prefix. Point `--out` at a **top-level**
+directory under grounded-code-mcp's `sources/` (e.g. `sources/my-app/`, *not* a nested
+`sources/projects/my-app/`) — a single-segment prefix is what the concept-graph
+`source_slug` matches against, so graph expansion in `search_knowledge` can resolve
+project edges back to real chunks.
+
 Then wire it into grounded-code-mcp in two steps:
 
 **1. Register the collection** (one-time, per project) in your **user** config
@@ -63,8 +70,9 @@ searchable (code *is*, because `search_code_examples` skips the allowlist):
 
 ```toml
 [collections]
-# value = the ingest --collection name below
-"sources/projects/myapp" = "project_myapp"
+# key = source_path prefix (the single-segment slug dir under sources/)
+# value = the ingest --collection name below (search_knowledge validates against these)
+"my-app" = "project_my_app"
 ```
 
 This lives in the user config, not the committed project config — project snapshots are
@@ -73,12 +81,14 @@ machine-specific and churny.
 **2. Ingest** (the tool prints this line for you):
 
 ```bash
-grounded-code-mcp ingest /tmp/code2md/myapp --collection project_myapp
+grounded-code-mcp ingest sources/my-app --collection project_my_app
 ```
 
-`--collection` overrides path-based collection derivation, producing `grounded_project_myapp`.
-Keep the output directory **outside** grounded-code-mcp's committed `sources/` tree. Re-running
-is cheap: grounded-code-mcp's SHA-256 change detection re-ingests only files that changed.
+`--collection` overrides path-based collection derivation, producing `grounded_project_my_app`.
+The scan lands **under** grounded-code-mcp's `sources/` as a single-segment slug dir so its
+chunks' `source_path` prefix (`my-app/…`) matches the concept-graph `source_slug`; gitignore the
+per-project scan dirs to keep churny snapshots out of the committed tree. Re-running is cheap:
+grounded-code-mcp's SHA-256 change detection re-ingests only files that changed.
 
 > The MCP server reads `[collections]` at startup — restart it after step 1 so
 > `search_knowledge` picks up the new collection. (The CLI `grounded-code-mcp search` re-reads

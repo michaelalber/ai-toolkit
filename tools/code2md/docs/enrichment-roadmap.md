@@ -176,10 +176,16 @@ stays clean by construction; vetted collections unchanged.
 ## Next action
 
 **Phase 3 pre-req is done — it failed: graph expansion is broken system-wide** (see Phase 3).
-Decision made: **(C) both.** Immediate work = **(A)** restructure project scan output to a top-level
+Decision made: **(C) both.** Work item **(A)** = restructure project scan output to a top-level
 slugified dir `sources/<project-slug>/` so `source_path`/`source_slug` resolve cleanly:
-1. Change code2md default out + docs from `sources/projects/<name>` to `sources/<project-slug>/`
-   (hyphenated); update the ingest guidance + config-key example.
-2. Migrate the existing `grounded_code_mcp` scan/collection to the new layout.
-3. Then build Phase 3 relationship extraction + verification, with Ollama Cloud as the build model.
+1. ✅ **DONE (2026-07-05, uncommitted).** `slugify_name` now mirrors grounded's `slugify()` exactly
+   (hyphenated, idempotent → `slugify(dirname) == dirname`); new `collection_suffix()` keeps
+   collection names on the underscore convention (`my-app` → `project_my_app`). CLI ingest hint,
+   README, and design-doc paths/examples moved from the 2-segment `sources/projects/<name>` to the
+   1-segment `sources/<project-slug>/`. 63 tests pass (was 49), 93% cov. `test_models.py` added.
+2. ✅ **No separate migration (2026-07-05).** grounded data is being rebuilt from scratch on the
+   Mac Mini, so the new single-segment `sources/grounded-code-mcp/` layout is picked up on the
+   fresh re-scan + re-ingest — no in-place migration of the old `projects/grounded_code_mcp`
+   collection needed.
+3. ⬜ Then build Phase 3 relationship extraction + verification, with Ollama Cloud as the build model.
 **(B)** the grounded-code-mcp chunk↔slug matching fix is scheduled in Phase 4.

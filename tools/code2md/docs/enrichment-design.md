@@ -37,15 +37,20 @@ memory*. So the bar for coverage, retrievability, and pre-digestion is higher. T
 
 ```
 code2md scan <repo>              (deterministic, existing)
-   → sources/projects/<name>/**.md          [code docs — the AUTHORITY]
+   → sources/<project-slug>/**.md            [code docs — the AUTHORITY]
 
 code2md enrich <scan-dir>        (NEW, LLM, opt-in)
-   → sources/projects/<name>/_enriched/**    [summaries + questions — the BRIDGE]
-   → sources/projects/<name>/RELATIONSHIPS.md [graph feed]
+   → sources/<project-slug>/_enriched/**      [summaries + questions — the BRIDGE]
+   → sources/<project-slug>/RELATIONSHIPS.md  [graph feed]
 
-grounded-code-mcp ingest sources/projects/<name>   (deterministic, existing)
+grounded-code-mcp ingest sources/<project-slug>   (deterministic, existing)
 grounded-code-mcp ingest --force ...  OR  build-graph   (rebuilds the concept graph)
 ```
+
+`<project-slug>` is a **single, hyphenated** segment (grounded's `slugify()` form) placed
+directly under `sources/`, so each chunk's `source_path` = `<project-slug>/…` and a concept-graph
+`source_slug` of `<project-slug>` prefix-matches it. A nested `sources/projects/<name>/` layout
+breaks graph expansion — a two-segment prefix can't be matched by a single slug.
 
 Generation lives entirely in `code2md`; grounded-code-mcp's ingest stays LLM-free. Adding a second
 subcommand means `scan` becomes explicit (`code2md scan <repo>`), a small UX change from today's
@@ -63,9 +68,9 @@ Path: `_enriched/<rel>.enriched.md`. Example for `src/grounded_code_mcp/ingest.p
 
 ```markdown
 ---
-source: grounded_code_mcp
+source: grounded-code-mcp
 path: _enriched/src/grounded_code_mcp/ingest.py.enriched.md
-derived_from: projects/grounded_code_mcp/src/grounded_code_mcp/ingest.py.md
+derived_from: grounded-code-mcp/src/grounded_code_mcp/ingest.py.md
 generated: true
 model: <build-time model id from config>
 generated_at: 2026-07-06T...
@@ -109,17 +114,19 @@ models are worst at — and the highest-risk, so it carries the most rigor.
 ```
 ## <name>  <!-- domain: architecture -->
 
-"IngestionPipeline" → orchestrates → "DocumentParser" [projects/grounded_code_mcp] [architecture] [] [ingest.py: parse step]
-"IngestionPipeline" → uses → "EmbeddingClient" [projects/grounded_code_mcp] [architecture] [] [batch embed loop]
-"DocumentChunker" → produces → "Chunk" [projects/grounded_code_mcp] [python] [] []
+"IngestionPipeline" → orchestrates → "DocumentParser" [grounded-code-mcp] [architecture] [] [ingest.py: parse step]
+"IngestionPipeline" → uses → "EmbeddingClient" [grounded-code-mcp] [architecture] [] [batch embed loop]
+"DocumentChunker" → produces → "Chunk" [grounded-code-mcp] [python] [] []
 ```
 
 Bracket order the parser expects: `[source_slug] [domain] [type] [description]`.
 
 - **source_slug** (1st bracket) = the per-edge source attribution guardrail — set it to the
-  project's chunk `source_path` prefix so graph expansion resolves edges back to real chunks.
-  ⚠️ Must align with how `search_knowledge` graph expansion matches `source_slug` against
-  `source_path` (verify against `server.py:342-347`).
+  project's single-segment chunk `source_path` prefix (`<project-slug>`) so graph expansion
+  resolves edges back to real chunks. grounded's `graph_builder` slugifies this value, and
+  `search_knowledge` then matches it verbatim as a `source_path` prefix (`server.py:344`), so the
+  scan dir must already be in slugified hyphen form — which `code2md`'s `slugify_name` now
+  guarantees (`slugify(dirname) == dirname`).
 - **domain** must be one of `VALID_DOMAINS` (`graph_store.py:19-37`) — 15 values. There is **no
   project/codebase domain**; use `architecture` for structural concepts, or the project language
   when it matches (`python`, `rust`, `javascript`, `php`). Languages like go/java/cpp/c/etc. have
