@@ -59,6 +59,17 @@ class TestScan:
         result = runner.invoke(app, ["scan", str(sample_repo), "--out", str(out), "--name", "My App"])
         assert "--collection project_my_app" in result.output
 
+    def test_default_out_uses_hyphenated_slug(
+        self, sample_repo: Path, tmp_path: Path, monkeypatch
+    ) -> None:
+        # Default out dir doubles as the single-segment source_path prefix under
+        # grounded's sources/, so it must be the hyphenated slug (not my_app).
+        monkeypatch.chdir(tmp_path)
+        result = runner.invoke(app, ["scan", str(sample_repo), "--name", "My App"])
+        assert result.exit_code == 0, result.output
+        assert (tmp_path / "output" / "my-app" / "src" / "main.py.md").exists()
+        assert not (tmp_path / "output" / "my_app").exists()
+
     def test_no_overview_flag(self, sample_repo: Path, tmp_path: Path) -> None:
         out = tmp_path / "out"
         runner.invoke(app, ["scan", str(sample_repo), "--out", str(out), "--no-overview"])
