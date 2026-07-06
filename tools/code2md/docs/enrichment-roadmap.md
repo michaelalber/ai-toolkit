@@ -79,10 +79,34 @@ counts remain sourced from the mechanical overview; provenance present; reads as
 (`query_graph`) — pre-computed multi-hop structure, the biggest win for a 30B runtime model and the
 highest-risk artifact (a bad edge injects false *routing*, not a false fact).
 
-**⚠️ Pre-requisite before generating anything:** verify the `source_slug` ↔ `source_path` linkage.
-The graph expansion in `search_knowledge` matches a node's `source_slug` against chunk
-`source_path` (grounded-code-mcp `server.py:342-347`). Confirm what slug value makes an edge resolve
-to the project's real chunks *before* spending model calls. **Do this first.**
+**⚠️ Pre-requisite — VERIFIED 2026-07-06: the linkage is BROKEN system-wide.** Blocks Phase 3.
+
+Graph expansion in `search_knowledge` matches `source_path.startswith(slug + "/")` (server.py:344),
+where `slug` is run through `slugify()` — which strips `/` and `.` and maps `_`→`-`
+(graph_store.py:158-161). But graph node `source_slug`s are **document-name slugs**
+(`google-aip`, `wcag-22`, `zalando`), while chunk `source_path`s are **collection-prefixed**
+(`api-design/google-aip/121.md`). A path starting `api-design/` can never `startswith("google-aip/")`,
+so expansion matches **nothing** — confirmed live: a query strongly matching the 27-edge concept
+`resource-oriented-design` returned only `[vector]` hits, zero `[graph-expanded]`. (`query_graph`
+traversal works; only the `search_knowledge` auto-expansion is dead.) The existing slugs are also
+often semantically wrong (`resource-oriented-design` → `source_slug: wcag-22`).
+
+For our project it's doubly broken: chunks live at `projects/grounded_code_mcp/...`; `slugify` can't
+hold a `/`, so no clean per-project slug prefix-matches a two-segment path (only the too-broad
+`projects` would, bleeding across all projects).
+
+**DECISION (2026-07-06): (C) both — (A) now to unblock Phase 3, (B) as the real fix in Phase 4.**
+
+Options:
+- **(A) Restructure project scan output to a top-level, pre-slugified dir** `sources/<project-slug>/`
+  (hyphens, no underscores) so `source_path = "<project-slug>/..."` and a triple `source_slug` of
+  `<project-slug>` resolves uniquely. Revisits the earlier `sources/projects/<name>` choice + the
+  config key. Fixes *our* project only; contained; no server change.
+- **(B) Fix grounded-code-mcp (recommended long-term).** Store a `source_slug`/collection token on
+  each chunk at ingest and match graph expansion on *that* instead of a `source_path` prefix — repairs
+  expansion for **every** collection (currently all broken), not just projects. Server change → fold
+  into Phase 4. Also fix the distillation that assigns wrong slugs.
+- **(C) Both:** (A) unblocks Phase 3 now; (B) is the real fix, scheduled in Phase 4.
 
 **Artifact & format (fixed by the existing parser — `graph_builder.py`).** Quoted triples:
 ```
@@ -151,6 +175,11 @@ stays clean by construction; vetted collections unchanged.
 
 ## Next action
 
-**Phase 3 pre-req** — verify the `source_slug` ↔ `source_path` linkage against a known collection
-before building relationship extraction. Fold Ollama Cloud support in alongside, since Phase 3 is
-where the bigger model matters most.
+**Phase 3 pre-req is done — it failed: graph expansion is broken system-wide** (see Phase 3).
+Decision made: **(C) both.** Immediate work = **(A)** restructure project scan output to a top-level
+slugified dir `sources/<project-slug>/` so `source_path`/`source_slug` resolve cleanly:
+1. Change code2md default out + docs from `sources/projects/<name>` to `sources/<project-slug>/`
+   (hyphenated); update the ingest guidance + config-key example.
+2. Migrate the existing `grounded_code_mcp` scan/collection to the new layout.
+3. Then build Phase 3 relationship extraction + verification, with Ollama Cloud as the build model.
+**(B)** the grounded-code-mcp chunk↔slug matching fix is scheduled in Phase 4.
