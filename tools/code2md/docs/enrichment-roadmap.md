@@ -73,13 +73,19 @@ counts remain sourced from the mechanical overview; provenance present; reads as
 
 ---
 
-## Phase 3 — concept-graph relationships ⬜ PLANNED  ← the "graph stuff"
+## Phase 3 — concept-graph relationships 🚧 IN PROGRESS  ← the "graph stuff"
 
 **Goal.** Generate per-project `RELATIONSHIPS.md` feeding grounded-code-mcp's concept graph
 (`query_graph`) — pre-computed multi-hop structure, the biggest win for a 30B runtime model and the
 highest-risk artifact (a bad edge injects false *routing*, not a false fact).
 
-**⚠️ Pre-requisite — VERIFIED 2026-07-06: the linkage is BROKEN system-wide.** Blocks Phase 3.
+**✅ Pre-requisite UNBLOCKED (2026-07-05).** Work item (A) shipped (branch
+`feat/code2md-graphrag-slug-layout`): the scan dir is now a single hyphenated segment
+`sources/<project-slug>/`, so each chunk's `source_path` prefix equals the graph builder's
+default `source_slug = slugify(parent-dir-name)` (`graph_builder.py:182`), which
+`search_knowledge` matches verbatim (`server.py:344`). The original diagnosis is kept below for
+context; (B) — the general server-side fix for the *other* collections — remains scheduled in
+Phase 4.
 
 Graph expansion in `search_knowledge` matches `source_path.startswith(slug + "/")` (server.py:344),
 where `slug` is run through `slugify()` — which strips `/` and `.` and maps `_`→`-`
@@ -128,12 +134,35 @@ routing.
 **Model.** Strongest available — **this is the phase most justified for an Ollama Cloud model**;
 extraction quality here has the largest and most permanent impact.
 
-**Steps.**
-1. Verify `source_slug` linkage (pre-req) — small experiment against a known collection.
-2. `enrich/relationships.py` (extract) + `enrich/verify.py` (verification pass);
-   `prompts/relationships.txt`, `prompts/verify_edge.txt` (both inject the controlled vocab).
-3. Emit `RELATIONSHIPS.md` at the project scan root; `grounded-code-mcp ingest --force` /
-   `build-graph` rebuilds the graph.
+**Decisions locked (2026-07-05).**
+- **Extraction granularity: per-file, name-merged.** Extract the relationships each source file
+  participates in (the file is the authority + the verification `derived_from`); cross-file edges
+  merge automatically because concept ids are `slugify(name)`. Only approach compatible with the
+  mandatory per-edge verification and Phase-1-style per-file caching.
+- **CLI: `--level {summaries,graph,full}` on `enrich`** (default `summaries` = today's behaviour;
+  `graph` = relationships + verify; `full` = both). Adds `--verify-model`.
+- **Model tiering: cloud extract + local verify.** Extraction via a `<model>-cloud` Ollama tag
+  (zero-code cloud path — no `Authorization` header work needed now; that stays backlog); verify on
+  the local model. grounded-code-mcp is OSS, so cloud is within the privacy gate.
+- **RELATIONSHIPS.md is graph-feed only.** Add `"RELATIONSHIPS.md"` to grounded's `config.toml`
+  `exclude_filenames` so `ingest` parses it into the graph but does **not** embed it as a vector
+  chunk (structured triples would be retrieval noise). Small cross-repo change — the design doc's
+  "no server changes for Phase 3" note is amended by this.
+
+**Steps (TDD slices, RED→GREEN each).**
+1. `enrich/relationships.py`: `Triple`, `normalize_relation` (mirror parser; drop non-`VALID_RELATIONS`
+   locally + log), defensive `parse_extraction_json`. Vendor `VALID_RELATIONS`/`VALID_DOMAINS` as
+   versioned constants (separate repo → can't import grounded; a test pins samples + points at
+   `graph_store.py`).
+2. `render_relationships(...)` → parser-valid quoted triples + section headers + provenance
+   front-matter; a **vendored copy of the parser regex** in the test proves parseability.
+3. `prompts/relationships.txt` (injects the verb list + domain constraint) + `extract_relationships`.
+4. `prompts/verify_edge.txt` + `enrich/verify.py` (`verify_triple`, `verify_all` drops unsupported).
+5. Relationship cache (`relate-manifest.json`, SHA+model) + CLI `--level` wiring → writes
+   `sources/<slug>/RELATIONSHIPS.md`, prints the `ingest --force` / `build-graph` hint.
+6. **(grounded repo)** add `"RELATIONSHIPS.md"` to `exclude_filenames` + a test.
+7. **(live, needs Qdrant+Ollama)** run cloud-extract → local-verify → `ingest --force` → spot-check
+   `query_graph` + graph-expanded `search_knowledge`.
 
 **Acceptance.** ≥90% of a sampled edge set is supported by its cited code (post-verify); every edge
 carries a resolving `source_slug`; `query_graph` on a seeded concept returns project relationships;
@@ -187,5 +216,6 @@ slugified dir `sources/<project-slug>/` so `source_path`/`source_slug` resolve c
    Mac Mini, so the new single-segment `sources/grounded-code-mcp/` layout is picked up on the
    fresh re-scan + re-ingest — no in-place migration of the old `projects/grounded_code_mcp`
    collection needed.
-3. ⬜ Then build Phase 3 relationship extraction + verification, with Ollama Cloud as the build model.
+3. 🚧 **Phase 3 IN PROGRESS** — plan locked (see Phase 3 § Decisions locked). Building the TDD
+   slices now, starting with slice 1 (`relationships.py` data model + relation validation).
 **(B)** the grounded-code-mcp chunk↔slug matching fix is scheduled in Phase 4.
