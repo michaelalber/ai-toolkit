@@ -18,7 +18,7 @@ from code2md.enrich.summarize import (
     summarize_document,
     write_enriched,
 )
-from code2md.models import ScanConfig, slugify_name
+from code2md.models import ScanConfig, collection_suffix, slugify_name
 from code2md.overview import build_overview, write_overview
 from code2md.walker import git_commit, iter_source_files
 
@@ -119,7 +119,7 @@ def scan(
     )
     console.print(
         "[cyan]Ingest with:[/] "
-        f"grounded-code-mcp ingest {config.out_dir} --collection project_{config.name}",
+        f"grounded-code-mcp ingest {config.out_dir} --collection {collection_suffix(config.name)}",
         soft_wrap=True,
     )
 

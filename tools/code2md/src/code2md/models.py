@@ -28,10 +28,28 @@ class SourceFile:
 
 
 def slugify_name(raw: str) -> str:
-    """Normalise a project name into a collection-safe slug (``[a-z0-9_]``).
+    """Normalise a project name into grounded-code-mcp's canonical slug form.
 
-    ``My App`` -> ``my_app``; the grounded-code-mcp collection becomes
-    ``project_my_app``.
+    The scan output directory name doubles as the chunk ``source_path`` prefix
+    and the concept-graph ``source_slug`` in grounded-code-mcp. Graph expansion
+    matches a slugified ``source_slug`` against ``source_path`` verbatim, so the
+    directory name must already be in grounded's hyphenated form — i.e. this must
+    mirror ``graph_store.slugify()`` exactly and be idempotent under it.
+
+    ``My App`` -> ``my-app``; ``grounded_code_mcp`` -> ``grounded-code-mcp``.
     """
-    slug = re.sub(r"[^0-9a-zA-Z]+", "_", raw.strip().lower())
-    return slug.strip("_") or "project"
+    text = raw.lower().strip()
+    text = re.sub(r"[^\w\s-]", "", text)
+    text = re.sub(r"[\s_]+", "-", text)
+    text = re.sub(r"-+", "-", text)
+    return text.strip("-") or "project"
+
+
+def collection_suffix(slug: str) -> str:
+    """Collection-name suffix for a project slug (underscore convention).
+
+    Qdrant collections in grounded-code-mcp use underscores (``grounded_internal``,
+    ``grounded_api_design``), so a hyphenated project slug maps to an underscored
+    collection: ``my-app`` -> ``project_my_app`` (server prepends ``grounded_``).
+    """
+    return "project_" + slug.replace("-", "_")
