@@ -127,3 +127,59 @@ class TestEnrich:
     def test_missing_scan_dir_errors(self, tmp_path: Path) -> None:
         result = runner.invoke(app, ["enrich", str(tmp_path / "nope"), "--model", "m"])
         assert result.exit_code == 1
+
+
+class _GraphFakeClient:
+    """Fake client that answers extraction, verification, and summary prompts."""
+
+    def __init__(self, *_args, **_kwargs) -> None:
+        pass
+
+    def generate(self, model: str, prompt: str, *, json_format: bool = True) -> str:
+        low = prompt.lower()
+        if "verifying a single" in low:
+            return '{"supported": true, "evidence": "ok"}'
+        if "concept graph" in low:
+            return (
+                '{"relationships": [{"subject": "Greeter", "relation": "uses",'
+                ' "object": "Logger", "domain": "architecture"}]}'
+            )
+        return _FAKE_JSON  # summary prompt
+
+
+class TestGraphEnrich:
+    @patch("code2md.cli.OllamaClient", _GraphFakeClient)
+    def test_graph_level_writes_relationships(self, sample_repo: Path, tmp_path: Path) -> None:
+        out = tmp_path / "grounded-code-mcp"
+        _scan(sample_repo, out)
+        result = runner.invoke(
+            app, ["enrich", str(out), "--model", "big-cloud", "--level", "graph"]
+        )
+        assert result.exit_code == 0, result.output
+        rel = out / "RELATIONSHIPS.md"
+        assert rel.exists()
+        text = rel.read_text()
+        assert "generated: true" in text
+        assert "→ uses →" in text
+        assert "[grounded-code-mcp]" in text  # source_slug = scan dir slug
+        # The ingest hint must include --force so the graph rebuilds.
+        assert "--force" in result.output
+        # Graph level does NOT produce Phase 1 summaries.
+        assert not (out / "_enriched" / "src" / "main.py.enriched.md").exists()
+
+    @patch("code2md.cli.OllamaClient", _GraphFakeClient)
+    def test_graph_second_run_is_cached(self, sample_repo: Path, tmp_path: Path) -> None:
+        out = tmp_path / "out"
+        _scan(sample_repo, out)
+        runner.invoke(app, ["enrich", str(out), "--model", "m", "--level", "graph"])
+        result = runner.invoke(app, ["enrich", str(out), "--model", "m", "--level", "graph"])
+        assert "cached" in result.output.lower()
+
+    @patch("code2md.cli.OllamaClient", _GraphFakeClient)
+    def test_full_level_does_both(self, sample_repo: Path, tmp_path: Path) -> None:
+        out = tmp_path / "out"
+        _scan(sample_repo, out)
+        result = runner.invoke(app, ["enrich", str(out), "--model", "m", "--level", "full"])
+        assert result.exit_code == 0, result.output
+        assert (out / "RELATIONSHIPS.md").exists()
+        assert (out / "_enriched" / "src" / "main.py.enriched.md").exists()
