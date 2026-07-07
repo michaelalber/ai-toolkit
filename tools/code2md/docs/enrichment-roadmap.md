@@ -165,7 +165,9 @@ extraction quality here has the largest and most permanent impact.
    into the concept graph (graph-feed only, never an embedded vector chunk). RED→GREEN pair committed
    on grounded-code-mcp branch `feat/exclude-relationships-md-embedding` (`df7eceb` test, `b98e89a`
    feat); test `TestCommittedConfigToml.test_relationships_md_excluded_from_embedding` asserts the
-   committed config. Full gate green: ruff + mypy clean, 519 tests pass. Branch not pushed; no PR.
+   committed config. Full gate green: ruff + mypy clean, 519 tests pass.
+   **Pushed + PR open: grounded-code-mcp #2** —
+   https://codeberg.org/michaelkalber/grounded-code-mcp/pulls/2
 7. **(live, needs Qdrant+Ollama)** run cloud-extract → local-verify → `ingest --force` → spot-check
    `query_graph` + graph-expanded `search_knowledge`.
 
@@ -224,6 +226,10 @@ slugified dir `sources/<project-slug>/` so `source_path`/`source_slug` resolve c
 3. 🚧 **Phase 3 IN PROGRESS** — plan locked (see Phase 3 § Decisions locked). Slices 1–6 done.
    **Next: slice 7 (live, needs Qdrant + Ollama)** — cloud-extract → local-verify on the
    grounded-code-mcp scan → `ingest --force` → spot-check `query_graph` + graph-expanded
-   `search_knowledge`. Then Phase 3 acceptance check + PRs (ai-toolkit
-   `feat/code2md-graphrag-slug-layout`; grounded-code-mcp `feat/exclude-relationships-md-embedding`).
+   `search_knowledge`. Then Phase 3 acceptance check.
+   **Both branches pushed, PRs open (2026-07-06):**
+   ai-toolkit #2 — https://codeberg.org/michaelkalber/ai-toolkit/pulls/2 ·
+   grounded-code-mcp #2 — https://codeberg.org/michaelkalber/grounded-code-mcp/pulls/2 .
+   NB: ai-toolkit #2 lands Phase 3 code *before* slice 7's live acceptance run — hold that merge if
+   you want the spot-check evidence first.
 **(B)** the grounded-code-mcp chunk↔slug matching fix is scheduled in Phase 4.
