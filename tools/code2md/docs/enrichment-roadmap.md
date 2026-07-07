@@ -160,7 +160,12 @@ extraction quality here has the largest and most permanent impact.
 4. `prompts/verify_edge.txt` + `enrich/verify.py` (`verify_triple`, `verify_all` drops unsupported).
 5. Relationship cache (`relate-manifest.json`, SHA+model) + CLI `--level` wiring → writes
    `sources/<slug>/RELATIONSHIPS.md`, prints the `ingest --force` / `build-graph` hint.
-6. **(grounded repo)** add `"RELATIONSHIPS.md"` to `exclude_filenames` + a test.
+6. ✅ **DONE (2026-07-06)** — **(grounded repo)** `"RELATIONSHIPS.md"` added to `config.toml`
+   `exclude_filenames` so the ingest scan skips it while `graph_builder`'s own rglob still parses it
+   into the concept graph (graph-feed only, never an embedded vector chunk). RED→GREEN pair committed
+   on grounded-code-mcp branch `feat/exclude-relationships-md-embedding` (`df7eceb` test, `b98e89a`
+   feat); test `TestCommittedConfigToml.test_relationships_md_excluded_from_embedding` asserts the
+   committed config. Full gate green: ruff + mypy clean, 519 tests pass. Branch not pushed; no PR.
 7. **(live, needs Qdrant+Ollama)** run cloud-extract → local-verify → `ingest --force` → spot-check
    `query_graph` + graph-expanded `search_knowledge`.
 
@@ -216,6 +221,9 @@ slugified dir `sources/<project-slug>/` so `source_path`/`source_slug` resolve c
    Mac Mini, so the new single-segment `sources/grounded-code-mcp/` layout is picked up on the
    fresh re-scan + re-ingest — no in-place migration of the old `projects/grounded_code_mcp`
    collection needed.
-3. 🚧 **Phase 3 IN PROGRESS** — plan locked (see Phase 3 § Decisions locked). Building the TDD
-   slices now, starting with slice 1 (`relationships.py` data model + relation validation).
+3. 🚧 **Phase 3 IN PROGRESS** — plan locked (see Phase 3 § Decisions locked). Slices 1–6 done.
+   **Next: slice 7 (live, needs Qdrant + Ollama)** — cloud-extract → local-verify on the
+   grounded-code-mcp scan → `ingest --force` → spot-check `query_graph` + graph-expanded
+   `search_knowledge`. Then Phase 3 acceptance check + PRs (ai-toolkit
+   `feat/code2md-graphrag-slug-layout`; grounded-code-mcp `feat/exclude-relationships-md-embedding`).
 **(B)** the grounded-code-mcp chunk↔slug matching fix is scheduled in Phase 4.
