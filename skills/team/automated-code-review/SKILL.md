@@ -41,7 +41,9 @@ SCAN        Define scope; enumerate files with languages; detect project convent
             references/convention-detection.md). GATE: scope defined, conventions detected, ≥3 files sampled.
 
 ANALYZE     Read each file completely. Run all five category checklists per file (floor in
-            conventions.md; detail in review-checklist-engine.md). Record findings via the finding
+            conventions.md; detail in review-checklist-engine.md). The maintainability category
+            uses the Fowler code smell catalog (references/code-smells.md) as its canonical
+            checklist, with the "repo overrides" suppression rule. Record findings via the finding
             pipeline. GATE: every file analyzed, every category checked, every finding has evidence +
             severity + false-positive check.
 
@@ -76,6 +78,7 @@ next_action: [description]
 
 - **Per-file analysis log, consolidated report, review statistics** — `references/output-templates.md`.
 - **Detailed per-category checklists, pass/fail criteria, language extensions** — `references/review-checklist-engine.md`.
+- **Fowler code smell catalog (the maintainability-category checklist) + repo-overrides rule** — `references/code-smells.md`.
 - **Convention detection procedures (naming, error handling, logging, testing)** — `references/convention-detection.md`.
 - **Principle table, KB lookups, full phase gates, finding pipeline, minimum checklists** — `references/conventions.md`.
 
