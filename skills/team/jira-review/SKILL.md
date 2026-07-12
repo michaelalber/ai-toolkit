@@ -90,4 +90,3 @@ next_action: [description]
 |-------|-------------|
 | `tdd-cycle` | The handoff for READY TO IMPLEMENT — write tests from the AC, implement, refactor. |
 | `task-decomposition` | For NEEDS PLANNING MODE on high-complexity issues — break the issue into implementable sub-tasks. |
-| `triage-issue` / `to-issues` | Upstream issue intake; this skill assesses readiness once an issue exists. |

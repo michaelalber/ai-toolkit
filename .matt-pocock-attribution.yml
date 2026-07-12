@@ -19,31 +19,6 @@ attributions:
       is an explicit-invocation skill — auto-firing on every chat turn is
       disruptive. Re-apply this field if re-vendoring from upstream.
 
-  - skill: to-prd
-    source: mattpocock/skills
-    source_commit: unknown
-    upstream_path: skills/engineering/to-prd/SKILL.md
-    locally_modified: true
-    modifications_summary: >
-      Rewrote approach: permits upfront clarifying questions (upstream forbids
-      user interviews and synthesises from context only); removed issue-tracker
-      and setup-matt-pocock-skills dependencies; replaced inline PRD template
-      with references/prd-template.md; added explicit binary acceptance criteria
-      and non-goals constraints aligned with local engineering standards.
-
-  - skill: to-issues
-    source: mattpocock/skills
-    source_commit: unknown
-    upstream_path: skills/engineering/to-issues/SKILL.md
-    locally_modified: true
-    modifications_summary: >
-      Rewrote decomposition approach: uses layer-ordering framing
-      (infrastructure → data model → API → UI → polish) instead of upstream's
-      vertical-slice / tracer-bullet model; removed HITL/AFK distinction and
-      user-quiz step; added 2-day issue-size cap; replaced direct issue-tracker
-      publish with gh-issue-create offer; uses local decomposition-patterns.md
-      and issue-template.md reference files.
-
   - skill: zoom-out
     source: mattpocock/skills
     source_commit: unknown

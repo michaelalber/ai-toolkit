@@ -4,9 +4,8 @@ audience: team
 description: >
   QRSPI Spec phase -- a Design Brain-Dump the human redirects ("brain surgery"), followed by a
   vertically-sliced Structure Outline. Use for "/qrspi-spec <feature>", "design discussion for X",
-  "structure outline for X", "spec out X from the research". Do NOT use to write a product PRD
-  (use to-prd) or for an open-ended design chat (use spec-coach); this phase consumes research.md
-  and produces an approved spec.md.
+  "structure outline for X", "spec out X from the research". Do NOT use for an open-ended design
+  chat (use spec-coach); this phase consumes research.md and produces an approved spec.md.
 ---
 
 # QRSPI Spec

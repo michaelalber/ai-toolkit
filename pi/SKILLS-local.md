@@ -71,8 +71,6 @@ These get *more* reliable on a weak model because the skill carries the procedur
 | php-migration-manager | 📚 | Lifecycle checklist |
 | environment-health | | Docker/service diagnostics; deterministic checks |
 | session-context | | Git summarization + ADR matching; bounded |
-| to-issues | | PRD → atomic issues; bounded decomposition |
-| triage-issue | | Severity/root-cause classification; bounded |
 | jira-review | | Readiness checklist; bounded |
 | jira-comment-writer | | Plain-language rewrite — bounded transform, ideal for local |
 | architecture-journal | 📚 | ADR template fill + retro prompts |
@@ -126,7 +124,6 @@ make steps explicit and imperative (the same treatment that produced `AGENTS-7b.
 | transcript-capture | 📚 | **Large input** — full transcript can saturate a 32K window |
 | email-capture | 📚 | **Large input** — full thread can saturate a 32K window |
 | capture-consolidate | 📚 | Dedup + contradiction detection across docs; judgment |
-| to-prd | | Synthesis from notes; judgment |
 | pr-feedback-writer | | Communication coaching; needs nuance |
 | spec-coach | 📚 | Interactive coach — needs the model to coach well |
 | skill-creator | 📚 | Meta; must follow the 5-section template precisely |
