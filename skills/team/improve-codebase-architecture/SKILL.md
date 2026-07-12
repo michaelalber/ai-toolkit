@@ -15,6 +15,10 @@ description: >
 Improve this codebase's architecture using principles from *A Philosophy of Software
 Design* (APOSD) by John Ousterhout.
 
+The APOSD module-shape vocabulary this skill names problems with — shallow module, interface,
+depth, seam, adapter, leverage, locality — is defined in the `codebase-design` skill. Load it
+when you need the precise definitions or the deepening/design-it-twice procedures.
+
 ## Prerequisites
 
 1. Check for `CONTEXT.md` or `UBIQUITOUS_LANGUAGE.md` — load if present.

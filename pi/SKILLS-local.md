@@ -86,7 +86,7 @@ These get *more* reliable on a weak model because the skill carries the procedur
 
 ---
 
-## 🟡 Yellow — usable, author a lite variant (48)
+## 🟡 Yellow — usable, author a lite variant (49)
 
 Single-pass but lean on judgment, synthesis, or large reference/input loads. The
 32B model produces the *structure* of a good result with shallower content. The
@@ -104,6 +104,7 @@ make steps explicit and imperative (the same treatment that produced `AGENTS-7b.
 | dependency-mapper | 📚 | Metrics are mechanical; the interpretation is judgment |
 | technical-debt-assessor | 📚 | Cost/interest estimation needs judgment |
 | improve-codebase-architecture | | Deep APOSD refactor reasoning |
+| codebase-design | | Deep-module vocabulary; reference-heavy glossary |
 | fitness-functions | | Authoring arch tests + CI wiring; multi-file |
 | evaluate-tests | | Judges test quality against Beck criteria |
 | doc-sync | | Staleness detection + generation; judgment |

@@ -68,3 +68,20 @@ attributions:
       APOSD Glossary section and deletion-test framing; added quantitative
       output table with effort estimates; adapted CONTEXT.md / UBIQUITOUS_LANGUAGE.md
       integration to local domain-model skill conventions.
+
+  - skill: codebase-design
+    source: mattpocock/skills
+    source_commit: unknown
+    upstream_path: skills/engineering/codebase-design/SKILL.md
+    locally_modified: true
+    modifications_summary: >
+      Ported the deep-module vocabulary skill (glossary, deep-vs-shallow,
+      principles, testability, rejected framings, relationships) largely
+      verbatim; ported references/DEEPENING.md and references/DESIGN-IT-TWICE.md.
+      Local adaptations: added audience/source frontmatter and
+      disable-model-invocation: true (vocabulary provider, not an action skill);
+      rewrote description to local third-person + trigger-phrase format; added an
+      Integration with Other Skills table cross-linking improve-codebase-architecture,
+      domain-model, and refactor-challenger; converted upstream's bare-filename
+      reference links to references/ pointers. Fills the vocabulary dependency the
+      local improve-codebase-architecture port had assumed but never imported.
