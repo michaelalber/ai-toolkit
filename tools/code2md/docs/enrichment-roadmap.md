@@ -232,4 +232,10 @@ slugified dir `sources/<project-slug>/` so `source_path`/`source_slug` resolve c
    grounded-code-mcp #2 — https://codeberg.org/michaelkalber/grounded-code-mcp/pulls/2 .
    NB: ai-toolkit #2 lands Phase 3 code *before* slice 7's live acceptance run — hold that merge if
    you want the spot-check evidence first.
+   ✅ **Tooling gate landed on `main` (2026-07-13).** The repo-wide ruff/mypy/bandit baseline for
+   the four `tools/` utilities merged via **ai-toolkit #3** (`chore/tools-lint-typecheck-baseline`,
+   merge `842804b`; branch since deleted). PR #2 carries a source-only commit (`b78646f`) that keeps
+   the Phase 3 code green under that gate — the `[tool.ruff]`/`[tool.mypy]`/`[tool.bandit]` config
+   lives only on the merged chore branch, so there is no `pyproject.toml` conflict and merge order is
+   interchangeable. PR #2 stays parked pending slice 7; nothing about the gate changes that.
 **(B)** the grounded-code-mcp chunk↔slug matching fix is scheduled in Phase 4.
