@@ -64,7 +64,10 @@ def parse_model_json(text: str) -> Enrichment:
     for item in data.get("symbols", []):
         if isinstance(item, dict) and item.get("name"):
             symbols.append(
-                Symbol(name=str(item["name"]).strip(), description=str(item.get("description", "")).strip())
+                Symbol(
+                    name=str(item["name"]).strip(),
+                    description=str(item.get("description", "")).strip(),
+                )
             )
     return Enrichment(summary=summary, questions=questions, symbols=symbols)
 

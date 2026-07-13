@@ -45,10 +45,20 @@ class TestGitPath:
         assert "secret.py" not in rel  # ignored → not surfaced by git ls-files
 
     def test_git_commit_returns_hash(self, sample_repo: Path) -> None:
-        env = {"GIT_AUTHOR_NAME": "t", "GIT_AUTHOR_EMAIL": "t@t", "GIT_COMMITTER_NAME": "t", "GIT_COMMITTER_EMAIL": "t@t"}
+        env = {
+            "GIT_AUTHOR_NAME": "t",
+            "GIT_AUTHOR_EMAIL": "t@t",
+            "GIT_COMMITTER_NAME": "t",
+            "GIT_COMMITTER_EMAIL": "t@t",
+        }
         subprocess.run(["git", "init", "-q"], cwd=sample_repo, check=True)
         subprocess.run(["git", "add", "src/main.py"], cwd=sample_repo, check=True)
-        subprocess.run(["git", "commit", "-q", "-m", "init"], cwd=sample_repo, check=True, env={**env, "PATH": __import__("os").environ["PATH"]})
+        subprocess.run(
+            ["git", "commit", "-q", "-m", "init"],
+            cwd=sample_repo,
+            check=True,
+            env={**env, "PATH": __import__("os").environ["PATH"]},
+        )
         assert git_commit(sample_repo)
 
     def test_git_commit_none_outside_repo(self, tmp_path: Path) -> None:

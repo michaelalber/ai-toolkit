@@ -101,11 +101,17 @@ class TestParseExtractionJson:
         assert parse_extraction_json(text) == []
 
     def test_invalid_domain_falls_back_to_architecture(self) -> None:
-        text = '{"relationships": [{"subject": "A", "relation": "uses", "object": "B", "domain": "banana"}]}'
+        text = (
+            '{"relationships": [{"subject": "A", "relation": "uses", '
+            '"object": "B", "domain": "banana"}]}'
+        )
         assert parse_extraction_json(text)[0].domain == "architecture"
 
     def test_invalid_type_becomes_blank(self) -> None:
-        text = '{"relationships": [{"subject": "A", "relation": "uses", "object": "B", "type": "widget"}]}'
+        text = (
+            '{"relationships": [{"subject": "A", "relation": "uses", '
+            '"object": "B", "type": "widget"}]}'
+        )
         assert parse_extraction_json(text)[0].node_type == ""
 
     def test_malformed_json_returns_empty(self) -> None:

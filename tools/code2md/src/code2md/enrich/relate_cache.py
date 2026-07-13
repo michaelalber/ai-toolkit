@@ -23,7 +23,7 @@ class RelateCache:
     entries: dict[str, dict] = field(default_factory=dict)
 
     @classmethod
-    def load(cls, scan_dir: Path) -> "RelateCache":
+    def load(cls, scan_dir: Path) -> RelateCache:
         path = scan_dir / "_enriched" / _CACHE_NAME
         entries: dict[str, dict] = {}
         if path.is_file():
@@ -35,11 +35,9 @@ class RelateCache:
 
     def is_fresh(self, doc: ParsedScanDoc, model: str) -> bool:
         entry = self.entries.get(doc.rel_doc_path.as_posix())
-        return (
-            bool(entry)
-            and entry.get("sha256") == doc.code_sha256
-            and entry.get("model") == model
-        )
+        if not entry:
+            return False
+        return entry.get("sha256") == doc.code_sha256 and entry.get("model") == model
 
     def get_triples(self, doc: ParsedScanDoc) -> list[Triple]:
         entry = self.entries.get(doc.rel_doc_path.as_posix())

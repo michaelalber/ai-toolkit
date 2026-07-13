@@ -7,6 +7,7 @@ breakdown, and declared dependencies — alongside the per-file code documents.
 from __future__ import annotations
 
 import json
+import sys
 from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
@@ -14,10 +15,10 @@ from pathlib import Path
 from code2md import __version__
 from code2md.models import SourceFile
 
-try:  # Python 3.11+
+if sys.version_info >= (3, 11):
     import tomllib as _toml
-except ModuleNotFoundError:  # pragma: no cover - exercised only on 3.10
-    import tomli as _toml  # type: ignore[no-redef]
+else:  # pragma: no cover - exercised only on 3.10
+    import tomli as _toml
 
 _README_NAMES = ("README.md", "README.rst", "README.txt", "README")
 _README_EXCERPT_CHARS = 1500

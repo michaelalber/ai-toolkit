@@ -44,7 +44,9 @@ class TestFlags:
 class TestScan:
     def test_produces_output_tree(self, sample_repo: Path, tmp_path: Path) -> None:
         out = tmp_path / "out"
-        result = runner.invoke(app, ["scan", str(sample_repo), "--out", str(out), "--name", "myapp"])
+        result = runner.invoke(
+            app, ["scan", str(sample_repo), "--out", str(out), "--name", "myapp"]
+        )
         assert result.exit_code == 0, result.output
         assert (out / "src" / "main.py.md").exists()
         assert (out / "src" / "util.ts.md").exists()
@@ -56,7 +58,9 @@ class TestScan:
 
     def test_prints_ingest_command(self, sample_repo: Path, tmp_path: Path) -> None:
         out = tmp_path / "out"
-        result = runner.invoke(app, ["scan", str(sample_repo), "--out", str(out), "--name", "My App"])
+        result = runner.invoke(
+            app, ["scan", str(sample_repo), "--out", str(out), "--name", "My App"]
+        )
         assert "--collection project_my_app" in result.output
 
     def test_default_out_uses_hyphenated_slug(
