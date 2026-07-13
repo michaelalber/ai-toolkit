@@ -20,7 +20,7 @@ class EnrichCache:
     entries: dict[str, dict[str, str]] = field(default_factory=dict)
 
     @classmethod
-    def load(cls, scan_dir: Path) -> "EnrichCache":
+    def load(cls, scan_dir: Path) -> EnrichCache:
         path = scan_dir / "_enriched" / _CACHE_NAME
         entries: dict[str, dict[str, str]] = {}
         if path.is_file():
@@ -32,7 +32,9 @@ class EnrichCache:
 
     def is_fresh(self, doc: ParsedScanDoc, model: str) -> bool:
         entry = self.entries.get(doc.rel_doc_path.as_posix())
-        return bool(entry) and entry.get("sha256") == doc.code_sha256 and entry.get("model") == model
+        if not entry:
+            return False
+        return entry.get("sha256") == doc.code_sha256 and entry.get("model") == model
 
     def update(self, doc: ParsedScanDoc, model: str) -> None:
         self.entries[doc.rel_doc_path.as_posix()] = {"sha256": doc.code_sha256, "model": model}

@@ -4,7 +4,6 @@ from __future__ import annotations
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
-import pytest
 from typer.testing import CliRunner
 
 from web2md.cli import app
@@ -51,7 +50,10 @@ class TestSinglePage:
         assert content.startswith("---")
         assert "source:" in content
 
-    @patch("web2md.converter.DocumentConverter", _mock_dc_returning("# A\n\nBody A.\n\n# B\n\nBody B.\n"))
+    @patch(
+        "web2md.converter.DocumentConverter",
+        _mock_dc_returning("# A\n\nBody A.\n\n# B\n\nBody B.\n"),
+    )
     def test_chunk_by_heading_creates_multiple_files(self, tmp_path: Path) -> None:
         out = tmp_path / "page.md"
         result = runner.invoke(app, ["https://example.com/", str(out), "--chunk-by-heading"])
@@ -65,7 +67,10 @@ class TestSinglePage:
         runner.invoke(app, ["https://example.com/", str(out), "--no-images"])
         assert "![" not in out.read_text()
 
-    @patch("web2md.converter.DocumentConverter", _mock_dc_returning("| A | B |\n| - | - |\n| 1 | 2 |\n"))
+    @patch(
+        "web2md.converter.DocumentConverter",
+        _mock_dc_returning("| A | B |\n| - | - |\n| 1 | 2 |\n"),
+    )
     def test_no_tables_strips_tables(self, tmp_path: Path) -> None:
         out = tmp_path / "out.md"
         runner.invoke(app, ["https://example.com/", str(out), "--no-tables"])

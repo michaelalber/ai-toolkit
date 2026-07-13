@@ -138,7 +138,7 @@ def build_markdown(
 
             if block.block_type == "table":
                 # Insert the table that occupies this block's position
-                for i, table in enumerate(page.tables):
+                for i, _table in enumerate(page.tables):
                     if not table_inserted[i]:
                         md = rendered_tables[i]
                         if md:

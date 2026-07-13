@@ -182,6 +182,9 @@ Module map (`src/web2md/`):
 cd tools/web2md
 uv run --extra dev pytest                   # run the full test suite (HTTP calls mocked)
 uv run --extra dev pytest --cov --cov-report=html  # coverage report
+uv run --extra dev ruff check src tests     # lint
+uv run --extra dev mypy src                 # type-check
+uv run --extra dev bandit -c pyproject.toml -r src  # security lint (medium+: add -ll)
 ```
 
 Tests use `respx` to mock all `httpx` calls and `unittest.mock.patch` for Docling — no network

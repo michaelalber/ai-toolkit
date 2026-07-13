@@ -1,11 +1,10 @@
 """Unit tests for sitemap.py — httpx calls mocked via respx."""
 from __future__ import annotations
 
-import pytest
-import respx
 import httpx
-
+import respx
 from conftest import SAMPLE_SITEMAP, SITEMAP_INDEX
+
 from web2md.sitemap import fetch_sitemap_urls
 
 

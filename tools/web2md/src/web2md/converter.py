@@ -5,7 +5,7 @@ import re
 from datetime import datetime, timezone
 from pathlib import Path
 
-from docling.document_converter import DocumentConverter  # type: ignore[import-untyped]
+from docling.document_converter import DocumentConverter
 from rich.console import Console
 
 from web2md.models import ConversionConfig

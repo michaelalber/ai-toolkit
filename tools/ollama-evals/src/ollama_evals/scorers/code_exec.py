@@ -27,7 +27,7 @@ from .base import ScoreResult, register
 try:  # POSIX only; absent on Windows
     import resource
 except ImportError:  # pragma: no cover - platform dependent
-    resource = None
+    resource = None  # type: ignore[assignment]
 
 DEFAULT_TIMEOUT = 10
 DEFAULT_FSIZE_BYTES = 10 * 1024 * 1024  # 10 MB of writes

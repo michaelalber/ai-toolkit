@@ -5,7 +5,7 @@ from typing import Literal
 
 from rich.console import Console
 
-from pdf2md.models import Block, ExtractedPage
+from pdf2md.models import ExtractedPage
 
 console = Console(stderr=True)
 
@@ -25,7 +25,7 @@ def extract_images(
     position.
     """
     try:
-        import fitz  # type: ignore[import-untyped]
+        import fitz
     except ImportError:
         console.print("[yellow]PyMuPDF not available; skipping image extraction.[/]")
         return
@@ -74,7 +74,7 @@ def extract_images(
                 except Exception as exc:
                     if verbose:
                         console.print(
-                            f"[yellow]Could not extract image xref={xref} on page {page_num}: {exc}[/]"
+                            f"[yellow]Skipped image xref={xref} on page {page_num}: {exc}[/]"
                         )
     finally:
         doc.close()

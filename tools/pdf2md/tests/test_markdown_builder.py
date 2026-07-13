@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from pdf2md.markdown_builder import build_markdown, _table_to_markdown
+from pdf2md.markdown_builder import _table_to_markdown, build_markdown
 from pdf2md.models import Block, ExtractedPage, Span, Table
 
 

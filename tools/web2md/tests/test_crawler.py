@@ -1,9 +1,9 @@
 """Unit tests for crawler.py — httpx calls mocked via respx."""
 from __future__ import annotations
 
+import httpx
 import pytest
 import respx
-import httpx
 
 from web2md.crawler import _has_skip_extension, crawl
 

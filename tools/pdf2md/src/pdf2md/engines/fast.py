@@ -27,7 +27,7 @@ class FastEngine:
         from pdf2md.table_detector import extract_tables
 
         try:
-            import fitz  # type: ignore[import-untyped]
+            import fitz
 
             doc = fitz.open(str(config.input_path))
         except Exception as exc:

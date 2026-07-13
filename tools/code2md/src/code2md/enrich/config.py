@@ -15,7 +15,7 @@ class EnrichConfig:
     via ``--model`` or the ``CODE2MD_ENRICH_MODEL`` env var.
     """
 
-    scan_dir: "os.PathLike[str] | str"
+    scan_dir: os.PathLike[str] | str
     model: str
     ollama_host: str = DEFAULT_OLLAMA_HOST
     force: bool = False

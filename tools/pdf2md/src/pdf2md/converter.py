@@ -77,7 +77,7 @@ def _write_chunks(markdown: str, base_output: Path) -> None:
 def _get_total_pages(pdf_path: Path) -> int | None:
     """Return the page count of a PDF, or None on error."""
     try:
-        import fitz  # type: ignore[import-untyped]
+        import fitz
 
         doc = fitz.open(str(pdf_path))
         count = doc.page_count
@@ -89,7 +89,7 @@ def _get_total_pages(pdf_path: Path) -> int | None:
 
 def _is_password_protected(pdf_path: Path) -> bool:
     try:
-        import fitz  # type: ignore[import-untyped]
+        import fitz
 
         doc = fitz.open(str(pdf_path))
         protected = bool(doc.needs_pass)

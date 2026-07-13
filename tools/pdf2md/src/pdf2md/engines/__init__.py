@@ -22,7 +22,7 @@ _SAMPLE_PAGES = 3
 def _avg_chars(pdf_path: Path) -> float:
     """Return the average extractable character count across the first few pages."""
     try:
-        import fitz  # type: ignore[import-untyped]
+        import fitz
 
         doc = fitz.open(str(pdf_path))
         sample = min(_SAMPLE_PAGES, doc.page_count)

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Annotated, Optional
+from typing import Annotated
 
 import typer
 
@@ -30,7 +30,7 @@ def convert(
         ),
     ],
     output_path: Annotated[
-        Optional[Path],
+        Path | None,
         typer.Argument(
             help=(
                 "Output path. File path for single PDF; directory for batch mode. "
@@ -39,7 +39,7 @@ def convert(
         ),
     ] = None,
     page_range: Annotated[
-        Optional[str],
+        str | None,
         typer.Option(
             "--page-range",
             help='Page range to extract, e.g. "1-5" or "3,7,9-12". Default: all.',
@@ -55,11 +55,15 @@ def convert(
     ] = False,
     no_code_blocks: Annotated[
         bool,
-        typer.Option("--no-code-blocks", help="Skip monospace detection; render as plain paragraphs."),
+        typer.Option(
+            "--no-code-blocks", help="Skip monospace detection; render as plain paragraphs."
+        ),
     ] = False,
     image_format: Annotated[
         str,
-        typer.Option("--image-format", help="Image output format for sidecar files.", show_default=True),
+        typer.Option(
+            "--image-format", help="Image output format for sidecar files.", show_default=True
+        ),
     ] = "png",
     chunk_by_heading: Annotated[
         bool,
@@ -69,11 +73,14 @@ def convert(
         bool,
         typer.Option(
             "--metadata/--no-metadata",
-            help="Prepend YAML front-matter (source, pages, timestamp). On by default for RAG provenance.",
+            help=(
+                "Prepend YAML front-matter (source, pages, timestamp). "
+                "On by default for RAG provenance."
+            ),
         ),
     ] = True,
     code_lang: Annotated[
-        Optional[str],
+        str | None,
         typer.Option(
             "--code-lang",
             help=(
@@ -94,13 +101,14 @@ def convert(
                 "Extraction engine. "
                 "'auto' samples the PDF to choose automatically; "
                 "'fast' uses PyMuPDF+pdfplumber (lightweight, digital PDFs); "
-                "'docling' uses Docling ML pipeline (scanned/complex PDFs, requires pip install pdf2md[docling])."
+                "'docling' uses Docling ML pipeline "
+                "(scanned/complex PDFs, requires pip install pdf2md[docling])."
             ),
             show_default=True,
         ),
     ] = "auto",
     version: Annotated[
-        Optional[bool],
+        bool | None,
         typer.Option(
             "--version",
             callback=_version_callback,
@@ -115,7 +123,9 @@ def convert(
         raise typer.Exit(code=1)
 
     if engine not in ("auto", "fast", "docling"):
-        typer.echo(f"Error: --engine must be 'auto', 'fast', or 'docling', got '{engine}'.", err=True)
+        typer.echo(
+            f"Error: --engine must be 'auto', 'fast', or 'docling', got '{engine}'.", err=True
+        )
         raise typer.Exit(code=1)
 
     from pdf2md.converter import run

@@ -1,8 +1,6 @@
 """Unit tests for models.url_to_slug."""
 from __future__ import annotations
 
-import pytest
-
 from web2md.models import url_to_slug
 
 

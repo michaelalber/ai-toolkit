@@ -1,8 +1,6 @@
 """Shared fixtures for web2md tests."""
 from __future__ import annotations
 
-import pytest
-
 SAMPLE_HTML = """<!DOCTYPE html>
 <html>
 <head><title>Test Page</title></head>
