@@ -42,7 +42,7 @@ Shipped in `ai-toolkit` commit **92a59b9** (`main`).
 
 **Verified**
 - 49 tests, 93% coverage.
-- Live `qwen3-coder:30b` (Mac Mini): faithful summaries, no hallucination in sample.
+- Live `qwen3-coder:30b` (local 30B host): faithful summaries, no hallucination in sample.
 - Bridge payoff: NL query *"what happens when a file fails to parse during ingestion"* →
   the enriched doc **outranked** the raw code (0.4734 vs 0.4363), both → `ingest.py`.
 - Isolation: prose enrichments absent from `search_code_examples`.
@@ -220,7 +220,7 @@ slugified dir `sources/<project-slug>/` so `source_path`/`source_slug` resolve c
    README, and design-doc paths/examples moved from the 2-segment `sources/projects/<name>` to the
    1-segment `sources/<project-slug>/`. 63 tests pass (was 49), 93% cov. `test_models.py` added.
 2. ✅ **No separate migration (2026-07-05).** grounded data is being rebuilt from scratch on the
-   Mac Mini, so the new single-segment `sources/grounded-code-mcp/` layout is picked up on the
+   local host, so the new single-segment `sources/grounded-code-mcp/` layout is picked up on the
    fresh re-scan + re-ingest — no in-place migration of the old `projects/grounded_code_mcp`
    collection needed.
 3. 🚧 **Phase 3 IN PROGRESS** — plan locked (see Phase 3 § Decisions locked). Slices 1–6 done.

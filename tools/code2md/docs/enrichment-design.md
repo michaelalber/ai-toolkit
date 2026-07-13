@@ -164,7 +164,7 @@ New `[enrich]` block in config (user or project):
 ```toml
 [enrich]
 enabled = false
-ollama_host = "http://192.168.42.165:11434"
+ollama_host = "http://localhost:11434"          # or a LAN Ollama host; env OLLAMA_HOST overrides
 summary_model = "<strong local coding model>"   # build-time
 graph_model   = "<strong local coding model>"   # build-time
 verify_model  = "<can be smaller>"              # yes/no grounded check
