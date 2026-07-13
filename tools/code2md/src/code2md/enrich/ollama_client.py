@@ -7,6 +7,26 @@ from __future__ import annotations
 
 import httpx
 
+# Context-window sizing. Ollama defaults to a ~4k-token window, which silently
+# truncates whole-file enrichment prompts (a 24 KB source file is ~8k tokens) and
+# makes the model return an empty or partial response. Size num_ctx to the prompt
+# instead: a comfortable floor for short calls, growing to fit large files, capped
+# to bound KV-cache memory on the host.
+_CTX_FLOOR = 8192
+_CTX_CAP = 32768
+_CTX_STEP = 4096
+_OUTPUT_HEADROOM_TOKENS = 2048
+# Conservative chars-per-token for code (denser than prose) so we round context up,
+# never under, the true token count.
+_CHARS_PER_TOKEN = 3
+
+
+def estimate_num_ctx(prompt: str) -> int:
+    """Pick a num_ctx that fits ``prompt`` plus output headroom, within bounds."""
+    needed = len(prompt) // _CHARS_PER_TOKEN + _OUTPUT_HEADROOM_TOKENS
+    rounded = ((needed + _CTX_STEP - 1) // _CTX_STEP) * _CTX_STEP
+    return max(_CTX_FLOOR, min(_CTX_CAP, rounded))
+
 
 class OllamaError(RuntimeError):
     """Raised when the Ollama endpoint fails or returns an unusable response."""
@@ -27,7 +47,7 @@ class OllamaClient:
             "model": model,
             "prompt": prompt,
             "stream": False,
-            "options": {"temperature": 0.2},
+            "options": {"temperature": 0.2, "num_ctx": estimate_num_ctx(prompt)},
         }
         if json_format:
             payload["format"] = "json"
