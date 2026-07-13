@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from pathlib import Path
+import re
 
 from rich.console import Console
 from rich.progress import track
@@ -14,8 +14,6 @@ _FLAG_BOLD = 1 << 4
 _FLAG_ITALIC = 1 << 1
 
 # Monospace font name pattern (compiled once at import)
-import re
-
 _MONOSPACE_RE = re.compile(
     r"courier|monaco|consolas|menlo|inconsolata|"
     r"dejavu.?mono|jetbrains.?mono|fira.?code|"
@@ -70,7 +68,7 @@ def extract_pages(
 
     for idx in iterator:
         page = doc[idx]  # type: ignore[index]
-        page_data = page.get_text("dict", flags=0)  # type: ignore[attr-defined]
+        page_data = page.get_text("dict", flags=0)
 
         extracted = ExtractedPage(page_number=idx + 1)
 
@@ -84,7 +82,7 @@ def extract_pages(
                     Block(
                         spans=[],
                         block_type="image",
-                        bbox=bbox,  # type: ignore[arg-type]
+                        bbox=bbox,
                         page_number=idx + 1,
                     )
                 )
@@ -109,7 +107,7 @@ def extract_pages(
                 Block(
                     spans=spans,
                     block_type="text",
-                    bbox=bbox,  # type: ignore[arg-type]
+                    bbox=bbox,
                     page_number=idx + 1,
                 )
             )

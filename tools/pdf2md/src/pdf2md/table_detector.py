@@ -9,7 +9,9 @@ from pdf2md.models import ExtractedPage, Table
 console = Console(stderr=True)
 
 
-def _bboxes_overlap(a: tuple[float, float, float, float], b: tuple[float, float, float, float]) -> bool:
+def _bboxes_overlap(
+    a: tuple[float, float, float, float], b: tuple[float, float, float, float]
+) -> bool:
     """Return True if two bounding boxes share any area."""
     ax0, ay0, ax1, ay1 = a
     bx0, by0, bx1, by1 = b
@@ -58,7 +60,7 @@ def extract_tables(
     of the page (same as PyMuPDF), so no y-axis flip is needed.
     """
     try:
-        import pdfplumber  # type: ignore[import-untyped]
+        import pdfplumber
     except ImportError:
         console.print("[yellow]pdfplumber not installed; skipping table extraction.[/]")
         return
@@ -76,7 +78,7 @@ def extract_tables(
                 raw_tables = plumber_page.extract_tables()
                 table_bboxes = [t.bbox for t in plumber_page.find_tables()]
 
-                for raw_table, bbox in zip(raw_tables, table_bboxes):
+                for raw_table, bbox in zip(raw_tables, table_bboxes, strict=False):
                     if not raw_table:
                         continue
 

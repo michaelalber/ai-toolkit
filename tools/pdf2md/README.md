@@ -196,6 +196,9 @@ Module map (`src/pdf2md/`):
 cd tools/pdf2md
 uv run --extra dev pytest                 # run the test suite (fast engine only)
 uv run --extra dev --extra docling pytest # include Docling-path tests
+uv run --extra dev ruff check src tests   # lint
+uv run --extra dev mypy src               # type-check
+uv run --extra dev bandit -c pyproject.toml -r src  # security lint (medium+: add -ll)
 ```
 
 Tests generate their own PDF fixtures at runtime via `reportlab` (see `tests/conftest.py`),

@@ -61,7 +61,9 @@ class TestScanDoc:
 
 class TestParseModelJson:
     def test_valid(self) -> None:
-        out = parse_model_json('{"summary":"S","questions":["Q1"],"symbols":[{"name":"f","description":"d"}]}')
+        out = parse_model_json(
+            '{"summary":"S","questions":["Q1"],"symbols":[{"name":"f","description":"d"}]}'
+        )
         assert out.summary == "S"
         assert out.questions == ["Q1"]
         assert out.symbols[0].name == "f"
@@ -85,7 +87,9 @@ class TestRender:
             questions=["How to greet?"],
             symbols=[Symbol(name="greet", description="returns a greeting")],
         )
-        md = render_enriched_doc(doc, enrichment, "qwen3-coder:30b", generated_at="2026-07-06T00:00:00Z")
+        md = render_enriched_doc(
+            doc, enrichment, "qwen3-coder:30b", generated_at="2026-07-06T00:00:00Z"
+        )
         assert md.startswith("---")
         assert "generated: true" in md
         assert "model: qwen3-coder:30b" in md

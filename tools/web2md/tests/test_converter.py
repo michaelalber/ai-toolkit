@@ -4,8 +4,6 @@ from __future__ import annotations
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
-import pytest
-
 from web2md.converter import build_front_matter, convert_and_write, write_chunks
 from web2md.models import ConversionConfig
 
@@ -60,7 +58,9 @@ class TestConvertAndWrite:
 
     @patch("web2md.converter.DocumentConverter")
     def test_writes_file(self, mock_dc: MagicMock, tmp_path: Path) -> None:
-        mock_dc.return_value.convert.return_value.document.export_to_markdown.return_value = "# Hello\n"
+        mock_dc.return_value.convert.return_value.document.export_to_markdown.return_value = (
+            "# Hello\n"
+        )
         out = tmp_path / "out.md"
         cfg = _make_config("https://example.com/", out)
         convert_and_write(cfg)
@@ -69,7 +69,9 @@ class TestConvertAndWrite:
 
     @patch("web2md.converter.DocumentConverter")
     def test_metadata_prepends_front_matter(self, mock_dc: MagicMock, tmp_path: Path) -> None:
-        mock_dc.return_value.convert.return_value.document.export_to_markdown.return_value = "# Page\n"
+        mock_dc.return_value.convert.return_value.document.export_to_markdown.return_value = (
+            "# Page\n"
+        )
         out = tmp_path / "out.md"
         cfg = _make_config("https://example.com/", out, metadata=True)
         convert_and_write(cfg)
@@ -98,7 +100,9 @@ class TestConvertAndWrite:
         assert "|" not in out.read_text()
 
     @patch("web2md.converter.DocumentConverter")
-    def test_chunk_by_heading_creates_multiple_files(self, mock_dc: MagicMock, tmp_path: Path) -> None:
+    def test_chunk_by_heading_creates_multiple_files(
+        self, mock_dc: MagicMock, tmp_path: Path
+    ) -> None:
         mock_dc.return_value.convert.return_value.document.export_to_markdown.return_value = (
             "# Alpha\n\nContent A.\n\n# Beta\n\nContent B.\n"
         )

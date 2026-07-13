@@ -153,7 +153,9 @@ isolation.** For untrusted models, run the whole harness inside a container or `
 
 ```bash
 uv run --extra dev pytest          # 79 tests; Ollama is mocked, so CI needs no live server
-uv run --extra dev ruff check src tests
+uv run --extra dev ruff check src tests   # lint
+uv run --extra dev mypy src               # type-check
+uv run --extra dev bandit -c pyproject.toml -r src  # security lint (medium+: add -ll)
 ```
 
 | Module | Responsibility |

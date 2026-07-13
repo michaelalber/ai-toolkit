@@ -34,7 +34,6 @@ class TestSelectEngine:
 
     def test_auto_with_low_char_count_returns_docling(self, tmp_path: Path) -> None:
         # Patch _avg_chars to return a value below the threshold
-        from pdf2md.engines import _avg_chars
         with patch("pdf2md.engines._avg_chars", return_value=5.0):
             engine = select_engine("auto", tmp_path / "fake.pdf")
         assert isinstance(engine, DoclingEngine)

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Annotated, Optional
+from typing import Annotated
 
 import typer
 from rich.console import Console
@@ -40,8 +40,10 @@ def _version_callback(value: bool) -> None:
 @app.callback()
 def main(
     version: Annotated[
-        Optional[bool],
-        typer.Option("--version", callback=_version_callback, is_eager=True, help="Show version and exit."),
+        bool | None,
+        typer.Option(
+            "--version", callback=_version_callback, is_eager=True, help="Show version and exit."
+        ),
     ] = None,
 ) -> None:
     """code2md — codebase → Markdown for RAG, with optional LLM enrichment."""
@@ -54,12 +56,14 @@ def scan(
         typer.Argument(help="Path to the repository / project directory to scan."),
     ],
     out: Annotated[
-        Optional[Path],
+        Path | None,
         typer.Option("--out", help="Output directory. Defaults to ./output/<name>."),
     ] = None,
     name: Annotated[
-        Optional[str],
-        typer.Option("--name", help="Project name / collection suffix. Defaults to the repo dir name."),
+        str | None,
+        typer.Option(
+            "--name", help="Project name / collection suffix. Defaults to the repo dir name."
+        ),
     ] = None,
     overview: Annotated[
         bool,
@@ -67,7 +71,9 @@ def scan(
     ] = True,
     metadata: Annotated[
         bool,
-        typer.Option("--metadata/--no-metadata", help="Prepend YAML front-matter to each document."),
+        typer.Option(
+            "--metadata/--no-metadata", help="Prepend YAML front-matter to each document."
+        ),
     ] = True,
     max_file_kb: Annotated[
         int,
@@ -131,11 +137,11 @@ def enrich(
         typer.Argument(help="A code2md scan output directory to enrich."),
     ],
     model: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("--model", help="Ollama model for summaries (or CODE2MD_ENRICH_MODEL env)."),
     ] = None,
     ollama_host: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("--ollama-host", help="Ollama base URL (or OLLAMA_HOST env)."),
     ] = None,
     force: Annotated[

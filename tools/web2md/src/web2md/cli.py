@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Annotated, Optional
+from typing import Annotated
 
 import typer
 from rich.console import Console
@@ -36,7 +36,7 @@ def convert(
         ),
     ],
     output: Annotated[
-        Optional[Path],
+        Path | None,
         typer.Argument(
             help=(
                 "Output path. File for a single page; directory for --crawl / --sitemap. "
@@ -71,7 +71,7 @@ def convert(
         ),
     ] = False,
     max_depth: Annotated[
-        Optional[int],
+        int | None,
         typer.Option(
             "--max-depth",
             help=(
@@ -94,14 +94,16 @@ def convert(
     ] = False,
     metadata: Annotated[
         bool,
-        typer.Option("--metadata", help="Prepend a YAML front-matter block (source URL, timestamp)."),
+        typer.Option(
+            "--metadata", help="Prepend a YAML front-matter block (source URL, timestamp)."
+        ),
     ] = False,
     verbose: Annotated[
         bool,
         typer.Option("--verbose/--quiet", help="Show per-page progress."),
     ] = False,
     version: Annotated[
-        Optional[bool],
+        bool | None,
         typer.Option(
             "--version",
             callback=_version_callback,
@@ -120,7 +122,15 @@ def convert(
     if is_batch:
         out_dir = output if output is not None else Path("output")
         out_dir.mkdir(parents=True, exist_ok=True)
-        urls = _collect_urls(url, crawl=crawl, sitemap=sitemap, max_pages=max_pages, same_prefix=same_prefix, max_depth=max_depth, verbose=verbose)
+        urls = _collect_urls(
+            url,
+            crawl=crawl,
+            sitemap=sitemap,
+            max_pages=max_pages,
+            same_prefix=same_prefix,
+            max_depth=max_depth,
+            verbose=verbose,
+        )
         if not urls:
             console.print("[yellow]No URLs to convert.[/]")
             return
@@ -146,7 +156,7 @@ def _collect_urls(
     sitemap: bool,
     max_pages: int,
     same_prefix: bool,
-    max_depth: Optional[int],
+    max_depth: int | None,
     verbose: bool,
 ) -> list[str]:
     if crawl:
@@ -155,7 +165,9 @@ def _collect_urls(
         if verbose:
             depth_note = "unlimited depth" if max_depth is None else f"depth ≤ {max_depth}"
             console.print(f"[cyan]Crawling from[/] {url} (max {max_pages} pages, {depth_note})")
-        return do_crawl(url, max_pages=max_pages, same_prefix=same_prefix, max_depth=max_depth, verbose=verbose)
+        return do_crawl(
+            url, max_pages=max_pages, same_prefix=same_prefix, max_depth=max_depth, verbose=verbose
+        )
 
     if sitemap:
         from web2md.sitemap import fetch_sitemap_urls

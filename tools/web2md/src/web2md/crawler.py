@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 from collections import deque
-from typing import Optional
 from urllib.parse import urljoin, urlparse
 
 import httpx
@@ -23,7 +22,7 @@ def crawl(
     start_url: str,
     max_pages: int,
     same_prefix: bool = False,
-    max_depth: Optional[int] = None,
+    max_depth: int | None = None,
     verbose: bool = False,
 ) -> list[str]:
     """BFS from start_url; return discovered page URLs in visit order.
@@ -83,7 +82,7 @@ def crawl(
         soup = BeautifulSoup(response.text, "html.parser")
         base = f"{parsed.scheme}://{parsed.netloc}"
         for tag in soup.find_all("a", href=True):
-            href: str = tag["href"].split("#")[0]
+            href: str = str(tag["href"]).split("#")[0]
             if not href or href.startswith("mailto:") or href.startswith("javascript:"):
                 continue
             absolute = urljoin(base, href)

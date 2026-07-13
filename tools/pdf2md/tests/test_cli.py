@@ -3,7 +3,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import pytest
 from typer.testing import CliRunner
 
 from pdf2md.cli import app
@@ -32,7 +31,9 @@ class TestCLI:
 
     def test_single_pdf_produces_md_file(self, simple_pdf: Path, tmp_path: Path) -> None:
         output = tmp_path / "out.md"
-        result = runner.invoke(app, [str(simple_pdf), str(output), "--no-images", "--engine", "fast"])
+        result = runner.invoke(
+            app, [str(simple_pdf), str(output), "--no-images", "--engine", "fast"]
+        )
         assert result.exit_code == 0, result.output
         assert output.exists()
         content = output.read_text()
@@ -40,7 +41,9 @@ class TestCLI:
 
     def test_metadata_flag_adds_front_matter(self, simple_pdf: Path, tmp_path: Path) -> None:
         output = tmp_path / "out.md"
-        runner.invoke(app, [str(simple_pdf), str(output), "--no-images", "--metadata", "--engine", "fast"])
+        runner.invoke(
+            app, [str(simple_pdf), str(output), "--no-images", "--metadata", "--engine", "fast"]
+        )
         content = output.read_text()
         assert content.startswith("---")
         assert "source:" in content
@@ -67,12 +70,18 @@ class TestCLI:
         full_out = tmp_path / "full.md"
         partial_out = tmp_path / "partial.md"
         runner.invoke(app, [str(multipage_pdf), str(full_out), "--no-images", "--engine", "fast"])
-        runner.invoke(app, [str(multipage_pdf), str(partial_out), "--no-images", "--engine", "fast", "--page-range", "1-2"])
+        runner.invoke(
+            app,
+            [str(multipage_pdf), str(partial_out), "--no-images", "--engine", "fast",
+             "--page-range", "1-2"],
+        )
         full_len = len(full_out.read_text())
         partial_len = len(partial_out.read_text())
         assert partial_len < full_len
 
-    def test_batch_mode_converts_directory(self, tmp_path: Path, simple_pdf: Path, headings_pdf: Path) -> None:
+    def test_batch_mode_converts_directory(
+        self, tmp_path: Path, simple_pdf: Path, headings_pdf: Path
+    ) -> None:
         import shutil
 
         input_dir = tmp_path / "pdfs"
@@ -81,14 +90,18 @@ class TestCLI:
         shutil.copy(headings_pdf, input_dir / "headings.pdf")
 
         output_dir = tmp_path / "out"
-        result = runner.invoke(app, [str(input_dir), str(output_dir), "--no-images", "--engine", "fast"])
+        result = runner.invoke(
+            app, [str(input_dir), str(output_dir), "--no-images", "--engine", "fast"]
+        )
         assert result.exit_code == 0
         assert (output_dir / "simple.md").exists()
         assert (output_dir / "headings.md").exists()
 
     def test_engine_fast_flag_accepted(self, simple_pdf: Path, tmp_path: Path) -> None:
         output = tmp_path / "out.md"
-        result = runner.invoke(app, [str(simple_pdf), str(output), "--no-images", "--engine", "fast"])
+        result = runner.invoke(
+            app, [str(simple_pdf), str(output), "--no-images", "--engine", "fast"]
+        )
         assert result.exit_code == 0
         assert output.exists()
 

@@ -27,7 +27,7 @@ class DoclingEngine:
 
     def convert(self, config: ConversionConfig) -> str:
         try:
-            from docling.document_converter import DocumentConverter  # type: ignore[import-untyped]
+            from docling.document_converter import DocumentConverter
         except ImportError as exc:
             raise RuntimeError(
                 "Docling is not installed. Run: pip install 'pdf2md[docling]'"

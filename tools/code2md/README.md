@@ -123,4 +123,7 @@ and dependency manifests flow into the overview instead.
 cd tools/code2md
 uv run pytest                 # with coverage
 uv run pytest --no-cov -q
+uv run --extra dev ruff check src tests   # lint
+uv run --extra dev mypy src               # type-check
+uv run --extra dev bandit -c pyproject.toml -r src  # security lint (medium+: add -ll)
 ```

@@ -1,8 +1,12 @@
 """Sitemap.xml parser — supports standard sitemaps and sitemap index files."""
 from __future__ import annotations
 
-import xml.etree.ElementTree as ET
+# Sitemaps are fetched from arbitrary (untrusted) URLs, so use defusedxml to guard
+# against XXE / entity-expansion attacks. defusedxml.ElementTree.fromstring is a drop-in
+# for the stdlib call; parse/attack failures surface as ParseError or ValueError.
+from xml.etree.ElementTree import ParseError
 
+import defusedxml.ElementTree as ET
 import httpx
 from rich.console import Console
 
@@ -34,7 +38,7 @@ def _collect(url: str, acc: list[str], depth: int) -> None:
 
     try:
         root = ET.fromstring(response.text)
-    except ET.ParseError as exc:
+    except (ParseError, ValueError) as exc:
         console.print(f"[yellow]Could not parse sitemap XML at {url}: {exc}[/]")
         return
 
