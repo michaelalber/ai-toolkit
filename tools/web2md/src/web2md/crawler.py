@@ -80,12 +80,18 @@ def crawl(
             continue
 
         soup = BeautifulSoup(response.text, "html.parser")
-        base = f"{parsed.scheme}://{parsed.netloc}"
         for tag in soup.find_all("a", href=True):
             href: str = str(tag["href"]).split("#")[0]
             if not href or href.startswith("mailto:") or href.startswith("javascript:"):
                 continue
-            absolute = urljoin(base, href)
+            # Resolve against the current page's URL (not a reconstructed origin) so
+            # document-relative links keep their directory. Guard the join: a malformed
+            # href (e.g. an unbalanced bracket) raises ValueError and must be skipped,
+            # not abort the whole crawl.
+            try:
+                absolute = urljoin(url, href)
+            except ValueError:
+                continue
             if is_allowed(absolute) and absolute not in visited:
                 queue.append((absolute, depth + 1))
 

@@ -210,6 +210,56 @@ class TestCrawl:
         assert "https://example.com/deep" in urls
 
     @respx.mock
+    def test_document_relative_link_resolves_against_current_page(self) -> None:
+        # Regression (KNOWN-ISSUES BUG-001 Defect A): a document-relative href must
+        # resolve against the current page's directory, not the domain root.
+        respx.get("https://example.com/a/b/").mock(
+            return_value=httpx.Response(
+                200,
+                text='<html><body><a href="c.html">C</a></body></html>',
+                headers={"content-type": "text/html"},
+            )
+        )
+        respx.get("https://example.com/a/b/c.html").mock(
+            return_value=httpx.Response(
+                200,
+                text="<html><body>c</body></html>",
+                headers={"content-type": "text/html"},
+            )
+        )
+        urls = crawl("https://example.com/a/b/", max_pages=10)
+        assert "https://example.com/a/b/c.html" in urls
+        assert "https://example.com/c.html" not in urls
+
+    @respx.mock
+    def test_malformed_href_does_not_abort_crawl(self) -> None:
+        # Regression (KNOWN-ISSUES BUG-001 Defect B): one malformed href (e.g. an
+        # unbalanced bracket that makes urljoin raise ValueError) must be skipped,
+        # not crash the whole crawl. The start page and valid links still return.
+        respx.get("https://example.com/").mock(
+            return_value=httpx.Response(
+                200,
+                text=(
+                    '<html><body>'
+                    '<a href="//foo[bar">bad</a>'
+                    '<a href="/ok">ok</a>'
+                    '</body></html>'
+                ),
+                headers={"content-type": "text/html"},
+            )
+        )
+        respx.get("https://example.com/ok").mock(
+            return_value=httpx.Response(
+                200,
+                text="<html><body>ok</body></html>",
+                headers={"content-type": "text/html"},
+            )
+        )
+        urls = crawl("https://example.com/", max_pages=10)
+        assert "https://example.com/" in urls
+        assert "https://example.com/ok" in urls
+
+    @respx.mock
     def test_deduplicates_visited_urls(self) -> None:
         # Two links both pointing to the same page — should only visit once
         respx.get("https://example.com/").mock(
