@@ -42,7 +42,7 @@ Shipped in `ai-toolkit` commit **92a59b9** (`main`).
 
 **Verified**
 - 49 tests, 93% coverage.
-- Live `qwen3-coder:30b` (Mac Mini): faithful summaries, no hallucination in sample.
+- Live `qwen3-coder:30b` (local 30B host): faithful summaries, no hallucination in sample.
 - Bridge payoff: NL query *"what happens when a file fails to parse during ingestion"* →
   the enriched doc **outranked** the raw code (0.4734 vs 0.4363), both → `ingest.py`.
 - Isolation: prose enrichments absent from `search_code_examples`.
@@ -73,13 +73,19 @@ counts remain sourced from the mechanical overview; provenance present; reads as
 
 ---
 
-## Phase 3 — concept-graph relationships ⬜ PLANNED  ← the "graph stuff"
+## Phase 3 — concept-graph relationships 🚧 IN PROGRESS  ← the "graph stuff"
 
 **Goal.** Generate per-project `RELATIONSHIPS.md` feeding grounded-code-mcp's concept graph
 (`query_graph`) — pre-computed multi-hop structure, the biggest win for a 30B runtime model and the
 highest-risk artifact (a bad edge injects false *routing*, not a false fact).
 
-**⚠️ Pre-requisite — VERIFIED 2026-07-06: the linkage is BROKEN system-wide.** Blocks Phase 3.
+**✅ Pre-requisite UNBLOCKED (2026-07-05).** Work item (A) shipped (branch
+`feat/code2md-graphrag-slug-layout`): the scan dir is now a single hyphenated segment
+`sources/<project-slug>/`, so each chunk's `source_path` prefix equals the graph builder's
+default `source_slug = slugify(parent-dir-name)` (`graph_builder.py:182`), which
+`search_knowledge` matches verbatim (`server.py:344`). The original diagnosis is kept below for
+context; (B) — the general server-side fix for the *other* collections — remains scheduled in
+Phase 4.
 
 Graph expansion in `search_knowledge` matches `source_path.startswith(slug + "/")` (server.py:344),
 where `slug` is run through `slugify()` — which strips `/` and `.` and maps `_`→`-`
@@ -128,12 +134,42 @@ routing.
 **Model.** Strongest available — **this is the phase most justified for an Ollama Cloud model**;
 extraction quality here has the largest and most permanent impact.
 
-**Steps.**
-1. Verify `source_slug` linkage (pre-req) — small experiment against a known collection.
-2. `enrich/relationships.py` (extract) + `enrich/verify.py` (verification pass);
-   `prompts/relationships.txt`, `prompts/verify_edge.txt` (both inject the controlled vocab).
-3. Emit `RELATIONSHIPS.md` at the project scan root; `grounded-code-mcp ingest --force` /
-   `build-graph` rebuilds the graph.
+**Decisions locked (2026-07-05).**
+- **Extraction granularity: per-file, name-merged.** Extract the relationships each source file
+  participates in (the file is the authority + the verification `derived_from`); cross-file edges
+  merge automatically because concept ids are `slugify(name)`. Only approach compatible with the
+  mandatory per-edge verification and Phase-1-style per-file caching.
+- **CLI: `--level {summaries,graph,full}` on `enrich`** (default `summaries` = today's behaviour;
+  `graph` = relationships + verify; `full` = both). Adds `--verify-model`.
+- **Model tiering: cloud extract + local verify.** Extraction via a `<model>-cloud` Ollama tag
+  (zero-code cloud path — no `Authorization` header work needed now; that stays backlog); verify on
+  the local model. grounded-code-mcp is OSS, so cloud is within the privacy gate.
+- **RELATIONSHIPS.md is graph-feed only.** Add `"RELATIONSHIPS.md"` to grounded's `config.toml`
+  `exclude_filenames` so `ingest` parses it into the graph but does **not** embed it as a vector
+  chunk (structured triples would be retrieval noise). Small cross-repo change — the design doc's
+  "no server changes for Phase 3" note is amended by this.
+
+**Steps (TDD slices, RED→GREEN each).**
+1. `enrich/relationships.py`: `Triple`, `normalize_relation` (mirror parser; drop non-`VALID_RELATIONS`
+   locally + log), defensive `parse_extraction_json`. Vendor `VALID_RELATIONS`/`VALID_DOMAINS` as
+   versioned constants (separate repo → can't import grounded; a test pins samples + points at
+   `graph_store.py`).
+2. `render_relationships(...)` → parser-valid quoted triples + section headers + provenance
+   front-matter; a **vendored copy of the parser regex** in the test proves parseability.
+3. `prompts/relationships.txt` (injects the verb list + domain constraint) + `extract_relationships`.
+4. `prompts/verify_edge.txt` + `enrich/verify.py` (`verify_triple`, `verify_all` drops unsupported).
+5. Relationship cache (`relate-manifest.json`, SHA+model) + CLI `--level` wiring → writes
+   `sources/<slug>/RELATIONSHIPS.md`, prints the `ingest --force` / `build-graph` hint.
+6. ✅ **DONE (2026-07-06)** — **(grounded repo)** `"RELATIONSHIPS.md"` added to `config.toml`
+   `exclude_filenames` so the ingest scan skips it while `graph_builder`'s own rglob still parses it
+   into the concept graph (graph-feed only, never an embedded vector chunk). RED→GREEN pair committed
+   on grounded-code-mcp branch `feat/exclude-relationships-md-embedding` (`df7eceb` test, `b98e89a`
+   feat); test `TestCommittedConfigToml.test_relationships_md_excluded_from_embedding` asserts the
+   committed config. Full gate green: ruff + mypy clean, 519 tests pass.
+   **Pushed + PR open: grounded-code-mcp #2** —
+   https://codeberg.org/michaelkalber/grounded-code-mcp/pulls/2
+7. **(live, needs Qdrant+Ollama)** run cloud-extract → local-verify → `ingest --force` → spot-check
+   `query_graph` + graph-expanded `search_knowledge`.
 
 **Acceptance.** ≥90% of a sampled edge set is supported by its cited code (post-verify); every edge
 carries a resolving `source_slug`; `query_graph` on a seeded concept returns project relationships;
@@ -176,10 +212,30 @@ stays clean by construction; vetted collections unchanged.
 ## Next action
 
 **Phase 3 pre-req is done — it failed: graph expansion is broken system-wide** (see Phase 3).
-Decision made: **(C) both.** Immediate work = **(A)** restructure project scan output to a top-level
+Decision made: **(C) both.** Work item **(A)** = restructure project scan output to a top-level
 slugified dir `sources/<project-slug>/` so `source_path`/`source_slug` resolve cleanly:
-1. Change code2md default out + docs from `sources/projects/<name>` to `sources/<project-slug>/`
-   (hyphenated); update the ingest guidance + config-key example.
-2. Migrate the existing `grounded_code_mcp` scan/collection to the new layout.
-3. Then build Phase 3 relationship extraction + verification, with Ollama Cloud as the build model.
+1. ✅ **DONE (2026-07-05, uncommitted).** `slugify_name` now mirrors grounded's `slugify()` exactly
+   (hyphenated, idempotent → `slugify(dirname) == dirname`); new `collection_suffix()` keeps
+   collection names on the underscore convention (`my-app` → `project_my_app`). CLI ingest hint,
+   README, and design-doc paths/examples moved from the 2-segment `sources/projects/<name>` to the
+   1-segment `sources/<project-slug>/`. 63 tests pass (was 49), 93% cov. `test_models.py` added.
+2. ✅ **No separate migration (2026-07-05).** grounded data is being rebuilt from scratch on the
+   local host, so the new single-segment `sources/grounded-code-mcp/` layout is picked up on the
+   fresh re-scan + re-ingest — no in-place migration of the old `projects/grounded_code_mcp`
+   collection needed.
+3. 🚧 **Phase 3 IN PROGRESS** — plan locked (see Phase 3 § Decisions locked). Slices 1–6 done.
+   **Next: slice 7 (live, needs Qdrant + Ollama)** — cloud-extract → local-verify on the
+   grounded-code-mcp scan → `ingest --force` → spot-check `query_graph` + graph-expanded
+   `search_knowledge`. Then Phase 3 acceptance check.
+   **Both branches pushed, PRs open (2026-07-06):**
+   ai-toolkit #2 — https://codeberg.org/michaelkalber/ai-toolkit/pulls/2 ·
+   grounded-code-mcp #2 — https://codeberg.org/michaelkalber/grounded-code-mcp/pulls/2 .
+   NB: ai-toolkit #2 lands Phase 3 code *before* slice 7's live acceptance run — hold that merge if
+   you want the spot-check evidence first.
+   ✅ **Tooling gate landed on `main` (2026-07-13).** The repo-wide ruff/mypy/bandit baseline for
+   the four `tools/` utilities merged via **ai-toolkit #3** (`chore/tools-lint-typecheck-baseline`,
+   merge `842804b`; branch since deleted). PR #2 carries a source-only commit (`b78646f`) that keeps
+   the Phase 3 code green under that gate — the `[tool.ruff]`/`[tool.mypy]`/`[tool.bandit]` config
+   lives only on the merged chore branch, so there is no `pyproject.toml` conflict and merge order is
+   interchangeable. PR #2 stays parked pending slice 7; nothing about the gate changes that.
 **(B)** the grounded-code-mcp chunk↔slug matching fix is scheduled in Phase 4.
