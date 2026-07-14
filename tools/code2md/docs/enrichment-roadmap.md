@@ -248,7 +248,7 @@ slugified dir `sources/<project-slug>/` so `source_path`/`source_slug` resolve c
    are on `main`; the `feat/code2md-graphrag-slug-layout` branch has been merged and deleted (local
    + remote). ai-toolkit #2 is therefore superseded — **close it if still open.**
    **🚧 Slice 7 generation DONE (2026-07-13); live half pending.** Extract + verify on the
-   grounded-code-mcp scan ran on the mac-mini Ollama (`192.168.42.165`, `qwen3-coder:30b`, 70 min) →
+   grounded-code-mcp scan ran on the KB-host Ollama (`qwen3-coder:30b`, 70 min) →
    **`RELATIONSHIPS.md`, 269 verified edges, 0 failed, uniform `source_slug`, 16/16 spot-check.**
    Artifact is local + gitignored (public repo — never committed); synced to the KB host out-of-band.
    **Remaining (operator, on the KB host):** `ingest --force` → `query-graph "DocumentChunker"` →
