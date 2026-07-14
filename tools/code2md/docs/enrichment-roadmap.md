@@ -73,14 +73,15 @@ counts remain sourced from the mechanical overview; provenance present; reads as
 
 ---
 
-## Phase 3 — concept-graph relationships 🚧 CODE MERGED (main) — slice 7 (live acceptance) remaining  ← the "graph stuff"
+## Phase 3 — concept-graph relationships 🚧 GENERATION DONE — live ingest/acceptance pending on the KB host  ← the "graph stuff"
 
-> **Status (2026-07-13):** slices 1–6 (generation, verification, caching, `--level` wiring, the
-> grounded `exclude_filenames` change) are **merged to `main`** via merge commit **`7dbdf1b`**
-> (`feat/code2md-graphrag-slug-layout`, branch since deleted). The only remaining work is **slice 7 —
-> the live acceptance run** (ingest → `query_graph` → graph-expanded `search_knowledge`). The
-> generation path was re-confirmed live on 2026-07-13 (local extract + local verify on the mac-mini
-> Ollama → a valid, accurate `RELATIONSHIPS.md`), but that is **not** the slice-7 acceptance below.
+> **Status (2026-07-13):** slices 1–6 are **merged to `main`** via merge commit **`7dbdf1b`**
+> (`feat/code2md-graphrag-slug-layout`, branch since deleted); the grounded `exclude_filenames` change
+> (slice 6) is **confirmed merged on grounded `main`**. **Slice 7 generation is done and validated** —
+> a full grounded-code-mcp scan enriched on the mac-mini Ollama produced a **269-edge, 0-failed
+> `RELATIONSHIPS.md`**, every edge with a resolving `source_slug` and a 16/16 spot-check of accuracy
+> (details in slice 7 below). **Remaining:** the live half — `ingest --force` → `query-graph` →
+> graph-expanded `search` — runs on the mac-mini KB host, plus the 2-segment layout caveat in slice 7.
 
 **Goal.** Generate per-project `RELATIONSHIPS.md` feeding grounded-code-mcp's concept graph
 (`query_graph`) — pre-computed multi-hop structure, the biggest win for a 30B runtime model and the
@@ -167,16 +168,28 @@ extraction quality here has the largest and most permanent impact.
 4. `prompts/verify_edge.txt` + `enrich/verify.py` (`verify_triple`, `verify_all` drops unsupported).
 5. Relationship cache (`relate-manifest.json`, SHA+model) + CLI `--level` wiring → writes
    `sources/<slug>/RELATIONSHIPS.md`, prints the `ingest --force` / `build-graph` hint.
-6. ✅ **DONE (2026-07-06)** — **(grounded repo)** `"RELATIONSHIPS.md"` added to `config.toml`
+6. ✅ **DONE + MERGED** — **(grounded repo)** `"RELATIONSHIPS.md"` added to `config.toml`
    `exclude_filenames` so the ingest scan skips it while `graph_builder`'s own rglob still parses it
    into the concept graph (graph-feed only, never an embedded vector chunk). RED→GREEN pair committed
    on grounded-code-mcp branch `feat/exclude-relationships-md-embedding` (`df7eceb` test, `b98e89a`
-   feat); test `TestCommittedConfigToml.test_relationships_md_excluded_from_embedding` asserts the
-   committed config. Full gate green: ruff + mypy clean, 519 tests pass.
-   **Pushed + PR open: grounded-code-mcp #2** —
-   https://codeberg.org/michaelkalber/grounded-code-mcp/pulls/2
-7. **(live, needs Qdrant+Ollama)** run cloud-extract → local-verify → `ingest --force` → spot-check
-   `query_graph` + graph-expanded `search_knowledge`.
+   feat). **Confirmed merged to grounded `main` (2026-07-13)** — `RELATIONSHIPS.md` is present in the
+   committed `config.toml` `exclude_filenames`; PR #2 can be closed.
+7. 🚧 **GENERATION DONE (2026-07-13); live ingest/acceptance pending on the mac-mini KB host.**
+   - ✅ **Generated + validated:** local extract + local verify (`qwen3-coder:30b`, 70 min) on the
+     grounded-code-mcp scan → **`RELATIONSHIPS.md` with 269 verified edges from 38/38 files, 0
+     failed.** All 269 carry a resolving `source_slug` (`grounded-code-mcp`); domains valid
+     (`architecture` 242, `python` 26); a 16-edge spot-check across `chunking.py`/`config.py` was
+     **16/16** supported by cited code (≥90% bar met on the generation side). Artifact is **local +
+     gitignored** in the (public) grounded repo — synced to the KB host out-of-band, never committed.
+   - ⬜ **Live half (runs on the mac-mini KB host):** `ingest --force` → `query-graph "DocumentChunker"`
+     → graph-expanded `search`. Blocked only on the operator run.
+   - ⚠️ **Layout caveat:** the scan landed at `sources/projects/grounded-code-mcp/` (2-segment). Graph
+     expansion matches `source_path.startswith("grounded-code-mcp/")`, so it works **only if** the
+     host's `knowledge_base.sources_dir` = `…/sources/projects/` (→ `source_path = grounded-code-mcp/…`).
+     If `sources_dir = …/sources/` (as it is for the other collections), paths become
+     `projects/grounded-code-mcp/…` and auto-expansion returns nothing — reproducing the documented
+     2-segment failure that motivates Phase 4 fix **(B)**. `query-graph` still works either way.
+     **Next: use the 1-segment `sources/<slug>/` layout, or land Phase 4 (B).**
 
 **Acceptance.** ≥90% of a sampled edge set is supported by its cited code (post-verify); every edge
 carries a resolving `source_slug`; `query_graph` on a seeded concept returns project relationships;
@@ -234,13 +247,16 @@ slugified dir `sources/<project-slug>/` so `source_path`/`source_slug` resolve c
    verification, caching, `--level graph|full` wiring, and the grounded `exclude_filenames` change)
    are on `main`; the `feat/code2md-graphrag-slug-layout` branch has been merged and deleted (local
    + remote). ai-toolkit #2 is therefore superseded — **close it if still open.**
-   **🚧 Only slice 7 remains (live acceptance, needs Qdrant + Ollama)** — extract → verify on the
-   grounded-code-mcp scan → `ingest --force` → spot-check `query_graph` + graph-expanded
-   `search_knowledge`, then the Phase 3 acceptance check. Target host: the mac mini at
-   `192.168.42.165` (Qdrant `:6333` ready, Ollama `:11434` live).
-   **Verify before/during slice 7:** grounded-code-mcp #2 (the `RELATIONSHIPS.md` →
-   `exclude_filenames` change, slice 6) — https://codeberg.org/michaelkalber/grounded-code-mcp/pulls/2 —
-   is actually **merged** on the running server, not just open; the graph feed depends on it.
+   **🚧 Slice 7 generation DONE (2026-07-13); live half pending.** Extract + verify on the
+   grounded-code-mcp scan ran on the mac-mini Ollama (`192.168.42.165`, `qwen3-coder:30b`, 70 min) →
+   **`RELATIONSHIPS.md`, 269 verified edges, 0 failed, uniform `source_slug`, 16/16 spot-check.**
+   Artifact is local + gitignored (public repo — never committed); synced to the KB host out-of-band.
+   **Remaining (operator, on the KB host):** `ingest --force` → `query-graph "DocumentChunker"` →
+   graph-expanded `search`, then the Phase 3 acceptance check. See the slice-7 **layout caveat**: the
+   2-segment `sources/projects/` output only graph-expands if the host `sources_dir` = `…/sources/projects/`;
+   otherwise switch to the 1-segment `sources/<slug>/` layout or land Phase 4 (B).
+   grounded-code-mcp #2 (`exclude_filenames`, slice 6) is **confirmed merged on grounded `main`** —
+   the graph feed depends on it; PR can be closed.
    ✅ **Tooling gate landed on `main` (2026-07-13).** The repo-wide ruff/mypy/bandit baseline for
    the four `tools/` utilities merged via **ai-toolkit #3** (`chore/tools-lint-typecheck-baseline`,
    merge `842804b`; branch since deleted); the Phase 3 source stays green under it (`b78646f`).
