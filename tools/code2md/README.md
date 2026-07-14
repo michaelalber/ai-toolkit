@@ -34,6 +34,9 @@ out of the shared, vetted collections like `grounded_internal`.
 - **`.gitignore`-aware** — uses `git ls-files` in a git repo; falls back to a `pathspec` walk.
 - **Fence-safe** — source containing ```` ``` ```` gets a longer outer fence automatically.
 - **`--max-file-kb`** — skip oversized files. **`--no-overview`** / **`--no-metadata`** toggles.
+- **Optional LLM enrichment** (`code2md enrich`) — per-file NL summaries and a verified concept
+  graph (`RELATIONSHIPS.md`) as retrieval bridges; provenance-marked, SHA-cached, ingested
+  unchanged. See [Enrichment](#enrichment-optional-llm).
 
 ## Installation
 
@@ -94,26 +97,46 @@ grounded-code-mcp's SHA-256 change detection re-ingests only files that changed.
 > `search_knowledge` picks up the new collection. (The CLI `grounded-code-mcp search` re-reads
 > config each run and needs no restart.)
 
-## Enrichment (optional, LLM) — Phase 1
+## Enrichment (optional, LLM)
 
-`code2md enrich` uses a local model to generate **retrieval bridges** — a natural-language
-summary and the questions each file answers — that make NL queries land on the right code.
-Generated docs go under `_enriched/`, carry provenance (`generated: true`, `model`,
-`derived_from`), and **never replace** the real code (the authority). grounded-code-mcp ingests
-them unchanged; no server change.
+`code2md enrich` uses a local model to generate **retrieval bridges** — content that makes
+natural-language queries land on the right code. It runs at three levels, selected with `--level`:
+
+- **`summaries`** (default, Phase 1) — a natural-language summary and the questions each file
+  answers, written per file under `_enriched/`. These are prose (`is_code=False`), so they match
+  NL queries yet stay out of `search_code_examples`.
+- **`graph`** (Phase 3) — a verified **concept graph** (`RELATIONSHIPS.md` at the scan root):
+  source-attributed `"A" → verb → "B"` edges that pre-compute the multi-hop structure small models
+  are worst at. Every edge passes a **verification pass** — a second model call confirms the cited
+  code actually supports the edge, and unsupported edges are dropped. This is the guard against
+  hallucinated *routing* (a false edge that steers retrieval to real-but-irrelevant code).
+- **`full`** — both.
+
+All output carries provenance (`generated: true`, `model`, `derived_from`) and **never replaces**
+the real code (the authority). grounded-code-mcp ingests it unchanged — `RELATIONSHIPS.md` is the
+concept-graph feed its existing parser already consumes, so `ingest --force` (or `build-graph`)
+rebuilds the graph with **no server change**.
 
 ```bash
 # scan first, then enrich the scan output
 code2md scan ~/AppDev/myapp --out /tmp/scan/myapp --name myapp
+
+# Phase 1 only (default): per-file summaries + questions
 code2md enrich /tmp/scan/myapp --model qwen3-coder:30b --ollama-host http://<host>:11434
+
+# full: summaries + verified concept graph, with a smaller model for the verify pass
+code2md enrich /tmp/scan/myapp --level full \
+  --model qwen3-coder:30b --verify-model qwen2.5-coder:7b \
+  --ollama-host http://<host>:11434 --verbose
 ```
 
 The model is **required** (via `--model` or `CODE2MD_ENRICH_MODEL`) — never hardcoded, since
-build-time generation should use your strongest available coding model. Results are SHA-cached
-(keyed by code hash + model id), so re-runs only regenerate changed files. See
-[`docs/enrichment-design.md`](docs/enrichment-design.md) for the full design (Phases 2–4: an
-architecture brief, concept-graph relationships with a verification pass, and an optional
-server-side provenance filter).
+build-time generation should use your strongest available coding model. `--verify-model` defaults
+to `--model`; `--timeout` sets the per-request timeout (default 180s). Results are SHA-cached
+(keyed by code hash + model id) in `_enriched/enrich-manifest.json` and
+`_enriched/relate-manifest.json`, so re-runs regenerate only changed files — pass `--force` to
+re-enrich regardless. See [`docs/enrichment-design.md`](docs/enrichment-design.md) for the full
+design (Phase 2: a project architecture brief; Phase 4: an optional server-side provenance filter).
 
 > **Bridge, not authority:** enriched docs are prose (`is_code=False`), so they match NL queries
 > and stay out of `search_code_examples`. In testing, the generated bridge for a file *outranks*
