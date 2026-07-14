@@ -73,7 +73,14 @@ counts remain sourced from the mechanical overview; provenance present; reads as
 
 ---
 
-## Phase 3 — concept-graph relationships 🚧 IN PROGRESS  ← the "graph stuff"
+## Phase 3 — concept-graph relationships 🚧 CODE MERGED (main) — slice 7 (live acceptance) remaining  ← the "graph stuff"
+
+> **Status (2026-07-13):** slices 1–6 (generation, verification, caching, `--level` wiring, the
+> grounded `exclude_filenames` change) are **merged to `main`** via merge commit **`7dbdf1b`**
+> (`feat/code2md-graphrag-slug-layout`, branch since deleted). The only remaining work is **slice 7 —
+> the live acceptance run** (ingest → `query_graph` → graph-expanded `search_knowledge`). The
+> generation path was re-confirmed live on 2026-07-13 (local extract + local verify on the mac-mini
+> Ollama → a valid, accurate `RELATIONSHIPS.md`), but that is **not** the slice-7 acceptance below.
 
 **Goal.** Generate per-project `RELATIONSHIPS.md` feeding grounded-code-mcp's concept graph
 (`query_graph`) — pre-computed multi-hop structure, the biggest win for a 30B runtime model and the
@@ -223,19 +230,18 @@ slugified dir `sources/<project-slug>/` so `source_path`/`source_slug` resolve c
    local host, so the new single-segment `sources/grounded-code-mcp/` layout is picked up on the
    fresh re-scan + re-ingest — no in-place migration of the old `projects/grounded_code_mcp`
    collection needed.
-3. 🚧 **Phase 3 IN PROGRESS** — plan locked (see Phase 3 § Decisions locked). Slices 1–6 done.
-   **Next: slice 7 (live, needs Qdrant + Ollama)** — cloud-extract → local-verify on the
+3. ✅ **Phase 3 code MERGED to `main` (2026-07-13, `7dbdf1b`).** Slices 1–6 (generation,
+   verification, caching, `--level graph|full` wiring, and the grounded `exclude_filenames` change)
+   are on `main`; the `feat/code2md-graphrag-slug-layout` branch has been merged and deleted (local
+   + remote). ai-toolkit #2 is therefore superseded — **close it if still open.**
+   **🚧 Only slice 7 remains (live acceptance, needs Qdrant + Ollama)** — extract → verify on the
    grounded-code-mcp scan → `ingest --force` → spot-check `query_graph` + graph-expanded
-   `search_knowledge`. Then Phase 3 acceptance check.
-   **Both branches pushed, PRs open (2026-07-06):**
-   ai-toolkit #2 — https://codeberg.org/michaelkalber/ai-toolkit/pulls/2 ·
-   grounded-code-mcp #2 — https://codeberg.org/michaelkalber/grounded-code-mcp/pulls/2 .
-   NB: ai-toolkit #2 lands Phase 3 code *before* slice 7's live acceptance run — hold that merge if
-   you want the spot-check evidence first.
+   `search_knowledge`, then the Phase 3 acceptance check. Target host: the mac mini at
+   `192.168.42.165` (Qdrant `:6333` ready, Ollama `:11434` live).
+   **Verify before/during slice 7:** grounded-code-mcp #2 (the `RELATIONSHIPS.md` →
+   `exclude_filenames` change, slice 6) — https://codeberg.org/michaelkalber/grounded-code-mcp/pulls/2 —
+   is actually **merged** on the running server, not just open; the graph feed depends on it.
    ✅ **Tooling gate landed on `main` (2026-07-13).** The repo-wide ruff/mypy/bandit baseline for
    the four `tools/` utilities merged via **ai-toolkit #3** (`chore/tools-lint-typecheck-baseline`,
-   merge `842804b`; branch since deleted). PR #2 carries a source-only commit (`b78646f`) that keeps
-   the Phase 3 code green under that gate — the `[tool.ruff]`/`[tool.mypy]`/`[tool.bandit]` config
-   lives only on the merged chore branch, so there is no `pyproject.toml` conflict and merge order is
-   interchangeable. PR #2 stays parked pending slice 7; nothing about the gate changes that.
+   merge `842804b`; branch since deleted); the Phase 3 source stays green under it (`b78646f`).
 **(B)** the grounded-code-mcp chunk↔slug matching fix is scheduled in Phase 4.
