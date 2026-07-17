@@ -4,7 +4,7 @@
 
 `CLAUDE.md` is Claude Code's global instruction file. It applies to **every project** you open — Claude reads it automatically at the start of each session.
 
-`settings.json` installs deterministic hooks (credential stop, post-write build/lint gates) and wires up the status line.
+`settings.json` installs deterministic hooks (credential stop, shell-exec-chain stop, bash audit log, post-write build/lint gates) and wires up the status line. The hook bodies live in `hooks/` as standalone scripts — `settings.json` only references them.
 `settings.local.json` controls Claude Code's permissions and tool allowlist.
 `statusline.sh` renders token count and context window usage below the prompt (e.g. `57.5k (6.0%)`).
 
@@ -20,9 +20,32 @@ bash ../../scripts/install-claude.sh
 cp CLAUDE.md ~/.claude/CLAUDE.md
 cp settings.json ~/.claude/settings.json
 cp settings.local.json ~/.claude/settings.local.json
+
+# 3. Install the hook scripts referenced by settings.json (they must be executable)
+mkdir -p ~/.claude/hooks
+cp hooks/*.sh ~/.claude/hooks/
+chmod +x ~/.claude/hooks/*.sh
 ```
 
 Then edit `~/.claude/settings.local.json` — replace `YOUR_USERNAME` with your actual username.
+
+The hooks require `jq` (they read tool input as JSON on stdin). The post-write gates are
+best-effort: they no-op silently when `dotnet` or `ruff`/`uvx` is not installed.
+
+**Verify the hooks are live.** A misconfigured hook fails silently — it never runs and nothing
+warns you — so confirm rather than assume:
+
+```bash
+# Bash audit hook: run any Bash command in a session, then
+tail -1 ~/.claude/logs/bash-audit.log   # should show the command you just ran
+```
+
+For the credential guard, ask Claude to write a file assigning a quoted dummy secret to a
+variable named `api_key`. The write must be **blocked**. If it succeeds, the hook is not wired up.
+
+> Note: the credential guard inspects the content being written, so it also fires on
+> documentation and test fixtures containing credential-shaped literals. That is intended —
+> it fails closed. Write such literals by hand, or stage them outside a guarded tool call.
 
 > `statusline.sh` is copied automatically by `install-claude.sh` in step 1 — no manual copy needed.
 

@@ -3,58 +3,40 @@
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "Bash(*)",
+        "matcher": "^Bash$",
         "hooks": [
           {
             "type": "command",
-            "command": "cmd=\"${CLAUDE_TOOL_INPUT_COMMAND:-}\"; if [ -n \"$cmd\" ]; then echo \"$cmd\" | grep -qE '(\\|[[:space:]]*(bash|sh|python[23]?|node|perl)\\b|-exec[ir]?[[:space:]]+(bash|sh|python[23]?|node|perl)\\b)' 2>/dev/null && echo '⛔ SHELL EXEC CHAIN DETECTED (pipe-to-shell or find -exec shell) — review before proceeding' && exit 2; fi; exit 0"
+            "command": "$HOME/.claude/hooks/guard-bash-exec.sh"
           }
         ]
       },
       {
-        "matcher": "Write(*)",
+        "matcher": "^(Write|Edit|NotebookEdit)$",
         "hooks": [
           {
             "type": "command",
-            "command": "file=\"$CLAUDE_TOOL_INPUT_FILE\"; if [ -f \"$file\" ]; then grep -iE '(password|passwd|secret|api.?key|token|connectionstring|bearer|private.?key)\\s*[=:][[:space:]]*[\"'\\''`][^\"'\\''`]{6}' \"$file\" 2>/dev/null && echo '⛔ CREDENTIAL PATTERN DETECTED — review before proceeding' && exit 2 || exit 0; fi"
+            "command": "$HOME/.claude/hooks/guard-credentials.sh"
           }
         ]
       }
     ],
     "PostToolUse": [
       {
-        "matcher": "Bash(*)",
+        "matcher": "^Bash$",
         "hooks": [
           {
             "type": "command",
-            "command": "ts=$(date -u '+%Y-%m-%dT%H:%M:%SZ'); cmd=\"${CLAUDE_TOOL_INPUT_COMMAND:-}\"; mkdir -p \"$HOME/.claude/logs\" && printf '[%s] %s\\n' \"$ts\" \"$cmd\" >> \"$HOME/.claude/logs/bash-audit.log\"; exit 0"
+            "command": "$HOME/.claude/hooks/audit-bash.sh"
           }
         ]
       },
       {
-        "matcher": "Write(*.cs)",
+        "matcher": "^(Write|Edit)$",
         "hooks": [
           {
             "type": "command",
-            "command": "dotnet build --no-restore 2>&1 | tail -15"
-          }
-        ]
-      },
-      {
-        "matcher": "Write(*.py)",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "ruff check \"$CLAUDE_TOOL_INPUT_FILE\" 2>&1 | head -20"
-          }
-        ]
-      },
-      {
-        "matcher": "Write(*.csproj)",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "dotnet restore 2>&1 | tail -10"
+            "command": "$HOME/.claude/hooks/post-write-check.sh"
           }
         ]
       }

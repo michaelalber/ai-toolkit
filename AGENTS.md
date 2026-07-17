@@ -46,7 +46,8 @@ repeated here. Related project context files: `intent.md` (goals, values, tradeo
   - `claude/commands/` — Claude Code user-invoked slash commands with shell injection (flat, no audience subdir)
   - `opencode/commands/` — OpenCode command equivalents with agent routing and subtask isolation (flat)
   - `claude/global/` — global Claude Code files installed to `~/.claude/`
-  - `claude/global/settings.json` — hooks: PreToolUse credential stop, PostToolUse build/lint gates
+  - `claude/global/settings.json` — hook wiring: PreToolUse credential + shell-exec-chain stops, PostToolUse bash audit log + build/lint gates
+  - `claude/global/hooks/` — hook script bodies (`*.sh`), installed to `~/.claude/hooks/`; `settings.json` references them by path
   - `claude/global/settings.local.json` — permissions: bash allow/deny arrays, read allow/deny arrays
   - `opencode/global/` — global OpenCode files installed to `~/.config/opencode/`
   - `pi/global/` — global Pi files installed to `~/.pi/agent/`; `SYSTEM.md` is a per-project template
@@ -62,7 +63,7 @@ repeated here. Related project context files: `intent.md` (goals, values, tradeo
 - **Agents:** `claude/agents/{team,professional}/<n>.md` (Claude Code) | `opencode/agents/{team,professional}/<n>.md` (OpenCode) — must stay in parity
 - **Commands:** `claude/commands/<n>.md` (Claude Code) | `opencode/commands/<n>.md` (OpenCode) — flat, no audience subdir
 - **Global files:** `claude/global/` → installs to `~/.claude/` | `opencode/global/` → installs to `~/.config/opencode/` | `pi/global/` → installs to `~/.pi/agent/`
-- **Hooks:** `claude/global/settings.json` — credential stop (PreToolUse) + post-write build/lint gates (PostToolUse)
+- **Hooks:** `claude/global/settings.json` (wiring) + `claude/global/hooks/*.sh` (bodies) — credential + shell-exec-chain stops (PreToolUse), bash audit log + post-write build/lint gates (PostToolUse)
 - **Permissions:** `claude/global/settings.local.json` — bash allow/deny arrays, read allow/deny arrays
 - **Project templates:** `project-templates/` — copy into target project roots, do not edit globally
 
@@ -278,17 +279,32 @@ Use `subtask: false` for commands that write files (new-feature, migrate) — th
 
 `claude/global/settings.json` installs deterministic hooks that run outside the LLM:
 
-| Hook | Trigger | Action |
+| Hook | Matcher | Action |
 |------|---------|--------|
-| PreToolUse | Any Write | Credential pattern scan — exit 2 blocks the write |
-| PostToolUse | Write(*.cs) | `dotnet build --no-restore` — surfaces compile errors immediately |
-| PostToolUse | Write(*.py) | `ruff check` — surfaces lint errors immediately |
-| PostToolUse | Write(*.csproj) | `dotnet restore` — keeps package state current |
+| PreToolUse | `^Bash$` | Shell-exec-chain scan (pipe-to-shell, `find -exec sh`) — exit 2 blocks the call |
+| PreToolUse | `^(Write\|Edit\|NotebookEdit)$` | Credential pattern scan of the content being written — exit 2 blocks the call |
+| PostToolUse | `^Bash$` | Appends the command to `~/.claude/logs/bash-audit.log` |
+| PostToolUse | `^(Write\|Edit)$` | Dispatches by extension: `.cs` → build the owning `.csproj`, `.csproj` → restore it, `.py` → `ruff check` (advisory) |
 
-These run regardless of model instruction. Exit code 2 blocks the tool call. Cannot be bypassed by
-prompt injection. Permissions (interactive allow/deny) live separately in
-`claude/global/settings.local.json` — hooks for deterministic enforcement, permissions for
-interactive approval; keep them in separate files.
+Hook bodies live in `claude/global/hooks/*.sh` and install to `~/.claude/hooks/`; `settings.json`
+only references them by path. Three rules govern whether a hook works at all — each has silently
+disabled these hooks before:
+
+- **`matcher` matches the tool NAME only**, as a literal or unanchored regex. Permission-rule
+  syntax (`Bash(*)`, `Write(*.cs)`) does **not** work here and matches nothing. Filter by file
+  extension inside the script, not in the matcher.
+- **Tool input arrives as JSON on stdin** — read it with `jq` (`.tool_input.command`,
+  `.tool_input.file_path`). There are no `CLAUDE_TOOL_INPUT_*` environment variables; referencing
+  them yields an empty string and the hook fails **open**, silently allowing what it should block.
+- **Exit 2 blocks only on PreToolUse.** PostToolUse runs after the tool call and cannot block —
+  its output is advisory. Messages must go to **stderr** to be surfaced.
+
+A misconfigured hook produces no error — it simply never runs. Verify with the checks in
+`claude/global/README.md` rather than assuming.
+
+These run regardless of model instruction and cannot be bypassed by prompt injection. Permissions
+(interactive allow/deny) live separately in `claude/global/settings.local.json` — hooks for
+deterministic enforcement, permissions for interactive approval; keep them in separate files.
 
 ---
 
