@@ -88,6 +88,23 @@ To install only the team-facing skills (e.g. when sharing this with a colleague)
 
 See [`claude/global/README.md`](claude/global/README.md) for global config setup (hooks, permissions, commands).
 
+> **Upgrade notice (2026-07-17) — if you installed `claude/global/` before this date, its hooks and
+> secret deny-rules were not doing anything.** Two bugs made them silently inert, and neither
+> produced an error, so the config reviewed as protective while enforcing nothing:
+>
+> - **No hook ever ran.** The `matcher` values used permission-rule syntax (`Bash(*)`,
+>   `Write(*.cs)`). Matchers test the tool *name*, so those matched nothing. The hook bodies also
+>   read `$CLAUDE_TOOL_INPUT_*` environment variables, which do not exist — had the matchers been
+>   right, the guards would have failed *open* and allowed what they were meant to block.
+> - **Secret deny-rules only covered the working directory.** `Read(**/.env)` matches at or under
+>   cwd, not filesystem-wide. Working in any project directory left `~/.ssh`, `~/.aws`, `~/.npmrc`
+>   and similar readable. The `//` prefix (`Read(//**/.env)`) is what makes a rule absolute.
+>
+> **To upgrade:** re-copy `settings.json` and `settings.local.json`, and install the new `hooks/`
+> directory, per [`claude/global/README.md`](claude/global/README.md). Then run the verification
+> checks in that file — a misconfigured hook is silent, so confirm rather than assume. Fixed in
+> `957222c`.
+
 ### OpenCode
 
 ```bash
