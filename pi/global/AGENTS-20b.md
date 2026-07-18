@@ -112,10 +112,26 @@ A passing test suite ≠ done. Tests verify code correctness; evals verify the o
 - Pydantic v2 for validation; `pyproject.toml` for dependencies
 - Context managers for all resource lifecycle (files, HTTP sessions, DB connections)
 
+### PHP
+- Use strict types (`declare(strict_types=1)`) in every file
+- Type-hint all function parameters and return types
+- Use Laravel Form Requests for input validation — never trust raw `$request->input()`
+- Use Eloquent ORM or the Query Builder with bound parameters — never raw string-concatenated SQL
+- Store secrets in `.env` (gitignored) and access via `config()` helpers, never `env()` directly in code
+- Follow PSR-12 coding style; enforce with a linter (PHP-CS-Fixer / PHP_CodeSniffer)
+
 ### TypeScript
 - Enable `strict` mode in `tsconfig.json`; no `any` without justification
 - `const` by default; `let` only when reassignment required; never `var`
 - `async`/`await` over raw Promises or callbacks
+
+---
+
+## AI / ML Coding Standards
+
+- Never hardcode model names as bare strings — use a config constant; models are deprecated without notice
+- For Ollama/local LLM calls: note when behavior depends on a specific model family (tool calling support varies significantly)
+- Prompt templates belong in versioned files, not f-strings scattered through application code
 
 ---
 
