@@ -25,6 +25,7 @@ dev = [
 ]
 docling = [
     "docling>=2.0",
+    "onnxruntime>=1.18",
 ]
 
 [project.scripts]
