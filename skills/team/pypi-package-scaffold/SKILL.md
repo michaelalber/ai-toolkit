@@ -25,7 +25,7 @@ establishes all of these before the first publish, using the `src/` layout and T
 1. NO PUBLISH WITHOUT TESTS — `pytest` must pass (the publish job `needs: test`) before any upload.
 2. SEMVER IS LAW — breaking changes require a major version bump; no exceptions.
 3. METADATA REQUIRED — name, version, description, license, authors, readme, requires-python, classifiers.
-4. MULTI-VERSION SUPPORT — `requires-python = ">=3.10"` minimum; test matrix covers 3.10–3.13.
+4. MULTI-VERSION SUPPORT — `requires-python = ">=3.10"` minimum; test matrix covers 3.10–3.14.
 5. DETERMINISTIC BUILDS — pinned build dependencies; `PYTHONHASHSEED=0` in CI; ship both sdist and wheel.
 
 Full principle table, KB lookups, command sequences, anti-patterns, discipline rules, and error

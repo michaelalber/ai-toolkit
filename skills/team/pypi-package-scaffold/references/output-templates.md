@@ -32,6 +32,6 @@ The scaffold progress checklist the skill reports to the user.
 - [ ] `twine check dist/*` passes
 
 ### CI/CD
-- [ ] `ci.yml` — test matrix (Python 3.10, 3.11, 3.12, 3.13)
+- [ ] `ci.yml` — test matrix (Python 3.10, 3.11, 3.12, 3.13, 3.14)
 - [ ] `publish.yml` — publish on tag (Trusted Publishing)
 ```

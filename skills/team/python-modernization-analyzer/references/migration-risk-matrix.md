@@ -42,9 +42,9 @@ Reference for the `python-modernization-analyzer` skill. Use during Phase 2 (ASS
 | `requirements.txt` → `pyproject.toml` | S | Low | None | 1 | Highest value, lowest risk |
 | Add `ruff` linting | S | Low | None | 1 | No behavior change |
 | Add type hints (partial) | M | Low | None | 2 | Start with public APIs |
-| Python 3.9 → 3.12 | M | Low | Medium | 2 | Check dependency compatibility |
-| Python 3.6/3.7 → 3.12 | L | Medium | Medium | 3 | More syntax changes; walrus operator, f-strings |
-| Python 2 → 3.12 | XL | High | High | 4 | Requires `2to3`; many manual fixes |
+| Python 3.9 → 3.13 | M | Low | Medium | 2 | Check dependency compatibility |
+| Python 3.6/3.7 → 3.13 | L | Medium | Medium | 3 | More syntax changes; walrus operator, f-strings |
+| Python 2 → 3.13 | XL | High | High | 4 | Requires `2to3`; many manual fixes |
 | `setup.py` → `pyproject.toml` | M | Low | Low | 2 | More complex than requirements.txt |
 | Add pytest + coverage | M | Low | None | 0 (prerequisite) | Must precede any framework migration |
 | Add Docker + CI/CD | M | Low | None | 0 (prerequisite) | Must precede any framework migration |
@@ -64,14 +64,15 @@ Reference for the `python-modernization-analyzer` skill. Use during Phase 2 (ASS
 
 | Python Version | EOL Date | Key Features Added | Migration Effort from 2.7 |
 |---------------|----------|-------------------|--------------------------|
-| 3.8 | Oct 2024 | Walrus operator, f-string debugging | L |
-| 3.9 | Oct 2025 | `dict \| dict`, `list[str]` type hints | L |
+| 3.8 | Oct 2024 (past EOL) | Walrus operator, f-string debugging | L |
+| 3.9 | Oct 2025 (past EOL) | `dict \| dict`, `list[str]` type hints | L |
 | 3.10 | Oct 2026 | Match/case, `X \| Y` union types | L |
 | 3.11 | Oct 2027 | 10-60% faster, better error messages | L |
 | 3.12 | Oct 2028 | f-string improvements, `@override` | L |
 | 3.13 | Oct 2029 | Free-threaded mode (experimental) | L |
+| 3.14 | Oct 2030 | Deferred annotation evaluation by default, template strings | L |
 
-**Recommendation:** Target Python 3.12 for new migrations. 3.11+ provides significant performance improvements.
+**Recommendation:** Target Python 3.13 for new migrations (3.14 if the dependency set already supports it). Any codebase still on 3.8/3.9 is on an already-EOL interpreter — flag as a blocker, not just a modernization opportunity.
 
 ---
 

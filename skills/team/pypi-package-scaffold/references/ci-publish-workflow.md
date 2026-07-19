@@ -6,7 +6,7 @@ Reference for the `pypi-package-scaffold` skill. GitHub Actions workflows for te
 
 ## CI Workflow (`.github/workflows/ci.yml`)
 
-Runs on every push and pull request. Tests across Python 3.10, 3.11, 3.12, 3.13.
+Runs on every push and pull request. Tests across Python 3.10, 3.11, 3.12, 3.13, 3.14.
 
 ```yaml
 name: CI
@@ -27,7 +27,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.10", "3.11", "3.12", "3.13"]
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
 
     steps:
       - uses: actions/checkout@v4
@@ -51,7 +51,7 @@ jobs:
 
       - name: Upload coverage
         uses: codecov/codecov-action@v4
-        if: matrix.python-version == '3.12'  # Upload once
+        if: matrix.python-version == '3.13'  # Upload once
         with:
           file: ./coverage.xml
           fail_ci_if_error: false
@@ -65,7 +65,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: "3.13"
           cache: "pip"
 
       - name: Install dependencies
@@ -90,7 +90,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: "3.13"
 
       - name: Install build tools
         run: pip install build twine
@@ -149,7 +149,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: "3.13"
 
       - name: Install build tools
         run: pip install build twine

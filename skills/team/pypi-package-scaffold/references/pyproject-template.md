@@ -42,6 +42,7 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Programming Language :: Python :: 3 :: Only",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Typing :: Typed",
@@ -141,10 +142,6 @@ select = [
     "S",   # flake8-bandit (security)
     "N",   # pep8-naming
     "ANN", # flake8-annotations
-]
-ignore = [
-    "ANN101",  # Missing type annotation for self
-    "ANN102",  # Missing type annotation for cls
 ]
 
 [tool.ruff.lint.per-file-ignores]
