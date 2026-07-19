@@ -17,11 +17,11 @@ A complete, publishable Composer library manifest plus the supporting config fil
         { "name": "Author Name", "email": "author@example.com" }
     ],
     "require": {
-        "php": "^8.1"
+        "php": "^8.2"
     },
     "require-dev": {
-        "pestphp/pest": "^2.34",
-        "phpstan/phpstan": "^1.11",
+        "pestphp/pest": "^3.0",
+        "phpstan/phpstan": "^2.0",
         "friendsofphp/php-cs-fixer": "^3.58"
     },
     "autoload": {

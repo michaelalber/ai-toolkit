@@ -4,7 +4,7 @@ Auth, rate limiting, CORS, and a consistent error envelope. Aligned with OWASP A
 
 ## Sanctum token authentication
 
-Install (Laravel 11/12): `php artisan install:api` — adds Sanctum, `routes/api.php`, and the
+Install (Laravel 11-13): `php artisan install:api` — adds Sanctum, `routes/api.php`, and the
 `HasApiTokens` trait wiring. For ≤10: `composer require laravel/sanctum` then publish + migrate.
 
 Issue a token:
@@ -68,7 +68,7 @@ return [
 
 ## Consistent error envelope
 
-Centralize exception rendering so every error has one shape. Laravel 12 (`bootstrap/app.php`):
+Centralize exception rendering so every error has one shape. Laravel 11+ (`bootstrap/app.php`):
 
 ```php
 ->withExceptions(function (Exceptions $exceptions): void {

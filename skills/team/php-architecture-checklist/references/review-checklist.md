@@ -1,7 +1,7 @@
 # PHP Architecture Review Checklist
 
 Section-by-section checklist for the PHP architecture review. Run alongside `phpstan`,
-`php-cs-fixer`, and `composer outdated`.
+`php-cs-fixer` (or `pint` on Laravel), and `composer outdated`.
 
 ---
 
@@ -11,7 +11,7 @@ Section-by-section checklist for the PHP architecture review. Run alongside `php
 php -v                                  # confirm PHP version
 grep -A2 '"require"' composer.json      # framework + php constraint
 phpstan analyse --level=6 2>&1 | tail   # static analysis baseline
-php-cs-fixer fix --dry-run --diff       # style drift
+php-cs-fixer fix --dry-run --diff       # style drift (Laravel: `pint --test` instead)
 vendor/bin/phpunit --list-tests | wc -l # test presence
 ```
 
@@ -42,7 +42,7 @@ vendor/bin/phpunit --list-tests | wc -l # test presence
 - [ ] No hardcoded credentials, API keys, or connection strings
 
 ## Section 6: Style & autoloading
-- [ ] PSR-12 clean (`php-cs-fixer`)
+- [ ] PSR-12 clean (`php-cs-fixer`, or `pint` on Laravel)
 - [ ] PSR-4 autoloading; one class per file; namespace matches path
 
 ## Section 7: Dependencies

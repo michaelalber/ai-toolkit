@@ -98,6 +98,7 @@ $this->app->bind(OrderWriteContract::class, OrderWriteService::class);
 ```bash
 php artisan route:list --path=api/v1/<name>     # routes registered
 vendor/bin/pest tests/Feature/<Name> tests/Unit/<Name>   # or phpunit
+vendor/bin/pint --dirty                          # Laravel's default style fixer (wraps php-cs-fixer)
 # Cross-feature import check — should print nothing
 grep -rn "use App\\\\Features\\\\" app/Features/<Name> | grep -v "App\\\\Features\\\\<Name>"
 ```
@@ -145,6 +146,7 @@ grep -rn "use App\\\\Features\\\\" app/Features/<Name> | grep -v "App\\\\Feature
 ### Verification
 - [ ] `php artisan route:list` shows the new routes
 - [ ] `pest` / `phpunit` green for the slice
+- [ ] `pint --dirty` clean
 - [ ] No cross-feature imports detected
 ```
 

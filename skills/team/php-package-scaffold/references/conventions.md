@@ -11,7 +11,7 @@ anti-pattern catalog, the output report template, and error-recovery procedures.
 | 2 | **Semver is a promise** | MAJOR = break, MINOR = additive, PATCH = fix. Consumers pin with `^1.0`. | Breaking change → bump MAJOR and document migration in CHANGELOG |
 | 3 | **Validate before publish** | `composer validate --strict` and a CI matrix gate every release. | CI job runs on tag push; Packagist webhook fires only after merge |
 | 4 | **Bounded constraints** | Dependencies use caret ranges; never `*` or a branch alias in a published lib. | `"guzzlehttp/guzzle": "^7.5"` |
-| 5 | **Declared PHP support** | `require.php` states the supported range; CI tests every version in it. | `"php": "^8.1"` + matrix `[8.1, 8.2, 8.3]` |
+| 5 | **Declared PHP support** | `require.php` states the supported range; CI tests every version in it. | `"php": "^8.2"` + matrix `[8.2, 8.3, 8.4, 8.5]` |
 | 6 | **Public API is curated** | Internal classes are marked `@internal` and excluded from BC guarantees. | `/** @internal */` on helpers; document the supported surface |
 | 7 | **Static analysis is a gate** | PHPStan (or Psalm) at a fixed level runs in CI; new code may not lower it. | `phpstan analyse src --level=8` |
 | 8 | **Style is enforced, not debated** | PHP-CS-Fixer / PHP_CodeSniffer with a committed ruleset (PSR-12). | `php-cs-fixer fix --dry-run --diff` in CI |
@@ -29,7 +29,7 @@ resolution conflicts downstream.
 ### REQUIRED: Bounded, Caret Constraints
 
 ```json
-"require": { "php": "^8.1", "psr/log": "^3.0" }
+"require": { "php": "^8.2", "psr/log": "^3.0" }
 ```
 Never `"*"`, never `"dev-main"`, never an unbounded `">=2.0"` in a published library.
 
@@ -61,7 +61,7 @@ immediately and consumers will install the breakage.
 ### Identity
 - Package: `vendor/name`
 - Namespace: `Vendor\Name\`
-- PHP: `^8.1` (matrix: 8.1, 8.2, 8.3)
+- PHP: `^8.2` (matrix: 8.2, 8.3, 8.4, 8.5)
 - License: MIT
 
 ### Files Created

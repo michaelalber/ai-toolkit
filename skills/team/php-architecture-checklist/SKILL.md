@@ -41,7 +41,7 @@ DETECT     PHP version (composer.json `require.php`), framework (Laravel/Symfony
 
 SCAN       Run the PHP Checklist below section by section. Gather evidence with tooling:
              phpstan analyse              # static analysis (target level >= 6)
-             php-cs-fixer fix --dry-run   # PSR-12 style drift
+             php-cs-fixer fix --dry-run   # PSR-12 style drift (Laravel projects: `pint --test` instead — wraps php-cs-fixer with Laravel's preset)
              composer outdated            # dependency currency
            Every violation becomes a finding with file:line and a severity (critical/high/medium/low).
 
@@ -61,7 +61,7 @@ RECOMMEND  Prioritize: critical → quick wins → modernization. Version-gate e
 | 4 | **Query safety** — Eloquent / Query Builder with bound parameters; no string-concatenated SQL; no `DB::raw` on user input | Critical |
 | 5 | **YAGNI / Rule of Three** — abstractions earned; no speculative repository/interface layers for a single implementation | High |
 | 6 | **Config & secrets** — secrets in `.env`, read via `config()` (never `env()` outside config files); no hardcoded credentials | Critical |
-| 7 | **PSR-12 + PSR-4** — `php-cs-fixer`/`phpcs` clean; correct PSR-4 autoloading; no class-per-file violations | Medium |
+| 7 | **PSR-12 + PSR-4** — `php-cs-fixer`/`phpcs` clean (`pint` on Laravel); correct PSR-4 autoloading; no class-per-file violations | Medium |
 | 8 | **Thin controllers** — controllers orchestrate (validate → call service → return); no business rules or persistence inline | High |
 | 9 | **Test coverage** — behavioral tests (PHPUnit/Pest) for business logic; high-risk untested code flagged | High |
 

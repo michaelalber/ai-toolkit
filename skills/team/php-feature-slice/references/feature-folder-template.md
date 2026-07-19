@@ -261,5 +261,5 @@ it('rejects an invalid quantity', function (): void {
   `private` fields and add getters, or a plain array DTO. Form Requests, Resources, and the container
   API are otherwise identical.
 - **Laravel 8+:** `whereNumber`, route model binding, and `Route::group` callbacks as shown.
-- **Laravel 12.x:** `routes/api.php` is created by `php artisan install:api` and Sanctum is the default
+- **Laravel 12.x/13.x:** `routes/api.php` is created by `php artisan install:api` and Sanctum is the default
   token guard. The `/api` prefix is applied automatically — do not repeat it in the slice route file.

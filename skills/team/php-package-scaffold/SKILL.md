@@ -112,7 +112,7 @@ tags publish automatically.
   phase: PLAN | SCAFFOLD | VERIFY | PUBLISH | COMPLETE
   package: vendor/name
   namespace: [root namespace]
-  php_range: [e.g. ^8.1]
+  php_range: [e.g. ^8.2]
   license: [SPDX id]
   test_runner: pest | phpunit
   phpstan_level: [n]

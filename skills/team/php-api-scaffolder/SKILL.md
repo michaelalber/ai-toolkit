@@ -53,7 +53,7 @@ ls routes/api.php 2>/dev/null && grep -rn "Sanctum\|auth:sanctum" routes/ app/ |
 grep -rn "prefix('v" routes/ ; grep -rn "RateLimiter::for" app/
 ```
 
-If `routes/api.php` is absent on Laravel 11/12, run `php artisan install:api` (installs Sanctum, creates
+If `routes/api.php` is absent on Laravel 11-13, run `php artisan install:api` (installs Sanctum, creates
 the file). Record version, whether Sanctum is present, existing limiters, and the OpenAPI tool in use
 (`l5-swagger`, `scribe`, or none).
 
@@ -89,6 +89,7 @@ Generate the spec: `php artisan l5-swagger:generate` (or `php artisan scribe:gen
 ```bash
 php artisan route:list --path=api
 vendor/bin/pest tests/Feature/Api          # or phpunit
+vendor/bin/pint --dirty                    # Laravel's default style fixer (wraps php-cs-fixer)
 curl -s localhost:8000/api/health          # {"status":"ok"}
 # 429 after exceeding the limiter; 422 on bad input; 401 without a token
 ```
@@ -138,6 +139,7 @@ curl -s localhost:8000/api/health          # {"status":"ok"}
 ### Verification
 - [ ] `route:list` shows versioned routes
 - [ ] Feature tests green (happy path + 422 + 401 + 429)
+- [ ] `pint --dirty` clean
 ```
 
 ## Integration with Other Skills

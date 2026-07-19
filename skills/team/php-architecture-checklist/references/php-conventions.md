@@ -79,6 +79,6 @@ and external calls belong in services.
 
 ```bash
 phpstan analyse --level=6           # static analysis
-php-cs-fixer fix --dry-run --diff   # PSR-12 style check
+php-cs-fixer fix --dry-run --diff   # PSR-12 style check (Laravel: `pint --test` instead)
 composer outdated --direct          # dependency currency
 ```
