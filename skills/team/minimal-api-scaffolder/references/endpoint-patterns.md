@@ -15,17 +15,17 @@
 
   <ItemGroup>
     <!-- OpenAPI / Swagger -->
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.*" />
 
     <!-- Versioning -->
-    <PackageReference Include="Asp.Versioning.Http" Version="8.1.0" />
+    <PackageReference Include="Asp.Versioning.Http" Version="10.*" />
 
     <!-- Validation -->
-    <PackageReference Include="FluentValidation" Version="11.9.0" />
-    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.9.0" />
+    <PackageReference Include="FluentValidation" Version="12.*" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.*" />
 
     <!-- CQRS -->
-    <PackageReference Include="FreeMediator" Version="1.0.0" />
+    <PackageReference Include="FreeMediator" Version="1.*" />
   </ItemGroup>
 
 </Project>

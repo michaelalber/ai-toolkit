@@ -8,8 +8,8 @@ Fast pattern matching for common anti-patterns. Use `grep` or IDE search.
 # .NET Framework 4.x (needs upgrade to .NET 10)
 grep -rE "<TargetFramework>net4[0-9]+</TargetFramework>" --include="*.csproj"
 
-# EOL frameworks (upgrade immediately)
-grep -rE "<TargetFramework>(netcoreapp3\.[0-9]+|net5\.0|net7\.0)</TargetFramework>" --include="*.csproj"
+# EOL frameworks (upgrade immediately) — net9.0 STS support ended May 2026
+grep -rE "<TargetFramework>(netcoreapp3\.[0-9]+|net5\.0|net7\.0|net9\.0)</TargetFramework>" --include="*.csproj"
 
 # Legacy project file format (needs SDK-style conversion)
 find . -name "*.csproj" -exec grep -L "Sdk=" {} \;

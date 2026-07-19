@@ -25,9 +25,9 @@
 
 ### EF Core Required Packages
 ```xml
-<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.0" />
-<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.0" PrivateAssets="all" />
-<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.0" PrivateAssets="all" />
+<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.*" />
+<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.*" PrivateAssets="all" />
+<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.*" PrivateAssets="all" />
 ```
 
 ## Logging
@@ -41,9 +41,9 @@
 
 ### Recommended Logging Setup
 ```xml
-<PackageReference Include="Serilog.AspNetCore" Version="8.0.0" />
-<PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
-<PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+<PackageReference Include="Serilog.AspNetCore" Version="10.*" />
+<PackageReference Include="Serilog.Sinks.Console" Version="6.*" />
+<PackageReference Include="Serilog.Sinks.File" Version="7.*" />
 ```
 
 ## Dependency Injection
@@ -83,8 +83,8 @@ var obj = JsonSerializer.Deserialize<MyType>(json);
 
 ### Keep Newtonsoft for Complex Scenarios
 ```xml
-<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="10.0.0" />
+<PackageReference Include="Newtonsoft.Json" Version="13.*" />
+<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="10.*" />
 ```
 
 ## Validation
@@ -95,7 +95,7 @@ var obj = JsonSerializer.Deserialize<MyType>(json);
 | `DataAnnotations` | `System.ComponentModel.DataAnnotations` | Built-in |
 
 ```xml
-<PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
+<PackageReference Include="FluentValidation.AspNetCore" Version="11.*" />
 ```
 
 ## HTTP Client
@@ -124,7 +124,7 @@ services.AddHttpClient<MyApiClient>(client =>
 | `IdentityServer3` | `Duende.IdentityServer` or `OpenIddict` | |
 
 ```xml
-<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.0" />
+<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.*" />
 ```
 
 ## Caching
@@ -135,8 +135,8 @@ services.AddHttpClient<MyApiClient>(client =>
 | `StackExchange.Redis` | `StackExchange.Redis` | Works on .NET 10 |
 
 ```xml
-<PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="10.0.0" />
-<PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="10.0.0" />
+<PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="10.*" />
+<PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="10.*" />
 ```
 
 ## Testing
@@ -150,9 +150,10 @@ services.AddHttpClient<MyApiClient>(client =>
 | `NSubstitute` | `NSubstitute` | Works on .NET 10 |
 
 ```xml
-<PackageReference Include="xunit" Version="2.6.6" />
-<PackageReference Include="xunit.runner.visualstudio" Version="2.5.6" PrivateAssets="all" />
-<PackageReference Include="Moq" Version="4.20.70" />
+<PackageReference Include="xunit" Version="2.*" />
+<!-- xunit.runner.visualstudio stays on the 2.x line to match xunit v2; the 3.x runner targets xunit v3 (self-executing) projects only -->
+<PackageReference Include="xunit.runner.visualstudio" Version="2.*" PrivateAssets="all" />
+<PackageReference Include="Moq" Version="4.*" />
 ```
 
 ## Mapping
@@ -163,9 +164,10 @@ services.AddHttpClient<MyApiClient>(client =>
 
 ```xml
 <!-- Recommended: Mapster (faster, simpler) -->
-<PackageReference Include="Mapster" Version="7.4.0" />
+<PackageReference Include="Mapster" Version="10.*" />
 
-<!-- Or AutoMapper -->
+<!-- Or AutoMapper — pinned to the last version before AutoMapper's commercial license
+     terms took effect at v13+ (core AutoMapper is at 16.x now); Mapster avoids this. -->
 <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
 ```
 
@@ -178,9 +180,9 @@ services.AddHttpClient<MyApiClient>(client =>
 | `Microsoft.Reporting.WebForms` | SSRS or third-party | |
 
 ```xml
-<PackageReference Include="QuestPDF" Version="2024.3.0" />
+<PackageReference Include="QuestPDF" Version="2026.*" />
 <!-- or -->
-<PackageReference Include="itext7" Version="8.0.2" />
+<PackageReference Include="itext7" Version="9.*" />
 ```
 
 ## Excel / Office
@@ -191,9 +193,9 @@ services.AddHttpClient<MyApiClient>(client =>
 | `EPPlus` | `EPPlus` | Works on .NET 10 (license changed) |
 
 ```xml
-<PackageReference Include="ClosedXML" Version="0.102.2" />
+<PackageReference Include="ClosedXML" Version="0.105.*" />
 <!-- or -->
-<PackageReference Include="EPPlus" Version="7.0.9" />
+<PackageReference Include="EPPlus" Version="8.*" />
 ```
 
 ## Image Processing
@@ -203,7 +205,7 @@ services.AddHttpClient<MyApiClient>(client =>
 | `System.Drawing.Common` | `SixLabors.ImageSharp` | Cross-platform |
 
 ```xml
-<PackageReference Include="SixLabors.ImageSharp" Version="3.1.2" />
+<PackageReference Include="SixLabors.ImageSharp" Version="4.*" />
 ```
 
 ## Scheduling
@@ -214,8 +216,8 @@ services.AddHttpClient<MyApiClient>(client =>
 | `Hangfire` | `Hangfire` | Works on .NET 10 |
 
 ```xml
-<PackageReference Include="Hangfire.AspNetCore" Version="1.8.9" />
-<PackageReference Include="Hangfire.SqlServer" Version="1.8.9" />
+<PackageReference Include="Hangfire.AspNetCore" Version="1.*" />
+<PackageReference Include="Hangfire.SqlServer" Version="1.*" />
 ```
 
 ## CQRS / Mediator
@@ -225,7 +227,7 @@ services.AddHttpClient<MyApiClient>(client =>
 | `MediatR` | `FreeMediator` | Recommended (Apache 2.0) |
 
 ```xml
-<PackageReference Include="FreeMediator" Version="1.0.0" />
+<PackageReference Include="FreeMediator" Version="1.*" />
 ```
 
 ## Configuration Packages
@@ -236,9 +238,9 @@ services.AddHttpClient<MyApiClient>(client =>
 | `System.Configuration.ConfigurationManager` | `Microsoft.Extensions.Configuration.Json` | |
 
 ```xml
-<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.0" />
-<PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="10.0.0" />
-<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="10.0.0" />
+<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.*" />
+<PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="10.*" />
+<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="10.*" />
 ```
 
 ## Removed Without Replacement

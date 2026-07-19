@@ -5,7 +5,7 @@
 ### Target Framework
 - [ ] Using .NET 10 LTS?
 - [ ] No .NET Framework 4.x projects without upgrade plan?
-- [ ] No EOL frameworks (netcoreapp3.1, net5, net7)?
+- [ ] No EOL frameworks (netcoreapp3.1, net5, net7, net9 — STS support ended May 2026)?
 - [ ] SDK-style project files (not legacy)?
 
 ```bash

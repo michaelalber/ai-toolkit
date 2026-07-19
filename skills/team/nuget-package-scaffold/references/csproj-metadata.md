@@ -65,9 +65,13 @@ When you need to support older .NET Framework consumers or Xamarin:
   </PropertyGroup>
 
   <!-- Polyfills for netstandard2.0 -->
+  <!-- Minimum-version pins, not floating (Version="10.*") — these flow to consumers of the
+       published package, and NuGet discourages floating versions in a public library's own
+       dependency group (non-reproducible restores for consumers). SourceLink/MinVer below are
+       PrivateAssets="All" (build-time only, never flow downstream) so they float safely. -->
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="System.Text.Json" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="8.0.0" />
+    <PackageReference Include="System.Text.Json" Version="10.0.10" />
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="10.0.10" />
   </ItemGroup>
 </Project>
 ```
@@ -93,7 +97,7 @@ public static class StringExtensions
 
 ```xml
 <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-  <PackageReference Include="System.Memory" Version="4.5.5" />
+  <PackageReference Include="System.Memory" Version="4.6.3" />
 </ItemGroup>
 
 <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
@@ -116,7 +120,7 @@ Source Link embeds repository metadata in the PDB so debuggers can automatically
 </PropertyGroup>
 
 <ItemGroup>
-  <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+  <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.*" PrivateAssets="All" />
 </ItemGroup>
 ```
 
@@ -124,7 +128,7 @@ Source Link embeds repository metadata in the PDB so debuggers can automatically
 
 ```xml
 <ItemGroup>
-  <PackageReference Include="Microsoft.SourceLink.AzureRepos.Git" Version="8.0.0" PrivateAssets="All" />
+  <PackageReference Include="Microsoft.SourceLink.AzureRepos.Git" Version="10.*" PrivateAssets="All" />
 </ItemGroup>
 ```
 
@@ -132,7 +136,7 @@ Source Link embeds repository metadata in the PDB so debuggers can automatically
 
 ```xml
 <ItemGroup>
-  <PackageReference Include="Microsoft.SourceLink.Bitbucket.Git" Version="8.0.0" PrivateAssets="All" />
+  <PackageReference Include="Microsoft.SourceLink.Bitbucket.Git" Version="10.*" PrivateAssets="All" />
 </ItemGroup>
 ```
 
@@ -312,7 +316,7 @@ The `PackageLicenseUrl` property is deprecated and should not be used for new pa
 
   <!-- Source Link for GitHub -->
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.*" PrivateAssets="All" />
   </ItemGroup>
 
 </Project>
@@ -373,7 +377,7 @@ A .NET tool is a special kind of NuGet package that contains a console applicati
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.*" PrivateAssets="All" />
   </ItemGroup>
 
 </Project>
@@ -416,7 +420,7 @@ When a solution contains multiple packages, use `Directory.Build.props` to share
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.*" PrivateAssets="All" />
   </ItemGroup>
 </Project>
 ```

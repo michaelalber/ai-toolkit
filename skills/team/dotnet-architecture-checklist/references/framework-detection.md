@@ -16,16 +16,16 @@ grep -rE "<TargetFramework>netcoreapp3\.[0-9]+</TargetFramework>" --include="*.c
 echo "=== .NET 5 (EOL - Upgrade) ==="
 grep -rE "<TargetFramework>net5\.0</TargetFramework>" --include="*.csproj"
 
-echo "=== .NET 6 (LTS Ending Nov 2024) ==="
+echo "=== .NET 6 (EOL since Nov 2024) ==="
 grep -rE "<TargetFramework>net6\.0</TargetFramework>" --include="*.csproj"
 
 echo "=== .NET 7 (EOL May 2024) ==="
 grep -rE "<TargetFramework>net7\.0</TargetFramework>" --include="*.csproj"
 
-echo "=== .NET 8 (Current LTS) ==="
+echo "=== .NET 8 (Previous LTS - supported until Nov 2026) ==="
 grep -rE "<TargetFramework>net8\.0</TargetFramework>" --include="*.csproj"
 
-echo "=== .NET 9 (STS - Support ends May 2026) ==="
+echo "=== .NET 9 (STS - EOL since May 2026) ==="
 grep -rE "<TargetFramework>net9\.0</TargetFramework>" --include="*.csproj"
 
 echo "=== .NET 10 (Latest LTS - Recommended) ==="
@@ -128,8 +128,8 @@ grep -r "Unity\|Autofac\|Ninject" --include="*.csproj"  # Consider built-in DI
 | net48, net472 | Full migration to .NET 10 | Critical |
 | netcoreapp3.1 | Upgrade to .NET 10 | Critical (EOL) |
 | net5.0 | Upgrade to .NET 10 | High (EOL) |
-| net6.0 | Plan upgrade to .NET 10 | Medium (LTS ending) |
+| net6.0 | Upgrade to .NET 10 | Critical (EOL) |
 | net7.0 | Upgrade to .NET 10 | High (EOL) |
-| net8.0 | Maintain, upgrade when convenient | Low |
-| net9.0 | Upgrade to .NET 10 for LTS | Medium |
+| net8.0 | Maintain, upgrade when convenient (supported until Nov 2026) | Low |
+| net9.0 | Upgrade to .NET 10 immediately | Critical (EOL) |
 | net10.0 | Current target | None |

@@ -67,7 +67,7 @@ permissions:
   packages: write
 
 env:
-  DOTNET_VERSION: '9.0.x'
+  DOTNET_VERSION: '10.0.x'
   PACKAGE_OUTPUT_DIR: ${{ github.workspace }}/artifacts
 
 jobs:
@@ -150,7 +150,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '9.0.x'
+          dotnet-version: '10.0.x'
 
       - name: Extract version from tag
         id: version
@@ -208,7 +208,7 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
-  dotnetVersion: '9.0.x'
+  dotnetVersion: '10.0.x'
   packageOutputDir: '$(Build.ArtifactStagingDirectory)/packages'
 
 stages:
@@ -328,7 +328,7 @@ MinVer reads git tags and calculates the version automatically, including prerel
 ```xml
 <!-- Add to .csproj or Directory.Build.props -->
 <ItemGroup>
-  <PackageReference Include="MinVer" Version="6.0.0" PrivateAssets="All" />
+  <PackageReference Include="MinVer" Version="7.*" PrivateAssets="All" />
 </ItemGroup>
 ```
 
@@ -592,7 +592,7 @@ jobs:
 
       - uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '9.0.x'
+          dotnet-version: '10.0.x'
 
       - run: dotnet restore
       - run: dotnet build --configuration Release -p:Version=${{ needs.validate.outputs.version }}
@@ -617,7 +617,7 @@ jobs:
 
       - uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '9.0.x'
+          dotnet-version: '10.0.x'
 
       - name: Push to NuGet.org
         run: |

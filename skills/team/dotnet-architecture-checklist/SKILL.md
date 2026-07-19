@@ -67,7 +67,7 @@ project. Items 3–9 apply to both styles (item 3 only when a mediator is presen
 | 2 | **Controller / handler discipline** — *vertical-slice* → each handler is a `sealed` standalone `IRequestHandler<TReq,TRes>`, no base handlers, thin endpoints that only `mediator.Send()`. *layered* → thin controllers (`[ApiController]`/`ControllerBase`), no business logic or EF queries in actions, delegate to a service layer; DTOs at the boundary, no entity leakage. (Full layered branch: references/layered-ntier.md) | Critical |
 | 3 | **Mediator pipeline (CQRS projects only)** — FreeMediator preferred (MediatR flagged for migration); validation/logging/exception/transaction behaviors registered in order. *Skip for layered projects — do not flag the absence of a mediator.* | Critical |
 | 4 | **EF Core lifetime** — DbContext scoped to the hosting model (singleton = Critical in Blazor Server); async all the way; no N+1 | Critical |
-| 5 | **Framework health** — EOL frameworks (.NET Core 3.1, 5, 7) flagged Critical; .NET Framework 4.x gets an upgrade-path assessment | Critical |
+| 5 | **Framework health** — EOL frameworks (.NET Core 3.1, 5, 7, 9) flagged Critical; .NET Framework 4.x gets an upgrade-path assessment | Critical |
 | 6 | **Mapster discipline (when detected)** — `TypeAdapterConfig` configured at startup; queries use `ProjectToType<>()` not `ToList().Adapt()` | High |
 | 7 | **Shared kernel** — official shared packages, version consistency, no duplicate entity definitions | High |
 | 8 | **Config & secrets** — `IOptions<T>`/`IOptionsSnapshot<T>`; no hardcoded secrets; WASM bundles secret-free | High |
