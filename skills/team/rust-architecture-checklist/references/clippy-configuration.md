@@ -71,7 +71,7 @@ allow-one-letter-params-in-short-closures = true
 #![deny(clippy::expect_used)]           // No .expect() in production code (use in tests only)
 #![deny(clippy::panic)]                 // No panic!() in library code
 #![deny(clippy::indexing_slicing)]      // No unchecked indexing (use .get())
-#![deny(clippy::integer_arithmetic)]    // No unchecked integer arithmetic (use checked_add etc.)
+#![deny(clippy::arithmetic_side_effects)] // No unchecked integer arithmetic (use checked_add etc.); renamed from clippy::integer_arithmetic
 // <AI-Generated END>
 ```
 
@@ -168,7 +168,7 @@ jobs:
   clippy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: dtolnay/rust-toolchain@stable
         with:
           components: clippy

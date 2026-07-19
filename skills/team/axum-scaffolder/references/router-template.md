@@ -10,25 +10,25 @@ JWT authentication, rate limiting, CORS, and health checks.
 ```toml
 # <AI-Generated START>
 [dependencies]
-axum = { version = "0.7", features = ["macros"] }
+axum = { version = "0.8", features = ["macros"] }
 tokio = { version = "1", features = ["full"] }
-tower = "0.4"
-tower-http = { version = "0.5", features = ["cors", "trace", "compression-gzip", "timeout"] }
-tower-governor = "0.3"
-utoipa = { version = "4", features = ["axum_extras", "uuid", "chrono"] }
-utoipa-swagger-ui = { version = "6", features = ["axum"] }
+tower = "0.5"
+tower-http = { version = "0.7", features = ["cors", "trace", "compression-gzip", "timeout"] }
+tower-governor = "0.8"
+utoipa = { version = "5", features = ["axum_extras", "uuid", "chrono"] }
+utoipa-swagger-ui = { version = "9", features = ["axum"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
-thiserror = "1"
+thiserror = "2"
 uuid = { version = "1", features = ["v4", "serde"] }
 chrono = { version = "0.4", features = ["serde"] }
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
 jsonwebtoken = "9"
-validator = { version = "0.18", features = ["derive"] }
+validator = { version = "0.20", features = ["derive"] }
 
 [dev-dependencies]
-axum-test = "14"
+axum-test = "18"
 tokio = { version = "1", features = ["full"] }
 # <AI-Generated END>
 ```

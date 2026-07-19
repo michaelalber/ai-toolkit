@@ -15,7 +15,7 @@ mechanics live in `ffi-patterns.md`.
 
 | Migration Scenario | Effort | Risk | Blocker Potential | Recommended Order |
 |-------------------|--------|------|-------------------|-------------------|
-| Rust edition upgrade (2015→2021) | Low | Low | No | 1 |
+| Rust edition upgrade (2015→2018→2021→2024) | Low | Low | No | 1 |
 | Deprecated crate replacement | Medium | Medium | Conditional | 2 |
 | sync→async migration | High | High | Yes | 3 |
 | C/C++ FFI module rewrite | High | High | Yes | 4 |

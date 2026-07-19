@@ -8,7 +8,7 @@ Complete reference for Cargo.toml fields required for crates.io publishing.
 [package]
 name = "crate-name"          # Unique on crates.io; lowercase, hyphens
 version = "0.1.0"            # Semver: MAJOR.MINOR.PATCH
-edition = "2021"             # Rust edition: 2015 | 2018 | 2021
+edition = "2021"             # Rust edition: 2015 | 2018 | 2021 | 2024 (2021 is cargo new's current default)
 description = "..."          # One sentence; shown on crates.io search
 license = "MIT OR Apache-2.0" # SPDX expression; dual-license is idiomatic Rust
 ```
@@ -22,7 +22,7 @@ documentation = "https://docs.rs/crate-name"
 readme = "README.md"
 keywords = ["keyword1", "keyword2"]   # Max 5; used for crates.io search
 categories = ["category1"]            # Must match crates.io category slugs
-rust-version = "1.75"                 # MSRV; tested in CI
+rust-version = "1.85"                 # MSRV; tested in CI
 ```
 
 ## Include / Exclude
@@ -63,7 +63,7 @@ version = "0.1.0"
 edition = "2021"
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/org/repo"
-rust-version = "1.75"
+rust-version = "1.85"
 
 # member Cargo.toml
 [package]

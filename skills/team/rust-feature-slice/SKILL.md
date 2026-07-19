@@ -87,7 +87,7 @@ VERIFY
 <rust-feature-slice-state>
 phase: DETECT | SCAFFOLD | REGISTER | VERIFY | COMPLETE
 feature_name: [name]
-edition: [2015 | 2018 | 2021]
+edition: [2015 | 2018 | 2021 | 2024]
 async_runtime: [tokio | async-std | none]
 app_state_exists: [true | false]
 features_dir_exists: [true | false]

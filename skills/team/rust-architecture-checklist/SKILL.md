@@ -83,7 +83,7 @@ Shared across all four architecture checklists.
 
 ```markdown
 ## Architecture Checklist: [crate] (Rust)
-**Edition**: [2021] | **Runtime**: [Tokio/async-std/none] | **Tests**: [yes/no]
+**Edition**: [2015/2018/2021/2024] | **Runtime**: [Tokio/async-std/none] | **Tests**: [yes/no]
 
 | Section | Pass | Fail | Warn |
 |---------|------|------|------|
@@ -105,7 +105,7 @@ Grading: **A** 0 crit/0 high/≤3 med · **B** 0 crit/≤2 high · **C** 0 crit,
 
 - **Clippy must pass first.** `cargo clippy -- -D warnings` is the baseline; report failures before the architectural checklist.
 - **Evidence or it is not a finding.** Cite `file:line`; show the grep/clippy output. Never grade on vibes.
-- **Edition-gate recommendations.** Do not flag 2015-era patterns in a 2015 crate, or suggest 2021 idioms for an older edition.
+- **Edition-gate recommendations.** Do not flag 2015-era patterns in a 2015 crate, or suggest 2024-edition idioms (e.g. RPIT lifetime capture, unsafe-attribute syntax) for an older edition.
 - **Architecture, not security.** Memory-safety-as-vulnerability and crypto findings belong to `rust-security-review` — note them and route there.
 
 ## Integration with Other Skills

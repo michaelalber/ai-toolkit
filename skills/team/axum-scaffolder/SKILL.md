@@ -63,7 +63,7 @@ VERIFY      cargo build · cargo test · cargo clippy -- -D warnings · curl /he
 <axum-scaffold-state>
 phase: DETECT | CONFIGURE | SCAFFOLD | SECURE | DOCUMENT | VERIFY | COMPLETE
 feature_name: [name]
-edition: [2015 | 2018 | 2021]
+edition: [2015 | 2018 | 2021 | 2024]
 tokio_version: [1.x | unknown]
 utoipa_configured: true | false
 auth_middleware: true | false

@@ -296,8 +296,8 @@ use super::models::{CreateOrderRequest, OrderResponse};
 pub fn orders_router() -> Router<AppState> {
     Router::new()
         .route("/", post(create_order))
-        .route("/:id", get(get_order))
-        .route("/:id/cancel", post(cancel_order))
+        .route("/{id}", get(get_order))
+        .route("/{id}/cancel", post(cancel_order))
 }
 
 /// Create a new order.

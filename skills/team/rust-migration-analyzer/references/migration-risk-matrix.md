@@ -18,7 +18,7 @@ Each migration scenario is scored on four dimensions:
 
 ---
 
-## Scenario 1: Rust Edition Upgrade (2015 → 2018 → 2021)
+## Scenario 1: Rust Edition Upgrade (2015 → 2018 → 2021 → 2024)
 
 | Dimension | Score | Notes |
 |-----------|-------|-------|
@@ -33,12 +33,16 @@ Each migration scenario is scored on four dimensions:
 - Anonymous lifetime elision improvements (2018 edition)
 - Disjoint capture in closures (2021 edition)
 - `IntoIterator` for arrays (2021 edition)
+- `impl Trait` in return position captures all in-scope lifetimes by default (2024 edition)
+- `unsafe extern` blocks and `unsafe` attributes required around unsafe items (2024 edition)
+- `gen` becomes a reserved keyword; RPIT/`Future`/`IntoIterator` changes (2024 edition)
 
 ### What Requires Manual Intervention
 - Trait object syntax: `Box<Trait>` → `Box<dyn Trait>` (some cases)
 - Lifetime annotations in complex generic bounds
 - Macro hygiene changes
 - `dyn Trait` in function signatures
+- 2024 edition: auditing `unsafe fn` bodies for implicit-unsafe-block reliance now flagged by the new lint
 
 ### Commands
 ```bash

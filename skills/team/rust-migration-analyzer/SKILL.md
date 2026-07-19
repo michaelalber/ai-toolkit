@@ -3,7 +3,7 @@ name: rust-migration-analyzer
 audience: team
 description: >
   Analyzes Rust migration paths: C/C++ to Rust rewrites via incremental FFI strangler fig, and
-  Rust modernization (edition upgrades 2015->2018->2021, deprecated-crate replacement, sync to
+  Rust modernization (edition upgrades 2015->2018->2021->2024, deprecated-crate replacement, sync to
   async). Assesses risk, quantifies effort, and produces a phased plan — does NOT perform the
   migration. Use when migrating C/C++ to Rust, upgrading editions, modernizing legacy Rust,
   replacing deprecated crates, or planning sync-to-async. Not when you want to execute the
@@ -26,7 +26,7 @@ Rust migration analysis covers two distinct contexts:
 The FFI boundary is the migration seam. The strangler fig pattern applies: rewrite one module at a time, expose it through a C ABI, and let the C/C++ codebase call the Rust implementation. The C/C++ side does not know it is calling Rust. Tests run against the C/C++ behavior before rewriting; the same tests run against the Rust implementation after. When all modules are rewritten, the C/C++ wrapper is removed.
 
 **Context B: Rust Modernization**
-Edition upgrades (2015→2018→2021) are largely mechanical — `cargo fix --edition` handles most of the work. Crate replacements require API compatibility analysis. Sync-to-async migration requires introducing a Tokio runtime and converting function signatures throughout the call chain.
+Edition upgrades (2015→2018→2021→2024) are largely mechanical — `cargo fix --edition` handles most of the work. Crate replacements require API compatibility analysis. Sync-to-async migration requires introducing a Tokio runtime and converting function signatures throughout the call chain.
 
 This skill assesses, quantifies risk, and produces a phased migration plan. It does NOT perform the migration. The plan produced by this skill is the input to the implementation phase.
 
@@ -95,7 +95,7 @@ REPORT  (templates: references/output-templates.md)
 <rust-migration-state>
 phase: SCAN | ASSESS | PLAN | REPORT | COMPLETE
 migration_context: c_cpp_rewrite | rust_modernization | both | unknown
-rust_edition: 2015 | 2018 | 2021 | unknown
+rust_edition: 2015 | 2018 | 2021 | 2024 | unknown
 async_runtime: tokio | async-std | none | unknown
 loc_total: [N]
 loc_unsafe: [N]
