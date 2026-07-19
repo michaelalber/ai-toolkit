@@ -42,7 +42,7 @@ uncertain; 32B can't sustain fan-out) · ⚠️ already deprecated in the toolki
 
 ---
 
-## 🟢 Green — ship as-is (35)
+## 🟢 Green — ship as-is (38)
 
 These get *more* reliable on a weak model because the skill carries the procedure.
 
@@ -58,12 +58,15 @@ These get *more* reliable on a weak model because the skill carries the procedur
 | dotnet-controller-api-scaffolder | 📚 | Conforms to detected conventions; mechanical |
 | php-api-scaffolder | 📚 | Laravel endpoint template |
 | react-app-scaffolder | 📚 | Vite app skeleton; fixed layout |
+| vue-app-scaffolder | 📚 | Vite app skeleton; fixed layout |
 | react-component-scaffolder | 📚 | Single component + test; tightly bounded |
+| vue-component-scaffolder | 📚 | Single SFC + test; tightly bounded |
 | dotnet-vertical-slice | 📚 | Feature-folder CQRS scaffold; procedural |
 | python-feature-slice | 📚 | Feature-folder scaffold |
 | php-feature-slice | 📚 | Feature-folder scaffold |
 | rust-feature-slice | 📚 | Feature-module scaffold |
 | react-feature-slice | 📚 | Feature-folder scaffold |
+| vue-feature-slice | 📚 | Feature-folder scaffold |
 | test-scaffold | | Naming/mock conventions; template-driven |
 | ef-migration-manager | | Lifecycle checklist with safety gates |
 | alembic-migration-manager | 📚 | Lifecycle checklist |
@@ -84,7 +87,7 @@ These get *more* reliable on a weak model because the skill carries the procedur
 
 ---
 
-## 🟡 Yellow — usable, author a lite variant (49)
+## 🟡 Yellow — usable, author a lite variant (52)
 
 Single-pass but lean on judgment, synthesis, or large reference/input loads. The
 32B model produces the *structure* of a good result with shallower content. The
@@ -99,6 +102,7 @@ make steps explicit and imperative (the same treatment that produced `AGENTS-7b.
 | php-architecture-checklist | | Checklist exec |
 | rust-architecture-checklist | | Checklist exec |
 | react-architecture-checklist | | Checklist exec |
+| vue-architecture-checklist | | Checklist exec |
 | dependency-mapper | 📚 | Metrics are mechanical; the interpretation is judgment |
 | technical-debt-assessor | 📚 | Cost/interest estimation needs judgment |
 | improve-codebase-architecture | | Deep APOSD refactor reasoning |
@@ -111,12 +115,14 @@ make steps explicit and imperative (the same treatment that produced `AGENTS-7b.
 | php-security-review | | Exploitability judgment |
 | rust-security-review | | Exploitability + `unsafe` audit judgment |
 | react-security-review | | Exploitability judgment |
+| vue-security-review | | Exploitability judgment |
 | security-review-federal | | NIST overlay on a base review; heavy reference load |
 | oss-vetting | 📚 | OSS/SBOM assessment across four frameworks + license matrix; structure holds, framework-mapping judgment is shallower locally |
 | automated-code-review | 📚 | Single-pass review engine; finding quality varies |
 | legacy-migration-analyzer | 📚 | Assessment + plan synthesis |
 | python-modernization-analyzer | 📚 | Assessment + plan synthesis |
 | react-modernization-analyzer | 📚 | Assessment + plan synthesis |
+| vue-modernization-analyzer | 📚 | Assessment + plan synthesis |
 | rust-migration-analyzer | 📚 | Assessment + plan synthesis |
 | 4d-schema-migration | 📚 | DDL gen is mechanical; UI/entity mapping is judgment |
 | confluence-guide-writer | 📚 | Doc synthesis; bounded by source but prose-quality-sensitive |

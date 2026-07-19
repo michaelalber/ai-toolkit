@@ -1,12 +1,12 @@
 # AI Toolkit
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Skills](https://img.shields.io/badge/skills-87-blue)](#skills)
-[![Agents](https://img.shields.io/badge/agents-45-blue)](#agents)
+[![Skills](https://img.shields.io/badge/skills-93-blue)](#skills)
+[![Agents](https://img.shields.io/badge/agents-51-blue)](#agents)
 [![Tools](https://img.shields.io/badge/tools-pdf2md%20%7C%20web2md%20%7C%20code2md-blue)](#repository-structure)
 [![Platforms](https://img.shields.io/badge/platforms-Claude%20Code%20%7C%20OpenCode%20%7C%20Pi-informational)](#platforms)
 
-**87 skills, 45 agents, and 25 slash commands for AI-assisted software development — spanning TDD, .NET, Python, PHP, Rust, React, security, DDD, knowledge management, and more.**
+**93 skills, 51 agents, and 25 slash commands for AI-assisted software development — spanning TDD, .NET, Python, PHP, Rust, React, Vue, security, DDD, knowledge management, and more.**
 
 > **Edge AI, robotics, ML, and industrial automation?** Those skills now live in the companion
 > [edge-ai-robotics-automation-toolkit](../edge-ai-robotics-automation-toolkit) — install it alongside this one.
@@ -33,10 +33,10 @@ This toolkit encodes that expertise as reusable primitives. Each skill is an opi
 
 | | Count |
 |--|-------|
-| Skills (team) | 78 |
+| Skills (team) | 81 |
 | Skills (professional) | 12 |
-| Agents (Claude Code) | 45 |
-| Agents (OpenCode) | 45 |
+| Agents (Claude Code) | 51 |
+| Agents (OpenCode) | 51 |
 | Slash commands (per platform) | 25 |
 | Platforms | Claude Code, OpenCode, Pi |
 
@@ -240,6 +240,17 @@ See `.matt-pocock-attribution.yml` at the repo root for the full provenance mani
 | `react-app-scaffolder` | Vite + React + TypeScript app skeleton — strict TS, Vitest + RTL, ESLint (hooks + a11y), router, error boundary, feature-folder layout. |
 | `react-modernization-analyzer` | Legacy React modernization — class→hooks, CRA→Vite, React 17→18→19, JS→TS, Enzyme→RTL, legacy Redux→RTK paths (assess & plan, no execution). |
 
+### Vue Suite
+
+| Skill | Description |
+|-------|-------------|
+| `vue-architecture-checklist` | Vue architecture checklist executor — reactivity discipline, watcher/lifecycle correctness, component cohesion, state placement, render performance, type safety, accessibility; graded report with eslint/vue-tsc evidence. |
+| `vue-security-review` | OWASP-based Vue/TypeScript front-end security review — v-html XSS, bundle-secret exposure, token storage, CSP, open redirects; npm audit + eslint-plugin-security; graded manager-friendly report. |
+| `vue-feature-slice` | Feature-based Vue architecture — feature folders, presentational + container SFCs, composables, a typed data layer, and structural CQRS (query vs mutation composables). |
+| `vue-component-scaffolder` | Single Vue SFC/route scaffolding — typed defineProps, co-located Vue Testing Library test, accessibility baseline, optional Storybook story. |
+| `vue-app-scaffolder` | Vite + Vue + TypeScript app skeleton — strict TS, Vitest + Vue Testing Library, ESLint (vue + a11y), router, app-level error handling, feature-folder layout. |
+| `vue-modernization-analyzer` | Legacy Vue modernization — Options→Composition API, Vue CLI→Vite, Vue 2→3, JS→TS, Vue Test Utils v1→Vitest+VTL, Vuex→Pinia paths (assess & plan, no execution). |
+
 ### AI/ML Bridge Suite
 
 > Moved to the companion **[edge-ai-robotics-automation-toolkit](../edge-ai-robotics-automation-toolkit)** —
@@ -408,6 +419,9 @@ Autonomous agents that make decisions and take actions independently. Each exist
 | `react-arch-checklist-agent` | React architecture review — hooks discipline, effects, state placement, render perf, type safety, accessibility. |
 | `react-security-agent` | OWASP React/front-end security review — XSS, bundle secrets, token storage, npm audit, executive summary. |
 | `react-modernization-agent` | Legacy React modernization analysis — class→hooks, CRA→Vite, React 17→18→19, JS→TS, Enzyme→RTL. |
+| `vue-arch-checklist-agent` | Vue architecture review — reactivity discipline, watchers, state placement, render perf, type safety, accessibility. |
+| `vue-security-agent` | OWASP Vue/front-end security review — v-html XSS, bundle secrets, token storage, npm audit, executive summary. |
+| `vue-modernization-agent` | Legacy Vue modernization analysis — Options→Composition API, Vue CLI→Vite, Vue 2→3, JS→TS, Vuex→Pinia. |
 | `oss-vetting-agent` | Federal OSS/SBOM vetting — scores a package across security, supply chain, maintainership, license, and CUI suitability against EO 14028/SSDF/800-171/800-161; Confluence-ready Approve / Approve-with-conditions / Reject report. |
 
 ### Scaffolding
@@ -429,6 +443,9 @@ Autonomous agents that make decisions and take actions independently. Each exist
 | `react-feature-slice-agent` | Feature-based React architecture — feature folders, presentational + container components, custom hooks, typed data layer, structural CQRS. |
 | `react-component-scaffold-agent` | Single React component/route — typed props, co-located RTL test, accessibility baseline, optional Storybook story. |
 | `react-app-scaffold-agent` | Vite + React + TS app skeleton — strict TS, Vitest + RTL, ESLint (hooks + a11y), router, error boundary, feature-folder layout. |
+| `vue-feature-slice-agent` | Feature-based Vue architecture — feature folders, presentational + container SFCs, composables, typed data layer, structural CQRS. |
+| `vue-component-scaffold-agent` | Single Vue SFC/route — typed defineProps, co-located Vue Testing Library test, accessibility baseline, optional Storybook story. |
+| `vue-app-scaffold-agent` | Vite + Vue + TS app skeleton — strict TS, Vitest + Vue Testing Library, ESLint (vue + a11y), router, app-level error handling, feature-folder layout. |
 
 > QRSPI workflow agents (`qrspi-orchestrator`, `qrspi-implement`) and the shared read-only research subagents (`research-file-locator`, `research-code-analyzer`, `research-pattern-finder`) are spawned automatically by the QRSPI skills/commands — not invoked directly.
 >
@@ -508,11 +525,11 @@ The `project-templates/` directory contains per-project context files based on t
 ```
 ai-toolkit/
 ├── skills/
-│   ├── team/                   # 75 team skills (shareable, production-ready)
+│   ├── team/                   # 81 team skills (shareable, production-ready)
 │   └── professional/           # 12 professional skills (deliberate practice)
 ├── claude/
 │   ├── agents/
-│   │   └── team/               # 45 Claude Code team agents
+│   │   └── team/               # 51 Claude Code team agents
 │   ├── commands/               # 25 slash commands with shell injection
 │   └── global/                 # Global config → ~/.claude/
 │       ├── CLAUDE.md           # Global instructions (every project)
@@ -520,7 +537,7 @@ ai-toolkit/
 │       └── settings.local.json # Permissions: bash allow/deny, read allow/deny
 ├── opencode/
 │   ├── agents/
-│   │   └── team/               # 45 OpenCode team agents
+│   │   └── team/               # 51 OpenCode team agents
 │   ├── commands/               # 25 slash commands with agent routing
 │   └── global/                 # Global config → ~/.config/opencode/
 │       ├── AGENTS.md           # Global instructions (every project)
