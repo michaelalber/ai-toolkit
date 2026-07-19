@@ -39,6 +39,7 @@ target for a new project — if an existing CRA app is in play, route to `react-
 4. **Router from the start** — a router with a typed route table and a not-found route
 5. **Error boundary at the shell** — a top-level error boundary so one throw does not blank the app
 6. **Env via Vite convention** — only `VITE_*` exposed to the client; secrets stay server-side
+7. **React Compiler wired** — stable since React Compiler 1.0 (Oct 2025); by 2026 it is the default assumption for a new React project, not an opt-in experiment
 
 **What this skill is NOT:**
 - It is NOT a feature generator — use `react-feature-slice` / `react-component-scaffolder` for that
@@ -68,7 +69,7 @@ npm create vite@latest <app-name> -- --template react-ts
 cd <app-name>
 npm install
 npm install -D vitest @testing-library/react @testing-library/user-event jsdom \
-  eslint-plugin-react-hooks eslint-plugin-jsx-a11y prettier
+  eslint-plugin-react-hooks eslint-plugin-jsx-a11y prettier babel-plugin-react-compiler
 npm install react-router-dom
 ```
 
@@ -94,7 +95,8 @@ vitest.config.ts
 tsconfig.json          # strict
 ```
 
-See `references/toolchain-config.md` for `tsconfig`, `eslint.config.js`, `vitest.config.ts`, and scripts.
+See `references/toolchain-config.md` for `tsconfig`, `eslint.config.js` (incl. compiler lint rules),
+`vite.config.ts` (React Compiler babel plugin), `vitest.config.ts`, and scripts.
 
 ### Phase 4: VERIFY
 
@@ -119,6 +121,7 @@ npm run dev            # dev server boots
   test_harness_configured: true | false
   lint_configured: true | false
   error_boundary_added: true | false
+  compiler_enabled: true | false
   last_action: [description]
   next_action: [description]
 </react-app-scaffold-state>

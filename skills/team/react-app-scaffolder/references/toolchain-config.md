@@ -35,7 +35,9 @@ import react from "@vitejs/plugin-react";
 import { fileURLToPath, URL } from "node:url";
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react({ babel: { plugins: ["babel-plugin-react-compiler"] } }),
+  ],
   resolve: {
     alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) },
   },
@@ -118,3 +120,10 @@ dist
 ```
 
 `.env` is gitignored; `.env.example` is committed. Secrets never enter the repo or a `VITE_*` var.
+
+## React Compiler
+
+`babel-plugin-react-compiler` (wired above) auto-memoizes the component tree at build time — do not
+also install the standalone `eslint-plugin-react-compiler` package; its lint rules now ship inside
+`eslint-plugin-react-hooks`'s `recommended-latest` preset, which the flat config above already pulls
+in via `react-hooks/*` rules. Verify in React DevTools: compiled components show a "Memo ✨" badge.

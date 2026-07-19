@@ -17,6 +17,7 @@ rules, the anti-pattern catalog, and error-recovery procedures. Load just-in-tim
 | 8 | **Env Handling** | `import.meta.env.VITE_*` typed in `vite-env.d.ts`; `.env.example` committed, `.env` gitignored. | `src/vite-env.d.ts` augmented |
 | 9 | **Path Aliases** | `@/` → `src/` in both `tsconfig` and Vite, so imports are stable across moves. | `paths` + `resolve.alias` |
 | 10 | **Scripts Are the Interface** | `dev`, `build`, `test`, `lint`, `format`, `typecheck` — one command each. | `package.json` scripts |
+| 11 | **React Compiler by Default** | Stable since Oct 2025; auto-memoizes so `useMemo`/`useCallback`/`memo` stop being the default reflex. | `babel-plugin-react-compiler` in `vite.config.ts` |
 
 ## Knowledge Base Lookups
 
@@ -39,6 +40,7 @@ Use `search_knowledge` (grounded-code-mcp). No React corpus — cover TS/tooling
 - [ ] `tsconfig` strict (+ noUncheckedIndexedAccess)
 - [ ] `@/` path alias in tsconfig + vite
 - [ ] ESLint flat config (react-hooks + jsx-a11y + ts)
+- [ ] React Compiler wired (`babel-plugin-react-compiler` in `vite.config.ts`)
 - [ ] Prettier configured
 - [ ] Vitest + RTL + jsdom + setup file
 

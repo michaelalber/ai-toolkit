@@ -40,8 +40,9 @@ Shared skeleton: `DETECT → SCAN → REPORT → RECOMMEND`.
 
 ```
 DETECT     React version (package.json `react`), bundler (Vite/CRA/Next.js), TypeScript (tsconfig +
-           strict), state library (Redux/RTK/Zustand/Context/none), router. Record findings;
-           version changes what is idiomatic.
+           strict), state library (Redux/RTK/Zustand/Context/none), router, and whether the React
+           Compiler is wired (`babel-plugin-react-compiler` / Next.js `experimental.reactCompiler`).
+           Record findings; version and compiler presence both change what is idiomatic.
 
 SCAN       Run the React Checklist below section by section. Gather evidence with tooling:
              npx eslint . --max-warnings 0          # baseline — incl. eslint-plugin-react-hooks
@@ -63,7 +64,7 @@ RECOMMEND  Prioritize: critical → quick wins → modernization. Version-gate e
 | 2 | **Effect correctness** — complete dependency arrays (no `exhaustive-deps` suppressions); cleanup returned for subscriptions/timers; no derived state that belongs in render | High |
 | 3 | **Component cohesion** — one responsibility per component; container/presentation separation where it earns it; no 300-line god components | Medium |
 | 4 | **State placement** — state lives at the lowest common owner; no prop-drilling past ~3 levels (lift to context/store); server state in a query cache, not `useState`+`useEffect` | High |
-| 5 | **Render performance** — stable list `key`s (never array index for dynamic lists); `memo`/`useMemo`/`useCallback` only where a measured re-render warrants it; no new object/array/function literals passed to memoized children | Medium |
+| 5 | **Render performance** — stable list `key`s (never array index for dynamic lists); if the React Compiler is wired, manual `memo`/`useMemo`/`useCallback` are a finding unless justified (compiler bail-out, cross-boundary prop to a non-compiled dep); if not wired, use them only where a measured re-render warrants it | Medium |
 | 6 | **Type safety** — `tsconfig` `strict: true`; no `any` without justification; props typed (no implicit `any`); no `as` casts hiding shape mismatches | High |
 | 7 | **Accessibility** — semantic elements over `div` soup; interactive elements keyboard-reachable; labels/`alt`/ARIA where needed; `eslint-plugin-jsx-a11y` clean | High |
 | 8 | **Boundary & dep hygiene** — no cross-feature deep imports; data-fetching isolated from presentation; error boundaries around async UI; bundle/dep weight justified | Medium |
@@ -89,7 +90,7 @@ Shared across all architecture checklists.
 
 ```markdown
 ## Architecture Checklist: [app/package] (React)
-**React**: [19] | **Bundler**: [Vite/CRA/Next] | **TS**: [strict/loose/none] | **State**: [RTK/Zustand/Context] | **Tests**: [yes/no]
+**React**: [19] | **Bundler**: [Vite/CRA/Next] | **Compiler**: [wired/absent] | **TS**: [strict/loose/none] | **State**: [RTK/Zustand/Context] | **Tests**: [yes/no]
 
 | Section | Pass | Fail | Warn |
 |---------|------|------|------|

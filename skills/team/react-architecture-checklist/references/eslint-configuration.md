@@ -7,7 +7,7 @@ applying the architectural items. Below is the minimum signal the review depends
 
 | Plugin | Catches |
 |--------|---------|
-| `eslint-plugin-react-hooks` | conditional hooks, incomplete effect dependency arrays (`exhaustive-deps`) |
+| `eslint-plugin-react-hooks` (`recommended-latest` preset) | conditional hooks, incomplete effect dependency arrays (`exhaustive-deps`), **and** React Compiler lint rules — the standalone `eslint-plugin-react-compiler` package is legacy; its rules now ship in this plugin |
 | `eslint-plugin-jsx-a11y` | missing labels/`alt`, non-semantic interactive elements, keyboard traps |
 | `@typescript-eslint` | `no-explicit-any`, unsafe `as` casts, floating promises |
 | `eslint-plugin-import` | cross-feature deep imports, cycles |

@@ -67,6 +67,9 @@ grep -l "react-scripts" package.json && echo "CRA — migrate to Vite"
 # Deprecated lifecycles / APIs
 grep -rn "componentWillMount\|componentWillReceiveProps\|UNSAFE_\|defaultProps" src/ | head
 
+# React Compiler adoption (stable since Oct 2025 — check before recommending manual memoization)
+grep -l "babel-plugin-react-compiler" package.json || echo "Compiler not wired — candidate path"
+
 # Test framework
 grep -rln "from 'enzyme'\|require('enzyme')" src/ | wc -l      # Enzyme = React 18 blocker
 grep -rln "@testing-library/react" src/ | wc -l
@@ -89,6 +92,7 @@ grep -rn "useEffect" src/ | grep -c "fetch\|axios"
 | Enzyme → RTL | `enzyme` import count | Test-by-test; hard blocker for React 18 |
 | Legacy Redux → RTK / Zustand | store/reducer count | Per-slice migration; separate server-state extraction |
 | Ad-hoc fetch → query cache | `useEffect`+fetch / `componentDidMount` count | Identify fragile fetching under concurrent React |
+| Adopt React Compiler | `babel-plugin-react-compiler` absent from `package.json` | Requires React 17+ (via `react-compiler-runtime` on <19); count hand-written `memo`/`useMemo`/`useCallback` as the payoff surface |
 
 Use `references/migration-risk-matrix.md` for scoring guidance and `references/react-version-migration.md`
 for per-version breaking-change detail.
@@ -104,6 +108,7 @@ for per-version breaking-change detail.
 5. **Phase 4: Components** — class → hooks, slice by slice
 6. **Phase 5: State & data** — legacy Redux → RTK/Zustand; ad-hoc fetch → query cache
 7. **Phase 6: Types** — finish JS → TS; turn on `strict`
+8. **Phase 7: Compiler** — wire React Compiler once the version bump lands; strip hand-written `memo`/`useMemo`/`useCallback` the compiler now subsumes
 
 ### Phase 4: REPORT
 
@@ -123,6 +128,7 @@ Use the template in `references/assessment-output-template.md` and the risk scor
   class_components: [count]
   test_framework: enzyme | rtl | mixed | none
   state_lib: legacy-redux | rtk | zustand | context | none
+  compiler_wired: true | false
   migration_paths_identified: 0
   blockers_identified: 0
   last_action: [description]

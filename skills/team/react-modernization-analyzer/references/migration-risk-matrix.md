@@ -37,6 +37,7 @@ incompatibility.
 | Legacy Redux → RTK | L | Med | hand-rolled middleware, normalized-state assumptions |
 | Legacy Redux → Zustand/Context | L | Med | global selectors, connect() sprawl |
 | Ad-hoc fetch → query cache | L | Med | request waterfalls, manual cache code to retire |
+| Adopt React Compiler | S–M | Low | needs React 17+ (`react-compiler-runtime` below 19); rare compiler bail-outs on mutation-heavy code |
 
 ## Risk multipliers
 
@@ -57,6 +58,8 @@ Raise the risk one level for each that applies:
 5. **Components** (class→hooks) — slice by slice, highest volume.
 6. **State & data** (Redux→RTK, fetch→query cache) — per slice.
 7. **Types** (finish JS→TS, enable strict) — last sweep.
+8. **Compiler** (wire React Compiler, strip manual memoization) — after the version bump, since the
+   compiler's payoff is largest on hooks-based function components.
 
 Never combine 4, 5, and the JS→TS sweep in one change set — isolate each so a regression has one cause.
 

@@ -41,11 +41,16 @@ grep -rn "if (.*) {[^}]*use[A-Z]" src/   # heuristic for conditional hooks
 
 ## 5. Render performance (Medium)
 
+React Compiler (stable since Oct 2025) auto-memoizes at build time. Check `package.json` /
+`vite.config.ts` for `babel-plugin-react-compiler` (or Next.js `experimental.reactCompiler`) first —
+it changes every row below.
+
 | Look for | Why it fails | Recommendation |
 |----------|--------------|----------------|
-| `key={index}` on a reorderable/dynamic list | Wrong reconciliation, state bleed | Use a stable id |
-| New `{}` / `[]` / `() => …` passed to a `memo`-wrapped child | Defeats the memo | `useMemo`/`useCallback` the value, or drop the premature `memo` |
-| `memo`/`useMemo` everywhere with no measured cause | Complexity with no benefit | Remove; memoize only measured hot paths |
+| `key={index}` on a reorderable/dynamic list | Wrong reconciliation, state bleed | Use a stable id (compiler does not fix this — it's a correctness bug, not a perf one) |
+| Compiler wired + hand-written `memo`/`useMemo`/`useCallback` with no bail-out comment | Dead weight; compiler already covers it, and manual code can mask a compiler bail-out | Remove, or add `// react-compiler: bail-out reason` if the compiler genuinely can't optimize the case |
+| Compiler absent + new `{}` / `[]` / `() => …` passed to a `memo`-wrapped child | Defeats the memo | `useMemo`/`useCallback` the value, or drop the premature `memo` |
+| Compiler absent + `memo`/`useMemo` everywhere with no measured cause | Complexity with no benefit | Remove; memoize only measured hot paths, or wire the compiler instead |
 
 ## 6. Type safety (High)
 
