@@ -42,7 +42,14 @@ tail -1 ~/.claude/logs/bash-audit.log   # should show the command you just ran
 # Shell-exec-chain guard: runnable self-check (exits non-zero on any failure)
 bash hooks/tests/guard-bash-exec.test.sh                                     # repo copy
 bash hooks/tests/guard-bash-exec.test.sh ~/.claude/hooks/guard-bash-exec.sh  # installed copy
+
+# Installed hooks match this repo? Silent output = in sync; any diff = re-copy.
+diff -r --exclude=tests claude/global/hooks ~/.claude/hooks
 ```
+
+Run the `diff` after every `git pull` — hooks are copied, not symlinked, so a fixed guard in the
+repo does nothing until you re-copy it. `--exclude=tests` skips the repo-only test directory,
+leaving silence as the pass condition.
 
 The exec-chain check covers both directions: real chains (pipe-to-shell, `find -exec bash`) must
 be blocked, and quoted look-alikes — a grep pattern, a `sed` substitution using pipe delimiters,
