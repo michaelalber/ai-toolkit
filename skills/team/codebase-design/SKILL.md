@@ -11,7 +11,6 @@ description: >
   seam goes, making code more testable, or when another skill needs the deep-module
   vocabulary. Pairs with improve-codebase-architecture (which applies it) and domain-model
   (which supplies the domain nouns). Ported from https://github.com/mattpocock/skills (Matt Pocock).
-disable-model-invocation: true
 ---
 
 Design **deep modules**: a lot of behaviour behind a small interface, placed at a clean

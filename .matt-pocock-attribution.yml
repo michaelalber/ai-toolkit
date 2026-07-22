@@ -46,18 +46,6 @@ attributions:
       the pointer reads /domain-model. Re-check this line when re-vendoring.
       Frontmatter conformed to local conventions as above.
 
-  - skill: zoom-out
-    source: mattpocock/skills
-    source_commit: unknown
-    upstream_path: skills/engineering/zoom-out/SKILL.md
-    locally_modified: true
-    modifications_summary: >
-      Significantly expanded from upstream's single-line instruction into a
-      5-step orientation process with a structured map output format (current
-      location, callers, module role, dependencies); added orientation-checklist.md
-      reference; updated description to include additional trigger phrases.
-      Upstream has since been simplified back to a one-liner.
-
   - skill: improve-codebase-architecture
     source: mattpocock/skills
     source_commit: unknown
@@ -70,6 +58,13 @@ attributions:
       APOSD Glossary section and deletion-test framing; added quantitative
       output table with effort estimates; adapted CONTEXT.md / UBIQUITOUS_LANGUAGE.md
       integration to local domain-model skill conventions.
+      2026-07-22: reviewed against upstream ed37663, which has since rewritten this
+      skill to emit a Tailwind/Mermaid HTML report driven by an Explore subagent and
+      a grilling loop. Deliberately NOT synced — the HTML deliverable cuts against
+      this repo's markdown-native grain and the local quantified-table output matches
+      the architecture-checklist family. Two upstream ideas were adopted: the
+      disable-model-invocation flag (was missing locally) and the git-log hot-spot
+      scoping step. Do not treat the divergence as drift; it is a standing decision.
 
   - skill: codebase-design
     source: mattpocock/skills
@@ -81,12 +76,14 @@ attributions:
       principles, testability, rejected framings, relationships) largely
       verbatim; ported references/DEEPENING.md and references/DESIGN-IT-TWICE.md.
       Local adaptations: added audience/source frontmatter and
-      disable-model-invocation: true (vocabulary provider, not an action skill);
       rewrote description to local third-person + trigger-phrase format; added an
       Integration with Other Skills table cross-linking improve-codebase-architecture,
       domain-model, and refactor-challenger; converted upstream's bare-filename
       reference links to references/ pointers. Fills the vocabulary dependency the
       local improve-codebase-architecture port had assumed but never imported.
+      2026-07-22: dropped the local disable-model-invocation: true — upstream
+      deliberately leaves this model-invocable so other skills can pull the
+      vocabulary in on demand, and improve-codebase-architecture does exactly that.
 
   - skill: domain-model
     source: mattpocock/skills

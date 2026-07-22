@@ -1,12 +1,12 @@
 # AI Toolkit
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Skills](https://img.shields.io/badge/skills-95-blue)](#skills)
+[![Skills](https://img.shields.io/badge/skills-94-blue)](#skills)
 [![Agents](https://img.shields.io/badge/agents-51-blue)](#agents)
 [![Tools](https://img.shields.io/badge/tools-pdf2md%20%7C%20web2md%20%7C%20code2md%20%7C%20ollama--evals-blue)](#repository-structure)
 [![Platforms](https://img.shields.io/badge/platforms-Claude%20Code%20%7C%20OpenCode%20%7C%20Pi-informational)](#platforms)
 
-**95 skills, 51 agents, and 26 slash commands for AI-assisted software development — spanning TDD, .NET, Python, PHP, Rust, React, Vue, security, DDD, knowledge management, and more.**
+**94 skills, 51 agents, and 26 slash commands for AI-assisted software development — spanning TDD, .NET, Python, PHP, Rust, React, Vue, security, DDD, knowledge management, and more.**
 
 > **Edge AI, robotics, ML, and industrial automation?** Those skills now live in the companion
 > [edge-ai-robotics-automation-toolkit](../edge-ai-robotics-automation-toolkit) — install it alongside this one.
@@ -176,7 +176,7 @@ This toolkit is organized in two folders. `skills/team/` contains skills and age
 
 This toolkit incorporates several skills from Matt Pocock's [skills repo](https://github.com/mattpocock/skills) alongside my own. Vendored copies carry `source: mattpocock/skills` in their frontmatter along with the upstream commit hash they were pulled from, so the provenance is traceable. Matt updates frequently — periodically check his repo and re-vendor when meaningful changes land.
 
-Matt's skills cover the **workflow primitives** that apply to any project regardless of stack: grilling a plan until it's coherent (`grilling` + its `grill-me` / `grill-with-docs` entry points), zooming out to understand a call chain (`zoom-out`), and improving a codebase's module structure (`improve-codebase-architecture`). They're small, composable, and deliberately stack-agnostic — exactly the layer my own skills don't try to replicate.
+Matt's skills cover the **workflow primitives** that apply to any project regardless of stack: grilling a plan until it's coherent (`grilling` + its `grill-me` / `grill-with-docs` entry points), naming module shape with a shared vocabulary (`codebase-design`), and improving a codebase's module structure (`improve-codebase-architecture`). They're small, composable, and deliberately stack-agnostic — exactly the layer my own skills don't try to replicate.
 
 The skills I've written cover the **domain-specific layers** that sit on top: enterprise .NET patterns (vertical slice, CQRS, EF Core migrations, federal-compliance security review), AI/ML infrastructure (RAG pipelines, MCP server scaffolding, local LLM workflows, model optimization), and the coaching loops in my professional-development track that build architectural and review judgment.
 
@@ -369,7 +369,6 @@ Vendored copies of workflow-primitive skills from [Matt Pocock's skills repo](ht
 | `grilling` | The shared interview engine — one question at a time, each with a recommended answer, ending at shared understanding. | `skills/productivity/grilling/SKILL.md` |
 | `grill-me` | Entry point: runs a `grilling` session. | `skills/productivity/grill-me/SKILL.md` |
 | `grill-with-docs` | Entry point: runs a `grilling` session that also captures ADRs and a glossary via `domain-model`. | `skills/engineering/grill-with-docs/SKILL.md` |
-| `zoom-out` | Map callers, dependents, and module relationships before continuing. | `skills/engineering/zoom-out/SKILL.md` |
 | `improve-codebase-architecture` | Deep module refactoring using APOSD vocabulary — eliminates shallow modules, information leakage, naming mismatches. | `skills/engineering/improve-codebase-architecture/SKILL.md` |
 | `codebase-design` | Shared deep-module vocabulary (module, interface, depth, seam, adapter, leverage, locality) that `improve-codebase-architecture` names problems with. | `skills/engineering/codebase-design/SKILL.md` |
 
@@ -545,7 +544,7 @@ The `project-templates/` directory contains per-project context files based on t
 ```
 ai-toolkit/
 ├── skills/
-│   ├── team/                   # 83 team skills (shareable, production-ready)
+│   ├── team/                   # 82 team skills (shareable, production-ready)
 │   └── professional/           # 12 professional skills (deliberate practice)
 ├── claude/
 │   ├── agents/

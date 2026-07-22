@@ -10,6 +10,7 @@ description: >
   language. Use when asked to "improve the architecture", "refactor this module",
   "apply APOSD", or "clean up the design". Works best after domain-model is established.
   Ported from https://github.com/mattpocock/skills (Matt Pocock).
+disable-model-invocation: true
 ---
 
 Improve this codebase's architecture using principles from *A Philosophy of Software
@@ -26,9 +27,20 @@ when you need the precise definitions or the deepening/design-it-twice procedure
 2. If neither exists: "Domain model not established. Naming recommendations may
    not align with ubiquitous language. Run `domain-model` first for best results."
 
+## Scoping Phase
+
+Decide *where* to look before you look — deepening a module only pays off where change
+is frequent, so scope before scanning.
+
+1. If the user named a module, subsystem, or pain point, take it and skip step 2.
+2. Otherwise walk back the commit history (`git log --oneline -- <path>`, or repo-wide)
+   and rank paths by change frequency. The hot spots are the candidates; let them pull
+   your attention first. If changes are scattered with no clear hot spot, widen the net.
+
 ## Analysis Phase
 
-Find the worst offenders first. Use `references/DEEPENING.md` as a checklist.
+Find the worst offenders first, within the scope set above. Use `references/DEEPENING.md`
+as a checklist.
 
 1. **Shallow modules** — interfaces that expose more complexity than they abstract.
    Red flag: method count approaches implementation line count.
