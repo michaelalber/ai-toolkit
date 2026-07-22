@@ -125,7 +125,7 @@ disable-model-invocation: true  # optional: prevents auto-invocation; use for in
 
 | Tier | When to use | SKILL.md size | References required |
 |------|------------|--------------|---------------------|
-| **Minimal** | Mode switches, conversational tools, single-instruction skills, thin workflow-phase drivers (≤ ~40 imperative directives) | ≤ 100 lines | ≥ 1 file |
+| **Minimal** | Mode switches, conversational tools, single-instruction skills, thin workflow-phase drivers (≤ ~40 imperative directives) | ≤ 100 lines | ≥ 1 file — none required under 20 lines |
 | **Full-template** | Domain-expert skills with workflow, state tracking, and output templates | ≤ 200 lines (depth → `references/`) | ≥ 2 files |
 
 Minimal-tier skills have no prescribed section structure — just focused instructions.
@@ -194,7 +194,7 @@ Each `references/` directory contains 2-5 supporting files: code examples, decis
 **Minimal-tier steps:**
 1. Create `skills/<audience>/<new-name>/SKILL.md` with focused instructions (no template to copy)
 2. Add `disable-model-invocation: true` for interactive or conversational skills
-3. Create `skills/<audience>/<new-name>/references/` with ≥ 1 supporting file
+3. Create `skills/<audience>/<new-name>/references/` with ≥ 1 supporting file — skip it if the SKILL.md is under 20 lines and has no depth to split out
 4. Skip the agent/command/registration steps below unless the skill is user-invocable
 
 **Full-template steps:**
@@ -353,7 +353,7 @@ diff CLAUDE.md AGENTS.md
 
 - Follow the 5-section lean layout when creating or modifying skills; push depth to `references/`.
 - Keep both `claude/agents/` and `opencode/agents/` versions in sync.
-- Every full-template skill must have a `references/` directory with at least 2 supporting files (minimal-tier: ≥ 1).
+- Every full-template skill must have a `references/` directory with at least 2 supporting files (minimal-tier: ≥ 1, or none if the SKILL.md is under 20 lines).
 - State block XML tags must be unique across all skills and agents.
 - Frontmatter `description` fields must include trigger phrases for slash-command discovery.
 - In Python code examples, avoid PyTorch evaluation mode calls that trigger security hooks. Use `model.train(False)` instead.
@@ -415,6 +415,7 @@ particular user has ingested. Personal enrichment belongs in the installed copie
 | 2026-06-26 | **`CLAUDE.md` and `AGENTS.md` made a byte-identical mirror pair.** The two root context files now carry the same union of content (project overview, architecture, skill/agent/command conventions, hooks, validation, decisions, open loops, skill suites). Claude Code reads `CLAUDE.md`; OpenCode and Pi read `AGENTS.md`. Kept in sync manually with a banner + `diff CLAUDE.md AGENTS.md` check. | Whichever agent opens the project must get the same project context. Previously `CLAUDE.md` was a thin pointer to `AGENTS.md`, so a Claude Code session and an OpenCode session saw materially different guidance. Two real files (not a symlink) keep it portable across tools that don't follow symlinks. |
 | 2026-07-11 | **`code-review-agent` slimmed to defer to the `automated-code-review` engine (both runtimes); Fowler code smell catalog added.** The agent (394 → ~160 lines in each runtime) previously re-inlined the skill's entire SCAN→ANALYZE→SYNTHESIZE→REPORT workflow, five-category checklist, self-checks, and output template while also declaring the skill as a dependency. It now keeps only the autonomous-specific parts (guardrails, KB grounding, session lifecycle, its own unique `<code-review-state>` block) and defers the engine to `automated-code-review`. Landed Martin Fowler's *Refactoring* smell catalog as `automated-code-review/references/code-smells.md` — the canonical checklist for the maintainability category, carrying Matt Pocock's "repo overrides" suppression rule; the agent and `/code-review` command inherit it via deferral. No skill/agent/command count change. | Same smell the 2026-06-03 TDD consolidation fixed: an operating-mode agent re-deriving a loop the canonical skill already owns whole. Deferral removes ~250 duplicated lines with zero information loss (the engine holds all of it) and gives one place to maintain the review workflow. The Fowler catalog was the reusable nugget from mattpocock's `code-review` skill; folding it into the existing maintainability category (not a new 6th category or a competing skill) honors the five-category invariant and the non-overlap doctrine. Agent state tag kept distinct from the skill's `<automated-review-state>` per the uniqueness invariant. |
 | 2026-07-19 | **Vue skill family added** (second frontend family, mirroring React exactly): `vue-architecture-checklist`, `vue-security-review`, `vue-feature-slice`, `vue-component-scaffolder`, `vue-app-scaffolder`, `vue-modernization-analyzer` (6 skills) + 6 agents in both runtimes (`vue-arch-checklist-agent`, `vue-security-agent`, `vue-modernization-agent`, `vue-feature-slice-agent`, `vue-component-scaffold-agent`, `vue-app-scaffold-agent`). Same shape/doctrine as the 2026-06-03 React decision: 5-section lean layout, structural CQRS via composables instead of hooks, `<script setup lang="ts">` + `defineProps`/`defineEmits` for type safety, Composition API reactivity discipline (no destructured `reactive()`) in place of hooks-rules checks, Vite + Vue Router + Vitest + Vue Testing Library skeleton, Options→Composition/Vue-CLI→Vite/Vue-2→3/Vuex→Pinia modernization paths. Counts: skills 87→93 (team 75→81), agents 45/45→51/51. | User asked for a Vue family alongside the existing React one — the toolkit's other major frontend framework was otherwise unrepresented (`grounded_javascript` already carries a Vue 2/3 corpus, unlike the React gap noted in the 2026-06-03 decision, so Vue skills ground TS/Vue idioms directly via `collection="javascript"` rather than falling back to an external-authority note only). Mirroring React's exact shape (not inventing a new pattern) keeps the two frontend families symmetric and keeps routing simple: same 6-skill/6-agent shape, same Integration cross-reference style, same no-commands-layer precedent. |
+| 2026-07-22 | **Minimal-tier `references/` requirement relaxed for sub-20-line skills** — a SKILL.md under 20 lines needs no `references/` directory at all. Applies to `grill-me` (19 lines), the only skill affected. | The rule exists to keep depth out of the always-loaded SKILL.md. A skill that fits in 19 lines has no depth to relocate, so the requirement can only be satisfied by a filler file — boilerplate that costs a reader a click and buys nothing. The invariant should track the reason it exists, not be met for its own sake. |
 
 ---
 
