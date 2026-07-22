@@ -131,8 +131,6 @@ Features/{FeatureName}/
 └── Tests/
 ```
 
-See [Telerik Blazor Templates](references/telerik-blazor-templates.md) for TelerikGrid list page, TelerikForm edit page, DTO classes, Mapster mapping configuration, and scaffold bash commands.
-
 ## Anti-Patterns Table
 
 | Anti-Pattern | Why It's Wrong | Correct Approach |
@@ -190,4 +188,3 @@ See [Telerik Blazor Templates](references/telerik-blazor-templates.md) for Teler
 - [Feature Folder Patterns](references/feature-folder-patterns.md) — Folder layouts, request/response records, handler classes, validators, FreeMediator registration
 - [Pipeline Behaviors](references/pipeline-behaviors.md) — Behavior implementations for validation, logging, transactions, caching
 - [Vertical Slice Testing](references/dotnet-vertical-testing.md) — Testing patterns for handlers, validators, endpoints using xUnit and FluentAssertions
-- [Telerik Blazor Templates](references/telerik-blazor-templates.md) — TelerikGrid list page, TelerikForm edit page, DTO classes, Mapster config, scaffold commands

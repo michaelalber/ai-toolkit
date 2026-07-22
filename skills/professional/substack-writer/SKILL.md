@@ -1,5 +1,6 @@
 ---
 name: substack-writer
+audience: professional
 description: >-
   Structured multi-pass pipeline for turning raw technical notes into
   publication-quality Substack/blog posts for a professional software-engineering
