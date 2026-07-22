@@ -297,3 +297,25 @@ The `project-detect` extension in each package auto-loads the right skill from p
 | Compaction loops immediately | Default `reserveTokens` exceeds context window | Use the included `settings.json` |
 | Model not found in `/model` | `id` in models.json doesn't match `ollama create` name | Use the custom model name, not the base model id |
 | Streaming stops mid-output | `num_predict` cap hit | Increase in Modelfile |
+
+---
+
+## Upstream Docs
+
+Pi is the authority on its own config surface — this guide only covers the Ollama-local setup.
+When the two disagree, upstream wins; open an issue here so this guide gets corrected.
+
+| Page | Covers | Used by this guide |
+|------|--------|--------------------|
+| [Settings](https://pi.dev/docs/latest/settings) | `settings.json` schema, global vs. project precedence | Step 4 (compaction, `defaultModel`) |
+| [Custom models](https://pi.dev/docs/latest/models) | `models.json` providers, `compat`, model fields | Step 3 |
+| [Custom providers](https://pi.dev/docs/latest/custom-provider) | Non-standard APIs and OAuth | — (Ollama uses `openai-completions`) |
+| [Skills](https://pi.dev/docs/latest/skills) | Discovery paths, frontmatter, `/skill:<name>` | The installed `skills/` tree |
+| [Prompt templates](https://pi.dev/docs/latest/prompt-templates) | Slash commands that expand to prompts | Why there is no `pi/commands/` |
+| [Extensions](https://pi.dev/docs/latest/extensions) | TypeScript tools, commands, events (`tool_call`, `tool_result`) | MCP access; the shell-injection gap |
+| [Session format](https://pi.dev/docs/latest/session-format) | JSONL sessions, `SessionManager` | `/tree`, `/fork`, `/clone` |
+| [Keybindings](https://pi.dev/docs/latest/keybindings) | Rebinding shortcuts | `/model` (Ctrl+L), favorites (Ctrl+P) |
+| [Themes](https://pi.dev/docs/latest/themes) | Terminal appearance | `theme` in `settings.json` |
+
+Config paths (both from the Settings page): `~/.pi/agent/` global, `.pi/` project — project
+overrides global, with nested objects merged rather than replaced.
