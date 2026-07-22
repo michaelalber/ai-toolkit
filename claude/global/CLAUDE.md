@@ -134,7 +134,6 @@ you must follow. **This is the authoritative source — prefer it over training 
 | `grounded_robotics` | `"robotics"` | Physical AI / embodied AI: ROS 2, MuJoCo, Isaac Lab, deep RL for robotics, VLA models |
 | `grounded_rust` | `"rust"` | Rust language: ownership/borrowing/lifetimes, async/Tokio, Cargo, error handling, Axum, Clippy, ecosystem crates |
 | `grounded_api_design` | `"api_design"` | REST API design: Zalando guidelines, Google AIP, Microsoft REST API guidelines (Azure + Graph) |
-| `grounded_4d_legacy` | `"4d_legacy"` | 4D v18/v20 — source reference for 4D → .NET migration |
 
 ### Canonical Engineering Standards
 
