@@ -61,6 +61,10 @@ GATHER
                         @research-code-analyzer  "Analyze the implementation of: {neutral topic}"
                         @research-pattern-finder "Find patterns and conventions related to: {neutral topic}"
                       wait for ALL THREE before synthesizing
+                      NO subagent support (Pi): run the same three passes SEQUENTIALLY in this
+                      session -- locate, then analyze, then patterns -- writing each pass to
+                      research-{locate,analyze,pattern}.md before the next, and synthesizing from
+                      those files. The ticket/goal must still never enter the session.
 
 SYNTHESIZE
     Organize into overview, landscape findings, options-on-the-table, constraints, open questions.

@@ -163,8 +163,8 @@ model, but the unattended loop will drift).
 | task-decomposition | 🧩 | Multi-agent orchestration; PI subagent support uncertain |
 | qrspi-implement | | Slice-by-slice autonomous loop with checkpoints |
 | qraspi-implement | | Slice-by-slice autonomous loop (greenfield) |
-| qrspi-research | 🧩 | Parallel read-only subagent fan-out |
-| qraspi-research | 🧩 | Parallel subagent fan-out (greenfield) |
+| qrspi-research | 🧩 | Parallel fan-out — but ships a SEQUENTIAL FALLBACK; usable on Pi at 🟡 quality |
+| qraspi-research | 🧩 | Same — sequential fallback in the inherited-repo branch |
 
 ---
 
@@ -177,9 +177,18 @@ silently fall back to the 32B model's training data — acceptable for scaffolde
 risky for the security and migration skills where the grounded standard *is* the value.
 **Recommendation: run `grounded-code-mcp` locally.**
 
-**Subagents (🧩).** Several research/orchestration skills assume parallel read-only
-subagents. Confirm PI's subagent support before relying on these; if absent, they
-collapse to single-threaded and lose their speed/coverage rationale.
+**Subagents (🧩).** Pi has no subagents — the docs are explicit that extensions
+"cannot spawn child agent instances." Skills assuming parallel read-only fan-out
+therefore collapse to single-threaded. The two research phases now carry an explicit
+SEQUENTIAL FALLBACK (three ordered passes, each written to a file before the next),
+so they remain usable on Pi at reduced objectivity; the rest of the 🧩 tier does not.
+
+**Multi-phase work is fine on Pi.** QRSPI and QRASPI phases are artifact-gated: each
+phase is one invocation that reads a markdown artifact and writes the next. That is
+Pi-native — `/skill:qrspi-spec` works today, and `/tree` + `/fork` let you branch at a
+gate and compare two plans in one session. What does NOT port is the *agents* that
+drive phase-to-phase automatically; on Pi the human drives, which is the QRSPI design
+anyway. See the Pi capability boundary in the root `AGENTS.md`.
 
 **Context window.** On the 32K tier, watch the large-input 🟡 skills
 (`transcript-capture`, `email-capture`) and any skill that loads multiple long
@@ -197,7 +206,8 @@ loop. The 24–32B/128K tier removes most of this risk.
    use most — start with the security reviews and architecture checklists, since those
    are the highest-value/highest-judgment combination.
 4. **Suppress the 🔴 tier locally** (don't install, or mark them cloud-only) and reach
-   for a cloud model when you need an autonomous loop or subagent fan-out.
+   for a cloud model when you need an autonomous loop or subagent fan-out — except the
+   two research phases, which run sequentially on Pi.
 
 > Counts: 🟢 34 · 🟡 45 · 🔴 6 = 85. (AI/ML skills moved to edge-ai-robotics-automation-toolkit.) Revisit when skills are added/removed or the
 > primary local model changes.

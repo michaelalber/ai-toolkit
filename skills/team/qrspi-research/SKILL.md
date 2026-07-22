@@ -25,7 +25,8 @@ topic string, and synthesizes one objective artifact.
    (areas and component names only) and pass ONLY that to the subagents
 2. OBJECTIVE only -- no opinions, recommendations, or design; facts with file:line citations
 3. PARALLEL subagents -- spawn `research-file-locator`, `research-code-analyzer`, and
-   `research-pattern-finder` concurrently via the Task tool; never serially
+   `research-pattern-finder` concurrently via the Task tool; never serially. On a harness with
+   NO subagent support (Pi), run the SEQUENTIAL FALLBACK below instead -- never skip the phase
 4. CITE every claim -- if you cannot cite a file, drop the claim
 5. CONTEXT BUDGET: keep utilization under 40%. At 60%, write `research.md` with progress and
    tell the user to start a fresh session.
@@ -45,6 +46,16 @@ DELEGATE (parallel)
       @research-code-analyzer  -- "Analyze the implementation of: {neutral topic}"
       @research-pattern-finder -- "Find patterns and conventions related to: {neutral topic}"
     Wait for ALL THREE before synthesizing
+
+DELEGATE (sequential fallback -- harnesses without subagents, e.g. Pi)
+    Run the SAME three passes in order, in this session, one prompt each, passing ONLY the
+    neutral topic string. Write each pass's raw findings to the feature folder before starting
+    the next, then synthesize from those files rather than from held context:
+      1. LOCATE  -> Glob/Grep for files related to {neutral topic}   -> research-locate.md
+      2. ANALYZE -> read the located files; structure, flow, types   -> research-analyze.md
+      3. PATTERN -> conventions, naming, test patterns, precedents   -> research-pattern.md
+    Ticket-hiding still holds -- the ticket must never enter this session. Objectivity is weaker
+    than the parallel path (one context sees all three passes), so drop any claim you cannot cite.
 
 SYNTHESIZE
     De-duplicate file references; organize into overview, findings, code references, patterns,
