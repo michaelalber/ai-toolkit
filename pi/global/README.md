@@ -20,6 +20,15 @@ QRSPI and QRASPI phases are artifact-gated, so you drive phase-to-phase yourself
 through community extensions; `grounded-code-mcp` also ships a CLI that Pi calls directly, which
 is what the installed `AGENTS.md` uses.
 
+**There is no `pi/commands/` directory, by design.** Pi already exposes every skill as
+`/skill:<name> <args>` — which is exactly what this toolkit's non-injecting commands do (they are
+four-line wrappers reading "use the X skill, subject: $ARGUMENTS"). Porting those would duplicate a
+built-in. The other 20 commands inject live shell state with `` !`cmd` ``, and Pi prompt templates
+take arguments only, so a port would ship them degraded: a template can *ask* the model to run
+`git diff` first, but injection exists for determinism — the state is guaranteed present before the
+model reasons — and a local model is likelier to skip or truncate that step. Closing that gap needs
+a Pi extension registering a command with real injected state, not a template.
+
 This guide configures Pi for the best local experience at the **20B+ tier** (24–32B dense or a
 comparable MoE, 16–24 GB VRAM). Smaller models are below the floor for agentic coding — keep them
 for the non-agentic roles (title, summary, FIM, autocomplete).
