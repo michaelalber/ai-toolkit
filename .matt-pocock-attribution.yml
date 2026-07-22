@@ -87,7 +87,7 @@ attributions:
 
   - skill: domain-model
     source: mattpocock/skills
-    source_commit: unknown
+    source_commit: ed37663
     upstream_path: skills/engineering/domain-modeling/SKILL.md
     locally_modified: true
     modifications_summary: >
@@ -98,3 +98,16 @@ attributions:
       format. Attribution entry backfilled 2026-07-22 — the skill carried a
       source line in its description but was missing from this file. Note:
       grill-with-docs composes this skill under its local name.
+      2026-07-22: reviewed against upstream ed37663 and four defects fixed —
+      dropped disable-model-invocation (it blocked the very composition
+      grill-with-docs, improve-codebase-architecture, codebase-design, and
+      qraspi-architecture rely on); replaced the hard "no CONTEXT.md, stop" gate
+      with upstream's lazy file creation; moved the ADR write path from
+      docs/decisions/ to docs/adr/NNNN-*.md, matching the repo's 2026-06-03
+      decision and the four QRASPI skills; added source/source_commit
+      frontmatter. Also adopted upstream's CONTEXT-MAP.md multi-context layout
+      and its three-part ADR test (hard to reverse AND surprising without
+      context AND a real trade-off). The local DDD interrogation protocol is
+      kept — upstream has since become a looser in-session maintenance
+      discipline rather than a structured interview, and the interview is this
+      skill's reason to exist. Standing divergence, not drift.

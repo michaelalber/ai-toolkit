@@ -1,7 +1,9 @@
 # ADR Format
 
 Template for Architecture Decision Records created by the `domain-model` skill.
-Save to `docs/decisions/ADR-XXXX-[kebab-title].md`.
+Save to `docs/adr/NNNN-[kebab-title].md` — the repo-wide ADR path (see the 2026-06-03
+decision in CLAUDE.md). Under a `CONTEXT-MAP.md` multi-context layout, context-specific
+ADRs go in that context's `docs/adr/`; system-wide ones in the root `docs/adr/`.
 
 ---
 
