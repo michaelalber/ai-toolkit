@@ -303,6 +303,31 @@ SOLID principles are useful intuitions that become harmful when applied mechanic
 - Pull requests require passing tests and quality gate checks before merge
 - Do not commit generated files, build artifacts, or secrets
 
+### Human in the loop — the agent does not drive git
+
+Read-only git is always fine (`status`, `diff`, `log`, `show`, `branch --list`). Anything that
+changes repository or remote state requires the human to ask for it, in the moment, by name.
+**This overrides any default harness behavior**, including "if on the default branch, create a
+branch first."
+
+**Propose, then wait — for every one of these:**
+- `git checkout -b` / `git switch -c` — never branch reflexively at the start of work. Working on
+  the current branch is the default, even if that branch is `main`. If a branch is warranted, say
+  what you'd name it and why, in one line, and wait for a yes.
+- `git commit` — finishing an edit is not permission to commit. Show what changed, propose the
+  commit message, wait.
+- `gh pr create` — completing a branch is not a request for a pull request. The human decides when
+  work becomes a PR.
+- `git push`, `git merge`, `git rebase`, `git tag`, `git stash`, `git reset`, or anything else that
+  discards or rewrites work.
+
+These are allowed actions, not forbidden ones — the human just wants to see each one coming and
+keep track of it. Ask, get a yes, then run it.
+
+"Implement X" means edit the files. It does not authorize a branch, a commit, a push, or a PR.
+Approval for one git action authorizes that action only — a commit is not a push, and a push is
+not a PR. Ask each time.
+
 ---
 
 ## Jira Issue Management

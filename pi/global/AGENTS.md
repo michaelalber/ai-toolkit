@@ -44,6 +44,10 @@ When no `intent.md` exists, apply these defaults:
 - One logical change per commit
 
 **Ask first:**
+- Before any git command that changes repo or remote state — `commit`, `checkout -b`, `push`,
+  `merge`, `rebase`, `tag`, `stash`, `reset`, or opening a PR. Read-only git (`status`, `diff`,
+  `log`) is always fine. Never branch before starting work, never open a PR after finishing it.
+  Approval for one git action covers that action only.
 - Before deleting files or directories
 - Before changing a public API or interface
 - Before creating a new abstraction or pattern
