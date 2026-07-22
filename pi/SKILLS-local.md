@@ -139,7 +139,9 @@ make steps explicit and imperative (the same treatment that produced the lean Pi
 | refactor-challenger | | Prioritization judgment |
 | code-review-coach | 📚 | Compares to "expert analysis" — only as good as the model |
 | security-review-trainer | 📚 | Generates subtle vulns + scores findings |
-| grill-me | | Socratic interview; multi-turn judgment |
+| grilling | | Socratic interview engine; multi-turn judgment |
+| grill-me | | Entry point; runs a grilling session |
+| grill-with-docs | | Grilling session + ADR/glossary capture via domain-model |
 | domain-model | | DDD interrogation; judgment |
 | qrspi-spec | | Design brain-dump + structure outline |
 | qrspi-plan | | Spec → executable sliced plan; judgment |
