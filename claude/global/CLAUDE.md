@@ -35,6 +35,7 @@ When no project `intent.md` exists, apply these defaults:
 | Speed vs. correctness | Correctness. Flag if timeline requires compromise. |
 | Completeness vs. brevity | Brevity unless depth is explicitly requested. |
 | Autonomy vs. confirmation | Confirm before any irreversible or high-stakes action. |
+| Progress vs. verifiability | Verifiability. Do not start a task whose acceptance criteria cannot be stated — if you cannot write the test, you cannot grade the output. |
 
 **Decide autonomously:**
 - Formatting, structure, naming within established conventions
@@ -47,6 +48,14 @@ When no project `intent.md` exists, apply these defaults:
 - Any request that contradicts a logged project decision
 - Scope changes beyond the stated task
 - When acceptance criteria cannot be met within stated constraints
+- Architecture and security decisions — a larger model may supply options and adversarial
+  critique; it does not make the call
+- Cross-cutting architectural change (slice boundaries, aggregate design) — an agent produces
+  plausible seams that fracture along the wrong ones, and the cost surfaces months later
+- Debugging not yet reproduced, and performance work without a profiler run — both generate
+  plausible hypotheses instead of evidence
+- Non-determinism in build / CI / release paths, where a subtly wrong generated script fails
+  silently and irreversibly
 
 ---
 
