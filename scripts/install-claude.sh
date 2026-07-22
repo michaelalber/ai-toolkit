@@ -13,6 +13,11 @@ mkdir -p "${CLAUDE_DIR}/skills"
 mkdir -p "${CLAUDE_DIR}/commands"
 
 find "${REPO_ROOT}/claude/agents" -name "*.md" -exec cp -v {} "${CLAUDE_DIR}/agents/" \;
+# Full resync of the repo-owned subtrees: cp -r overwrites and adds but never
+# deletes, so a skill removed from the repo would linger here and stay
+# invocable. Only team/ and professional/ are repo-owned — anything else you
+# added by hand under skills/ is left untouched.
+rm -rf "${CLAUDE_DIR}/skills/team" "${CLAUDE_DIR}/skills/professional"
 cp -rv "${REPO_ROOT}/skills/"* "${CLAUDE_DIR}/skills/"
 find "${REPO_ROOT}/claude/commands" -name "*.md" -exec cp -v {} "${CLAUDE_DIR}/commands/" \;
 cp -v "${REPO_ROOT}/claude/global/statusline.sh" "${CLAUDE_DIR}/statusline.sh"

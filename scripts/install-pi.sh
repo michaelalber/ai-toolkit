@@ -29,7 +29,13 @@ cp -v "${REPO_ROOT}/pi/global/settings.json" "${PI_DIR}/settings.json"
 # across Claude Code, OpenCode, and Pi. Pi discovers SKILL.md directories
 # recursively under ~/.pi/agent/skills/. See pi/SKILLS-local.md for which
 # skills are suited to local 32B inference vs. cloud.
+#
+# Full resync of the repo-owned subtrees: cp -r overwrites and adds but never
+# deletes, so a skill removed from the repo would linger here and stay
+# invocable. Only team/ and professional/ are repo-owned — anything else you
+# added by hand under skills/ is left untouched.
 mkdir -p "${PI_DIR}/skills"
+rm -rf "${PI_DIR}/skills/team" "${PI_DIR}/skills/professional"
 cp -rv "${REPO_ROOT}/skills/"* "${PI_DIR}/skills/"
 
 # Knowledge grounding — Pi reaches MCP only through a community extension, so

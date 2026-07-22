@@ -19,7 +19,8 @@ New-Item -ItemType Directory -Force -Path $PiDir | Out-Null
 
 Copy-Item -Path (Join-Path $RepoRoot 'pi\global\AGENTS.md') -Destination (Join-Path $PiDir 'AGENTS.md') -Force -Verbose
 Write-Host "Installed: AGENTS.md (target tier 20B+)"
-Write-Host "  For a 128K context model, set settings.json compaction to reserveTokens 4096 / keepRecentTokens 24576."
+Write-Host "  Compaction ships tuned for a 128K model. On a 40K dense model, lower"
+Write-Host "  settings.json to reserveTokens 2048 / keepRecentTokens 8192."
 
 Copy-Item -Path (Join-Path $RepoRoot 'pi\global\models.json')   -Destination (Join-Path $PiDir 'models.json')   -Force -Verbose
 Copy-Item -Path (Join-Path $RepoRoot 'pi\global\settings.json') -Destination (Join-Path $PiDir 'settings.json') -Force -Verbose
@@ -28,13 +29,23 @@ Copy-Item -Path (Join-Path $RepoRoot 'pi\global\settings.json') -Destination (Jo
 # across Claude Code, OpenCode, and Pi. Pi discovers SKILL.md directories
 # recursively under ~/.pi/agent/skills/. See pi/SKILLS-local.md for which
 # skills are suited to local 32B inference vs. cloud.
+#
+# Full resync of the repo-owned subtrees: Copy-Item overwrites and adds but
+# never deletes, so a skill removed from the repo would linger here and stay
+# invocable. Only team\ and professional\ are repo-owned — anything else you
+# added by hand under skills\ is left untouched.
 $SkillsDir = Join-Path $PiDir 'skills'
 New-Item -ItemType Directory -Force -Path $SkillsDir | Out-Null
+foreach ($Sub in 'team', 'professional') {
+    $StaleDir = Join-Path $SkillsDir $Sub
+    if (Test-Path $StaleDir) { Remove-Item -Path $StaleDir -Recurse -Force }
+}
 Copy-Item -Path (Join-Path $RepoRoot 'skills\*') -Destination $SkillsDir -Recurse -Force -Verbose
 
-# Knowledge grounding — Pi has no MCP support, so the 50 skills that ground
-# against the knowledge base call the grounded-code-mcp CLI directly (see the
-# Knowledge Grounding section of the installed AGENTS.md). Warn if it is missing.
+# Knowledge grounding — Pi reaches MCP only through a community extension, so
+# the 50 skills that ground against the knowledge base call the grounded-code-mcp
+# CLI directly (see the Knowledge Grounding section of the installed AGENTS.md).
+# Warn if it is missing.
 $Grounded = Get-Command grounded-code-mcp -ErrorAction SilentlyContinue
 if ($Grounded) {
     $GroundedStatus = "found on PATH"
@@ -56,14 +67,17 @@ Write-Host "  pi/global/router-config.json.example → $(Join-Path $PiDir 'route
 Write-Host "  (drop the .example suffix and the _README key)."
 Write-Host ""
 Write-Host "Next steps:"
-Write-Host "  1. Edit $(Join-Path $PiDir 'models.json') — delete entries for models you have not pulled."
-Write-Host "  2. Create your Ollama model: ollama create pi-coder -f pi/global/Modelfile-20b"
-Write-Host "  3. Copy pi/global/SYSTEM.md to your project root and trim to one variant."
+Write-Host "  1. Edit $(Join-Path $PiDir 'models.json') — set the ollama-lan baseUrl to your Ollama host"
+Write-Host "     and delete entries for models you have not pulled."
+Write-Host "  2. Create your Ollama model:"
+Write-Host "       ollama create qwen3.6-35b-a3b-agent -f pi/global/Modelfile-moe-agent  # MoE, 128K"
+Write-Host "       ollama create qwen3.6-27b-agent     -f pi/global/Modelfile-20b        # dense, 128K"
+Write-Host "  3. Copy pi/global/SYSTEM.md to your project root."
 if (-not $Grounded) {
     Write-Host "  4. Install the grounded-code-mcp CLI and ensure it is on PATH —"
     Write-Host "     without it, grounded skills (security reviews, migrations) lose their"
     Write-Host "     authoritative source. See pi/SKILLS-local.md (📚 flag) for the affected skills."
-    Write-Host "  5. Run: pi --model ollama/pi-coder"
+    Write-Host "  5. Run: pi --model ollama-lan/qwen3.6-27b-agent:latest"
 } else {
-    Write-Host "  4. Run: pi --model ollama/pi-coder"
+    Write-Host "  4. Run: pi --model ollama-lan/qwen3.6-27b-agent:latest"
 }

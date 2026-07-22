@@ -13,6 +13,11 @@ mkdir -p "${OPENCODE_DIR}/skills"
 mkdir -p "${OPENCODE_DIR}/commands"
 
 find "${REPO_ROOT}/opencode/agents" -name "*.md" -exec cp -v {} "${OPENCODE_DIR}/agents/" \;
+# Full resync of the repo-owned subtrees: cp -r overwrites and adds but never
+# deletes, so a skill removed from the repo would linger here and stay
+# invocable. Only team/ and professional/ are repo-owned — anything else you
+# added by hand under skills/ is left untouched.
+rm -rf "${OPENCODE_DIR}/skills/team" "${OPENCODE_DIR}/skills/professional"
 cp -rv "${REPO_ROOT}/skills/"* "${OPENCODE_DIR}/skills/"
 find "${REPO_ROOT}/opencode/commands" -name "*.md" -exec cp -v {} "${OPENCODE_DIR}/commands/" \;
 
