@@ -212,6 +212,7 @@ See [`pi/global/README.md`](pi/global/README.md) for the full setup guide — Mo
 **Docs**
 
 - [Pi homepage](https://pi.dev)
+- [Upstream docs reference](pi/global/README.md#upstream-docs) — every `pi.dev` config page mapped to the setup step it backs
 
 ---
 
