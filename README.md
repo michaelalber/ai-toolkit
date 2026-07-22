@@ -320,7 +320,7 @@ ADRs live in the target repo's `docs/adr/`.
 | `capture-consolidate` | Consolidates multiple capture documents (transcripts, emails, SOWs) into a unified requirements registry. |
 | `email-capture` | Extracts requirements, decisions, and action items from email threads and converts them to structured captures. |
 | `transcript-capture` | Converts meeting transcripts or Zoom/Slack summaries into structured capture documents. |
-| `domain-model` | DDD domain modeling consultant — enforces CONTEXT.md vocabulary, surfaces code/plan contradictions, records decisions as ADRs sparingly. |
+| `domain-model` | DDD domain modeling consultant — structured interrogation (bounded contexts, aggregates, ubiquitous language, invariants, domain events), surfaces code/plan contradictions, records decisions as ADRs sparingly in `docs/adr/`. Creates `CONTEXT.md` lazily; supports the `CONTEXT-MAP.md` multi-context layout. Vendored from mattpocock/skills — see [Workflow Primitives](#workflow-primitives-vendored-from-mattpocockskills). |
 
 ### Docs, Jira & Confluence
 
@@ -362,14 +362,14 @@ actionability-first classification model (Projects → Areas → Resources → A
 
 ### Workflow Primitives (vendored from mattpocock/skills)
 
-Vendored copies of workflow-primitive skills from [Matt Pocock's skills repo](https://github.com/mattpocock/skills). Each carries `source: mattpocock/skills` in its frontmatter. See [Companion Skills](#companion-skills) for the rationale and re-vendoring guidance.
+Vendored copies of workflow-primitive skills from [Matt Pocock's skills repo](https://github.com/mattpocock/skills). Each carries `source: mattpocock/skills` and a pinned `source_commit` in its frontmatter; `.matt-pocock-attribution.yml` records every local deviation and why. `domain-model` is also vendored — it's listed under [Requirements & Workflow](#requirements--workflow-suite) since that's where it's used. See [Companion Skills](#companion-skills) for the rationale and re-vendoring guidance.
 
 | Skill | Description | Upstream path |
 |-------|-------------|---------------|
 | `grilling` | The shared interview engine — one question at a time, each with a recommended answer, ending at shared understanding. | `skills/productivity/grilling/SKILL.md` |
 | `grill-me` | Entry point: runs a `grilling` session. | `skills/productivity/grill-me/SKILL.md` |
 | `grill-with-docs` | Entry point: runs a `grilling` session that also captures ADRs and a glossary via `domain-model`. | `skills/engineering/grill-with-docs/SKILL.md` |
-| `improve-codebase-architecture` | Deep module refactoring using APOSD vocabulary — eliminates shallow modules, information leakage, naming mismatches. | `skills/engineering/improve-codebase-architecture/SKILL.md` |
+| `improve-codebase-architecture` | Deep module refactoring using APOSD vocabulary — scopes to git-log hot spots first, then eliminates shallow modules, information leakage, and naming mismatches. | `skills/engineering/improve-codebase-architecture/SKILL.md` |
 | `codebase-design` | Shared deep-module vocabulary (module, interface, depth, seam, adapter, leverage, locality) that `improve-codebase-architecture` names problems with. | `skills/engineering/codebase-design/SKILL.md` |
 
 ---
