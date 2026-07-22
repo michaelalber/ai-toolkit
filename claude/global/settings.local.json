@@ -216,7 +216,21 @@
       "Edit(//**/appsettings.Production.json)",
       "Edit(//**/appsettings.Release.json)",
       "Edit(//**/web.config)",
-      "Edit(//**/app.config)"
+      "Edit(//**/app.config)",
+      "Edit(//**/.aws/credentials)",
+      "Edit(//**/.kube/config)",
+      "Edit(//**/kubeconfig)",
+      "Edit(//**/.azure/msal_token_cache.json)",
+      "Edit(//**/*.tfstate)",
+      "Edit(//**/terraform.tfstate.backup)",
+      "Edit(//**/connectionstrings.json)",
+      "Edit(//**/*connectionstrings*.json)",
+      "Edit(//**/AppSettingsSecrets.config)",
+      "Edit(//**/ConnectionStrings.config)",
+      "Edit(//**/*.bak)",
+      "Edit(//**/*.sql.bak)",
+      "Edit(//**/*.mdf)",
+      "Edit(//**/*.ldf)"
     ]
   }
 }
