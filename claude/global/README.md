@@ -38,7 +38,22 @@ warns you — so confirm rather than assume:
 ```bash
 # Bash audit hook: run any Bash command in a session, then
 tail -1 ~/.claude/logs/bash-audit.log   # should show the command you just ran
+
+# Shell-exec-chain guard: runnable self-check (exits non-zero on any failure)
+bash hooks/tests/guard-bash-exec.test.sh                                     # repo copy
+bash hooks/tests/guard-bash-exec.test.sh ~/.claude/hooks/guard-bash-exec.sh  # installed copy
 ```
+
+The exec-chain check covers both directions: real chains (pipe-to-shell, `find -exec bash`) must
+be blocked, and quoted look-alikes — a grep pattern, a `sed` substitution using pipe delimiters,
+prose about the guard itself — must not be. The second half is the one that matters in practice:
+a guard that fires during ordinary editing trains you to ignore it. `hooks/tests/` is a
+subdirectory precisely so `cp hooks/*.sh` never copies a test into a live hooks directory.
+
+> **Known limitation.** The guard strips single- and double-quoted spans before matching, but not
+> backticks (which are real command substitution — stripping them would hide genuine chains) and
+> not heredoc bodies. So a command whose heredoc contains a pipe-to-shell *example* still trips it.
+> Write those through `Write`/`Edit` rather than a shell heredoc.
 
 For the credential guard, ask Claude to write a file assigning a quoted dummy secret to a
 variable named `api_key`. The write must be **blocked**. If it succeeds, the hook is not wired up.
