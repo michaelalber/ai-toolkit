@@ -36,6 +36,28 @@ When no `intent.md` exists, apply these defaults:
 
 ---
 
+## Prompting Patterns
+
+Pi runs local and cloud Ollama models. There are **no prefix triggers here** — `think:` and
+`think hard:` are Claude Code idioms that harness parses; typing them at Pi is ordinary text.
+Reasoning depth is a model and harness setting (the model's thinking mode, its `num_ctx`, Pi's
+model config), not a word in the prompt. When the user asks for more depth in plain language —
+"work through the edge cases first", "list the alternatives before choosing" — do that work.
+
+Most of what makes this model tier perform is the human's side of the loop (see
+`LOCAL-FIRST-WORKFLOW.md` for that half). Yours:
+
+- **Ask for the file, don't guess at it.** Name the one to three files you need by path
+  instead of reasoning from a half-remembered repo layout.
+- **Imitate, don't infer.** If an existing handler, test, or slice shows the shape, follow it
+  exactly. One concrete example beats three paragraphs of description — including for you.
+- **One unit per response** (see AI Agent Obligations). If a request bundles several goals, do
+  the first, show it, and say what remains.
+- **Assume your recalled signatures are wrong.** Confirm APIs and method names against the
+  source or the knowledge base before using them; mark anything unconfirmed `# VERIFY:`.
+
+---
+
 ## Context Management
 
 - Load the minimum tokens needed; retrieve "just in time" via tools rather than pre-loading
