@@ -41,7 +41,18 @@
      Seed: what would a well-intentioned agent do that would technically
      satisfy the request but produce the wrong outcome? -->
 
-- Do not begin a task that has no verifiable acceptance criteria.
+- Do not begin a task that has no verifiable acceptance criteria. (If you can't write the test,
+  you can't grade the output — this is the AI-eligibility gate.)
+- Do not use AI for these regardless of model tier — escalating to a frontier model does not fix
+  them (see `docs/LOCAL-FIRST-WORKFLOW.md` §3a):
+  cross-cutting architectural change (slice boundaries, aggregate design);
+  security boundaries and CUI handling;
+  legacy-runtime migration semantics;
+  debugging not yet reproduced;
+  performance work without a profiler run;
+  non-deterministic build / CI / release paths.
+- Do not treat "3+ files must change together" as a reason to escalate to a bigger model — that
+  is a retrieval/harness gap. Fix the context, then retry locally.
 - Do not re-litigate decisions already logged in AGENTS.md or intent.md Persistent Decisions.
 - Do not exceed the scope defined in the active Jira issue / spec without explicit human approval.
 - Do not hardcode secrets, tokens, or credentials — use environment variables or a secrets manager.
@@ -86,6 +97,8 @@
 - Any request where acceptance criteria cannot be met within stated constraints.
 - More than one consecutive failing subtask in domain-memory.md (dark factory only).
 - Any security-relevant decision not explicitly covered by existing constraints.
+- Architecture and security decisions escalate to the **human**, not to a larger model. A bigger
+  model may supply options and adversarial critique; it does not make the call.
 - [PROJECT-SPECIFIC ESCALATION TRIGGER]
 - [PROJECT-SPECIFIC ESCALATION TRIGGER]
 

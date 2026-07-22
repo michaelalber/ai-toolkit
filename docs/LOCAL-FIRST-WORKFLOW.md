@@ -21,6 +21,31 @@ low latency on short tasks, and offline capability. A frontier cloud model still
 on a specific class of hard problems — so the goal is not *100% local*, it is **local by default
 with a deliberate escape hatch**. The 20% is a feature, not a failure.
 
+**The premise to get right.** Don't architect around token prices — per-token API prices have
+been falling, not rising. The subsidy sits in *flat-rate* coding subscriptions, and that is the
+fragile product: it gets rate-limited, tiered, or converted to metered billing. So the exposure
+worth hedging is not cost, it is **dependency** — your daily throughput riding on one vendor's
+pricing decision, rate limiter, and deprecation schedule.
+
+The second premise is verifiable and does the real work: **the gap is closing from below.**
+Open-weight coders now land within a few points of the best closed models on public coding
+benchmarks. Whether the frontier plateaus is unknowable and irrelevant — what matters is that
+the *marginal* value of a frontier call on routine work keeps shrinking. That is the arbitrage.
+
+---
+
+## 1a. Route on cost-of-being-wrong, not on "which model is best"
+
+AI is cheap exactly where verification is cheap. A repository method with a passing integration
+test is nearly free to validate; a concurrency model in a long-lived server circuit is not — that
+failure surfaces in production three weeks later. That asymmetry, not benchmark rank, decides
+where tokens go.
+
+|                          | Cheap to verify                   | Expensive to verify                |
+| ------------------------ | --------------------------------- | ---------------------------------- |
+| **Cheap to be wrong**    | Local, always. Full autonomy.     | Local + the test suite as verifier |
+| **Expensive to be wrong**| Local draft → human review        | Frontier, or no AI at all          |
+
 ---
 
 ## 2. The capability envelope of a ~30B local model
@@ -50,19 +75,69 @@ let the trigger fire.
 Escalation triggers — any one is sufficient:
 
 1. Context needed exceeds the local window (you are near the model's ceiling).
-2. Three or more files must change *in concert*.
-3. Two genuine local attempts failed to converge.
-4. An architecture or security-critical decision is on the line.
-5. You are spending more time re-prompting than a cloud round-trip would cost.
+2. Two genuine local attempts failed to converge.
+3. You are spending more time re-prompting than a cloud round-trip would cost.
+
+**Two amendments that matter more than the triggers themselves:**
+
+- **"3+ files in concert" is not an escalation trigger.** It is a *harness* failure. A modern
+  local coder inside a proper agent loop with a repo map handles multi-file edits fine. Fix the
+  retrieval and the loop before spending the token.
+- **Architecture and security decisions do not escalate to a bigger model — they escalate to
+  *you*.** Using a frontier model to settle an authn boundary is the same abdication as using a
+  30B; it just sounds more authoritative. Frontier models are for *breadth of options and
+  adversarial critique*, never for the decision.
 
 Make escalation a **deliberate, named act** — a dedicated agent, alias, or flag — so cloud is
 never the path of least resistance.
 
 ---
 
+## 3a. Where AI does not belong (either tier)
+
+Codify these as refusals in your `AGENTS.md` / `constraints.md`, not as vibes. None of them are
+fixed by escalating to a better model.
+
+1. **Anything whose acceptance criteria you cannot state.** If you can't write the test, you
+   can't grade the output. Highest-value rule on this list — the QRSPI Spec gate *is* the
+   AI-eligibility gate.
+2. **Cross-cutting architectural change.** Slice boundaries, handler decomposition, aggregate
+   design. These compress *your* domain knowledge; an agent produces plausible slices that
+   fracture along the wrong seams and bills you six months later.
+3. **Security boundaries and CUI handling.** Not because the model is wrong — because you must
+   defend the reasoning to a reviewer, and "the model produced it" is not a defense.
+4. **Legacy-runtime migration semantics** (e.g. .NET Framework `SynchronizationContext`,
+   `ConfigureAwait`, binding redirects). Training data is polluted with a decade of confident,
+   wrong answers.
+5. **Debugging you have not reproduced yet.** You will get five hypotheses and a patch for each.
+   Reproduce first, then bring AI in.
+6. **Performance work without a profiler run.** Same failure mode.
+7. **Non-determinism in build / CI / release paths**, where a subtly wrong generated script fails
+   silently and irreversibly.
+
+The inverse — the highest-yield AI work — is deliberately unglamorous: tests from a written spec,
+mechanical refactors under green tests, boilerplate slices from an established pattern, schema
+migrations, DTO/mapper plumbing, docs and ADRs from diffs, SBOM and vetting first passes, log and
+telemetry analysis, and translation between languages you already review fluently.
+
+---
+
 ## 4. Prompting for small local models
 
-A 30B local model needs a different prompt than a frontier model. Six concrete shifts:
+**At this point the harness matters more than the model.** A local model failing a task is
+usually context starvation, not incapacity — every open-weight model performs markedly better
+inside a structured agent loop than in raw chat. Three levers, in order of leverage:
+
+- **Retrieval is the quality multiplier.** A 30B with the right five files beats a 200B with the
+  wrong fifty. Call-graph and type-hierarchy edges are what let a small model reason about a
+  change *set* rather than a file.
+- **Spend context on constraints, not prose.** Your `AGENTS.md` should read like a lint config:
+  allowed directories, forbidden patterns, the exact test command, the slice template. Small
+  models degrade fast under rambling instructions and do well under machine-checkable ones.
+- **TDD is not a nicety here.** The test suite is how a weaker model's output becomes
+  *verifiable*, which is what converts it from a liability into 80% of your throughput.
+
+Then, six concrete prompt shifts:
 
 1. **Feed less, more precisely.** Frontier models tolerate "here's the repo, figure it out";
    local models degrade as the window fills. Point at one to three specific files. If a coding
@@ -114,8 +189,33 @@ else stays local.
 3. **Provision a named escalation agent** (or alias/flag) pointing at your chosen cloud model —
    so local stays the default and escalation is one deliberate keystroke away.
 4. **Keep the escalation triggers visible** — pin the five triggers where you will see them.
-5. **Instrument the split.** For the first week, tally "local" or "cloud" per task. If you land
-   below 80% local, the fix is almost always §4 (tasks too big), not a weaker model.
+5. **Instrument the split — log every escalation with its trigger.** Once a month, read the
+   distribution. If "2 failed local tries" dominates, that's a prompt/context problem you can
+   fix. If "context ceiling" dominates, that's a retrieval problem. If it's genuinely
+   "architecture decision," the discipline is working. Without this the ratio silently drifts to
+   50/50, because frontier is more pleasant.
+6. **Keep a ~20-task eval set drawn from your own repos** — not a public benchmark. Run it
+   against your local model and one frontier model each quarter. It is the only way to know when
+   the gap has actually closed enough to drop a tier, and the only defensible way to claim it.
+7. **Treat your local tier as the floor, not the ceiling.** Re-benchmark when a new open-weight
+   coder lands; memory capacity, not raw FLOPs, is what MoE architectures reward, so that is
+   where the next hardware dollar goes.
+
+---
+
+## 7. Portability discipline — the actual hedge
+
+The point is not to avoid frontier models. It is that switching should be a config change, not a
+migration.
+
+- **No vendor-proprietary agent format as the source of truth.** Define skills and agents once,
+  emit per harness — which is exactly what this repo's Claude Code / OpenCode / Pi parity is for.
+- **Everything through an OpenAI-compatible endpoint** (Ollama, LiteLLM, or a thin router). Never
+  let a harness hard-bind to a vendor SDK.
+- **Prompts, specs, and evals live in git next to the code**, not in a vendor's cloud workspace.
+- **Methodology is the portable asset.** On a managed corporate stack you control neither tooling
+  nor budget — but QRSPI, spec-gated AI eligibility, and the refusal list above travel with you
+  unchanged. The stack stays home; the discipline goes to work.
 
 ---
 

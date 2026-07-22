@@ -134,7 +134,9 @@ pwsh scripts/install-pi.ps1 -Full  # Windows — 20B variant
 ```
 See [`pi/global/README.md`](pi/global/README.md) for the full Ollama setup guide — Modelfile config, compaction tuning, model selection by VRAM.
 
-**Working local-first?** [`LOCAL-FIRST-WORKFLOW.md`](LOCAL-FIRST-WORKFLOW.md) is the methodology for running ~80% of coding work on a self-hosted ~30B model and escalating the hard 20% to a frontier cloud model — the routing rule, escalation triggers, and how to adjust prompting for smaller local models. Its companion [`LOCAL-AI-CHEATSHEET.md`](LOCAL-AI-CHEATSHEET.md) is the tool picker — which local-AI tool (Pi, OpenCode, Open WebUI, Goose, …) to reach for per task.
+**Working local-first?** [`LOCAL-FIRST-WORKFLOW.md`](LOCAL-FIRST-WORKFLOW.md) is the methodology for running ~80% of coding work on a self-hosted ~30B model and escalating the hard 20% to a frontier cloud model — the routing rule, escalation triggers, the cost-of-being-wrong routing matrix, the refusal list
+(work that no model tier should touch), portability discipline, and how to adjust prompting for
+smaller local models. Its companion [`LOCAL-AI-CHEATSHEET.md`](LOCAL-AI-CHEATSHEET.md) is the tool picker — which local-AI tool (Pi, OpenCode, Open WebUI, Goose, …) to reach for per task.
 
 ### Other agent tools (`~/.agents/skills/`)
 
