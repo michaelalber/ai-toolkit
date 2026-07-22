@@ -71,6 +71,27 @@ variable named `api_key`. The write must be **blocked**. If it succeeds, the hoo
 
 > `statusline.sh` is copied automatically by `install-claude.sh` in step 1 — no manual copy needed.
 
+## Two gotchas worth knowing before you edit these files
+
+**Deny Claude write access to its own permission files.** Nothing in the harness stops a session
+from editing `~/.claude/settings.json` or `settings.local.json` — if you don't add the rule, an
+agent can widen its own permissions, and you would see only a routine-looking `Edit` prompt. Add
+both patterns to the `deny` array:
+
+```json
+"Edit(//**/.claude/settings*.json)",
+"Write(//**/.claude/settings*.json)"
+```
+
+Leave `Read` allowed so audits still work. After this, change these files by hand, via `/config`,
+or with a script you approve in the moment — each of which puts a human in the loop.
+
+**Permission patterns need both separator forms.** `Bash(git checkout -b:*)` matches the colon
+form only and will *not* catch every invocation of `git checkout`. Where an action must always
+prompt, list the space form alongside it — `Bash(git checkout *)` — as the `ask` array here does
+for `checkout` and `merge`. A rule that silently fails to match reads exactly like a rule that
+approved the command.
+
 ## What's in CLAUDE.md
 
 - **Session Boot Ritual** — context confirmation gate before any work begins
@@ -79,7 +100,8 @@ variable named `api_key`. The write must be **blocked**. If it succeeds, the hoo
 - **Prompting Patterns** — prefix triggers (`think:`, `think hard:`, `think step:`) and the `[CANNOT COMPLETE]` escape hatch
 - **Context Management** — just-in-time loading, NOTES.md scratchpad
 - **Project File Architecture** — the `.md` context stack for non-trivial projects
-- **AI Agent Obligations** — TDD discipline enforced via prompt
+- **AI Agent Obligations** — TDD discipline enforced via prompt, including "never claim unverified"
+- **Ponytail Precedence** — optional; how the minimal-solution plugin ranks against test discipline
 - **Evaluation Design** — acceptance criteria and evals as safety infrastructure
 - **Security-By-Design** — OWASP-aligned guardrails
 - **Code Quality Gates** — cyclomatic complexity, coverage targets
