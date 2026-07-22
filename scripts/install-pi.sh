@@ -2,37 +2,24 @@
 # Installs Pi global config from the repo into ~/.pi/agent/
 #
 # Usage:
-#   bash scripts/install-pi.sh          # installs AGENTS-7b.md  (7B-safe default)
-#   bash scripts/install-pi.sh --full   # installs AGENTS-20b.md (20B+ models)
+#   bash scripts/install-pi.sh
 #
-# The two AGENTS files are standalone, self-contained globals — exactly one is
-# copied to ~/.pi/agent/AGENTS.md. They are NOT layered/merged.
+# Installs the single Pi global (pi/global/AGENTS.md) to ~/.pi/agent/AGENTS.md,
+# matching how claude/global and opencode/global each ship one global file.
+# Target model tier is 20B+ — smaller models are below the agentic-coding floor.
 
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PI_DIR="${HOME}/.pi/agent"
-USE_FULL=false
-
-for arg in "$@"; do
-  if [[ "$arg" == "--full" ]]; then
-    USE_FULL=true
-  fi
-done
 
 echo "Installing Pi global config from: ${REPO_ROOT}"
 
 mkdir -p "${PI_DIR}"
 
-if [[ "${USE_FULL}" == true ]]; then
-  cp -v "${REPO_ROOT}/pi/global/AGENTS-20b.md" "${PI_DIR}/AGENTS.md"
-  echo "Installed: AGENTS-20b.md as AGENTS.md (20B+ variant)"
-  echo "  For 20B+ context, set settings.json compaction to reserveTokens 4096 / keepRecentTokens 24576."
-else
-  cp -v "${REPO_ROOT}/pi/global/AGENTS-7b.md" "${PI_DIR}/AGENTS.md"
-  echo "Installed: AGENTS-7b.md as AGENTS.md (7B-safe default)"
-  echo "  Run with --full to install the 20B+ variant instead."
-fi
+cp -v "${REPO_ROOT}/pi/global/AGENTS.md" "${PI_DIR}/AGENTS.md"
+echo "Installed: AGENTS.md (target tier 20B+)"
+echo "  For a 128K context model, set settings.json compaction to reserveTokens 4096 / keepRecentTokens 24576."
 
 cp -v "${REPO_ROOT}/pi/global/models.json" "${PI_DIR}/models.json"
 cp -v "${REPO_ROOT}/pi/global/settings.json" "${PI_DIR}/settings.json"
@@ -68,7 +55,7 @@ echo "  (drop the .example suffix and the _README key)."
 echo ""
 echo "Next steps:"
 echo "  1. Edit ${PI_DIR}/models.json — delete entries for models you have not pulled."
-echo "  2. Create your Ollama model: ollama create pi-coder -f pi/global/Modelfile-7b"
+echo "  2. Create your Ollama model: ollama create pi-coder -f pi/global/Modelfile-20b"
 echo "  3. Copy pi/global/SYSTEM.md to your project root and trim to one variant."
 if ! command -v grounded-code-mcp >/dev/null 2>&1; then
   echo "  4. Install the grounded-code-mcp CLI and ensure it is on PATH —"

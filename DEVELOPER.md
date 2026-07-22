@@ -204,8 +204,7 @@ pi --version
 **Install this toolkit's global Pi config**
 
 ```bash
-bash scripts/install-pi.sh          # 7B-safe baseline
-bash scripts/install-pi.sh --full   # 20B variant
+bash scripts/install-pi.sh
 ```
 
 See [`pi/global/README.md`](pi/global/README.md) for the full setup guide — Modelfiles, `models.json` configuration, compaction tuning, and project context stack.

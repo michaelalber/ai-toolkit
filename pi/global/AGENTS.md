@@ -1,8 +1,13 @@
-# Coding Agent — 20B+
+# Coding Agent — Pi Global
 
-> Standalone global for 20B+ models — copy to `~/.pi/agent/AGENTS.md`.
+> The global standard for Pi, installed to `~/.pi/agent/AGENTS.md` by `scripts/install-pi.sh`.
 > Self-contained: full rules, quality gates, and the complete grounded-code-mcp collection map.
-> For 7B models or low-memory devices, copy `AGENTS-7b.md` instead. Pick exactly one — these are not layered.
+> Merged with any project-root `AGENTS.md` (global -> parent dirs -> current dir).
+>
+> **Target tier: 20B+ (24-32B dense or a comparable MoE).** Smaller models are below the floor
+> for agentic coding -- under 7B, tool-selection accuracy falls off a cliff, and 7B itself cannot
+> sustain a multi-step loop. Use small models for the non-agentic roles (title, summary, FIM,
+> autocomplete), not as the coding agent.
 
 ---
 

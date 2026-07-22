@@ -2,15 +2,11 @@
 # Installs Pi global config from the repo into ~/.pi/agent/
 #
 # Usage:
-#   pwsh scripts/install-pi.ps1          # installs AGENTS-7b.md  (7B-safe default)
-#   pwsh scripts/install-pi.ps1 -Full    # installs AGENTS-20b.md (20B+ models)
+#   pwsh scripts/install-pi.ps1
 #
-# The two AGENTS files are standalone, self-contained globals — exactly one is
-# copied to ~/.pi/agent/AGENTS.md. They are NOT layered/merged.
-
-param(
-    [switch]$Full
-)
+# Installs the single Pi global (pi\global\AGENTS.md) to ~/.pi/agent/AGENTS.md,
+# matching how claude/global and opencode/global each ship one global file.
+# Target model tier is 20B+ — smaller models are below the agentic-coding floor.
 
 $ErrorActionPreference = 'Stop'
 
@@ -21,15 +17,9 @@ Write-Host "Installing Pi global config from: $RepoRoot"
 
 New-Item -ItemType Directory -Force -Path $PiDir | Out-Null
 
-if ($Full) {
-    Copy-Item -Path (Join-Path $RepoRoot 'pi\global\AGENTS-20b.md') -Destination (Join-Path $PiDir 'AGENTS.md') -Force -Verbose
-    Write-Host "Installed: AGENTS-20b.md as AGENTS.md (20B+ variant)"
-    Write-Host "  For 20B+ context, set settings.json compaction to reserveTokens 4096 / keepRecentTokens 24576."
-} else {
-    Copy-Item -Path (Join-Path $RepoRoot 'pi\global\AGENTS-7b.md') -Destination (Join-Path $PiDir 'AGENTS.md') -Force -Verbose
-    Write-Host "Installed: AGENTS-7b.md as AGENTS.md (7B-safe default)"
-    Write-Host "  Run with -Full to install the 20B+ variant instead."
-}
+Copy-Item -Path (Join-Path $RepoRoot 'pi\global\AGENTS.md') -Destination (Join-Path $PiDir 'AGENTS.md') -Force -Verbose
+Write-Host "Installed: AGENTS.md (target tier 20B+)"
+Write-Host "  For a 128K context model, set settings.json compaction to reserveTokens 4096 / keepRecentTokens 24576."
 
 Copy-Item -Path (Join-Path $RepoRoot 'pi\global\models.json')   -Destination (Join-Path $PiDir 'models.json')   -Force -Verbose
 Copy-Item -Path (Join-Path $RepoRoot 'pi\global\settings.json') -Destination (Join-Path $PiDir 'settings.json') -Force -Verbose
@@ -67,7 +57,7 @@ Write-Host "  (drop the .example suffix and the _README key)."
 Write-Host ""
 Write-Host "Next steps:"
 Write-Host "  1. Edit $(Join-Path $PiDir 'models.json') — delete entries for models you have not pulled."
-Write-Host "  2. Create your Ollama model: ollama create pi-coder -f pi/global/Modelfile-7b"
+Write-Host "  2. Create your Ollama model: ollama create pi-coder -f pi/global/Modelfile-20b"
 Write-Host "  3. Copy pi/global/SYSTEM.md to your project root and trim to one variant."
 if (-not $Grounded) {
     Write-Host "  4. Install the grounded-code-mcp CLI and ensure it is on PATH —"

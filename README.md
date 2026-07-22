@@ -125,12 +125,10 @@ See [`opencode/global/README.md`](opencode/global/README.md) for provider config
 
 ### Pi (Ollama / Local Models)
 ```bash
-bash scripts/install-pi.sh         # macOS / Linux — 7B-safe default
-bash scripts/install-pi.sh --full  # macOS / Linux — 20B variant
+bash scripts/install-pi.sh         # macOS / Linux
 ```
 ```powershell
-pwsh scripts/install-pi.ps1        # Windows — 7B-safe default
-pwsh scripts/install-pi.ps1 -Full  # Windows — 20B variant
+pwsh scripts/install-pi.ps1        # Windows
 ```
 See [`pi/global/README.md`](pi/global/README.md) for the full Ollama setup guide — Modelfile config, compaction tuning, model selection by VRAM.
 
@@ -546,11 +544,10 @@ ai-toolkit/
 │       └── opencode.json       # Providers, MCP, permissions, temperatures
 ├── pi/
 │   └── global/                 # Global config → ~/.pi/agent/
-│       ├── AGENTS-7b.md        # Standalone 7B global (~25 rules, self-contained)
-│       ├── AGENTS-20b.md       # Standalone 20B+ global (full rules + collection map)
+│       ├── AGENTS.md           # Pi global standard (full rules + collection map)
 │       ├── models.json         # Ollama provider config
 │       ├── settings.json       # Compaction tuned for local context windows
-│       ├── Modelfile-7b        # Modelfile template for 7B models
+│       ├── Modelfile-7b        # Modelfile template for small utility models (FIM, title, summary)
 │       └── Modelfile-20b       # Modelfile template for 20B models
 ├── project-templates/          # Per-project context files — copy to your project root
 ├── scripts/                    # Install scripts (Bash + PowerShell)

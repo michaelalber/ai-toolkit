@@ -97,7 +97,7 @@ A passing eval would survive scrutiny from a developer seeing the skill for the 
   - [ ] Install paths in both READMEs (`~/.claude/` and `~/.config/opencode/`) are current and accurate for the respective platforms
   - [ ] Optional-dependency sections (Snyk, grounded-code-mcp, Jira) remain clearly marked as optional with removal instructions
   - [ ] No instruction in either global file contradicts a convention defined in `project-templates/CLAUDE.md` or `project-templates/AGENTS.md`
-  - [ ] `pi/global/AGENTS-20b.md`, `pi/global/AGENTS-7b.md`, `pi/global/settings.json`, and `pi/global/models.json` are internally consistent — model IDs in `models.json` match Modelfile `FROM` lines; `settings.json` compaction values are within the context windows declared in `models.json`
+  - [ ] `pi/global/AGENTS.md`, `pi/global/settings.json`, and `pi/global/models.json` are internally consistent — model IDs in `models.json` match Modelfile `FROM` lines; `settings.json` compaction values are within the context windows declared in `models.json`
   - [ ] `pi/global/README.md` install steps match what `scripts/install-pi.sh` actually does
   - [ ] Human explicitly approved the change before it was committed (per `constraints.md`)
 - **Last Run:** — | **Result:** —

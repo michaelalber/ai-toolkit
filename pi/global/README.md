@@ -2,7 +2,9 @@
 
 Pi ([pi.dev](https://pi.dev)) is a minimal, privacy-first terminal coding agent. Unlike Claude Code (Anthropic subscription) or OpenCode (cloud providers), Pi's sweet spot is **local inference via Ollama** — zero API cost, fully offline, no data leaves your machine.
 
-This guide configures Pi for the best local experience at two model tiers: 7B (8 GB VRAM) and 20B (16–24 GB VRAM).
+This guide configures Pi for the best local experience at the **20B+ tier** (24–32B dense or a
+comparable MoE, 16–24 GB VRAM). Smaller models are below the floor for agentic coding — keep them
+for the non-agentic roles (title, summary, FIM, autocomplete).
 
 ---
 
@@ -10,8 +12,7 @@ This guide configures Pi for the best local experience at two model tiers: 7B (8
 
 ```bash
 # From the ai-toolkit repo root
-bash scripts/install-pi.sh          # 7B-safe default
-bash scripts/install-pi.sh --full   # 20B variant
+bash scripts/install-pi.sh
 ```
 
 Then follow the five steps below.
@@ -30,7 +31,6 @@ export OLLAMA_KEEP_ALIVE=30m
 ollama serve &
 
 # Pull your model
-ollama pull qwen2.5-coder:7b        # 7B — 8 GB VRAM
 ollama pull devstral-small-2:24b    # 20B+ — 16–24 GB VRAM
 ```
 
@@ -53,11 +53,10 @@ sudo systemctl restart ollama
 **This step is critical.** Ollama's default context is 4,096 tokens. Pi injects tool schemas + system prompt + conversation history on every request — this saturates 4K before you type a single prompt. Tool calls silently fail.
 
 ```bash
-# 7B model with 32K context
-ollama create my-coder-7b -f pi/global/Modelfile-7b
-
 # 20B+ model with 64K context
 ollama create my-coder-20b -f pi/global/Modelfile-20b
+
+# Modelfile-7b remains for small utility models (title, summary, FIM) — not the coding agent
 ```
 
 The Modelfiles set `num_ctx`, cap output tokens, and tune temperature for code. Edit the `FROM` line to swap models.
@@ -112,11 +111,11 @@ The installed file contains all five supported models. **Delete the entries for 
 
 | File | Destination | Purpose |
 |------|-------------|---------|
-| `AGENTS-7b.md` (default) or `AGENTS-20b.md` (--full) | `~/.pi/agent/AGENTS.md` | Global coding rules — one standalone file per tier |
+| `AGENTS.md` | `~/.pi/agent/AGENTS.md` | Global coding rules — one file, same shape as `claude/global/CLAUDE.md` and `opencode/global/AGENTS.md` |
 | `models.json` | `~/.pi/agent/models.json` | Ollama provider config |
 | `settings.json` | `~/.pi/agent/settings.json` | Compaction tuned for local models |
 
-`AGENTS-7b.md` and `AGENTS-20b.md` are **two independent, self-contained globals** — pick the one matching your model and copy it to `~/.pi/agent/AGENTS.md`. They are not layered or merged; each carries its own complete rule set and grounded-code-mcp collection map.
+`AGENTS.md` is a **single self-contained global**, carrying the full rule set and the grounded-code-mcp collection map. Pi merges it with any project-root `AGENTS.md` (global → parent dirs → current dir).
 
 **Why custom `settings.json`?** Pi's default compaction settings (`reserveTokens: 16384`, `keepRecentTokens: 20000`) were designed for cloud models with 200K+ context windows. On a 32K window they exceed the total available context — compaction triggers immediately and loops. The included settings correct this:
 
@@ -147,9 +146,9 @@ cp project-templates/evals.md       /path/to/your-project/evals.md
 cp project-templates/domain-memory.md /path/to/your-project/domain-memory.md
 ```
 
-Pi's Session Boot ritual (in both `AGENTS-7b.md` and `AGENTS-20b.md`) checks for `intent.md` and `constraints.md` by name — fill them in or the agent will ask on every session start.
+Pi's Session Boot ritual (in `AGENTS.md`) checks for `intent.md` and `constraints.md` by name — fill them in or the agent will ask on every session start.
 
-**7B token budget:** Strip all comment blocks from these files before committing. Every token in every file loads on session boot. Lean files = more context left for actual work.
+**Token budget:** Strip all comment blocks from these files before committing. Every token in every file loads on session boot. Lean files = more context left for actual work.
 
 ---
 
@@ -184,21 +183,17 @@ with a specific model from the shell with `pi --model <provider>/<id>`.
 This toolkit ships **two self-contained global files, one per model tier.** You install exactly one as your global `~/.pi/agent/AGENTS.md` — they are not layered against each other. Pi then merges that global with any project-root `AGENTS.md` (global → parent dirs → current dir):
 
 ```
-pi/global/AGENTS-7b.md   ─┐  pick ONE, copy to
-pi/global/AGENTS-20b.md  ─┘  ~/.pi/agent/AGENTS.md   ← global tier baseline (always loaded)
+pi/global/AGENTS.md  ──→  ~/.pi/agent/AGENTS.md   ← global baseline (always loaded)
 
 ./AGENTS.md (project root)                            ← project overlay (from project-templates/)
                                                          project-specific context, merged on top
 ```
 
-- **`AGENTS-7b.md`** — ~25 rules, 7B-safe, compact. Self-contained, including its own lean grounded-code-mcp collection map.
-- **`AGENTS-20b.md`** — full rules, quality gates, and the complete grounded-code-mcp collection map. For 20B+ models.
+- **`AGENTS.md`** — full rules, quality gates, and the complete grounded-code-mcp collection map. Target tier 20B+.
 
-**7B workflow:** `install-pi.sh` (no flag) installs `AGENTS-7b.md`. Add a project-root `AGENTS.md` for repo-specific context if you want.
+**Workflow:** `install-pi.sh` installs `AGENTS.md`. Add a project-root `AGENTS.md` (copy from `project-templates/AGENTS.md`) for repo-specific context — it is project context, not a tier overlay.
 
-**20B+ workflow:** `install-pi.sh --full` installs `AGENTS-20b.md`. Add a project-root `AGENTS.md` (copy from `project-templates/AGENTS.md`) for repo-specific context — it is project context, not a tier overlay.
-
-**Switching tiers:** re-run `install-pi.sh` with the matching flag (or copy the other tier file over `~/.pi/agent/AGENTS.md`). The global file is loaded once at session start and does not reload when you switch models with `/model` mid-session — so match the file to the model you launch with.
+The global file is loaded once at session start and does not reload when you switch models with `/model` mid-session.
 
 ---
 
