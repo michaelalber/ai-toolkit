@@ -52,7 +52,7 @@ repeated here. Related project context files: `intent.md` (goals, values, tradeo
   - `opencode/global/` — global OpenCode files installed to `~/.config/opencode/`
   - `pi/global/` — global Pi files installed to `~/.pi/agent/`; `SYSTEM.md` is a per-project template
   - `project-templates/` — context file templates users copy into their own project roots (do not edit globally)
-  - `tools/` — standalone runnable utilities that are not skills/agents/commands (e.g. `tools/pdf2md/`, `tools/web2md/`, `tools/ollama-evals/`); excluded from primitive counts and parity checks
+  - `tools/` — standalone runnable utilities that are not skills/agents/commands (e.g. `tools/pdf2md/`, `tools/web2md/`, `tools/code2md/`, `tools/ollama-evals/`); excluded from primitive counts and parity checks
 - **Platform primitive support** — harness and model provider are orthogonal (all three run local
   or cloud models); what differs is which primitives each harness natively supports:
 
@@ -98,6 +98,7 @@ repeated here. Related project context files: `intent.md` (goals, values, tradeo
 | `constraints.md` | Contribution constraints — read before any task |
 | `tools/pdf2md/` | Standalone Python utility (not a skill/agent/command): converts PDFs to RAG-ready Markdown. Self-contained `pyproject.toml` + tests; see its `README.md`. |
 | `tools/web2md/` | Standalone Python utility: converts web pages and documentation sites to RAG-ready Markdown via docling. Supports single-page, crawl, and sitemap modes. Self-contained `pyproject.toml` + tests; see its `README.md`. |
+| `tools/code2md/` | Standalone Python utility: converts a codebase to language-tagged Markdown for RAG ingestion. Self-contained `pyproject.toml` + tests; see its `README.md`. |
 | `tools/ollama-evals/` | Standalone Python utility: evaluates and regression-tests local Ollama models (coding via code-execution, chat via LLM-as-judge, tool-use, structured JSON-schema). Frontend-agnostic — measures the model behind Pi / Goose / Open WebUI once at the `/v1` API. Model-vs-model comparison matrix + non-zero-exit regression gate; local rubric judge (offline) with optional DeepEval/remote. Self-contained `pyproject.toml` + tests; see its `README.md`. |
 
 ---

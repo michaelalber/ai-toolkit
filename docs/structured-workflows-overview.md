@@ -1,4 +1,4 @@
-# RPI, QRSPI/QRASPI & Spec-Driven Development Overview
+# Structured Workflows & Spec-Driven Development Overview
 
 The following are some of the ways I'm using AI in my daily software development workflow. The
 structured-workflow story has three generations: **RPI** (the original, now removed), **QRSPI**
