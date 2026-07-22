@@ -172,7 +172,6 @@ Pass the bare collection suffix — the server prepends `grounded_` automaticall
 | `databases` | SQL, PostgreSQL indexing, relational theory |
 | `edge_ai` | RAG, embeddings, LLM application design, AI agents |
 | `automation` | PLC, OPC UA, MODBUS, ICS security, Raspberry Pi, NIST 800-82 |
-| `4d_legacy` | 4D v18/v20 — source reference for legacy migration work |
 | `php` | PHP manual and Laravel docs |
 | `javascript` | JavaScript, TypeScript, and frontend framework docs |
 | `gov` | NIST 800-53/171/218, DOE, Zero Trust, AI RMF, CUI |

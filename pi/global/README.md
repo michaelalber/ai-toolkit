@@ -58,7 +58,7 @@ export OLLAMA_KEEP_ALIVE=30m
 ollama serve &
 
 # Pull your model
-ollama pull devstral-small-2:24b    # 20B+ — 16–24 GB VRAM
+ollama pull qwen3.6:27b    # 20B+ — 16–24 GB VRAM
 ```
 
 **Why `OLLAMA_KV_CACHE_TYPE=q8_0`?** It halves KV cache VRAM, letting you run a 32K context window on 8 GB instead of needing 16 GB. Without it you're stuck at Ollama's 4K default — too small for reliable tool calling.
@@ -80,15 +80,20 @@ sudo systemctl restart ollama
 **This step is critical.** Ollama's default context is 4,096 tokens. Pi injects tool schemas + system prompt + conversation history on every request — this saturates 4K before you type a single prompt. Tool calls silently fail.
 
 ```bash
-# Dense 20–32B model (Qwen3 32B / 14B — capped at the base model's 40K)
-ollama create qwen3-32b-agent -f pi/global/Modelfile-20b
+# Dense (qwen3.6:27b — the default agentic/build model)
+ollama create qwen3.6-27b-agent -f pi/global/Modelfile-20b
 
-# MoE variant (qwen3:30b-a3b, qwen3-coder:30b — 128K+ context, cheap KV cache)
-ollama create qwen3-30b-a3b-agent -f pi/global/Modelfile-moe-agent
+# MoE variant (qwen3.6:35b-a3b — faster, same 128K window, cheap KV cache)
+ollama create qwen3.6-35b-a3b-agent -f pi/global/Modelfile-moe-agent
 ```
 
-The Modelfiles set `num_ctx`, cap output tokens, tune temperature for code, and override the Qwen3
-chat template to actually honour `/no_think`. Edit the `FROM` line to swap models.
+The Modelfiles set `num_ctx` to 131072 and tune temperature for code. Edit the `FROM` line to swap
+models.
+
+**Do not add a `TEMPLATE` block.** Qwen3.6 ships an Ollama renderer/parser pair that handles the
+chat template, thinking blocks, and tool-call parsing, and `FROM` inherits it. The hand-written
+Qwen3-era template that forced `/no_think` is obsolete — overriding the built-in breaks tool
+calling. Thinking is disabled on the Pi side instead, via `"defaultThinkingLevel": "off"`.
 
 Small utility models (title, summary, FIM) need no Modelfile — `contextWindow` in `models.json`
 sets `num_ctx` at request time.
@@ -119,9 +124,9 @@ context is applied without a separate Modelfile:
       },
       "models": [
         {
-          "id": "qwen3-30b-a3b-agent:latest",
-          "name": "Qwen3 30B-A3B Agent",
-          "input": ["text"],
+          "id": "qwen3.6-27b-agent:latest",
+          "name": "Qwen3.6 27B Agent",
+          "input": ["text", "image"],
           "contextWindow": 131072,
           "maxTokens": 8192
         }
@@ -131,8 +136,8 @@ context is applied without a separate Modelfile:
 }
 ```
 
-The `id` must match what `ollama list` shows. If you ran `ollama create qwen3-30b-a3b-agent -f
-Modelfile-moe-agent` in Step 2, use that name; if you point at a base model instead, use the base
+The `id` must match what `ollama list` shows. If you ran `ollama create qwen3.6-27b-agent -f
+Modelfile-20b` in Step 2, use that name; if you point at a base model instead, use the base
 name. Both set `num_ctx` correctly — the Modelfile bakes it in, `contextWindow` passes it at
 request time.
 
@@ -155,9 +160,9 @@ request time.
 | Model tier | reserveTokens | keepRecentTokens |
 |------------|---------------|-----------------|
 | 20B+ (128K ctx) — **shipped** | 4,096 | 24,576 |
-| 20B+ (40K ctx, dense Qwen3) | 2,048 | 8,192 |
+| 20B+ (40K ctx, older dense models) | 2,048 | 8,192 |
 
-The shipped values match the default `qwen3-coder-30b-agent:latest` (128K). If you switch
+The shipped values match the default `qwen3.6-27b-agent:latest` (128K). If you switch
 `defaultModel` to a 40K-context dense model, lower them to the second row.
 
 ---
@@ -190,7 +195,7 @@ Pi's Session Boot ritual (in `AGENTS.md`) checks for `intent.md` and `constraint
 
 **Pi runs one model that you choose — there is no automatic per-task model switching.**
 The model Pi launches with is `defaultModel` (+ `defaultProvider`) in
-`~/.pi/agent/settings.json` (shipped default: `qwen3-coder-30b-agent:latest`). Change it
+`~/.pi/agent/settings.json` (shipped default: `qwen3.6-27b-agent:latest`). Change it
 at any time during a session with `/model` (Ctrl+L), or cycle favorites with Ctrl+P. Start
 with a specific model from the shell with `pi --model <provider>/<id>`.
 
@@ -202,10 +207,11 @@ with a specific model from the shell with `pi --model <provider>/<id>`.
 
 | Model | Tier | VRAM (Q4 + 32K) | Context | Tool Calling | Best for |
 |-------|------|-----------------|---------|-------------|----------|
-| `qwen3-30b-a3b-agent` | 30B MoE | ~18 GB | 128K | Excellent | Default — tool-heavy agentic loops |
+| `qwen3.6-27b-agent` | 27B dense | ~18 GB | 128K | Excellent | **Default** — agentic loops, build/plan |
+| `qwen3.6-35b-a3b-agent` | 36B MoE | ~20 GB | 128K | Excellent | Faster explore/search at the same window |
 | `qwen3-coder-30b-agent` | 30B MoE | ~18 GB | 128K | Excellent | Code generation, edits, completions |
-| `qwen3-32b-agent` | 32B dense | ~20 GB | 40K | Excellent | Planning and reasoning-heavy work |
-| `devstral-small-2:24b` | 24B | ~15 GB | 128K | Excellent | Multi-step agentic workflows, vision |
+| `qwen3-vl:30b-a3b` | 30B MoE | ~18 GB | 128K | Excellent | Vision + tools (screenshots, diagrams) |
+| `devstral:latest` | 24B | ~15 GB | 128K | Excellent | Mistral alternative for agentic coding |
 | `qwen2.5-coder:7b` | 7B | ~5.5 GB | 32K | Good | **Non-agentic only** — FIM, autocomplete |
 
 **The agentic floor is 20B+.** Under 7B, tool-selection accuracy collapses (<60%); 7B itself picks
@@ -257,8 +263,8 @@ For Q4_K_M models with `OLLAMA_KV_CACHE_TYPE=q8_0`. Includes ~0.8 GB overhead.
 | `models.json` | `~/.pi/agent/` or `.pi/` | Provider and model definitions |
 | `settings.json` | `~/.pi/agent/` or `.pi/` | Compaction, thinking level, **default model** (the one model Pi runs) |
 | `router-config.json.example` | (opt-in — rename to `router-config.json` in `~/.pi/agent/`) | Per-task auto-routing map; **disabled by default** so you pick the model |
-| `Modelfile-20b` | (use with `ollama create`) | Dense Qwen3 20–32B: context, params, `/no_think` template |
-| `Modelfile-moe-agent` | (use with `ollama create`) | Qwen3 MoE (30b-a3b, coder:30b): 128K context variant |
+| `Modelfile-20b` | (use with `ollama create`) | Dense Qwen3.6 (27b): 128K context + code params |
+| `Modelfile-moe-agent` | (use with `ollama create`) | Qwen3.6 MoE (35b-a3b): 128K context + code params |
 
 ---
 
@@ -293,7 +299,8 @@ The `project-detect` extension in each package auto-loads the right skill from p
 |---------|-------|-----|
 | Tool calls silently fail | Ollama 4K context overflows on first request | Set `contextWindow` in models.json, or `num_ctx` in a Modelfile |
 | `max_tokens` error | `maxTokens` in models.json exceeds the model's limit | Lower it (8,192 for the 20B+ agents) |
-| Model "thinks" despite `/no_think` | Base Qwen3 template opens `<think>` unconditionally | Rebuild from `Modelfile-20b` / `Modelfile-moe-agent` — they override the template |
+| Model emits thinking blocks | Thinking enabled on the Pi side | Set `"defaultThinkingLevel": "off"` — do not hand-roll a `/no_think` TEMPLATE |
+| Tool calls malformed after a rebuild | A custom `TEMPLATE` block overrode Qwen3.6's built-in renderer/parser | Drop the `TEMPLATE` block and rebuild; `FROM` inherits the correct one |
 | Compaction loops immediately | Default `reserveTokens` exceeds context window | Use the included `settings.json` |
 | Model not found in `/model` | `id` in models.json doesn't match `ollama create` name | Use the custom model name, not the base model id |
 | Streaming stops mid-output | `num_predict` cap hit | Increase in Modelfile |

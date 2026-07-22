@@ -6,5 +6,5 @@
     "keepRecentTokens": 24576
   },
   "defaultProvider": "ollama-lan",
-  "defaultModel": "qwen3-coder-30b-agent:latest"
+  "defaultModel": "qwen3.6-27b-agent:latest"
 }

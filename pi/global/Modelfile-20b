@@ -1,92 +1,32 @@
-# Ollama Modelfile — Qwen3 32B agentic coding agent
+# Ollama Modelfile — Qwen3.6 dense agentic coding agent
 #
 # Usage:
-#   ollama create qwen3-32b-agent -f Modelfile-20b
-#   pi --model ollama-lan/qwen3-32b-agent:latest
+#   ollama create qwen3.6-27b-agent -f Modelfile-20b
+#   pi --model ollama-lan/qwen3.6-27b-agent:latest
 #
-# Swap the FROM line for any dense 20B–32B Qwen3 model.
-# Context window is capped by the base model's architecture:
-#   qwen3:32b   → 40960 (base model max)
-#   qwen3:14b   → 40960
+# Swap the FROM line for any dense Qwen3.6 tag (27b, 35b).
+# Use Modelfile-moe-agent for the MoE variant (qwen3.6:35b-a3b).
 #
-# Use Modelfile-moe-agent for MoE variants (qwen3:30b-a3b, qwen3-coder:30b)
-# which support much larger context windows (131072+).
-#
-# VRAM: ~20 GB at Q4_K_M + 40K KV cache on M4 Pro / 48 GB unified memory
+# VRAM: ~18 GB at Q4_K_M + 128K KV cache on 48 GB unified memory
 # Env:  export OLLAMA_KV_CACHE_TYPE=q8_0 before starting ollama serve
 
-FROM qwen3:32b
+FROM qwen3.6:27b
 
-# Qwen3 chat template with /no_think enforcement.
-# Two mechanisms work together:
-#   1. /no_think appended to the last user message
-#   2. Empty <think></think> block before the assistant turn (signals skip-thinking)
-TEMPLATE """
-{{- $lastUserIdx := -1 -}}
-{{- range $idx, $msg := .Messages -}}
-{{- if eq $msg.Role "user" }}{{ $lastUserIdx = $idx }}{{ end -}}
-{{- end }}
-{{- if or .System .Tools }}<|im_start|>system
-{{ if .System }}
-{{ .System }}
-{{- end }}
-{{- if .Tools }}
-# Tools
-You may call one or more functions to assist with the user query.
-You are provided with function signatures within <tools></tools> XML tags:
-<tools>
-{{- range .Tools }}
-{"type": "function", "function": {{ .Function }}}
-{{- end }}
-</tools>
-For each function call, return a json object with function name and arguments within <tool_call></tool_call> XML tags:
-<tool_call>
-{"name": <function-name>, "arguments": <args-json-object>}
-</tool_call>
-{{- end -}}
-<|im_end|>
-{{ end }}
-{{- range $i, $_ := .Messages }}
-{{- $last := eq (len (slice $.Messages $i)) 1 -}}
-{{- if eq .Role "user" }}<|im_start|>user
-{{ .Content }}
-{{- if and $.IsThinkSet (eq $i $lastUserIdx) }}
-   {{- if $.Think -}}
-      {{- " "}}/think
-   {{- else -}}
-      {{- " "}}/no_think
-   {{- end -}}
-{{- end }}<|im_end|>
-{{ else if eq .Role "assistant" }}<|im_start|>assistant
-{{ if (and $.IsThinkSet (and .Thinking (or $last (gt $i $lastUserIdx)))) -}}
-<think>{{ .Thinking }}</think>
-{{ end -}}
-{{ if .Content }}{{ .Content }}
-{{- else if .ToolCalls }}<tool_call>
-{{ range .ToolCalls }}{"name": "{{ .Function.Name }}", "arguments": {{ .Function.Arguments }}}
-{{ end }}</tool_call>
-{{- end }}{{ if not $last }}<|im_end|>
-{{ end }}
-{{- else if eq .Role "tool" }}<|im_start|>user
-<tool_response>
-{{ .Content }}
-</tool_response><|im_end|>
-{{ end }}
-{{- if and (ne .Role "assistant") $last }}<|im_start|>assistant
-{{ if and $.IsThinkSet (not $.Think) -}}
-<think>
-</think>
-{{ end -}}
-{{ end }}
-{{- end }}"""
+# NOTE: do NOT add a TEMPLATE block here. Qwen3.6 ships an Ollama
+# renderer/parser pair that handles the chat template, thinking blocks, and
+# tool-call parsing; FROM inherits it. The hand-written Qwen3-era template
+# that forced "/no_think" is obsolete and overriding it breaks tool calling.
+# Turn thinking off on the Pi side instead: "defaultThinkingLevel": "off".
 
-SYSTEM You are an expert coding assistant. /no_think
+# num_ctx MUST be set — Ollama's default is 4096, which tool schemas plus the
+# system prompt exhaust before you type anything. Native window is 262144;
+# 131072 is the practical ceiling at q8_0 KV cache on 48 GB unified memory.
+PARAMETER num_ctx 131072
 
-PARAMETER num_ctx 40960
-PARAMETER num_predict 8192
-PARAMETER temperature 0.7
+# Low temperature for deterministic code output.
+PARAMETER temperature 0.2
 PARAMETER top_k 20
-PARAMETER top_p 0.95
-PARAMETER repeat_penalty 1.0
-PARAMETER stop <|im_end|>
-PARAMETER stop <|endoftext|>
+PARAMETER top_p 0.9
+PARAMETER min_p 0
+PARAMETER presence_penalty 1.5
+PARAMETER repeat_penalty 1

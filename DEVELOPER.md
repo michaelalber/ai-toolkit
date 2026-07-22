@@ -123,7 +123,7 @@ curl -fsSL https://ollama.com/install.sh | sh
 ollama pull qwen2.5-coder:7b
 
 # 20B+ — 16–24 GB VRAM (workstation / Mac Mini)
-ollama pull devstral-small-2:24b
+ollama pull qwen3.6:27b
 
 # Embeddings (used by grounded-code-mcp)
 ollama pull nomic-embed-text

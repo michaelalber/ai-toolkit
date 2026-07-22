@@ -59,14 +59,14 @@ echo "Next steps:"
 echo "  1. Edit ${PI_DIR}/models.json — set the ollama-lan baseUrl to your Ollama host"
 echo "     and delete entries for models you have not pulled."
 echo "  2. Create your Ollama model:"
-echo "       ollama create qwen3-30b-a3b-agent -f pi/global/Modelfile-moe-agent   # MoE, 128K"
-echo "       ollama create qwen3-32b-agent     -f pi/global/Modelfile-20b         # dense, 40K"
+echo "       ollama create qwen3.6-35b-a3b-agent -f pi/global/Modelfile-moe-agent  # MoE, 128K"
+echo "       ollama create qwen3.6-27b-agent     -f pi/global/Modelfile-20b        # dense, 128K"
 echo "  3. Copy pi/global/SYSTEM.md to your project root."
 if ! command -v grounded-code-mcp >/dev/null 2>&1; then
   echo "  4. Install the grounded-code-mcp CLI and ensure it is on PATH —"
   echo "     without it, grounded skills (security reviews, migrations) lose their"
   echo "     authoritative source. See pi/SKILLS-local.md (📚 flag) for the affected skills."
-  echo "  5. Run: pi --model ollama-lan/qwen3-30b-a3b-agent:latest"
+  echo "  5. Run: pi --model ollama-lan/qwen3.6-27b-agent:latest"
 else
-  echo "  4. Run: pi --model ollama-lan/qwen3-30b-a3b-agent:latest"
+  echo "  4. Run: pi --model ollama-lan/qwen3.6-27b-agent:latest"
 fi
