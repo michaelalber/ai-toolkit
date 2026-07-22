@@ -2,7 +2,7 @@
 #
 # Usage:
 #   ollama create qwen3-32b-agent -f Modelfile-20b
-#   pi --model macmini-ollama/qwen3-32b-agent:latest
+#   pi --model ollama-lan/qwen3-32b-agent:latest
 #
 # Swap the FROM line for any dense 20B–32B Qwen3 model.
 # Context window is capped by the base model's architecture:

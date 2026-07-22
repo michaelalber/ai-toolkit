@@ -27,6 +27,12 @@
 - Before changing a public API or interface
 - Before creating a new abstraction or pattern
 - Before any irreversible action (deploy, force-push, drop table)
+- Before any architecture or security decision — propose options, let the human choose
+- Before debugging you have not reproduced, or performance work with no profiler run
+- Before touching build / CI / release scripts
+
+**Never start** a task whose acceptance criteria you cannot state. If you cannot write the
+test, you cannot grade the output — ask for the criteria first.
 
 **Never:**
 - Commit secrets, credentials, or API keys

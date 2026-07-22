@@ -5,6 +5,6 @@
     "reserveTokens": 2048,
     "keepRecentTokens": 8192
   },
-  "defaultProvider": "macmini-ollama",
+  "defaultProvider": "ollama-lan",
   "defaultModel": "qwen3-coder-30b-agent:latest"
 }

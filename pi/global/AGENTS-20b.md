@@ -25,6 +25,10 @@ When no `intent.md` exists, apply these defaults:
 
 **Always escalate:** Irreversible actions, external-facing output, scope changes beyond the stated task, when acceptance criteria cannot be met.
 
+**Never decide alone — a bigger model does not fix these:** architecture and security decisions (a larger model supplies options and critique, not the decision), cross-cutting architectural change (slice boundaries, aggregate design), debugging not yet reproduced, performance work without a profiler run, non-determinism in build / CI / release paths.
+
+**Do not start a task whose acceptance criteria cannot be stated** — if you cannot write the test, you cannot grade the output.
+
 ---
 
 ## Boundaries

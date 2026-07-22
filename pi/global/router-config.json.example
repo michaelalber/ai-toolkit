@@ -1,12 +1,10 @@
 {
   "_README": "OPT-IN, DISABLED BY DEFAULT. Pi uses a single user-selected model: the defaultModel in settings.json, switchable at any time via /model (Ctrl+L). This file is the per-task auto-router and is NOT loaded while it carries the .example extension. To re-enable automatic per-role model routing, rename it to router-config.json and place it where Pi reads its config (~/.pi/agent/). Delete this _README key first — Pi expects only role keys.",
-  "complex": "macmini-ollama/qwen3-coder-30b-agent:latest",
-  "plan": "macmini-ollama/qwen3-32b-agent:latest",
-  "medium": "macmini-ollama/qwen3-30b-a3b-agent:latest",
-  "explore": "macmini-ollama/qwen3-30b-a3b-agent:latest",
-  "title": "macmini-ollama/devstral-small-2:24b",
-  "summary": "macmini-ollama/devstral-small-2:24b",
-  "mac-mini-fast": "macmini-ollama/qwen2.5-coder:7b",
-  "mac-mini-devstral": "macmini-ollama/devstral:latest",
-  "coder": "macmini-ollama/qwen3-coder-30b-agent:latest"
+  "complex": "ollama-lan/qwen3-coder-30b-agent:latest",
+  "plan": "ollama-lan/qwen3-32b-agent:latest",
+  "medium": "ollama-lan/qwen3-30b-a3b-agent:latest",
+  "explore": "ollama-lan/qwen3-30b-a3b-agent:latest",
+  "title": "ollama-lan/devstral-small-2:24b",
+  "summary": "ollama-lan/devstral-small-2:24b",
+  "coder": "ollama-lan/qwen3-coder-30b-agent:latest"
 }
