@@ -53,6 +53,21 @@ repeated here. Related project context files: `intent.md` (goals, values, tradeo
   - `pi/global/` — global Pi files installed to `~/.pi/agent/`; `SYSTEM.md` is a per-project template
   - `project-templates/` — context file templates users copy into their own project roots (do not edit globally)
   - `tools/` — standalone runnable utilities that are not skills/agents/commands (e.g. `tools/pdf2md/`, `tools/web2md/`, `tools/ollama-evals/`); excluded from primitive counts and parity checks
+- **Platform primitive support** — harness and model provider are orthogonal (all three run local
+  or cloud models); what differs is which primitives each harness natively supports:
+
+  | Primitive | Claude Code | OpenCode | Pi |
+  |---|---|---|---|
+  | Skills | yes | yes | yes — same `skills/` tree, `/skill:<name>` to invoke |
+  | Commands | `claude/commands/` | `opencode/commands/` | prompt templates (`~/.pi/agent/prompts/*.md`) — args only, **no `!` shell injection** |
+  | Agents / subagents | yes | yes | **no** — Pi extensions cannot spawn child agents |
+  | Hooks | shell, `settings.json` | yes | TypeScript extension events (`tool_call` can block, `tool_result` can rewrite) |
+  | MCP | native | native | via an extension; `grounded-code-mcp` also ships a CLI Pi calls directly |
+
+  **Pi is a first-class target for skills and commands, and deliberately not for agents** — the
+  boundary is Pi's capability surface plus the local model tier, not neglect. Multi-phase work
+  still runs on Pi: QRSPI/QRASPI phases are artifact-gated (each phase reads a markdown artifact
+  and writes the next), so the human drives phase-to-phase where the agents would.
 - **Non-obvious constraints:** `claude/global/`, `opencode/global/`, and `pi/global/` files affect every project on the user's machine — changes require explicit human approval before committing
 
 ---

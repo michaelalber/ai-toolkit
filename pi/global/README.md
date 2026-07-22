@@ -1,6 +1,24 @@
 # Pi + Ollama Setup Guide
 
-Pi ([pi.dev](https://pi.dev)) is a minimal, privacy-first terminal coding agent. Unlike Claude Code (Anthropic subscription) or OpenCode (cloud providers), Pi's sweet spot is **local inference via Ollama** — zero API cost, fully offline, no data leaves your machine.
+Pi ([pi.dev](https://pi.dev)) is a minimal, privacy-first terminal coding agent — *"a minimal
+terminal coding harness… designed to stay small at the core while being extended through TypeScript
+extensions, skills, prompt templates, themes, and pi packages."*
+
+OpenCode can also be pointed at a local Ollama endpoint, and Claude Code technically can. Pi's
+advantage isn't exclusivity, it's **prompt overhead**: at a 32K–128K window, every token the
+harness spends on itself is taken from the work. A small core is the feature, which is why Pi is
+this toolkit's first-class local harness.
+
+**What Pi supports natively:** skills (the same `skills/` tree, invocable as `/skill:<name>`),
+prompt templates (`~/.pi/agent/prompts/*.md`, arguments but no `!` shell injection), TypeScript
+extensions with a deep event surface (`tool_call` can block a call, `tool_result` can rewrite its
+output), session trees (`/tree`, `/fork`, `/clone`), and custom providers.
+
+**What it does not:** subagents — the docs state extensions "cannot spawn child agent instances."
+So this toolkit's 51 agents are Claude Code / OpenCode only. Multi-phase work is unaffected:
+QRSPI and QRASPI phases are artifact-gated, so you drive phase-to-phase yourself. MCP is available
+through community extensions; `grounded-code-mcp` also ships a CLI that Pi calls directly, which
+is what the installed `AGENTS.md` uses.
 
 This guide configures Pi for the best local experience at the **20B+ tier** (24–32B dense or a
 comparable MoE, 16–24 GB VRAM). Smaller models are below the floor for agentic coding — keep them

@@ -23,7 +23,7 @@ This toolkit encodes that expertise as reusable primitives. Each skill is an opi
 
 **Design decisions:**
 - **Three primitives, one toolkit** — skills (model-invoked expertise), agents (autonomous executors), commands (user-triggered with live shell context). Each has a distinct role.
-- **Platform parity** — every skill and agent exists in both Claude Code and OpenCode format with identical behavior. Pi gets its own Ollama-optimized config.
+- **Platform parity, bounded by capability** — every skill and agent exists in both Claude Code and OpenCode format with identical behavior. Pi shares the same `skills/` tree and gets its own global config; it has no agents, because Pi has no subagents and the local tier can't sustain autonomous fan-out.
 - **Two-tier skill design** — full-template skills (5-section lean layout: philosophy, workflow, state, output-template pointers, integrations; depth such as principle tables, anti-patterns, and error recovery loads on demand from `references/`) for domain-expert tools; minimal-tier skills (≤ 100 lines, focused instructions) for mode switches and conversational tools.
 - **Global + project layered config** — global standards apply everywhere; project-level files add specificity without duplicating the global.
 
@@ -64,11 +64,28 @@ User types /tdd
 
 ## Platforms
 
-| Platform | Provider | Privacy | Best for |
-|----------|----------|---------|----------|
-| **[Claude Code](https://claude.ai/code)** | Anthropic subscription | Cloud | Best reasoning, MCP ecosystem, Claude-native workflows |
-| **[OpenCode](https://opencode.ai/)** | Any cloud provider (Anthropic, OpenAI, Google, Mistral…) | Cloud | Provider flexibility, multi-model teams |
-| **[Pi](https://pi.dev)** | Ollama local models (7B–32B) | Fully offline | Zero API cost, privacy-first, air-gapped use |
+Harness and model provider are **orthogonal** — all three harnesses can run local or cloud models.
+What actually differs is the primitives each one supports natively.
+
+| Platform | Typical provider | Also runs | Best for |
+|----------|------------------|-----------|----------|
+| **[Claude Code](https://claude.ai/code)** | Anthropic subscription | local via base-URL override (rarely worth it — the harness is Claude-tuned) | Best reasoning, MCP ecosystem, Claude-native workflows |
+| **[OpenCode](https://opencode.ai/)** | Any cloud provider (Anthropic, OpenAI, Google, Mistral…) | local Ollama, configurable | Provider flexibility, multi-model teams |
+| **[Pi](https://pi.dev)** | Local Ollama (20B+ tier) | any OpenAI-compatible cloud endpoint | Zero API cost, privacy-first, air-gapped, minimal prompt overhead |
+
+| Primitive | Claude Code | OpenCode | Pi |
+|---|---|---|---|
+| **Skills** | ✅ | ✅ | ✅ same `skills/` tree; `/skill:<name>` to invoke |
+| **Commands** | ✅ `claude/commands/` | ✅ `opencode/commands/` | ✅ as prompt templates — arguments only, no `!` shell injection |
+| **Agents** | ✅ 51 | ✅ 51 | ❌ Pi has no subagents by design |
+| **Hooks** | shell, via `settings.json` | ✅ | ✅ TypeScript extension events — `tool_call` can block, `tool_result` can rewrite |
+| **MCP** | native | native | via extension; `grounded-code-mcp` also ships a CLI Pi calls directly |
+
+**Pi is first-class for skills and commands, and deliberately not for agents.** That boundary is
+Pi's capability surface plus the local model tier — not a gap waiting to be filled. Multi-phase
+work still runs on Pi: the QRSPI and QRASPI phases are artifact-gated, so each phase is a single
+invocation that reads one markdown artifact and writes the next. You drive phase-to-phase where
+the agents otherwise would, and `/tree` + `/fork` let you branch at a gate and compare.
 
 ### Claude Code
 
