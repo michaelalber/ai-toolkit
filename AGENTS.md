@@ -37,7 +37,8 @@ repeated here. Related project context files: `intent.md` (goals, values, tradeo
 
 - **Pattern:** Flat directories by domain — skills, agents, global config, and project templates are siblings, not layers
 - **Two-level context stack:**
-  - `claude/global/CLAUDE.md` + `opencode/global/AGENTS.md` + `pi/global/AGENTS.md` — universal standards, installed once globally
+  - `claude/global/CLAUDE.md` + `opencode/global/AGENTS.md` + `pi/global/AGENTS-{7b,20b}.md` — universal standards, installed once globally
+    (Pi ships one file per model tier; `install-pi.sh` copies the chosen one to `~/.pi/agent/AGENTS.md`)
   - `CLAUDE.md` (root) + `AGENTS.md` (root) — this repo's context only (this mirrored file)
 - **Key directories:**
   - `skills/{team,professional}/<name>/` — skill definition (`SKILL.md`) + supporting docs (`references/`); the `team`/`professional` subdirectory is selected by the skill's `audience:` frontmatter
@@ -77,7 +78,7 @@ repeated here. Related project context files: `intent.md` (goals, values, tradeo
 | `project-templates/AGENTS.md` | Template pattern this file follows |
 | `claude/global/CLAUDE.md` | Global Claude Code standards — do not duplicate here |
 | `opencode/global/AGENTS.md` | Global OpenCode standards — do not duplicate here |
-| `pi/global/AGENTS.md` | Global Pi standards — do not duplicate here |
+| `pi/global/AGENTS-7b.md` / `AGENTS-20b.md` | Global Pi standards, one self-contained file per model tier — `install-pi.sh` installs one as `~/.pi/agent/AGENTS.md`; do not duplicate here |
 | `pi/global/SYSTEM.md` | Per-project Pi system prompt template — users copy to project root |
 | `intent.md` | Goals, values, tradeoff hierarchy, and persistent decisions for this repo |
 | `constraints.md` | Contribution constraints — read before any task |
