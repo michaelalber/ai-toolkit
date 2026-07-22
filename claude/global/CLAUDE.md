@@ -149,6 +149,11 @@ The `internal` collection is the **authoritative engineering standard**. Search 
 4. Cite the source path in your response
 5. If the KB returns nothing useful, say so — do not silently fall back to training data
 
+**Empty results are suspect.** A client pointed at the wrong host — or missing its config file
+entirely — returns `[]` for every query instead of erroring. If a query you expect to hit comes
+back empty, report the configuration as the likely cause; do not read it as "the KB has nothing"
+and answer from training data.
+
 ### MCP Tool Signatures
 
 ```
@@ -194,6 +199,19 @@ Search `grounded_internal` for the full rationale. Apply these unconditionally:
 - **Simple Design (priority order):** passes tests → reveals intent → no duplication → fewest elements.
 - **Boy Scout Rule.** When touching code, leave it cleaner. Always have passing tests before and after.
 - **Human reviews everything.** You are the driver, not the decision-maker.
+- **Never claim unverified.** Do not state a test passes, a build succeeds, or a command works
+  without running it in this session and showing the output. If you did not run it, say "not run."
+
+---
+
+## Ponytail Precedence
+
+> **Optional** — applies only if you run the [ponytail](https://github.com/DietrichGebert/ponytail)
+> minimal-solution plugin. Remove this section if you don't.
+
+Ponytail governs solution *size*, never test discipline. On conflict, AI Agent Obligations and
+Code Quality Gates win. The "trivial one-liner needs no test" exemption does not apply to
+business logic, security paths, public APIs, or anything with a branch.
 
 ---
 
@@ -222,6 +240,9 @@ All practices align with [OWASP Top 10 (2025)](https://owasp.org/Top10/2025/).
 - Use parameterized queries exclusively — no string-concatenated SQL under any circumstances
 - Never hardcode secrets; use environment variables or a secrets manager
 - Never log sensitive data (passwords, tokens, PII)
+- **Never resolve a secret to inspect it.** Read the unexpanded form (`${VAR}`, `{env:...}`, the
+  template) and verify the wiring by behavior. Echoing a resolved token into a transcript forces a
+  rotation — a "quick check" is not worth it
 - Bind HTTP services to `127.0.0.1` by default; use TLS for external communication
 - Pin dependency versions; flag all new dependencies for review
 

@@ -36,6 +36,15 @@ When no `intent.md` exists, apply these defaults:
 
 ---
 
+## Context Management
+
+- Load the minimum tokens needed; retrieve "just in time" via tools rather than pre-loading
+- After a subtask completes, discard intermediate noise — summarize progress, continue with the summary
+- For long tasks: maintain a `NOTES.md` scratchpad (current objective, decisions, open questions, next steps)
+- After a context reset, re-read the five most recently touched files and the scratchpad before continuing
+
+---
+
 ## Boundaries
 
 **Always:**
@@ -68,6 +77,21 @@ When no `intent.md` exists, apply these defaults:
 - Every test: Arrange → Act → Assert. Fast, isolated, deterministic. Test behavior, not implementation.
 - Match existing conventions. Read project code before writing. No new patterns without discussion.
 - Simple Design (priority order): passes tests → reveals intent → no duplication → fewest elements.
+- **One logical unit per response.** One file, one function, one test. Finish it, show it, stop.
+  Do not begin a second change until the first is confirmed.
+- **Never claim unverified.** Do not state a test passes, a build succeeds, or a command works
+  without running it in this session and showing the output. If you did not run it, say "not run."
+
+---
+
+## Ponytail Precedence
+
+> **Optional** — applies only if you run the [ponytail](https://github.com/DietrichGebert/ponytail)
+> minimal-solution plugin. Remove this section if you don't.
+
+Ponytail governs solution *size*, never test discipline. On conflict, AI Agent Obligations and
+Code Quality Gates win. The "trivial one-liner needs no test" exemption does not apply to
+business logic, security paths, public APIs, or anything with a branch.
 
 ---
 
@@ -88,6 +112,8 @@ A passing test suite ≠ done. Tests verify code correctness; evals verify the o
 - Parameterized queries only — no string-concatenated SQL
 - No hardcoded secrets — environment variables or secrets manager
 - Never log sensitive data (passwords, tokens, PII)
+- **Never resolve a secret to inspect it.** Read the unexpanded form (`${VAR}`, `{env:...}`, the
+  template) and verify the wiring by behavior — echoing a resolved token forces a rotation
 - Pin dependency versions; flag all new dependencies for review
 
 ---
@@ -98,7 +124,10 @@ A passing test suite ≠ done. Tests verify code correctness; evals verify the o
 - Keep modules cohesive and loosely coupled; prefer flat, composable structures
 - YAGNI: start with the simplest thing that works; no speculative abstractions
 - Add interfaces only when multiple concrete implementations exist today
-- Add enforced layer boundaries (Onion / Hexagonal) only when domain logic must be tested independently of infrastructure
+- **Stay in the slice.** Add an enforced layer boundary (Onion / Hexagonal) only when *not*
+  adding it would make the domain logic materially harder to test. When in doubt, stay in the slice.
+- Violating LSP — a subtype that breaks its base type's contract — is a correctness defect,
+  never a style choice
 
 ---
 
@@ -184,6 +213,13 @@ Pass the bare collection suffix — the server prepends `grounded_` automaticall
 | `api_design` | Zalando guidelines, Google AIP, Microsoft REST API guidelines |
 
 Run `grounded-code-mcp list-sources --json` for the authoritative runtime list.
+
+**If the KB returns nothing useful, say so — do not silently fall back to training data.**
+
+**Empty results are suspect.** Without a `~/.config/grounded-code-mcp/config.toml` pointing at the
+vector-store and embedding hosts, every query silently returns `[]` instead of erroring. If a query
+you expect to hit comes back empty, report the configuration as the likely cause rather than
+answering from training data.
 
 ---
 
