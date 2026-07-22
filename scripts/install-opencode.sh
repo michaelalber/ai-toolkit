@@ -12,6 +12,9 @@ mkdir -p "${OPENCODE_DIR}/agents"
 mkdir -p "${OPENCODE_DIR}/skills"
 mkdir -p "${OPENCODE_DIR}/commands"
 
+# Agents and commands are copied flat, so the same prune applies: without it a
+# removed agent lingers and stays spawnable. These two dirs are wholly repo-owned.
+rm -f "${OPENCODE_DIR}/agents/"*.md "${OPENCODE_DIR}/commands/"*.md
 find "${REPO_ROOT}/opencode/agents" -name "*.md" -exec cp -v {} "${OPENCODE_DIR}/agents/" \;
 # Full resync of the repo-owned subtrees: cp -r overwrites and adds but never
 # deletes, so a skill removed from the repo would linger here and stay

@@ -15,6 +15,11 @@ New-Item -ItemType Directory -Force -Path $AgentsDir   | Out-Null
 New-Item -ItemType Directory -Force -Path $SkillsDir   | Out-Null
 New-Item -ItemType Directory -Force -Path $CommandsDir | Out-Null
 
+# Agents and commands are copied flat, so the same prune applies: without it a
+# removed agent lingers and stays spawnable. These two dirs are wholly repo-owned.
+Remove-Item -Path (Join-Path $AgentsDir '*.md')   -Force -ErrorAction SilentlyContinue
+Remove-Item -Path (Join-Path $CommandsDir '*.md') -Force -ErrorAction SilentlyContinue
+
 Get-ChildItem -Path (Join-Path $RepoRoot 'opencode\agents') -Filter '*.md' -Recurse |
     Copy-Item -Destination $AgentsDir -Verbose
 
