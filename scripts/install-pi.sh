@@ -19,7 +19,8 @@ mkdir -p "${PI_DIR}"
 
 cp -v "${REPO_ROOT}/pi/global/AGENTS.md" "${PI_DIR}/AGENTS.md"
 echo "Installed: AGENTS.md (target tier 20B+)"
-echo "  For a 128K context model, set settings.json compaction to reserveTokens 4096 / keepRecentTokens 24576."
+echo "  Compaction ships tuned for a 128K model. On a 40K dense model, lower"
+echo "  settings.json to reserveTokens 2048 / keepRecentTokens 8192."
 
 cp -v "${REPO_ROOT}/pi/global/models.json" "${PI_DIR}/models.json"
 cp -v "${REPO_ROOT}/pi/global/settings.json" "${PI_DIR}/settings.json"
@@ -31,7 +32,8 @@ cp -v "${REPO_ROOT}/pi/global/settings.json" "${PI_DIR}/settings.json"
 mkdir -p "${PI_DIR}/skills"
 cp -rv "${REPO_ROOT}/skills/"* "${PI_DIR}/skills/"
 
-# Knowledge grounding — Pi has no MCP support, so the 50 skills that ground
+# Knowledge grounding — Pi reaches MCP only through a community extension, so
+# the 50 skills that ground
 # against the knowledge base call the grounded-code-mcp CLI directly (see the
 # Knowledge Grounding section of the installed AGENTS.md). Warn if it is missing.
 if command -v grounded-code-mcp >/dev/null 2>&1; then
@@ -54,14 +56,17 @@ echo "  pi/global/router-config.json.example → ${PI_DIR}/router-config.json"
 echo "  (drop the .example suffix and the _README key)."
 echo ""
 echo "Next steps:"
-echo "  1. Edit ${PI_DIR}/models.json — delete entries for models you have not pulled."
-echo "  2. Create your Ollama model: ollama create pi-coder -f pi/global/Modelfile-20b"
-echo "  3. Copy pi/global/SYSTEM.md to your project root and trim to one variant."
+echo "  1. Edit ${PI_DIR}/models.json — set the ollama-lan baseUrl to your Ollama host"
+echo "     and delete entries for models you have not pulled."
+echo "  2. Create your Ollama model:"
+echo "       ollama create qwen3-30b-a3b-agent -f pi/global/Modelfile-moe-agent   # MoE, 128K"
+echo "       ollama create qwen3-32b-agent     -f pi/global/Modelfile-20b         # dense, 40K"
+echo "  3. Copy pi/global/SYSTEM.md to your project root."
 if ! command -v grounded-code-mcp >/dev/null 2>&1; then
   echo "  4. Install the grounded-code-mcp CLI and ensure it is on PATH —"
   echo "     without it, grounded skills (security reviews, migrations) lose their"
   echo "     authoritative source. See pi/SKILLS-local.md (📚 flag) for the affected skills."
-  echo "  5. Run: pi --model ollama/pi-coder"
+  echo "  5. Run: pi --model ollama-lan/qwen3-30b-a3b-agent:latest"
 else
-  echo "  4. Run: pi --model ollama/pi-coder"
+  echo "  4. Run: pi --model ollama-lan/qwen3-30b-a3b-agent:latest"
 fi

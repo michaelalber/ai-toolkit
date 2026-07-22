@@ -564,8 +564,10 @@ ai-toolkit/
 │       ├── AGENTS.md           # Pi global standard (full rules + collection map)
 │       ├── models.json         # Ollama provider config
 │       ├── settings.json       # Compaction tuned for local context windows
-│       ├── Modelfile-7b        # Modelfile template for small utility models (FIM, title, summary)
-│       └── Modelfile-20b       # Modelfile template for 20B models
+│       ├── SYSTEM.md           # Per-project system prompt template
+│       ├── router-config.json.example  # Opt-in per-task model routing (off by default)
+│       ├── Modelfile-20b       # Modelfile template for dense 20–32B models
+│       └── Modelfile-moe-agent # Modelfile template for Qwen3 MoE variants
 ├── project-templates/          # Per-project context files — copy to your project root
 ├── scripts/                    # Install scripts (Bash + PowerShell)
 ├── tools/                      # Standalone utilities (not skills/agents/commands)

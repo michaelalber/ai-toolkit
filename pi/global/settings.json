@@ -2,8 +2,8 @@
   "defaultThinkingLevel": "off",
   "compaction": {
     "enabled": true,
-    "reserveTokens": 2048,
-    "keepRecentTokens": 8192
+    "reserveTokens": 4096,
+    "keepRecentTokens": 24576
   },
   "defaultProvider": "ollama-lan",
   "defaultModel": "qwen3-coder-30b-agent:latest"
