@@ -61,13 +61,15 @@ When no project `intent.md` exists, apply these defaults:
 
 ## Prompting Patterns
 
-Prefix triggers that change how the model reasons:
+Reasoning effort controls (set via one sentence in the system message or user prompt).
+`think:` / `think hard:` are Claude Code idioms and do nothing here — OpenCode's models
+(GitHub Copilot, local Ollama) respond to an explicit effort instruction instead:
 
-| Prefix | Effect |
+| Instruction | Effect |
 |---|---|
-| `think:` | Reason through before answering |
-| `think hard:` | Deep analysis — requirements, edge cases, alternatives |
-| `think step:` | Numbered step-by-step breakdown |
+| `Use low reasoning effort.` | Fast response, minimal deliberation — use for simple or latency-sensitive tasks |
+| `Use medium reasoning effort.` | Balanced — default for most tasks |
+| `Use high reasoning effort.` | Deep analysis — requirements, edge cases, alternatives; use for complex design or debugging |
 
 **Escape hatch** — when a task cannot be completed accurately:
 > `[CANNOT COMPLETE]: <one sentence reason>` — then complete what's possible with `# VERIFY:` comments on uncertain parts.
