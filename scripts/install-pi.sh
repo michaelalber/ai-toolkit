@@ -1,11 +1,16 @@
 #!/usr/bin/env bash
-# Installs Pi global config from the repo into ~/.pi/agent/
+# Installs Pi config and skills from the repo into ~/.pi/agent/
 #
 # Usage:
 #   bash scripts/install-pi.sh
 #
-# Installs the single Pi global (pi/global/AGENTS.md) to ~/.pi/agent/AGENTS.md,
-# matching how claude/global and opencode/global each ship one global file.
+# Installs the shared skills tree, plus global config on a FRESH install only.
+#
+# Global config (AGENTS.md, models.json, settings.json) is copy-if-absent: a new
+# install gets a working set, but an existing file is never overwritten. All
+# three are expected to be edited after install (host URLs, model names, local
+# rules), so a re-run must not discard those edits. Skills are still a full
+# resync — they are repo-owned and carry no user state.
 # Target model tier is 20B+ — smaller models are below the agentic-coding floor.
 
 set -euo pipefail
@@ -13,17 +18,23 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PI_DIR="${HOME}/.pi/agent"
 
-echo "Installing Pi global config from: ${REPO_ROOT}"
+echo "Installing Pi config and skills from: ${REPO_ROOT}"
 
 mkdir -p "${PI_DIR}"
 
-cp -v "${REPO_ROOT}/pi/global/AGENTS.md" "${PI_DIR}/AGENTS.md"
-echo "Installed: AGENTS.md (target tier 20B+)"
-echo "  Compaction ships tuned for a 128K model. On a 40K dense model, lower"
-echo "  settings.json to reserveTokens 2048 / keepRecentTokens 8192."
-
-cp -v "${REPO_ROOT}/pi/global/models.json" "${PI_DIR}/models.json"
-cp -v "${REPO_ROOT}/pi/global/settings.json" "${PI_DIR}/settings.json"
+# Global config — copy-if-absent, never overwrite. Unlike install-claude.sh and
+# install-opencode.sh (which leave their global files fully manual), Pi needs
+# these three present to start at all, so a fresh install seeds them. An
+# existing file is always left alone: it is the user's, not the repo's.
+GLOBAL_SKIPPED=""
+for f in AGENTS.md models.json settings.json; do
+  if [[ -e "${PI_DIR}/${f}" ]]; then
+    echo "  ${f} — already present, left untouched"
+    GLOBAL_SKIPPED="${GLOBAL_SKIPPED} ${f}"
+  else
+    cp -v "${REPO_ROOT}/pi/global/${f}" "${PI_DIR}/${f}"
+  fi
+done
 
 # Skills — single source of truth in skills/, identical Agent Skills format
 # across Claude Code, OpenCode, and Pi. Pi discovers SKILL.md directories
@@ -50,11 +61,19 @@ fi
 
 echo ""
 echo "Done."
-echo "  AGENTS.md     → ${PI_DIR}/AGENTS.md"
-echo "  models.json   → ${PI_DIR}/models.json"
-echo "  settings.json → ${PI_DIR}/settings.json"
 echo "  skills        → ${PI_DIR}/skills/"
 echo "  grounded-code-mcp CLI → ${GROUNDED_STATUS}"
+echo ""
+if [[ -n "${GLOBAL_SKIPPED// /}" ]]; then
+  echo "Global config left untouched (already present — never overwritten):"
+  for f in ${GLOBAL_SKIPPED}; do
+    echo "  ${f} — to take the repo version, diff it first:"
+    echo "      diff ${PI_DIR}/${f} ${REPO_ROOT}/pi/global/${f}"
+  done
+  echo ""
+fi
+echo "  Compaction ships tuned for a 128K model. On a 40K dense model, lower"
+echo "  settings.json to reserveTokens 2048 / keepRecentTokens 8192."
 echo ""
 echo "Model selection: Pi runs the single defaultModel in settings.json (switch with /model)."
 echo "  Per-task auto-routing is OPT-IN and not installed. To enable it, copy"

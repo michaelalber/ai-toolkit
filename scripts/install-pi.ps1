@@ -1,11 +1,16 @@
 #Requires -Version 5.1
-# Installs Pi global config from the repo into ~/.pi/agent/
+# Installs Pi config and skills from the repo into ~/.pi/agent/
 #
 # Usage:
 #   pwsh scripts/install-pi.ps1
 #
-# Installs the single Pi global (pi\global\AGENTS.md) to ~/.pi/agent/AGENTS.md,
-# matching how claude/global and opencode/global each ship one global file.
+# Installs the shared skills tree, plus global config on a FRESH install only.
+#
+# Global config (AGENTS.md, models.json, settings.json) is copy-if-absent: a new
+# install gets a working set, but an existing file is never overwritten. All
+# three are expected to be edited after install (host URLs, model names, local
+# rules), so a re-run must not discard those edits. Skills are still a full
+# resync — they are repo-owned and carry no user state.
 # Target model tier is 20B+ — smaller models are below the agentic-coding floor.
 
 $ErrorActionPreference = 'Stop'
@@ -13,17 +18,24 @@ $ErrorActionPreference = 'Stop'
 $RepoRoot = Split-Path -Parent $PSScriptRoot
 $PiDir    = Join-Path $HOME '.pi\agent'
 
-Write-Host "Installing Pi global config from: $RepoRoot"
+Write-Host "Installing Pi config and skills from: $RepoRoot"
 
 New-Item -ItemType Directory -Force -Path $PiDir | Out-Null
 
-Copy-Item -Path (Join-Path $RepoRoot 'pi\global\AGENTS.md') -Destination (Join-Path $PiDir 'AGENTS.md') -Force -Verbose
-Write-Host "Installed: AGENTS.md (target tier 20B+)"
-Write-Host "  Compaction ships tuned for a 128K model. On a 40K dense model, lower"
-Write-Host "  settings.json to reserveTokens 2048 / keepRecentTokens 8192."
-
-Copy-Item -Path (Join-Path $RepoRoot 'pi\global\models.json')   -Destination (Join-Path $PiDir 'models.json')   -Force -Verbose
-Copy-Item -Path (Join-Path $RepoRoot 'pi\global\settings.json') -Destination (Join-Path $PiDir 'settings.json') -Force -Verbose
+# Global config — copy-if-absent, never overwrite. Unlike install-claude and
+# install-opencode (which leave their global files fully manual), Pi needs these
+# three present to start at all, so a fresh install seeds them. An existing file
+# is always left alone: it is the user's, not the repo's.
+$GlobalSkipped = @()
+foreach ($f in 'AGENTS.md', 'models.json', 'settings.json') {
+    $Dest = Join-Path $PiDir $f
+    if (Test-Path $Dest) {
+        Write-Host "  $f — already present, left untouched"
+        $GlobalSkipped += $f
+    } else {
+        Copy-Item -Path (Join-Path $RepoRoot (Join-Path 'pi\global' $f)) -Destination $Dest -Verbose
+    }
+}
 
 # Skills — single source of truth in skills/, identical Agent Skills format
 # across Claude Code, OpenCode, and Pi. Pi discovers SKILL.md directories
@@ -55,11 +67,21 @@ if ($Grounded) {
 
 Write-Host ""
 Write-Host "Done."
-Write-Host "  AGENTS.md     → $(Join-Path $PiDir 'AGENTS.md')"
-Write-Host "  models.json   → $(Join-Path $PiDir 'models.json')"
-Write-Host "  settings.json → $(Join-Path $PiDir 'settings.json')"
 Write-Host "  skills        → $SkillsDir"
 Write-Host "  grounded-code-mcp CLI → $GroundedStatus"
+Write-Host ""
+if ($GlobalSkipped.Count -gt 0) {
+    Write-Host "Global config left untouched (already present — never overwritten):"
+    foreach ($f in $GlobalSkipped) {
+        $Dest = Join-Path $PiDir $f
+        $Src  = Join-Path $RepoRoot (Join-Path 'pi\global' $f)
+        Write-Host "  $f — to take the repo version, diff it first:"
+        Write-Host "      Compare-Object (Get-Content '$Dest') (Get-Content '$Src')"
+    }
+    Write-Host ""
+}
+Write-Host "  Compaction ships tuned for a 128K model. On a 40K dense model, lower"
+Write-Host "  settings.json to reserveTokens 2048 / keepRecentTokens 8192."
 Write-Host ""
 Write-Host "Model selection: Pi runs the single defaultModel in settings.json (switch with /model)."
 Write-Host "  Per-task auto-routing is OPT-IN and not installed. To enable it, copy"
