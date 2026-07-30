@@ -22,7 +22,7 @@ and recovery. The blank 5-section scaffold is in `skill-template.md`; the SCORE 
 ## Discipline Rules
 
 - **Always load a gold standard before scaffolding.** Read a lean exemplar
-  (`skills/team/cargo-package-scaffold/SKILL.md` or `skills/team/qraspi-skeleton/SKILL.md`) for the
+  (`skills/cargo-package-scaffold/SKILL.md` or `skills/qraspi-skeleton/SKILL.md`) for the
   5-section structure, description format, and state-block style before writing.
   *Wrong:* writing a SKILL.md from memory → wrong section shape, depth inlined, weak trigger.
   *Right:* read the exemplar, note structure + pointer pattern, then scaffold to match.

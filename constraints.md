@@ -11,7 +11,7 @@
 ## Must Do
 
 - Read `AGENTS.md` (root), `intent.md`, and this file before beginning any task.
-- Follow the 5-section lean layout for skills — use `skills/team/cargo-package-scaffold/SKILL.md` as the gold standard; keep SKILL.md ≤ 200 lines and push depth (principle tables, anti-patterns, discipline rules, error recovery, templates) to `references/`.
+- Follow the 5-section lean layout for skills — use `skills/cargo-package-scaffold/SKILL.md` as the gold standard; keep SKILL.md ≤ 200 lines and push depth (principle tables, anti-patterns, discipline rules, error recovery, templates) to `references/`.
 - Follow the 10-section agent template exactly — both Claude Code and OpenCode versions must be present.
 - Ensure every new skill has a `references/` directory with at least 2 supporting files.
 - Ensure every new state block XML tag is unique across all skills and agents before committing.

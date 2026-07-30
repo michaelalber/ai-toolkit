@@ -24,7 +24,7 @@ A passing eval would survive scrutiny from a developer seeing the skill for the 
 ### Test Case 1: New Skill Completeness
 
 - **Input:** A newly created or modified skill in `skills/<name>/SKILL.md`
-- **Known-Good Output:** `skills/team/cargo-package-scaffold/SKILL.md` — the gold standard
+- **Known-Good Output:** `skills/cargo-package-scaffold/SKILL.md` — the gold standard
 - **Pass Criteria:**
   - [ ] The 5 lean sections present and in order (Core Philosophy, Workflow, State Block, Output Template, Integration), after the title + epigraph
   - [ ] SKILL.md ≤ 200 lines; no inline principle/anti-pattern/error-recovery tables (depth lives in `references/`)
@@ -157,7 +157,7 @@ This is a Markdown-only repo — there is no build or test runner. The CI gate c
 - **Link integrity (README):** All skill names in `README.md` suite tables resolve to actual `skills/<name>/` directories
 - **References population:** Every `skills/<name>/` has a `references/` subdirectory with ≥ 2 files
 - **No placeholder text:** `grep -r "TODO\|\[fill in\]\|\[e\.g\." skills/ claude/agents/ opencode/agents/` — must return no results in committed files
-- **Pi skills triage coverage:** Every `skills/team/` and `skills/professional/` directory name must appear in `pi/SKILLS-local.md` — `comm -23 <(find skills/team skills/professional -maxdepth 1 -mindepth 1 -type d -exec basename {} \; | sort) <(grep -oP '^\| \`\K[^`]+' pi/SKILLS-local.md | sort)` must return empty
+- **Pi skills triage coverage:** Every `skills/<name>/` directory name must appear in `pi/SKILLS-local.md` — `comm -23 <(find skills -maxdepth 1 -mindepth 1 -type d -exec basename {} \; | sort) <(grep -oP '^\| \`\K[^`]+' pi/SKILLS-local.md | sort)` must return empty
 
 > Append CI gate results as a sub-item of each Test Case entry on every run.
 

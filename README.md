@@ -46,7 +46,7 @@ This toolkit encodes that expertise as reusable primitives. Each skill is an opi
 
 Three distinct primitives compose the toolkit:
 
-**Skills** — Structured, opinionated prompt files that encode domain expertise. Model-invoked autonomously. Live in `skills/{team,professional}/<name>/SKILL.md`. Full-template skills follow a 5-section lean layout with depth in `references/`.
+**Skills** — Structured, opinionated prompt files that encode domain expertise. Model-invoked autonomously. Live in `skills/<name>/SKILL.md` (flat — Claude Code only discovers skills one level deep); an `audience: team|professional` frontmatter field tags each one. Full-template skills follow a 5-section lean layout with depth in `references/`.
 
 **Agents** — Autonomous executors that combine skills with tool access and guardrails. Operate independently within defined boundaries. Live in `claude/agents/` and `opencode/agents/`.
 
@@ -90,10 +90,9 @@ the agents otherwise would, and `/tree` + `/fork` let you branch at a gate and c
 ### Claude Code
 
 ```bash
-# Skills (both team and professional by default)
+# Skills (flat tree — Claude Code only discovers skills/<name>/SKILL.md one level deep)
 mkdir -p ~/.claude/skills
-ln -sf /path/to/ai-toolkit/skills/team/*/ ~/.claude/skills/
-ln -sf /path/to/ai-toolkit/skills/professional/*/ ~/.claude/skills/
+ln -sf /path/to/ai-toolkit/skills/*/ ~/.claude/skills/
 
 # Agents
 mkdir -p ~/.claude/agents
@@ -101,7 +100,9 @@ ln -sf /path/to/ai-toolkit/claude/agents/team/*.md ~/.claude/agents/
 ln -sf /path/to/ai-toolkit/claude/agents/professional/*.md ~/.claude/agents/
 ```
 
-To install only the team-facing skills (e.g. when sharing this with a colleague), omit the `professional/` lines.
+To install only the team-facing agents (e.g. when sharing this with a colleague), omit the
+`professional/` line. Skills no longer split by audience on disk — `scripts/install-claude.sh`
+(recommended over manual symlinking) copies the whole `skills/` tree either way.
 
 See [`claude/global/README.md`](claude/global/README.md) for global config setup (hooks, permissions, commands).
 
@@ -126,8 +127,7 @@ See [`claude/global/README.md`](claude/global/README.md) for global config setup
 
 ```bash
 mkdir -p ~/.config/opencode/skills
-ln -sf /path/to/ai-toolkit/skills/team/*/ ~/.config/opencode/skills/
-ln -sf /path/to/ai-toolkit/skills/professional/*/ ~/.config/opencode/skills/
+ln -sf /path/to/ai-toolkit/skills/*/ ~/.config/opencode/skills/
 
 mkdir -p ~/.config/opencode/agents
 ln -sf /path/to/ai-toolkit/opencode/agents/team/*.md ~/.config/opencode/agents/
@@ -170,7 +170,7 @@ pwsh scripts/install-agents.ps1       # Windows
 
 ## Skills
 
-This toolkit is organized in two folders. `skills/team/` contains skills and agents I use in production work and consider shareable — patterns extracted from years of enterprise .NET, legacy modernization, and AI-augmented development on regulated-industry codebases. It also incorporates several vendored workflow-primitive skills from Matt Pocock's repo (see [Companion Skills](#companion-skills) below). `skills/professional/` is my professional-development track: deliberate-practice loops that sharpen engineering judgment (architecture critique, code review, pattern selection, refactoring prioritization) and learning scaffolds for the professional domains I'm actively growing into. (Edge AI, ML, robotics, and automation skills — including model optimization — now live in the companion [edge-ai-robotics-automation-toolkit](../edge-ai-robotics-automation-toolkit).) These are career-skill investments, not side projects — the split keeps "what I ship for the team" distinct from "the competencies I'm deliberately building."
+This toolkit is organized in two groups, tagged by each skill's `audience:` frontmatter field (the `skills/` tree itself is flat — Claude Code only discovers `skills/<name>/SKILL.md` one level deep). `audience: team` skills and agents are ones I use in production work and consider shareable — patterns extracted from years of enterprise .NET, legacy modernization, and AI-augmented development on regulated-industry codebases. It also incorporates several vendored workflow-primitive skills from Matt Pocock's repo (see [Companion Skills](#companion-skills) below). `audience: professional` is my professional-development track: deliberate-practice loops that sharpen engineering judgment (architecture critique, code review, pattern selection, refactoring prioritization) and learning scaffolds for the professional domains I'm actively growing into. (Edge AI, ML, robotics, and automation skills — including model optimization — now live in the companion [edge-ai-robotics-automation-toolkit](../edge-ai-robotics-automation-toolkit).) These are career-skill investments, not side projects — the split keeps "what I ship for the team" distinct from "the competencies I'm deliberately building."
 
 ## Companion Skills
 
@@ -184,7 +184,7 @@ The two layers are non-overlapping by design. Where they look adjacent — his `
 
 See `.matt-pocock-attribution.yml` at the repo root for the full provenance manifest, including modification notes for each vendored skill.
 
-## skills/team/
+## Team Skills (`audience: team`)
 
 ### TDD Suite
 
@@ -374,7 +374,7 @@ Vendored copies of workflow-primitive skills from [Matt Pocock's skills repo](ht
 
 ---
 
-## skills/professional/
+## Professional Skills (`audience: professional`)
 
 ### Coaching & Learning Suite
 

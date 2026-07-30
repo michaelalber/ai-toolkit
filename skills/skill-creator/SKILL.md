@@ -38,8 +38,8 @@ Full principle table, discipline rules, anti-patterns, and error recovery live i
 
 ```
 Mode: CREATE — scaffold a new skill
-  LOAD       Read a lean gold standard: skills/team/cargo-package-scaffold/SKILL.md (domain
-             scaffolder) or skills/team/qraspi-skeleton/SKILL.md (phase driver). Note the 5-section
+  LOAD       Read a lean gold standard: skills/cargo-package-scaffold/SKILL.md (domain
+             scaffolder) or skills/qraspi-skeleton/SKILL.md (phase driver). Note the 5-section
              structure, description format, and reference-pointer pattern.
   INTAKE     Ask: one-sentence purpose? trigger phrases? negative triggers (Do NOT use when)?
              how many workflow modes (1 simple, 2-3 multi-mode)?

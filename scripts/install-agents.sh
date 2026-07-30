@@ -5,9 +5,8 @@
 #   bash scripts/install-agents.sh
 #
 # Skills are a single source of truth in skills/ (identical Agent Skills format
-# across Claude Code, OpenCode, and Pi). This copies both the team/ and
-# professional/ subtrees, preserving the skills/<audience>/<name>/SKILL.md layout
-# that skill discovery walks recursively.
+# across Claude Code, OpenCode, and Pi). skills/ is flat -- this copies the whole
+# tree, preserving the skills/<name>/SKILL.md layout that skill discovery walks.
 
 set -euo pipefail
 

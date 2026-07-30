@@ -40,7 +40,7 @@ repeated here. Related project context files: `intent.md` (goals, values, tradeo
   - `claude/global/CLAUDE.md` + `opencode/global/AGENTS.md` + `pi/global/AGENTS.md` — universal standards, installed once globally
   - `CLAUDE.md` (root) + `AGENTS.md` (root) — this repo's context only (this mirrored file)
 - **Key directories:**
-  - `skills/{team,professional}/<name>/` — skill definition (`SKILL.md`) + supporting docs (`references/`); the `team`/`professional` subdirectory is selected by the skill's `audience:` frontmatter
+  - `skills/<name>/` — skill definition (`SKILL.md`) + supporting docs (`references/`); flat, no `team`/`professional` subdirectory — Claude Code only discovers `skills/<name>/SKILL.md` one level deep, so the `audience:` frontmatter field is metadata only (it no longer selects an install subdirectory for skills; it still does for `claude/agents/` and `opencode/agents/`, which keep their `team`/`professional` split)
   - `claude/agents/{team,professional}/` — Claude Code agent definitions (`.md` with `skills:` frontmatter array)
   - `opencode/agents/{team,professional}/` — OpenCode agent definitions (`.md` with boolean tool flags + `skill()` body calls)
   - `claude/commands/` — Claude Code user-invoked slash commands with shell injection (flat, no audience subdir)
@@ -74,7 +74,7 @@ repeated here. Related project context files: `intent.md` (goals, values, tradeo
 
 ## Quick Reference
 
-- **Skills:** `skills/team/<n>/SKILL.md` or `skills/professional/<n>/SKILL.md` — subdir chosen by `audience:` frontmatter. 5-section lean layout (depth → `references/`), gold standard: `skills/team/cargo-package-scaffold/SKILL.md`
+- **Skills:** `skills/<n>/SKILL.md` — flat, no subdir; `audience:` frontmatter (`team` | `professional`) is metadata only. 5-section lean layout (depth → `references/`), gold standard: `skills/cargo-package-scaffold/SKILL.md`
 - **Agents:** `claude/agents/{team,professional}/<n>.md` (Claude Code) | `opencode/agents/{team,professional}/<n>.md` (OpenCode) — must stay in parity
 - **Commands:** `claude/commands/<n>.md` (Claude Code) | `opencode/commands/<n>.md` (OpenCode) — flat, no audience subdir
 - **Global files:** `claude/global/` → installs to `~/.claude/` | `opencode/global/` → installs to `~/.config/opencode/` | `pi/global/` → installs to `~/.pi/agent/`
@@ -88,7 +88,7 @@ repeated here. Related project context files: `intent.md` (goals, values, tradeo
 
 | File | Why It Matters |
 |---|---|
-| `skills/team/cargo-package-scaffold/SKILL.md` | Gold standard for the 5-section lean skill layout (depth in `references/`) |
+| `skills/cargo-package-scaffold/SKILL.md` | Gold standard for the 5-section lean skill layout (depth in `references/`) |
 | `project-templates/AGENTS.md` | Template pattern this file follows |
 | `claude/global/CLAUDE.md` | Global Claude Code standards — do not duplicate here |
 | `opencode/global/AGENTS.md` | Global OpenCode standards — do not duplicate here |
@@ -105,16 +105,19 @@ repeated here. Related project context files: `intent.md` (goals, values, tradeo
 
 ## Skill Conventions
 
-Each skill lives in `skills/team/<name>/` or `skills/professional/<name>/` with a `SKILL.md` and a
-`references/` directory. The `team` vs. `professional` subdirectory is selected by the `audience:`
-frontmatter field and applied by `scripts/add_frontmatter.py` (which walks `skills/{team,professional}/*/`).
+Each skill lives in `skills/<name>/` with a `SKILL.md` and a `references/` directory — flat, no
+`team`/`professional` subdirectory. Claude Code only discovers `skills/<name>/SKILL.md` one level
+deep, so nesting by audience breaks discovery. The `audience:` frontmatter field (`team` |
+`professional`) is retained as metadata — it still selects the install subdir for the *agent*
+definitions in `claude/agents/<audience>/` and `opencode/agents/<audience>/` — and is backfilled by
+`scripts/add_frontmatter.py`, which now walks `skills/*/`.
 
 ### SKILL.md Frontmatter
 
 ```yaml
 ---
 name: skill-name
-audience: team  # team | professional — selects the skills/<audience>/ install subdirectory
+audience: team  # team | professional — metadata; selects the install subdir for this skill's paired agent (if any), not for the skill itself
 description: >
   What the skill does. Trigger phrases like "keyword1", "keyword2".
 disable-model-invocation: true  # optional: prevents auto-invocation; use for interactive or conversational skills
@@ -178,8 +181,8 @@ Anti-Patterns table, AI Discipline (WRONG/RIGHT) rules, Error Recovery scenarios
 code/report templates. These remain authoritative — they are relocated, not deleted, and every
 reference file is named by a pointer in SKILL.md so nothing becomes undiscoverable.
 
-Gold-standard lean examples: `skills/team/qraspi-skeleton/SKILL.md` (phase driver) and
-`skills/team/cargo-package-scaffold/SKILL.md` (domain scaffolder with `references/` depth).
+Gold-standard lean examples: `skills/qraspi-skeleton/SKILL.md` (phase driver) and
+`skills/cargo-package-scaffold/SKILL.md` (domain scaffolder with `references/` depth).
 
 ### References Directory
 
@@ -188,17 +191,18 @@ Each `references/` directory contains 2-5 supporting files: code examples, decis
 ### When Adding a Skill
 
 **Choose a tier first** (see the Skill Tiers table above). Set `audience:` in the frontmatter
-(`team` | `professional`) — it selects the `skills/<audience>/` install subdir, applied by
+(`team` | `professional`) — it's metadata on the skill itself, but selects the install subdir for
+any paired agent under `claude/agents/<audience>/` and `opencode/agents/<audience>/`, applied by
 `scripts/add_frontmatter.py`.
 
 **Minimal-tier steps:**
-1. Create `skills/<audience>/<new-name>/SKILL.md` with focused instructions (no template to copy)
+1. Create `skills/<new-name>/SKILL.md` with focused instructions (no template to copy)
 2. Add `disable-model-invocation: true` for interactive or conversational skills
-3. Create `skills/<audience>/<new-name>/references/` with ≥ 1 supporting file — skip it if the SKILL.md is under 20 lines and has no depth to split out
+3. Create `skills/<new-name>/references/` with ≥ 1 supporting file — skip it if the SKILL.md is under 20 lines and has no depth to split out
 4. Skip the agent/command/registration steps below unless the skill is user-invocable
 
 **Full-template steps:**
-1. Copy the gold standard: `cp -r skills/team/cargo-package-scaffold skills/<audience>/<new-name>`
+1. Copy the gold standard: `cp -r skills/cargo-package-scaffold skills/<new-name>`
 2. 5-section lean layout — keep Core Philosophy / Workflow / State / Output Template / Integration in SKILL.md; push depth to `references/`; ≥ 2 reference files
 3. Add agent entries in **both** `claude/agents/<audience>/` and `opencode/agents/<audience>/`
 4. Add command entries in **both** `claude/commands/` and `opencode/commands/` if user-invocable
@@ -333,7 +337,7 @@ No compiled artifacts. Validation is structural.
 find skills -name "SKILL.md" | wc -l
 
 # Verify a full-template skill has the 5 lean sections (in-fence template headers may push this higher)
-grep -c "^## " skills/{team,professional}/<n>/SKILL.md
+grep -c "^## " skills/<n>/SKILL.md
 
 # Check agent parity (counts must match) — agents live under team/ and professional/ subdirs
 find claude/agents -name "*.md" | wc -l
@@ -419,6 +423,7 @@ particular user has ingested. Personal enrichment belongs in the installed copie
 | 2026-07-22 | **Re-vendored the mattpocock grill family in sync with upstream `ed37663`.** Upstream split the inlined interview engine into three files; adopted as-is: `grilling` (the engine, model-invocable) + `grill-me` and `grill-with-docs` (thin `disable-model-invocation` entry points). `grill-with-docs` composes the local `domain-model` (upstream's `domain-modeling`) to capture ADRs + a glossary. Added `/grill-with-docs` in both runtimes. Backfilled the missing `domain-model` attribution entry and pinned `source_commit` on all four grill-family entries. Counts: skills 93→95 (team 81→83), commands 25→26, agents unchanged. | Staying in sync with upstream on vendored primitives beats carrying a diverged fork: the engine gained three real behavioral improvements the local copy lacked — wait for feedback between questions, look up *facts* but always put *decisions* to the human, and a terminal "do not act until I confirm" gate. The three-file split is upstream's, not invented here; the only local deviation is the composed skill's name. |
 | 2026-07-22 | **Removed `zoom-out`; reviewed the other two vendored mattpocock skills against upstream `ed37663`.** `zoom-out` deleted upstream in `e112a6b` (2026-06-17, "Remove zoom-out skill and all references") — not renamed, not deprecated — so the local fork was orphaned; removed here too along with its attribution entry. `codebase-design`: dropped the local `disable-model-invocation` to match upstream, which leaves it model-invocable so other skills can pull the vocabulary in on demand. `improve-codebase-architecture`: adopted two upstream ideas — the `disable-model-invocation` flag (missing locally, a real defect on an interactive skill) and a git-log hot-spot Scoping phase — but deliberately did NOT sync the rest. Counts: skills 95→94 (team 83→82). | Upstream rewrote `improve-codebase-architecture` to emit a Tailwind/Mermaid HTML report driven by an Explore subagent and a grilling loop. That deliverable cuts against this repo's markdown-native, no-build-system grain, and the local quantified issue table with S/M/L effort estimates matches the architecture-checklist family's house style. Recorded in `.matt-pocock-attribution.yml` as a standing decision so a future re-vendor doesn't read it as drift. |
 | 2026-07-22 | **`domain-model` reviewed against upstream `ed37663`; four defects fixed.** Dropped `disable-model-invocation` — it blocked the mid-session composition that `grill-with-docs`, `improve-codebase-architecture`, `codebase-design`, and `qraspi-architecture` all depend on. Replaced the hard "no `CONTEXT.md`, stop" gate with upstream's lazy file creation. Moved the ADR write path `docs/decisions/` → `docs/adr/NNNN-*.md`, aligning with the 2026-06-03 decision and the four QRASPI skills. Added `source`/`source_commit` frontmatter (it was the only vendored skill without it). Also adopted upstream's `CONTEXT-MAP.md` multi-context layout and its three-part ADR test. Kept the local DDD interrogation protocol. No count change. | Three of the four were latent bugs independent of upstream: the ADR path made `domain-model` the only skill in the repo writing outside `docs/adr/`, so a `qraspi-architecture` session and a `domain-model` session scattered ADRs across two directories; the `CONTEXT.md` gate stalled any composing skill in a fresh repo. Upstream has since narrowed `domain-modeling` to an in-session maintenance discipline — explicitly *not* an interview — so the structured interrogation stays local; it is this skill's reason to exist and has no upstream equivalent to sync to. |
+| 2026-07-30 | **Flattened `skills/` from `skills/{team,professional}/<name>/` to `skills/<name>/`; renamed the `tdd` skill to `tdd-loop`.** Claude Code only discovers `skills/<name>/SKILL.md` one level deep, so the category subdirectory silently broke discovery for all 94 skills — none ever loaded. `audience:` frontmatter is retained as metadata (it still selects the install subdir for a skill's paired agent under `claude/agents/<audience>/` and `opencode/agents/<audience>/`, which were NOT flattened). `scripts/add_frontmatter.py` now walks `skills/*/` and no longer infers `audience` from the path — it warns instead of failing when a `SKILL.md` lacks the field. All four `install-*.sh`/`install-*.ps1` pairs updated to prune by `skills/*/` instead of the now-nonexistent `team`/`professional` dirs (the `.ps1` variants had silently stopped pruning at all — Copy-Item only adds/overwrites, so a removed skill would have lingered and stayed invocable). The `tdd` skill collided with the `/tdd` command and always lost, so every `skill({ name: "tdd" })` call resolved to the command instead; renamed to `tdd-loop` and updated 14 references across `claude/`, `opencode/`, `skills/`. | A structural bug this deep (nothing ever loaded) needed a mechanical, repo-wide fix rather than a per-skill patch. Flattening only `skills/` and not `claude/agents/`/`opencode/agents/` keeps the fix minimal — those two trees' one-level nesting is correct for how Claude Code discovers agents, only skill discovery required the flat form. |
 
 ---
 
@@ -435,7 +440,7 @@ particular user has ingested. Personal enrichment belongs in the installed copie
 
 | Suite | Skills | Focus |
 |-------|--------|-------|
-| TDD | tdd (the canonical loop) + tdd-agent (autonomous operating mode) + evaluate-tests (quality & compliance audit) | Test-Driven Development lifecycle |
+| TDD | tdd-loop (the canonical loop) + tdd-agent (autonomous operating mode) + evaluate-tests (quality & compliance audit) | Test-Driven Development lifecycle |
 | Enterprise .NET | dotnet-vertical-slice, ef-migration-manager, nuget-package-scaffold, legacy-migration-analyzer, dotnet-architecture-checklist, dotnet-controller-api-scaffolder, dotnet-security-review, minimal-api-scaffolder, 4d-schema-migration | .NET patterns, migrations, security |
 | Security (cross-language) | security-review-federal, oss-vetting | Shared language-agnostic federal/gov work. `security-review-federal` is the overlay (NIST 800-53, FIPS, CUI, POA&M, EO 14028, DOE 205.1B) applied on top of any base `<lang>-security-review`; `oss-vetting` produces a structured OSS/SBOM assessment for federal contractor environments (LANL/DOE/CUI) — security posture, supply chain risk, license compliance, CUI suitability against four governing frameworks; Confluence-ready report. |
 | Coaching | architecture-review, pattern-tradeoff-analyzer, system-design-kata, dependency-mapper, code-review-coach, refactor-challenger, security-review-trainer, pr-feedback-writer, technical-debt-assessor, architecture-journal, grilling, grill-me, grill-with-docs, improve-codebase-architecture, codebase-design | Engineering judgment and communication modes. `grilling` is the shared interview engine; `grill-me` and `grill-with-docs` are its entry points (the latter capturing ADRs + a glossary via `domain-model`). `codebase-design` supplies the deep-module vocabulary `improve-codebase-architecture` applies. |
