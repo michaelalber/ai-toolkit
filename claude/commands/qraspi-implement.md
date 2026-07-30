@@ -11,7 +11,7 @@ QRASPI project folders and their artifacts:
 
 Run the QRASPI **Implement** phase for the new system: $ARGUMENTS
 
-Use the `qraspi-builder` agent (it loads the `qraspi-implement` and `tdd` skills). Locate the project
+Use the `qraspi-builder` agent (it loads the `qraspi-implement` and `tdd-loop` skills). Locate the project
 folder above. Read `skeleton.md` — confirm `status: complete` **and** `ci_green: true`; if the skeleton
 is not green, STOP and route me to `/qraspi-skeleton`. Read `plan-{slice}.md` for the target slice — if
 absent, STOP and route me to `/qraspi-plan`; confirm it is `status: approved` (not merely

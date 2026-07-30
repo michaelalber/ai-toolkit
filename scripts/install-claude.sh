@@ -1,12 +1,17 @@
 #!/usr/bin/env bash
-# Installs Claude agents and skills from the repo into ~/.claude/
+# Installs Claude agents and skills from the repo into the active Claude profile.
+#
+# Target defaults to ~/.claude and follows CLAUDE_CONFIG_DIR when set — the same
+# variable Claude Code itself uses to pick a profile. To deploy a second profile:
+#   CLAUDE_CONFIG_DIR=~/.claude-denali scripts/install-claude.sh
 
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-CLAUDE_DIR="${HOME}/.claude"
+CLAUDE_DIR="${CLAUDE_CONFIG_DIR:-${HOME}/.claude}"
 
 echo "Installing Claude agents and skills from: ${REPO_ROOT}"
+echo "                                    into: ${CLAUDE_DIR}"
 
 mkdir -p "${CLAUDE_DIR}/agents"
 mkdir -p "${CLAUDE_DIR}/skills"
@@ -16,11 +21,12 @@ mkdir -p "${CLAUDE_DIR}/commands"
 # removed agent lingers and stays spawnable. These two dirs are wholly repo-owned.
 rm -f "${CLAUDE_DIR}/agents/"*.md "${CLAUDE_DIR}/commands/"*.md
 find "${REPO_ROOT}/claude/agents" -name "*.md" -exec cp -v {} "${CLAUDE_DIR}/agents/" \;
-# Full resync of the repo-owned subtrees: cp -r overwrites and adds but never
+# Full resync of the repo-owned skills. cp -r overwrites and adds but never
 # deletes, so a skill removed from the repo would linger here and stay
-# invocable. Only team/ and professional/ are repo-owned — anything else you
-# added by hand under skills/ is left untouched.
-rm -rf "${CLAUDE_DIR}/skills/team" "${CLAUDE_DIR}/skills/professional"
+# invocable. Prune by what the repo currently ships -- skills/ is flat, so the
+# old `rm -rf team professional` no longer matches anything. Skills you added
+# by hand under skills/ are not in the repo listing, so they are left untouched.
+for d in "${REPO_ROOT}/skills/"*/; do rm -rf "${CLAUDE_DIR}/skills/$(basename "$d")"; done
 cp -rv "${REPO_ROOT}/skills/"* "${CLAUDE_DIR}/skills/"
 find "${REPO_ROOT}/claude/commands" -name "*.md" -exec cp -v {} "${CLAUDE_DIR}/commands/" \;
 cp -v "${REPO_ROOT}/claude/global/statusline.sh" "${CLAUDE_DIR}/statusline.sh"

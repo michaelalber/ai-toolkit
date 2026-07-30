@@ -8,7 +8,7 @@ subtask: true
 !`out=$(timeout 90 dotnet test --no-build -m:1 $ARGUMENTS 2>&1); rc=$?; printf '%s\n' "$out" | tail -50; [ "$rc" = 124 ] && echo "(TIMED OUT after 90s — snapshot is INCOMPLETE. Treat it as no data, not as a result. Re-run scoped: dotnet test --no-build -m:1 --filter <expr>)"; true`
 </current_test_state>
 
-Use the tdd skill. The test output above is the current state.
+Use the tdd-loop skill. The test output above is the current state.
 Make failing tests pass. Do not modify test files. Run tests after each change.
 Stop when all tests pass and no regressions are introduced.
 

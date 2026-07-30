@@ -38,7 +38,7 @@ Load these skills on-demand for detailed guidance. Use the `skill` tool when you
 
 | Skill | When to Load |
 |-------|--------------|
-| `skill({ name: "tdd" })` | When integrating test generation into a full TDD workflow with RED-GREEN-REFACTOR, or for minimal-implementation strategies/idioms (in its `references/`) |
+| `skill({ name: "tdd-loop" })` | When integrating test generation into a full TDD workflow with RED-GREEN-REFACTOR, or for minimal-implementation strategies/idioms (in its `references/`) |
 | `skill({ name: "dotnet-vertical-slice" })` | When generating tests for vertical slice architecture (handlers, validators, endpoints) |
 | `skill({ name: "test-scaffold" })` | When you need mock patterns, naming conventions, or test project structure guidance |
 

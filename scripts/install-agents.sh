@@ -19,11 +19,12 @@ echo "Installing skills from: ${REPO_ROOT}"
 
 mkdir -p "${SKILLS_DIR}"
 
-# Full resync of the repo-owned subtrees: cp -r overwrites and adds but never
+# Full resync of the repo-owned skills. cp -r overwrites and adds but never
 # deletes, so a skill removed from the repo would linger here and stay
-# invocable. Only team/ and professional/ are repo-owned — anything else you
-# added by hand under skills/ is left untouched.
-rm -rf "${SKILLS_DIR}/team" "${SKILLS_DIR}/professional"
+# invocable. Prune by what the repo currently ships -- skills/ is flat, so the
+# old `rm -rf team professional` no longer matches anything. Skills you added
+# by hand under skills/ are not in the repo listing, so they are left untouched.
+for d in "${REPO_ROOT}/skills/"*/; do rm -rf "${SKILLS_DIR}/$(basename "$d")"; done
 cp -rv "${REPO_ROOT}/skills/"* "${SKILLS_DIR}/"
 
 echo ""

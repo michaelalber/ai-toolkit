@@ -16,11 +16,12 @@ mkdir -p "${OPENCODE_DIR}/commands"
 # removed agent lingers and stays spawnable. These two dirs are wholly repo-owned.
 rm -f "${OPENCODE_DIR}/agents/"*.md "${OPENCODE_DIR}/commands/"*.md
 find "${REPO_ROOT}/opencode/agents" -name "*.md" -exec cp -v {} "${OPENCODE_DIR}/agents/" \;
-# Full resync of the repo-owned subtrees: cp -r overwrites and adds but never
+# Full resync of the repo-owned skills. cp -r overwrites and adds but never
 # deletes, so a skill removed from the repo would linger here and stay
-# invocable. Only team/ and professional/ are repo-owned — anything else you
-# added by hand under skills/ is left untouched.
-rm -rf "${OPENCODE_DIR}/skills/team" "${OPENCODE_DIR}/skills/professional"
+# invocable. Prune by what the repo currently ships -- skills/ is flat, so the
+# old `rm -rf team professional` no longer matches anything. Skills you added
+# by hand under skills/ are not in the repo listing, so they are left untouched.
+for d in "${REPO_ROOT}/skills/"*/; do rm -rf "${OPENCODE_DIR}/skills/$(basename "$d")"; done
 cp -rv "${REPO_ROOT}/skills/"* "${OPENCODE_DIR}/skills/"
 find "${REPO_ROOT}/opencode/commands" -name "*.md" -exec cp -v {} "${OPENCODE_DIR}/commands/" \;
 

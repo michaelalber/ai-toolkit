@@ -59,7 +59,7 @@ are captured command results, never claims.
 skill({ name: "qraspi-skeleton" })     — SKELETON mode: archetype discovery + scaffold + CI-green gate
 skill({ name: "qraspi-implement" })    — IMPLEMENT mode: per-slice Red-Green-Refactor + the slice-log template
 skill({ name: "fitness-functions" })   — per-stack authoring + CI-wiring of each specified fitness gate (SKELETON)
-skill({ name: "tdd" })                 — the Red-Green-Refactor inner loop each IMPLEMENT phase runs
+skill({ name: "tdd-loop" })                 — the Red-Green-Refactor inner loop each IMPLEMENT phase runs
 ```
 
 Load the skill for your mode: `qraspi-skeleton` (+ `fitness-functions` at the GATE step) for a Skeleton
@@ -122,7 +122,7 @@ Step 6 — WRITE skeleton.md (status: complete) with CI status + the SLICE BACKL
 ```
 Step 1 — PRE-FLIGHT: locate the project folder; read skeleton.md (status: complete, ci_green: true) and
           plan-{slice}.md (status: approved) (Guardrail 1); run the baseline suite (tests + fitness
-          gates) → must be green; load skill qraspi-implement + load skill tdd
+          gates) → must be green; load skill qraspi-implement + load skill tdd-loop
 Step 2 — RESUME CHECK: implementation-log-{slice}.md present? → resume at the first unfinished phase.
           Else start at Phase 1 of plan-{slice}.md
 Step 3 — PHASE LOOP (each plan-{slice}.md phase = one vertical increment):

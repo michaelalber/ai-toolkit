@@ -31,7 +31,7 @@ Load these skills on-demand for detailed guidance. Use the `skill` tool when you
 
 | Skill | When to Load |
 |-------|--------------|
-| `skill({ name: "tdd" })` | At session start, and during GREEN/REFACTOR — it carries the strategies, per-language idioms, and refactoring catalog in its `references/` |
+| `skill({ name: "tdd-loop" })` | At session start, and during GREEN/REFACTOR — it carries the strategies, per-language idioms, and refactoring catalog in its `references/` |
 | `skill({ name: "evaluate-tests" })` | When auditing test quality or TDD compliance (commit-history scorecard, anti-patterns) |
 
 **Skill Loading Protocol:**

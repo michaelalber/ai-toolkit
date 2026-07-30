@@ -1,5 +1,5 @@
 ---
-name: tdd
+name: tdd-loop
 audience: team
 description: >
   The canonical RED-GREEN-REFACTOR inner loop. Enforces behavioral, structure-insensitive tests

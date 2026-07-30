@@ -11,7 +11,7 @@ QRSPI feature folders, artifacts, and any slice logs already written:
 
 Run the QRSPI **Implement** phase for: $ARGUMENTS
 
-Use the `qrspi-implement` agent (it loads the `qrspi-implement` and `tdd` skills and can edit source).
+Use the `qrspi-implement` agent (it loads the `qrspi-implement` and `tdd-loop` skills and can edit source).
 Locate the feature folder above and read its `plan.md`. If no `plan.md` exists, STOP and tell me to
 run `/qrspi-plan` first -- do not implement from memory. If `plan.md` status is only
 `ready-for-review`, STOP and ask me to approve the plan before implementing.

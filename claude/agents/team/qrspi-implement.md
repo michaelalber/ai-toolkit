@@ -38,7 +38,7 @@ plan does not cover something.
 
 ```
 skill({ name: "qrspi-implement" })   — the per-slice RGR workflow, slice-log template, gates
-skill({ name: "tdd" })               — the RED-GREEN-REFACTOR inner-loop mechanics each slice runs
+skill({ name: "tdd-loop" })               — the RED-GREEN-REFACTOR inner-loop mechanics each slice runs
 ```
 
 Load both when starting any QRSPI implement session: `qrspi-implement` supplies the slice loop and

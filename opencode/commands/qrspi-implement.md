@@ -6,7 +6,7 @@ subtask: false
 
 Run the QRSPI **Implement** phase for: $ARGUMENTS
 
-Load the `qrspi-implement` and `tdd` skills. Locate the feature folder under
+Load the `qrspi-implement` and `tdd-loop` skills. Locate the feature folder under
 `thoughts/shared/qrspi/` and read its `plan.md`. If no `plan.md` exists, STOP and tell me to run
 `/qrspi-plan` first -- do not implement from memory. If `plan.md` status is only
 `ready-for-review`, STOP and ask me to approve the plan before implementing.
