@@ -111,7 +111,7 @@ If tests fail during REFACTOR:
 Always maintain explicit state:
 
 ```markdown
-<tdd-state>
+<tdd-agent-state>
 phase: RED | GREEN | REFACTOR
 iteration: N
 feature: [description]
@@ -120,7 +120,7 @@ tests_passing: true | false
 test_count: N
 failing_count: N
 last_verified: [description]
-</tdd-state>
+</tdd-agent-state>
 ```
 
 ## Autonomous Protocol
@@ -290,13 +290,13 @@ Stack: [Language/Framework]
 
 **Analysis**: [expected/unexpected, why]
 
-<tdd-state>
+<tdd-agent-state>
 phase: GREEN
 iteration: 1
 feature: [name]
 current_test: [test name]
 tests_passing: false
-</tdd-state>
+</tdd-agent-state>
 
 ---
 

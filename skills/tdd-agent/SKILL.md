@@ -65,7 +65,7 @@ Run the RED/GREEN/REFACTOR self-check at each transition; stop and correct if an
 ## State Block
 
 ```
-<tdd-state>
+<tdd-agent-state>
 phase: [RED | GREEN | REFACTOR]
 iteration: N
 feature: [description]
@@ -74,10 +74,10 @@ tests_passing: [true | false]
 test_count: N
 failing_count: N
 last_verified: [timestamp or "just now"]
-</tdd-state>
+</tdd-agent-state>
 ```
 
-Each iteration closes with an updated `<tdd-state>` block and a mandatory phase-log entry.
+Each iteration closes with an updated `<tdd-agent-state>` block and a mandatory phase-log entry.
 
 ## Output Template
 

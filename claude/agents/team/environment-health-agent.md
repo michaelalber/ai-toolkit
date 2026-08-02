@@ -390,7 +390,7 @@ $ docker ps --filter name=app-redis
 
 **Verification:** Container running, health check passing.
 
-<env-health-state>
+<environment-health-agent-state>
 phase: MONITOR
 environment: dev
 services_total: 3
@@ -401,7 +401,7 @@ issues_found: 1
 issues_resolved: 1
 last_action: Stopped host redis-server, restarted container
 last_verified: All 3 services healthy
-</env-health-state>
+</environment-health-agent-state>
 
 ---
 
@@ -415,7 +415,7 @@ All services healthy. No new issues detected.
 Maintain state across conversation turns:
 
 ```markdown
-<env-health-state>
+<environment-health-agent-state>
 phase: PROBE | DIAGNOSE | REMEDIATE | MONITOR
 environment: dev | staging | production | unknown
 services_total: [number]
@@ -427,7 +427,7 @@ issues_resolved: [number]
 last_action: [description of last action taken]
 last_verified: [description of last verification]
 blockers: [any issues preventing progress]
-</env-health-state>
+</environment-health-agent-state>
 ```
 
 ## Completion Criteria

@@ -10,7 +10,7 @@ RED → GREEN → REFACTOR for `Calculator.add()` (Python):
 
 **REFACTOR**: No smells detected. Code is minimal. No refactoring needed. Update state: `phase: RED, iteration: 2`.
 
-Each iteration closes with an updated `<tdd-state>` block and a mandatory phase log entry.
+Each iteration closes with an updated `<tdd-agent-state>` block and a mandatory phase log entry.
 
 ## Quick Error-Recovery Reference
 
@@ -48,13 +48,13 @@ The detailed step-by-step protocols for each of these (plus flaky-test detection
 3. Identifying test file location: [path]
 4. Identifying implementation file: [path]
 
-<tdd-state>
+<tdd-agent-state>
 phase: RED
 iteration: 1
 feature: [first behavior]
 current_test: none
 tests_passing: unknown
-</tdd-state>
+</tdd-agent-state>
 
 Beginning RED phase for first behavior.
 ```
@@ -109,7 +109,7 @@ E   ModuleNotFoundError: No module named 'user_service'
 - [x] New test fails
 - [x] Failure is for expected reason (missing module)
 
-<tdd-state>
+<tdd-agent-state>
 phase: GREEN
 iteration: 1
 feature: User account creation
@@ -118,7 +118,7 @@ tests_passing: false
 test_count: 1
 failing_count: 1
 last_verified: Module doesn't exist yet
-</tdd-state>
+</tdd-agent-state>
 
 Proceeding to GREEN phase.
 
@@ -170,7 +170,7 @@ tests/test_user_service.py::test_create_user_with_email_and_password PASSED
 - [x] All tests pass
 - [x] New test passes
 
-<tdd-state>
+<tdd-agent-state>
 phase: REFACTOR
 iteration: 1
 feature: User account creation
@@ -178,7 +178,7 @@ current_test: test_create_user_with_email_and_password
 tests_passing: true
 test_count: 1
 failing_count: 0
-</tdd-state>
+</tdd-agent-state>
 
 Proceeding to REFACTOR phase.
 
@@ -217,7 +217,7 @@ $ pytest tests/test_user_service.py -v
 ============================= 1 passed in 0.02s ===============================
 ```
 
-<tdd-state>
+<tdd-agent-state>
 phase: RED
 iteration: 2
 feature: User account creation (next behavior)
@@ -225,7 +225,7 @@ current_test: none
 tests_passing: true
 test_count: 1
 failing_count: 0
-</tdd-state>
+</tdd-agent-state>
 
 Ready for next behavior. Proceeding to RED phase.
 
@@ -274,7 +274,7 @@ E   AttributeError: 'User' object has no attribute 'password_hash'
 - Previous test still passes: ✓
 - Expected failure: ✓
 
-<tdd-state>
+<tdd-agent-state>
 phase: GREEN
 iteration: 2
 feature: Password hashing
@@ -282,7 +282,7 @@ current_test: test_password_is_hashed
 tests_passing: false
 test_count: 2
 failing_count: 1
-</tdd-state>
+</tdd-agent-state>
 
 Proceeding to GREEN phase.
 ```
@@ -407,11 +407,11 @@ Steps:
    $ git status
 
 4. Reconstruct state block:
-   <tdd-state>
+   <tdd-agent-state>
    phase: [determined from analysis]
    iteration: [count from test file]
    ...
-   </tdd-state>
+   </tdd-agent-state>
 
 5. Log the recovery
 6. Continue from reconstructed state
@@ -461,10 +461,10 @@ Session is complete when:
 - Refactorings performed: [list]
 - Remaining smells: [none | list]
 
-<tdd-state>
+<tdd-agent-state>
 phase: COMPLETE
 iterations: N
 tests_passing: true
 test_count: N
-</tdd-state>
+</tdd-agent-state>
 ```

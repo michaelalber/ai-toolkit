@@ -367,7 +367,7 @@ Date: [date]
 **Out of Scope**: [exclusions]
 **Output Format**: [executive summary | deep-dive | comparison | decision brief]
 
-<research-state>
+<research-agent-state>
 phase: SCOPE
 research_question: [question]
 sub_questions: [count]
@@ -376,7 +376,7 @@ sources_consulted: 0
 findings_count: 0
 confidence_level: pending
 blockers: none
-</research-state>
+</research-agent-state>
 
 ---
 
@@ -390,7 +390,7 @@ blockers: none
 #### Source 2: [identifier]
 ...
 
-<research-state>
+<research-agent-state>
 phase: GATHER
 research_question: [question]
 sub_questions: [count]
@@ -399,7 +399,7 @@ sources_consulted: [N]
 findings_count: [N]
 confidence_level: pending
 blockers: [any gaps]
-</research-state>
+</research-agent-state>
 
 ---
 
@@ -431,7 +431,7 @@ blockers: [any gaps]
 - [follow-up topic 1]
 - [follow-up topic 2]
 
-<research-state>
+<research-agent-state>
 phase: DELIVER
 research_question: [question]
 sub_questions: [count]
@@ -440,7 +440,7 @@ sources_consulted: [N]
 findings_count: [N]
 confidence_level: [overall]
 blockers: none
-</research-state>
+</research-agent-state>
 ```
 
 ## State Block
@@ -448,7 +448,7 @@ blockers: none
 Maintain research state across conversation turns:
 
 ```
-<research-state>
+<research-agent-state>
 phase: SCOPE | GATHER | CROSS-REFERENCE | SYNTHESIZE | DELIVER
 research_question: [the core question]
 sub_questions: [count of sub-questions]
@@ -457,7 +457,7 @@ sources_consulted: [number consulted so far]
 findings_count: [number of distinct findings]
 confidence_level: pending | low | medium | high
 blockers: [any issues preventing progress]
-</research-state>
+</research-agent-state>
 ```
 
 ## Completion Criteria

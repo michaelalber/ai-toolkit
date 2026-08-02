@@ -12,7 +12,7 @@ detail, violation responses, and severity table follow below.
 
 ## Mandatory Phase-Log Templates
 
-Each iteration closes with an updated `<tdd-state>` block and a mandatory phase-log entry.
+Each iteration closes with an updated `<tdd-agent-state>` block and a mandatory phase-log entry.
 
 ### RED Phase Log
 
@@ -279,7 +279,7 @@ Step 5: RETRY (smaller)
 **State Block Requirements**:
 
 ```markdown
-<tdd-state>
+<tdd-agent-state>
 # Required fields (always present)
 phase: RED | GREEN | REFACTOR
 iteration: [positive integer]
@@ -295,7 +295,7 @@ last_verified: [description of last verification]
 # Error state (when applicable)
 error: [description of current blocker]
 recovery_action: [what needs to happen]
-</tdd-state>
+</tdd-agent-state>
 ```
 
 **State Validation Rules**:

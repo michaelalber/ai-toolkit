@@ -299,7 +299,7 @@ Target: [Directory/namespace/file]
 2. [item] -- [reason]
 3. [item] -- [reason]
 
-<doc-sync-state>
+<documentation-agent-state>
 phase: AUDIT
 scope: [directory or namespace]
 files_scanned: [count]
@@ -308,7 +308,7 @@ stale_docs: [count]
 items_updated: 0
 items_validated: 0
 last_verified: [description]
-</doc-sync-state>
+</documentation-agent-state>
 
 ---
 
@@ -347,7 +347,7 @@ last_verified: [description]
 Track the current documentation session:
 
 ```markdown
-<doc-sync-state>
+<documentation-agent-state>
 phase: AUDIT | ANALYZE | UPDATE | VALIDATE
 scope: [directory, namespace, or file being documented]
 files_scanned: [count of code files examined]
@@ -356,7 +356,7 @@ stale_docs: [count of stale documentation items]
 items_updated: [count of docs written or updated this session]
 items_validated: [count of docs verified against code]
 last_verified: [description of last verification action]
-</doc-sync-state>
+</documentation-agent-state>
 ```
 
 **Phase definitions:**
@@ -368,7 +368,7 @@ last_verified: [description of last verification action]
 **Example initial state:**
 
 ```markdown
-<doc-sync-state>
+<documentation-agent-state>
 phase: AUDIT
 scope: src/OrderService/
 files_scanned: 0
@@ -377,7 +377,7 @@ stale_docs: 0
 items_updated: 0
 items_validated: 0
 last_verified: Session started, beginning audit
-</doc-sync-state>
+</documentation-agent-state>
 ```
 
 ## Completion Criteria
