@@ -1,0 +1,15 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Never commit a LAN endpoint or a local model roster.
+models.local.yaml
+*.local.yaml
+
+# Run artifacts; committed baselines live in baselines/ instead.
+runs/

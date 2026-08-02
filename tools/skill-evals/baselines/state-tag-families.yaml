@@ -1,0 +1,42 @@
+# Declared state-tag families (SK032).
+#
+# The rule is: a state tag is unique ACROSS families, and may be shared WITHIN one.
+# A family is a set of skills that run the same workflow over different subject matter —
+# the tag names the shared workflow, so sharing it is the honest encoding. Anything else
+# claiming the tag is a collision: a multi-turn session cannot tell whose state it reads.
+#
+# Adding an entry here is a decision. State the rationale, or do not add it.
+
+families:
+  arch-checklist-state:
+    rationale: >
+      One architecture-grading workflow (DETECT -> SCAN -> REPORT -> RECOMMEND) applied per
+      language. The 2026-06-03 cross-language parity decision made the workflow identical by
+      design; only the language checks differ. The tag names the workflow, not the language.
+    skills:
+      - dotnet-architecture-checklist
+      - php-architecture-checklist
+      - python-architecture-checklist
+      - react-architecture-checklist
+      - rust-architecture-checklist
+      - vue-architecture-checklist
+
+  security-review-state:
+    rationale: >
+      One OWASP Top 10 (2025) review workflow applied per language, sharing a core mapped to
+      language-specific patterns. Same 2026-06-03 parity decision as the checklist family.
+      `security-review-federal` deliberately does NOT share this tag — it is an overlay that
+      runs on top of a base review, not another member of the family.
+    skills:
+      - dotnet-security-review
+      - php-security-review
+      - python-security-review
+      - react-security-review
+      - rust-security-review
+      - vue-security-review
+
+# Deliberately NOT a family — <tdd-state>, shared by `tdd-loop` and `tdd-agent`.
+# Those two are a loop and an operating mode of that loop, not peers running one workflow
+# over different subject matter. `tdd-agent` should own <tdd-agent-state>, exactly as
+# `code-review-agent` keeps <code-review-state> distinct from the engine skill's
+# <automated-review-state>.

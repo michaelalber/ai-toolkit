@@ -1,0 +1,69 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "skill-evals"
+version = "0.1.0"
+description = "Structural lint, routing eval, and rubric scorecard for the ai-toolkit skill corpus"
+requires-python = ">=3.10"
+# L1 (the lint) is the daily driver and must install with no LLM stack at all.
+dependencies = [
+    "typer>=0.12",
+    "rich>=13",
+    "pyyaml>=6",
+]
+
+[project.optional-dependencies]
+# The LLM-in-the-loop layers (routing, quality, scorecard) reuse ollama-evals' client,
+# judge, scorer registry, compare gate, and report renderers rather than duplicating them.
+llm = [
+    "ollama-evals>=0.1",
+]
+dev = [
+    "pytest>=8",
+    "pytest-cov>=5",
+    "ruff>=0.6",
+    "mypy>=1.11",
+    "bandit[toml]>=1.7",
+]
+
+[project.scripts]
+skill-evals = "skill_evals.cli:app"
+
+[tool.uv.sources]
+ollama-evals = { path = "../ollama-evals", editable = true }
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/skill_evals"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=skill_evals --cov-report=term-missing"
+markers = [
+    "corpus: acceptance tests that run against the real skills/ tree (skipped if absent)",
+]
+
+[tool.coverage.run]
+source = ["src/skill_evals"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.ruff.lint.flake8-bugbear]
+# typer.Option/Argument in a default is the framework's own idiom, not a mutable default.
+extend-immutable-calls = ["typer.Option", "typer.Argument"]
+
+[tool.mypy]
+python_version = "3.10"
+ignore_missing_imports = true
+check_untyped_defs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+
+[tool.bandit]
+exclude_dirs = ["tests"]

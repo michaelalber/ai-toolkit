@@ -1,0 +1,76 @@
+# Accepted findings — the open backlog, with a reason for each.
+#
+# This is the ACTIVE baseline. `skill-evals lint --baseline baselines/known-defects.yaml`
+# exits 0; a plain `skill-evals lint` still reports these, which is the point — they are
+# deferred, not resolved.
+#
+# The rule for this file: a finding is baselined because a human decided the fix is a
+# content change they want to make deliberately, and the reason is written down. Never
+# baseline something to make the gate quiet. Never lower a rule's severity instead.
+#
+# Everything mechanical the linter found on its first run (2026-08-02) was FIXED, not
+# baselined: the tdd -> tdd-loop rename tail across 18 Integration tables, two dangling
+# reference pointers in tdd-agent, the stale tdd row and three inconsistent count sets in
+# pi/SKILLS-local.md, stale skill counts in README/CLAUDE.md/AGENTS.md, and four
+# agent/skill state-tag collisions. 63 errors -> 8.
+
+note: >
+  Open backlog after the 2026-08-02 cleanup. Eight findings, all content decisions on
+  skills whose owner should make the call — restructuring a skill or trimming its budget
+  is authorship, not linting.
+
+accepted:
+  # --- evaluate-tests and substack-writer never adopted the 5-section lean layout ---
+  #
+  # Both use bespoke headings ("Two Modes", "Per-Test Classification", "Core principle:
+  # the human owns the substance"). At 163 and 134 lines they are full-tier, so the layout
+  # applies. Converting them means restructuring the skill, which changes how it reads and
+  # how the model executes it — a deliberate authoring decision, not a lint fix.
+  #
+  # The 2026-06-26 Persistent Decision records the lean-layout migration as complete. It
+  # was verified on line count only; these two are the section-level remainder.
+  - rule: SK021
+    skill: evaluate-tests
+    file: skills/evaluate-tests/SKILL.md
+    message: 'missing canonical section(s): Core Philosophy, State Block, Output Template,
+      Integration'
+  - rule: SK030
+    skill: evaluate-tests
+    file: skills/evaluate-tests/SKILL.md
+    message: full-template skill has no <*-state> block
+  - rule: SK021
+    skill: substack-writer
+    file: skills/substack-writer/SKILL.md
+    message: 'missing canonical section(s): Core Philosophy, Workflow, State Block, Output
+      Template, Integration'
+  - rule: SK030
+    skill: substack-writer
+    file: skills/substack-writer/SKILL.md
+    message: full-template skill has no <*-state> block
+
+  # --- four phase drivers sit just over the minimal ceiling ---
+  #
+  # qraspi-graduate 102, qrspi-research 102, qraspi-implement 107, qraspi-plan 110 lines.
+  # The 2026-06-02 decision declares the QRSPI/QRASPI phase skills minimal-tier ("thin,
+  # self-sufficient workflow-phase drivers", <= 100 lines, >= 1 reference) and they each
+  # carry exactly one reference file, consistent with that. They are 2-10 lines over.
+  #
+  # Two honest resolutions, both the owner's call: trim each back under 100, or accept
+  # them as full-tier and add a second reference file. Raising the minimal ceiling to fit
+  # would be moving the goalposts.
+  - rule: SK041
+    skill: qraspi-graduate
+    file: skills/qraspi-graduate/SKILL.md
+    message: 1 reference file(s); full tier requires 2
+  - rule: SK041
+    skill: qraspi-implement
+    file: skills/qraspi-implement/SKILL.md
+    message: 1 reference file(s); full tier requires 2
+  - rule: SK041
+    skill: qraspi-plan
+    file: skills/qraspi-plan/SKILL.md
+    message: 1 reference file(s); full tier requires 2
+  - rule: SK041
+    skill: qrspi-research
+    file: skills/qrspi-research/SKILL.md
+    message: 1 reference file(s); full tier requires 2

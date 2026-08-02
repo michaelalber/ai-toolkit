@@ -1,0 +1,868 @@
+{
+  "manifest": {
+    "run_id": "b860fdd80952",
+    "created_at": "2026-08-02T17:28:06.138557+00:00",
+    "base_url": "http://192.168.42.165:11434/v1",
+    "models": [
+      "qwen3-coder-30b-agent:latest"
+    ],
+    "temperature": 0.0,
+    "seed": 7,
+    "num_ctx": 32768,
+    "n_cases": 60,
+    "samples": 1,
+    "suite": "routing",
+    "system_prompt_sha256": null,
+    "system_prompt_chars": 0,
+    "roster_sha256": "c36e1981e9ed7febf4d97dee43c344df6f2eb4a76b8d1906ebe8b7c20df63875",
+    "roster_mode": "full",
+    "roster_size": 91,
+    "roster_withheld": [
+      "grill-me",
+      "grill-with-docs",
+      "improve-codebase-architecture"
+    ]
+  },
+  "results": [
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-canon-tdd",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "chose 'tdd-loop'",
+      "output": "{\n  \"skill\": \"tdd-loop\",\n  \"runner_up\": \"tdd-agent\"\n}",
+      "metadata": {
+        "chosen": "tdd-loop",
+        "runner_up": "tdd-agent",
+        "expected": "tdd-loop"
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-canon-cargo",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "chose 'cargo-package-scaffold'",
+      "output": "{\n  \"skill\": \"cargo-package-scaffold\",\n  \"runner_up\": \"pypi-package-scaffold\"\n}",
+      "metadata": {
+        "chosen": "cargo-package-scaffold",
+        "runner_up": "pypi-package-scaffold",
+        "expected": "cargo-package-scaffold"
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-canon-nuget",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "chose 'nuget-package-scaffold'",
+      "output": "{\n  \"skill\": \"nuget-package-scaffold\",\n  \"runner_up\": \"cargo-package-scaffold\"\n}",
+      "metadata": {
+        "chosen": "nuget-package-scaffold",
+        "runner_up": "cargo-package-scaffold",
+        "expected": "nuget-package-scaffold"
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-canon-efmig",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "chose 'ef-migration-manager'",
+      "output": "{\n  \"skill\": \"ef-migration-manager\",\n  \"runner_up\": \"sqlx-migration-manager\"\n}",
+      "metadata": {
+        "chosen": "ef-migration-manager",
+        "runner_up": "sqlx-migration-manager",
+        "expected": "ef-migration-manager"
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-canon-alembic",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "chose 'alembic-migration-manager'",
+      "output": "{\n  \"skill\": \"alembic-migration-manager\",\n  \"runner_up\": \"sqlx-migration-manager\"\n}",
+      "metadata": {
+        "chosen": "alembic-migration-manager",
+        "runner_up": "sqlx-migration-manager",
+        "expected": "alembic-migration-manager"
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-canon-sqlx",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "chose 'sqlx-migration-manager'",
+      "output": "{\n  \"skill\": \"sqlx-migration-manager\",\n  \"runner_up\": \"ef-migration-manager\"\n}",
+      "metadata": {
+        "chosen": "sqlx-migration-manager",
+        "runner_up": "ef-migration-manager",
+        "expected": "sqlx-migration-manager"
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-canon-axum",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "chose 'axum-scaffolder'",
+      "output": "{\n  \"skill\": \"axum-scaffolder\",\n  \"runner_up\": \"fastapi-scaffolder\"\n}",
+      "metadata": {
+        "chosen": "axum-scaffolder",
+        "runner_up": "fastapi-scaffolder",
+        "expected": "axum-scaffolder"
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-canon-fastapi",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "chose 'fastapi-scaffolder'",
+      "output": "{\n  \"skill\": \"fastapi-scaffolder\",\n  \"runner_up\": \"minimal-api-scaffolder\"\n}",
+      "metadata": {
+        "chosen": "fastapi-scaffolder",
+        "runner_up": "minimal-api-scaffolder",
+        "expected": "fastapi-scaffolder"
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-canon-vslice",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "chose 'dotnet-vertical-slice'",
+      "output": "{\n  \"skill\": \"dotnet-vertical-slice\",\n  \"runner_up\": \"dotnet-controller-api-scaffolder\"\n}",
+      "metadata": {
+        "chosen": "dotnet-vertical-slice",
+        "runner_up": "dotnet-controller-api-scaffolder",
+        "expected": "dotnet-vertical-slice"
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-canon-parafile",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "chose 'para-file'",
+      "output": "{\"skill\": \"para-file\", \"runner_up\": \"para-review\"}",
+      "metadata": {
+        "chosen": "para-file",
+        "runner_up": "para-review",
+        "expected": "para-file"
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-canon-parareview",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "chose 'para-review'",
+      "output": "{\n  \"skill\": \"para-review\",\n  \"runner_up\": \"para-file\"\n}",
+      "metadata": {
+        "chosen": "para-review",
+        "runner_up": "para-file",
+        "expected": "para-review"
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-canon-transcript",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "chose 'transcript-capture'",
+      "output": "{\n  \"skill\": \"transcript-capture\",\n  \"runner_up\": \"email-capture\"\n}",
+      "metadata": {
+        "chosen": "transcript-capture",
+        "runner_up": "email-capture",
+        "expected": "transcript-capture"
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-canon-oss",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "chose 'oss-vetting'",
+      "output": "{\n  \"skill\": \"oss-vetting\",\n  \"runner_up\": \"supply-chain-audit\"\n}",
+      "metadata": {
+        "chosen": "oss-vetting",
+        "runner_up": "supply-chain-audit",
+        "expected": "oss-vetting"
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-canon-qrspiq",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "chose 'qrspi-questions'",
+      "output": "{\n  \"skill\": \"qrspi-questions\",\n  \"runner_up\": \"qraspi-questions\"\n}",
+      "metadata": {
+        "chosen": "qrspi-questions",
+        "runner_up": "qraspi-questions",
+        "expected": "qrspi-questions"
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-canon-qraspiq",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "chose 'qraspi-questions'",
+      "output": "{\n  \"skill\": \"qraspi-questions\",\n  \"runner_up\": \"qrspi-questions\"\n}",
+      "metadata": {
+        "chosen": "qraspi-questions",
+        "runner_up": "qrspi-questions",
+        "expected": "qraspi-questions"
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-canon-fitness",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "chose 'fitness-functions'",
+      "output": "{\"skill\": \"fitness-functions\", \"runner_up\": \"dependency-mapper\"}",
+      "metadata": {
+        "chosen": "fitness-functions",
+        "runner_up": "dependency-mapper",
+        "expected": "fitness-functions"
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-canon-depmap",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "chose 'dependency-mapper'",
+      "output": "{\"skill\": \"dependency-mapper\", \"runner_up\": \"codebase-design\"}",
+      "metadata": {
+        "chosen": "dependency-mapper",
+        "runner_up": "codebase-design",
+        "expected": "dependency-mapper"
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-canon-jira",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "chose 'jira-review'",
+      "output": "{\"skill\": \"jira-review\", \"runner_up\": \"architecture-review\"}",
+      "metadata": {
+        "chosen": "jira-review",
+        "runner_up": "architecture-review",
+        "expected": "jira-review"
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-canon-substack",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "chose 'substack-writer'",
+      "output": "{\n  \"skill\": \"substack-writer\",\n  \"runner_up\": \"spec-coach\"\n}",
+      "metadata": {
+        "chosen": "substack-writer",
+        "runner_up": "spec-coach",
+        "expected": "substack-writer"
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-canon-domainmodel",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "chose 'domain-model'",
+      "output": "{\n  \"skill\": \"domain-model\",\n  \"runner_up\": \"architecture-journal\"\n}",
+      "metadata": {
+        "chosen": "domain-model",
+        "runner_up": "architecture-journal",
+        "expected": "domain-model"
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-conf-secreview-react",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "chose 'react-security-review'",
+      "output": "{\n  \"skill\": \"react-security-review\",\n  \"runner_up\": \"security-review-federal\"\n}",
+      "metadata": {
+        "chosen": "react-security-review",
+        "runner_up": "security-review-federal",
+        "expected": "react-security-review"
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-conf-secreview-vue",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "chose 'vue-security-review'",
+      "output": "{\n  \"skill\": \"vue-security-review\",\n  \"runner_up\": \"security-review-federal\"\n}",
+      "metadata": {
+        "chosen": "vue-security-review",
+        "runner_up": "security-review-federal",
+        "expected": "vue-security-review"
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-conf-app-react",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "chose 'react-app-scaffolder'",
+      "output": "{\n  \"skill\": \"react-app-scaffolder\",\n  \"runner_up\": \"vue-app-scaffolder\"\n}",
+      "metadata": {
+        "chosen": "react-app-scaffolder",
+        "runner_up": "vue-app-scaffolder",
+        "expected": "react-app-scaffolder"
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-conf-app-vue",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "chose 'vue-app-scaffolder'",
+      "output": "{\n  \"skill\": \"vue-app-scaffolder\",\n  \"runner_up\": \"vue-feature-slice\"\n}",
+      "metadata": {
+        "chosen": "vue-app-scaffolder",
+        "runner_up": "vue-feature-slice",
+        "expected": "vue-app-scaffolder"
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-conf-slice-react",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "chose 'react-feature-slice'",
+      "output": "{\n  \"skill\": \"react-feature-slice\",\n  \"runner_up\": \"react-component-scaffolder\"\n}",
+      "metadata": {
+        "chosen": "react-feature-slice",
+        "runner_up": "react-component-scaffolder",
+        "expected": "react-feature-slice"
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-conf-slice-vue",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "chose 'vue-feature-slice'",
+      "output": "{\n  \"skill\": \"vue-feature-slice\",\n  \"runner_up\": \"vue-component-scaffolder\"\n}",
+      "metadata": {
+        "chosen": "vue-feature-slice",
+        "runner_up": "vue-component-scaffolder",
+        "expected": "vue-feature-slice"
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-conf-comp-react",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "chose 'react-component-scaffolder'",
+      "output": "{\n  \"skill\": \"react-component-scaffolder\",\n  \"runner_up\": \"react-feature-slice\"\n}",
+      "metadata": {
+        "chosen": "react-component-scaffolder",
+        "runner_up": "react-feature-slice",
+        "expected": "react-component-scaffolder"
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-conf-comp-vue",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "chose 'vue-component-scaffolder'",
+      "output": "{\n  \"skill\": \"vue-component-scaffolder\",\n  \"runner_up\": \"vue-feature-slice\"\n}",
+      "metadata": {
+        "chosen": "vue-component-scaffolder",
+        "runner_up": "vue-feature-slice",
+        "expected": "vue-component-scaffolder"
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-conf-arch-react",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "chose 'react-architecture-checklist'",
+      "output": "{\n  \"skill\": \"react-architecture-checklist\",\n  \"runner_up\": \"architecture-review\"\n}",
+      "metadata": {
+        "chosen": "react-architecture-checklist",
+        "runner_up": "architecture-review",
+        "expected": "react-architecture-checklist"
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-conf-arch-vue",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "chose 'vue-architecture-checklist'",
+      "output": "{\n  \"skill\": \"vue-architecture-checklist\",\n  \"runner_up\": \"vue-modernization-analyzer\"\n}",
+      "metadata": {
+        "chosen": "vue-architecture-checklist",
+        "runner_up": "vue-modernization-analyzer",
+        "expected": "vue-architecture-checklist"
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-conf-sec-python",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "chose 'python-security-review'",
+      "output": "{\n  \"skill\": \"python-security-review\",\n  \"runner_up\": \"security-review-federal\"\n}",
+      "metadata": {
+        "chosen": "python-security-review",
+        "runner_up": "security-review-federal",
+        "expected": "python-security-review"
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-conf-sec-rust",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "chose 'rust-security-review'",
+      "output": "{\n  \"skill\": \"rust-security-review\",\n  \"runner_up\": \"supply-chain-audit\"\n}",
+      "metadata": {
+        "chosen": "rust-security-review",
+        "runner_up": "supply-chain-audit",
+        "expected": "rust-security-review"
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-conf-sec-dotnet",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "chose 'dotnet-security-review'",
+      "output": "{\n  \"skill\": \"dotnet-security-review\",\n  \"runner_up\": \"oss-vetting\"\n}",
+      "metadata": {
+        "chosen": "dotnet-security-review",
+        "runner_up": "oss-vetting",
+        "expected": "dotnet-security-review"
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-conf-slice-php",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "chose 'php-feature-slice'",
+      "output": "{\n  \"skill\": \"php-feature-slice\",\n  \"runner_up\": \"php-api-scaffolder\"\n}",
+      "metadata": {
+        "chosen": "php-feature-slice",
+        "runner_up": "php-api-scaffolder",
+        "expected": "php-feature-slice"
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-conf-qrspi-plan",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "chose 'qrspi-plan'",
+      "output": "{\n  \"skill\": \"qrspi-plan\",\n  \"runner_up\": \"python-feature-slice\"\n}",
+      "metadata": {
+        "chosen": "qrspi-plan",
+        "runner_up": "python-feature-slice",
+        "expected": "qrspi-plan"
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-neg-geography",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "correctly declined",
+      "output": "{\n  \"skill\": \"none\",\n  \"runner_up\": \"none\"\n}",
+      "metadata": {
+        "chosen": "none",
+        "runner_up": "none",
+        "expected": null
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-neg-rename-var",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "correctly declined",
+      "output": "{\n  \"skill\": \"none\",\n  \"runner_up\": \"none\"\n}",
+      "metadata": {
+        "chosen": "none",
+        "runner_up": "none",
+        "expected": null
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-neg-git-log",
+      "category": "routing",
+      "score": 0.0,
+      "passed": false,
+      "detail": "fired 'session-context' when no skill should",
+      "output": "{\n  \"skill\": \"session-context\",\n  \"runner_up\": \"none\"\n}",
+      "metadata": {
+        "chosen": "session-context",
+        "runner_up": "none",
+        "expected": null
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-neg-typo",
+      "category": "routing",
+      "score": 0.0,
+      "passed": false,
+      "detail": "fired 'doc-sync' when no skill should",
+      "output": "{\n  \"skill\": \"doc-sync\",\n  \"runner_up\": \"none\"\n}",
+      "metadata": {
+        "chosen": "doc-sync",
+        "runner_up": "none",
+        "expected": null
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-neg-explain",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "correctly declined",
+      "output": "{\n  \"skill\": \"none\",\n  \"runner_up\": \"none\"\n}",
+      "metadata": {
+        "chosen": "none",
+        "runner_up": "none",
+        "expected": null
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-neg-timezone",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "correctly declined",
+      "output": "{\n  \"skill\": \"none\",\n  \"runner_up\": \"none\"\n}",
+      "metadata": {
+        "chosen": "none",
+        "runner_up": "none",
+        "expected": null
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-neg-cat-file",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "correctly declined",
+      "output": "{\n  \"skill\": \"none\",\n  \"runner_up\": \"none\"\n}",
+      "metadata": {
+        "chosen": "none",
+        "runner_up": "none",
+        "expected": null
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-neg-install",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "correctly declined",
+      "output": "{\n  \"skill\": \"none\",\n  \"runner_up\": \"none\"\n}",
+      "metadata": {
+        "chosen": "none",
+        "runner_up": "none",
+        "expected": null
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-neg-regex",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "correctly declined",
+      "output": "{\n  \"skill\": \"none\",\n  \"runner_up\": \"none\"\n}",
+      "metadata": {
+        "chosen": "none",
+        "runner_up": "none",
+        "expected": null
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-neg-smalltalk",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "correctly declined",
+      "output": "{\n  \"skill\": \"none\",\n  \"runner_up\": \"none\"\n}",
+      "metadata": {
+        "chosen": "none",
+        "runner_up": "none",
+        "expected": null
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-bound-internal-crate",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "chose 'rust-feature-slice'",
+      "output": "{\"skill\": \"rust-feature-slice\", \"runner_up\": \"cargo-package-scaffold\"}",
+      "metadata": {
+        "chosen": "rust-feature-slice",
+        "runner_up": "cargo-package-scaffold",
+        "expected": "rust-feature-slice"
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-bound-internal-nuget",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "chose 'dotnet-vertical-slice'",
+      "output": "{\n  \"skill\": \"dotnet-vertical-slice\",\n  \"runner_up\": \"dotnet-controller-api-scaffolder\"\n}",
+      "metadata": {
+        "chosen": "dotnet-vertical-slice",
+        "runner_up": "dotnet-controller-api-scaffolder",
+        "expected": "dotnet-vertical-slice"
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-bound-audit-not-write",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "chose 'evaluate-tests'",
+      "output": "{\"skill\": \"evaluate-tests\", \"runner_up\": \"tdd-loop\"}",
+      "metadata": {
+        "chosen": "evaluate-tests",
+        "runner_up": "tdd-loop",
+        "expected": "evaluate-tests"
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-bound-arch-not-security",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "chose 'python-architecture-checklist'",
+      "output": "{\n  \"skill\": \"python-architecture-checklist\",\n  \"runner_up\": \"architecture-review\"\n}",
+      "metadata": {
+        "chosen": "python-architecture-checklist",
+        "runner_up": "architecture-review",
+        "expected": "python-architecture-checklist"
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-bound-security-not-arch",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "chose 'php-security-review'",
+      "output": "{\n  \"skill\": \"php-security-review\",\n  \"runner_up\": \"security-review-federal\"\n}",
+      "metadata": {
+        "chosen": "php-security-review",
+        "runner_up": "security-review-federal",
+        "expected": "php-security-review"
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-bound-socratic",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "chose 'architecture-review'",
+      "output": "{\n  \"skill\": \"architecture-review\",\n  \"runner_up\": \"grilling\"\n}",
+      "metadata": {
+        "chosen": "architecture-review",
+        "runner_up": "grilling",
+        "expected": "architecture-review"
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-bound-federal-overlay",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "chose 'security-review-federal'",
+      "output": "{\"skill\": \"security-review-federal\", \"runner_up\": \"python-security-review\"}",
+      "metadata": {
+        "chosen": "security-review-federal",
+        "runner_up": "python-security-review",
+        "expected": "security-review-federal"
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-bound-controller-api",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "chose 'dotnet-controller-api-scaffolder'",
+      "output": "{\n  \"skill\": \"dotnet-controller-api-scaffolder\",\n  \"runner_up\": \"minimal-api-scaffolder\"\n}",
+      "metadata": {
+        "chosen": "dotnet-controller-api-scaffolder",
+        "runner_up": "minimal-api-scaffolder",
+        "expected": "dotnet-controller-api-scaffolder"
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-bound-plan-not-execute",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "chose 'react-modernization-analyzer'",
+      "output": "{\n  \"skill\": \"react-modernization-analyzer\",\n  \"runner_up\": \"react-architecture-checklist\"\n}",
+      "metadata": {
+        "chosen": "react-modernization-analyzer",
+        "runner_up": "react-architecture-checklist",
+        "expected": "react-modernization-analyzer"
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-bound-consolidate",
+      "category": "routing",
+      "score": 1.0,
+      "passed": true,
+      "detail": "chose 'capture-consolidate'",
+      "output": "{\n  \"skill\": \"capture-consolidate\",\n  \"runner_up\": \"transcript-capture\"\n}",
+      "metadata": {
+        "chosen": "capture-consolidate",
+        "runner_up": "transcript-capture",
+        "expected": "capture-consolidate"
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-noninv-grillme-1",
+      "category": "routing",
+      "score": 0.0,
+      "passed": false,
+      "detail": "fired 'architecture-review' when no skill should",
+      "output": "{\n  \"skill\": \"architecture-review\",\n  \"runner_up\": \"dotnet-architecture-checklist\"\n}",
+      "metadata": {
+        "chosen": "architecture-review",
+        "runner_up": "dotnet-architecture-checklist",
+        "expected": null
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-noninv-grillme-2",
+      "category": "routing",
+      "score": 0.0,
+      "passed": false,
+      "detail": "fired 'architecture-review' when no skill should",
+      "output": "{\n  \"skill\": \"architecture-review\",\n  \"runner_up\": \"grilling\"\n}",
+      "metadata": {
+        "chosen": "architecture-review",
+        "runner_up": "grilling",
+        "expected": null
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-noninv-improve-arch",
+      "category": "routing",
+      "score": 0.0,
+      "passed": false,
+      "detail": "fired 'architecture-review' when no skill should",
+      "output": "{\n  \"skill\": \"architecture-review\",\n  \"runner_up\": \"dotnet-architecture-checklist\"\n}",
+      "metadata": {
+        "chosen": "architecture-review",
+        "runner_up": "dotnet-architecture-checklist",
+        "expected": null
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-noninv-grilldocs",
+      "category": "routing",
+      "score": 0.0,
+      "passed": false,
+      "detail": "fired 'grilling' when no skill should",
+      "output": "{\n  \"skill\": \"grilling\",\n  \"runner_up\": \"spec-coach\"\n}",
+      "metadata": {
+        "chosen": "grilling",
+        "runner_up": "spec-coach",
+        "expected": null
+      }
+    },
+    {
+      "model": "qwen3-coder-30b-agent:latest",
+      "case_id": "route-noninv-vague",
+      "category": "routing",
+      "score": 0.0,
+      "passed": false,
+      "detail": "fired 'grilling' when no skill should",
+      "output": "{\n  \"skill\": \"grilling\",\n  \"runner_up\": \"pattern-tradeoff-analyzer\"\n}",
+      "metadata": {
+        "chosen": "grilling",
+        "runner_up": "pattern-tradeoff-analyzer",
+        "expected": null
+      }
+    }
+  ]
+}

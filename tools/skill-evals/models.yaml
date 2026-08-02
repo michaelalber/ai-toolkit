@@ -1,0 +1,22 @@
+# Committed defaults. Override locally in models.local.yaml (gitignored) or with
+# OLLAMA_BASE_URL — never commit a LAN address or a personal model roster.
+#
+# Precedence, inherited from ollama-evals: OLLAMA_BASE_URL > models.local.yaml > this file.
+
+base_url: http://127.0.0.1:11434/v1
+
+defaults:
+  temperature: 0.0
+  seed: 7
+  # The full 94-skill roster is ~9.5K tokens — above ollama-evals' 8192 default. An
+  # endpoint that cannot serve this needs `--roster-mode shard`; sharded and full runs
+  # are not comparable, which the roster sha256 in the manifest makes visible.
+  num_ctx: 32768
+
+models:
+  - qwen2.5-coder:7b
+
+judge:
+  provider: local
+  # Deliberately a stronger model than the ones under test.
+  model: qwen2.5:14b
