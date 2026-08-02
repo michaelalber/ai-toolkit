@@ -17,7 +17,7 @@ repeated here. Related project context files: `intent.md` (goals, values, tradeo
 ## Project Overview
 
 - **Name:** AI Toolkit
-- **Purpose:** A collection of 87 shareable skills and autonomous agents for AI-assisted software development. Supports Claude Code, OpenCode, and Pi. Edge AI, ML, robotics, and industrial-automation skills live in the companion `edge-ai-robotics-automation-toolkit`.
+- **Purpose:** A collection of 94 shareable skills and autonomous agents for AI-assisted software development. Supports Claude Code, OpenCode, and Pi. Edge AI, ML, robotics, and industrial-automation skills live in the companion `edge-ai-robotics-automation-toolkit`.
 - **Phase:** Maintain — stable toolkit; work consists of adding new skills/agents, fixing existing ones, and keeping platform parity.
 - **Jira project key:** N/A — task specs are tracked in conversation context or ad hoc
 - **Definition of success:** Every skill and agent installs cleanly, follows its template (skills: the 5-section lean layout; agents: the agent section template), and works out of the box without requiring external documentation.

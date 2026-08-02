@@ -33,11 +33,11 @@ This toolkit encodes that expertise as reusable primitives. Each skill is an opi
 
 | | Count |
 |--|-------|
-| Skills (team) | 81 |
+| Skills (team) | 82 |
 | Skills (professional) | 12 |
 | Agents (Claude Code) | 51 |
 | Agents (OpenCode) | 51 |
-| Slash commands (per platform) | 25 |
+| Slash commands (per platform) | 26 |
 | Platforms | Claude Code, OpenCode, Pi |
 
 ---

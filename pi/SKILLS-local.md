@@ -42,7 +42,7 @@ uncertain; 32B can't sustain fan-out) · ⚠️ already deprecated in the toolki
 
 ---
 
-## 🟢 Green — ship as-is (38)
+## 🟢 Green — ship as-is (35)
 
 These get *more* reliable on a weak model because the skill carries the procedure.
 
@@ -86,7 +86,7 @@ These get *more* reliable on a weak model because the skill carries the procedur
 
 ---
 
-## 🟡 Yellow — usable, author a lite variant (52)
+## 🟡 Yellow — usable, author a lite variant (53)
 
 Single-pass but lean on judgment, synthesis, or large reference/input loads. The
 32B model produces the *structure* of a good result with shallower content. The
@@ -210,5 +210,5 @@ loop. The 24–32B/128K tier removes most of this risk.
    for a cloud model when you need an autonomous loop or subagent fan-out — except the
    two research phases, which run sequentially on Pi.
 
-> Counts: 🟢 34 · 🟡 45 · 🔴 6 = 85. (AI/ML skills moved to edge-ai-robotics-automation-toolkit.) Revisit when skills are added/removed or the
+> Counts: 🟢 35 · 🟡 53 · 🔴 6 = 94. (AI/ML skills moved to edge-ai-robotics-automation-toolkit.) Revisit when skills are added/removed or the
 > primary local model changes.
