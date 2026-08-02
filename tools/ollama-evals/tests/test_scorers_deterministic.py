@@ -77,3 +77,12 @@ def test_json_schema_malformed_json_fails():
 def test_unknown_scorer_type_raises():
     with pytest.raises(KeyError):
         get_scorer("does-not-exist")
+
+
+def test_unknown_scorer_error_lists_registered_names():
+    """A typo'd scorer type must be diagnosable once other packages register their own."""
+    with pytest.raises(KeyError) as exc:
+        get_scorer("json_shema")  # typo of json_schema
+    message = str(exc.value)
+    assert "json_shema" in message
+    assert "json_schema" in message  # the real name is offered

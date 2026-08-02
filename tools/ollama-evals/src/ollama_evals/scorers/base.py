@@ -33,7 +33,11 @@ def register(name: str) -> Callable[[Scorer], Scorer]:
 
 
 def get_scorer(name: str) -> Scorer:
-    return _REGISTRY[name]
+    try:
+        return _REGISTRY[name]
+    except KeyError:
+        known = ", ".join(sorted(_REGISTRY)) or "(none registered)"
+        raise KeyError(f"unknown scorer type {name!r}; registered: {known}") from None
 
 
 def score_output(output: str, spec: dict, context: dict | None = None) -> ScoreResult:

@@ -166,3 +166,13 @@ def test_llm_judge_scorer_marks_parse_failure_in_metadata():
 def test_llm_judge_scorer_has_no_parse_failure_flag_on_success():
     r = score_output("x", {"type": "judge", "criteria": "c"}, {"judge": FakeJudge(0.9)})
     assert r.metadata.get("parse_failure", False) is False
+
+
+# --- Commit C: public JSON extraction seam ------------------------------------------
+
+
+def test_extract_json_obj_is_public():
+    from ollama_evals.judging import extract_json_obj
+
+    assert extract_json_obj('noise {"a": 1} tail') == {"a": 1}
+    assert extract_json_obj("no object here") is None

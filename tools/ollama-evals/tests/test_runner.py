@@ -119,6 +119,36 @@ def test_save_and_load_run_roundtrip(tmp_path: Path):
     assert loaded.overall_means()["m"] == 1.0
 
 
+# --- Commit B/C: scorer metadata reaches the artifact; preview length is tunable -----
+
+
+def test_scorer_metadata_is_preserved_on_case_result():
+    """L2's confusion matrix reads metadata['chosen'] — the runner must not drop it."""
+    from ollama_evals.scorers.base import register
+
+    @register("_meta_probe")
+    def _probe(output, spec, context):
+        from ollama_evals.scorers.base import ScoreResult
+
+        return ScoreResult(1.0, True, "ok", metadata={"chosen": "tdd-loop"})
+
+    client = ScriptedClient({"m": {"content": "x"}})
+    cases = [Case(id="c", category="routing", prompt="p", scorer={"type": "_meta_probe"})]
+    run = run_suite(client, cases, ["m"], run_id="r", created_at="t")
+    assert run.results[0].metadata == {"chosen": "tdd-loop"}
+
+
+def test_output_preview_length_is_overridable():
+    client = ScriptedClient({"m": {"content": "z" * 5000}})
+    cases = [Case(id="c", category="x", prompt="p", scorer={"type": "contains", "value": "z"})]
+    default = run_suite(client, cases, ["m"], run_id="r", created_at="t")
+    assert len(default.results[0].output) == 600
+    wide = run_suite(
+        client, cases, ["m"], output_preview_chars=4000, run_id="r", created_at="t"
+    )
+    assert len(wide.results[0].output) == 4000
+
+
 # --- Commit A: system prompt injection and provenance -------------------------------
 
 

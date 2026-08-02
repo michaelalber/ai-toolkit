@@ -148,7 +148,8 @@ def build_judge(config, client):
     raise ValueError(f"unknown judge provider: {jc.provider!r}")
 
 
-def _extract_json_obj(text: str):
+def extract_json_obj(text: str):
+    """Pull the first JSON object out of a model reply, tolerating surrounding prose."""
     match = _JSON_OBJ.search(text)
     if not match:
         return None
@@ -158,8 +159,11 @@ def _extract_json_obj(text: str):
         return None
 
 
+_extract_json_obj = extract_json_obj  # retained: other modules import the private name
+
+
 def _parse_verdict(text: str) -> Verdict:
-    payload = _extract_json_obj(text)
+    payload = extract_json_obj(text)
     if payload is None or "score" not in payload:
         return Verdict(0.0, f"could not parse judge response: {text[:120]!r}", parsed=False)
     raw = max(1.0, min(5.0, float(payload["score"])))

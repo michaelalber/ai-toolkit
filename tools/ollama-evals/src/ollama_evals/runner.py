@@ -65,6 +65,7 @@ def run_suite(
     samples: int = 1,
     system_prompt: str | None = None,
     suite: str | None = None,
+    output_preview_chars: int = OUTPUT_PREVIEW_CHARS,
     run_id: str | None = None,
     created_at: str | None = None,
 ) -> RunResult:
@@ -95,7 +96,7 @@ def run_suite(
             results.append(
                 _run_one(
                     client, model, case, judge, samples,
-                    temperature, seed, num_ctx, system_prompt,
+                    temperature, seed, num_ctx, system_prompt, output_preview_chars,
                 )
             )
     return RunResult(manifest=manifest, results=results)
@@ -105,7 +106,10 @@ def _sha256(text: str | None) -> str | None:
     return hashlib.sha256(text.encode()).hexdigest() if text else None
 
 
-def _run_one(client, model, case, judge, samples, temperature, seed, num_ctx, system_prompt):
+def _run_one(
+    client, model, case, judge, samples, temperature, seed, num_ctx, system_prompt,
+    output_preview_chars=OUTPUT_PREVIEW_CHARS,
+):
     try:
         scores: list[float] = []
         passes: list[bool] = []
@@ -146,7 +150,7 @@ def _run_one(client, model, case, judge, samples, temperature, seed, num_ctx, sy
             score=statistics.mean(scores),
             passed=passed,
             detail=last_detail,
-            output=last_output[:OUTPUT_PREVIEW_CHARS],
+            output=last_output[:output_preview_chars],
             metadata=last_metadata,
         )
     except Exception as exc:  # noqa: BLE001 - a bad response must not abort the run
