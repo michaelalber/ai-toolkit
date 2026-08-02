@@ -72,6 +72,76 @@ def test_run_with_no_models_errors(monkeypatch, tmp_path: Path):
     assert result.exit_code == 2
 
 
+def _write_case(ds: Path, **overrides):
+    ds.mkdir(exist_ok=True)
+    case = {"id": "x", "category": "coding", "prompt": "q", "scorer": {"type": "contains",
+            "value": "answer"}}
+    case.update(overrides)
+    (ds / "coding.jsonl").write_text(json.dumps(case) + "\n")
+
+
+def test_run_accepts_system_prompt_file(monkeypatch, tmp_path: Path):
+    ds = tmp_path / "datasets"
+    _write_case(ds)
+    _patch_client(monkeypatch, FakeClient(content="the answer is here"))
+    sysfile = tmp_path / "skill.md"
+    sysfile.write_text("You are the cargo-package-scaffold skill.")
+    out = tmp_path / "runs"
+
+    result = runner.invoke(
+        cli.app,
+        ["run", "--models", "m", "--suite", "coding", "--datasets-dir", str(ds),
+         "--out", str(out), "--system-prompt-file", str(sysfile)],
+    )
+    assert result.exit_code == 0, result.output
+    artifact = json.loads(next(out.glob("*.run.json")).read_text())
+    assert artifact["manifest"]["system_prompt_chars"] == len(sysfile.read_text())
+    assert artifact["manifest"]["system_prompt_sha256"]
+
+
+def test_run_accepts_inline_system_prompt(monkeypatch, tmp_path: Path):
+    ds = tmp_path / "datasets"
+    _write_case(ds)
+    _patch_client(monkeypatch, FakeClient(content="the answer is here"))
+    out = tmp_path / "runs"
+
+    result = runner.invoke(
+        cli.app,
+        ["run", "--models", "m", "--suite", "coding", "--datasets-dir", str(ds),
+         "--out", str(out), "--system-prompt", "BE TERSE"],
+    )
+    assert result.exit_code == 0, result.output
+    artifact = json.loads(next(out.glob("*.run.json")).read_text())
+    assert artifact["manifest"]["system_prompt_chars"] == len("BE TERSE")
+
+
+def test_run_rejects_both_system_prompt_forms(monkeypatch, tmp_path: Path):
+    ds = tmp_path / "datasets"
+    _write_case(ds)
+    _patch_client(monkeypatch, FakeClient())
+    sysfile = tmp_path / "s.md"
+    sysfile.write_text("x")
+    result = runner.invoke(
+        cli.app,
+        ["run", "--models", "m", "--suite", "coding", "--datasets-dir", str(ds),
+         "--system-prompt", "y", "--system-prompt-file", str(sysfile)],
+    )
+    assert result.exit_code == 2
+
+
+def test_run_records_suite_label_in_manifest(monkeypatch, tmp_path: Path):
+    ds = tmp_path / "datasets"
+    _write_case(ds)
+    _patch_client(monkeypatch, FakeClient(content="the answer is here"))
+    out = tmp_path / "runs"
+    runner.invoke(
+        cli.app,
+        ["run", "--models", "m", "--suite", "coding", "--datasets-dir", str(ds), "--out", str(out)],
+    )
+    artifact = json.loads(next(out.glob("*.run.json")).read_text())
+    assert artifact["manifest"]["suite"] == "coding"
+
+
 def _make_run(tmp_path, run_id, model, score):
     run = RunResult(
         manifest={"run_id": run_id, "models": [model]},

@@ -135,6 +135,26 @@ Cases are JSONL — one per line in `datasets/<suite>.jsonl`:
 Keep the set small and challenging — 100 well-constructed cases beat 1,000 noisy ones.
 `tests/test_datasets.py` guards that every case loads and uses a registered scorer.
 
+### System prompts
+
+Put an instruction set in front of every case in a run:
+
+```bash
+uv run ollama-evals run --suite chat --system-prompt-file ./persona.md
+# or inline: --system-prompt "Answer in one sentence."
+```
+
+A case may carry its own `"system"` field, which **wins** over the run-level prompt — that
+is how one suite can front each case with a *different* instruction set:
+
+```json
+{"id": "q-1", "category": "quality", "system": "<the instruction set under test>",
+ "prompt": "Scaffold a crate.", "scorer": {"type": "judge", "criteria": "..."}}
+```
+
+The run manifest records `system_prompt_sha256` and `system_prompt_chars`, never the text —
+two runs differing only by system prompt stay distinguishable without bloating the artifact.
+
 ---
 
 ## Security

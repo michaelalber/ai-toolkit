@@ -8,6 +8,7 @@ single bad response never aborts a whole run.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import statistics
 import uuid
@@ -62,6 +63,7 @@ def run_suite(
     judge=None,
     samples: int = 1,
     system_prompt: str | None = None,
+    suite: str | None = None,
     run_id: str | None = None,
     created_at: str | None = None,
 ) -> RunResult:
@@ -79,6 +81,11 @@ def run_suite(
         "num_ctx": num_ctx,
         "n_cases": len(cases),
         "samples": samples,
+        "suite": suite,
+        # Identity, never the text: a full instruction set would bloat every artifact,
+        # but two runs differing only by system prompt must remain distinguishable.
+        "system_prompt_sha256": _sha256(system_prompt),
+        "system_prompt_chars": len(system_prompt) if system_prompt else 0,
     }
 
     results: list[CaseResult] = []
@@ -93,6 +100,10 @@ def run_suite(
     return RunResult(manifest=manifest, results=results)
 
 
+def _sha256(text: str | None) -> str | None:
+    return hashlib.sha256(text.encode()).hexdigest() if text else None
+
+
 def _run_one(client, model, case, judge, samples, temperature, seed, num_ctx, system_prompt):
     try:
         scores: list[float] = []
@@ -101,8 +112,10 @@ def _run_one(client, model, case, judge, samples, temperature, seed, num_ctx, sy
         last_output = ""
         for _ in range(max(1, samples)):
             messages = list(case.messages or [])
-            if system_prompt:
-                messages = [{"role": "system", "content": system_prompt}, *messages]
+            # A per-case system prompt wins: a suite may front each case with its own.
+            effective_system = case.system or system_prompt
+            if effective_system:
+                messages = [{"role": "system", "content": effective_system}, *messages]
             result = client.chat(
                 model=model,
                 messages=messages,

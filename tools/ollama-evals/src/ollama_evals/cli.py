@@ -62,8 +62,19 @@ def run(
     out: str = typer.Option("runs", help="Directory for the run artifact."),
     samples: int = typer.Option(1, help="Repeat each case N times and average."),
     config: str = typer.Option(None, help="Path to a models.yaml."),
+    system_prompt: str = typer.Option(
+        None, help="System prompt prepended to every case (a case's own `system` wins)."
+    ),
+    system_prompt_file: str = typer.Option(
+        None, help="Read the system prompt from this file instead of passing it inline."
+    ),
 ):
     cfg = resolve_config(config)
+    if system_prompt and system_prompt_file:
+        typer.echo("pass --system-prompt or --system-prompt-file, not both", err=True)
+        raise typer.Exit(code=2)
+    if system_prompt_file:
+        system_prompt = Path(system_prompt_file).read_text()
     model_list = [m.strip() for m in models.split(",")] if models else cfg.models
     if not model_list:
         typer.echo("no models specified (use --models or set models: in config)", err=True)
@@ -78,7 +89,16 @@ def run(
     needs_judge = any(c.scorer["type"] == "judge" for c in cases)
     judge = build_judge(cfg, client) if needs_judge else None
 
-    result = run_suite(client, cases, model_list, config=cfg, judge=judge, samples=samples)
+    result = run_suite(
+        client,
+        cases,
+        model_list,
+        config=cfg,
+        judge=judge,
+        samples=samples,
+        system_prompt=system_prompt,
+        suite=suite,
+    )
     path = save_run(result, out)
     typer.echo(run_to_markdown(result))
     typer.echo(f"\nsaved run: {path}")

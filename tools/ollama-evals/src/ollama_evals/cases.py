@@ -3,6 +3,9 @@
 
 A case is one prompt + one scorer spec. Datasets are JSONL (one case per line) so they
 version cleanly alongside model/prompt changes.
+
+``system`` is optional and, when set, overrides the run-level system prompt for that case
+alone — this is how a suite can put a *different* instruction set in front of every case.
 """
 
 from __future__ import annotations
@@ -21,6 +24,7 @@ class Case:
     messages: list[dict] | None = None
     tools: list[dict] | None = None
     reference: str | None = None
+    system: str | None = None
     tags: list[str] = field(default_factory=list)
 
     def __post_init__(self) -> None:
@@ -47,6 +51,7 @@ class Case:
             messages=data.get("messages"),
             tools=data.get("tools"),
             reference=data.get("reference"),
+            system=data.get("system"),
             tags=data.get("tags", []),
         )
 
