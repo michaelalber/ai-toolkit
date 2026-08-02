@@ -29,7 +29,16 @@ def run_to_markdown(run) -> str:
     for model in sorted(cat_means):
         cells = [_fmt(cat_means[model].get(c)) for c in categories]
         lines.append(f"| `{model}` | " + " | ".join(cells) + f" | **{overall[model]:.2f}** |")
+    n_failed = n_parse_failures(run)
+    if n_failed:
+        lines += ["", f"> ⚠️ judge parse failures: {n_failed} — these are scored 0.0 but "
+                  "mean the judge was unreadable, not that the response was bad."]
     return "\n".join(lines)
+
+
+def n_parse_failures(run) -> int:
+    """How many cases scored 0.0 because the judge's reply was unreadable."""
+    return sum(1 for r in run.results if (r.metadata or {}).get("parse_failure"))
 
 
 def run_to_html(run) -> str:

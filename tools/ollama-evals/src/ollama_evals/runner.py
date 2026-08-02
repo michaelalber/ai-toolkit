@@ -31,6 +31,7 @@ class CaseResult:
     passed: bool
     detail: str = ""
     output: str = ""
+    metadata: dict = field(default_factory=dict)
 
 
 @dataclass
@@ -110,6 +111,7 @@ def _run_one(client, model, case, judge, samples, temperature, seed, num_ctx, sy
         passes: list[bool] = []
         last_detail = ""
         last_output = ""
+        last_metadata: dict = {}
         for _ in range(max(1, samples)):
             messages = list(case.messages or [])
             # A per-case system prompt wins: a suite may front each case with its own.
@@ -135,6 +137,7 @@ def _run_one(client, model, case, judge, samples, temperature, seed, num_ctx, sy
             passes.append(scored.passed)
             last_detail = scored.detail
             last_output = result.content
+            last_metadata = scored.metadata
         passed = sum(passes) > len(passes) / 2 if len(passes) > 1 else passes[0]
         return CaseResult(
             model=model,
@@ -144,6 +147,7 @@ def _run_one(client, model, case, judge, samples, temperature, seed, num_ctx, sy
             passed=passed,
             detail=last_detail,
             output=last_output[:OUTPUT_PREVIEW_CHARS],
+            metadata=last_metadata,
         )
     except Exception as exc:  # noqa: BLE001 - a bad response must not abort the run
         return CaseResult(model, case.id, case.category, 0.0, False, detail=f"error: {exc}")

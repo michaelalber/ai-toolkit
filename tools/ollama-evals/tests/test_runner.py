@@ -206,7 +206,7 @@ def test_load_run_accepts_artifact_without_new_manifest_keys(tmp_path: Path):
     path.write_text(json.dumps(legacy))
     loaded = load_run(path)
     assert loaded.manifest["run_id"] == "old"
-    assert loaded.results[0].case_id == "c1"
+    assert loaded.results[0].metadata == {}
 
 
 def test_load_cases_from_jsonl(tmp_path: Path):

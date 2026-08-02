@@ -27,5 +27,9 @@ def llm_judge(output: str, spec: dict, context: dict) -> ScoreResult:
         reference=spec.get("reference") or context.get("reference"),
     )
     passed = verdict.score >= threshold
-    return ScoreResult(verdict.score, passed, verdict.reasoning, metadata={"threshold": threshold})
+    metadata = {"threshold": threshold}
+    if not getattr(verdict, "parsed", True):
+        # Surfaced so a broken judge never reads as "the response scored zero".
+        metadata["parse_failure"] = True
+    return ScoreResult(verdict.score, passed, verdict.reasoning, metadata=metadata)
 # <AI-Generated END>

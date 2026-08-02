@@ -24,6 +24,13 @@ from dataclasses import dataclass
 class Verdict:
     score: float  # normalised to 0.0-1.0
     reasoning: str = ""
+    parsed: bool = True
+    """False when the judge's reply could not be read.
+
+    A parse failure and a genuine 1-out-of-5 both normalise to 0.0. Without this flag a
+    broken judge is indistinguishable from a bad response, and a gate built on the score
+    would blame the wrong thing.
+    """
 
 
 _RUBRIC_PROMPT = """You are a strict evaluator. Score the RESPONSE against the CRITERIA \
@@ -40,23 +47,44 @@ RESPONSE:
 Reply with ONLY a JSON object of the form:
 {{"score": <1-5>, "reasoning": "<one sentence>"}}"""
 
+_JSON_ONLY_REMINDER = (
+    "\n\nYour previous reply could not be parsed. Reply with the JSON object ONLY — "
+    "no preamble, no explanation, no code fence."
+)
+
 _JSON_OBJ = re.compile(r"\{.*\}", re.DOTALL)
 
 
 class RubricJudge:
     """Judge backed by a local Ollama model prompted with a 1-5 rubric."""
 
-    def __init__(self, client, model: str, temperature: float = 0.0, seed: int = 7) -> None:
+    def __init__(
+        self,
+        client,
+        model: str,
+        temperature: float = 0.0,
+        seed: int = 7,
+        retries: int = 1,
+    ) -> None:
         self._client = client
         self._model = model
         self._temperature = temperature
         self._seed = seed
+        self._retries = retries
 
     def score(self, *, criteria: str, prompt: str, output: str, reference=None) -> Verdict:
         reference_block = f"\nREFERENCE (a known-good answer):\n{reference}\n" if reference else ""
         content = _RUBRIC_PROMPT.format(
             criteria=criteria, prompt=prompt, output=output, reference_block=reference_block
         )
+        verdict = self._ask(content)
+        for _ in range(max(0, self._retries)):
+            if verdict.parsed:
+                break
+            verdict = self._ask(content + _JSON_ONLY_REMINDER)
+        return verdict
+
+    def _ask(self, content: str) -> Verdict:
         result = self._client.chat(
             model=self._model,
             messages=[{"role": "user", "content": content}],
@@ -133,7 +161,7 @@ def _extract_json_obj(text: str):
 def _parse_verdict(text: str) -> Verdict:
     payload = _extract_json_obj(text)
     if payload is None or "score" not in payload:
-        return Verdict(0.0, f"could not parse judge response: {text[:120]!r}")
+        return Verdict(0.0, f"could not parse judge response: {text[:120]!r}", parsed=False)
     raw = max(1.0, min(5.0, float(payload["score"])))
     return Verdict((raw - 1.0) / 4.0, str(payload.get("reasoning", "")))
 # <AI-Generated END>

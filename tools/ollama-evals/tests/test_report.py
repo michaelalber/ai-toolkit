@@ -18,6 +18,22 @@ def test_run_markdown_matrix_lists_models_and_categories():
     assert "Overall" in md
 
 
+def test_run_markdown_surfaces_parse_failure_count():
+    """A judge that cannot be parsed must not read as 'the model scored zero'."""
+    results = [
+        CaseResult("m", "c1", "chat", 0.0, False, metadata={"parse_failure": True}),
+        CaseResult("m", "c2", "chat", 0.0, False),  # a genuine zero
+    ]
+    run = RunResult(manifest={"run_id": "r", "models": ["m"]}, results=results)
+    md = run_to_markdown(run)
+    assert "parse failures: 1" in md.lower()
+
+
+def test_run_markdown_omits_parse_failure_line_when_none():
+    run = _run("r", [("m", "c1", "coding", 1.0)])
+    assert "parse failure" not in run_to_markdown(run).lower()
+
+
 def test_comparison_markdown_shows_verdict_and_deltas():
     base = _run("b", [("old", "c1", "coding", 1.0)])
     cand = _run("c", [("new", "c1", "coding", 0.4)])
