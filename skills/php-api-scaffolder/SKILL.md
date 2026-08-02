@@ -150,4 +150,4 @@ curl -s localhost:8000/api/health          # {"status":"ok"}
 | `php-security-review` | Audit the new endpoints for OWASP API risks (authz, mass assignment, rate limits) after scaffolding. |
 | `php-migration-manager` | When an endpoint needs new tables/columns, manage the migration lifecycle. |
 | `php-package-scaffold` | When the API client/SDK is published as a Composer package. |
-| `tdd` | Drive each endpoint test-first (request → 422/401/200) before generating the action. |
+| `tdd-loop` | Drive each endpoint test-first (request → 422/401/200) before generating the action. |

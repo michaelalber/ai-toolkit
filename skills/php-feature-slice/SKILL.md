@@ -163,4 +163,4 @@ oversized controller) live in `references/discipline-and-recovery.md`.
 | `php-migration-manager` | When a slice needs schema changes, manage the Laravel migration lifecycle and rollback safety. |
 | `php-security-review` | After scaffolding, audit the slice's validation, authorization, and query safety against OWASP. |
 | `php-architecture-checklist` | Architecture quality gate. Run after several slices to verify isolation and coupling. |
-| `tdd` | Drive each service method test-first (RED → GREEN → REFACTOR) rather than scaffolding code ahead of tests. |
+| `tdd-loop` | Drive each service method test-first (RED → GREEN → REFACTOR) rather than scaffolding code ahead of tests. |

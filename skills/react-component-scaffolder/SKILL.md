@@ -126,4 +126,4 @@ The scaffold checklist (Contract / Accessibility / Tests / Story / Verification)
 | `react-app-scaffolder` | Stands up the project (Vite + TS + Vitest + Storybook) this skill scaffolds components into. |
 | `react-security-review` | After scaffolding, audit link/URL handling and any raw-HTML usage in the component. |
 | `react-architecture-checklist` | Quality gate for hooks discipline and render performance across components. |
-| `tdd` | Drive the component test-first (RED → GREEN → REFACTOR) instead of scaffolding code ahead of the test. |
+| `tdd-loop` | Drive the component test-first (RED → GREEN → REFACTOR) instead of scaffolding code ahead of the test. |

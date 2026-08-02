@@ -88,5 +88,5 @@ next_action: [description]
 
 | Skill | Relationship |
 |-------|-------------|
-| `tdd-cycle` | The handoff for READY TO IMPLEMENT — write tests from the AC, implement, refactor. |
+| `tdd-loop` | The handoff for READY TO IMPLEMENT — write tests from the AC, implement, refactor. |
 | `task-decomposition` | For NEEDS PLANNING MODE on high-complexity issues — break the issue into implementable sub-tasks. |

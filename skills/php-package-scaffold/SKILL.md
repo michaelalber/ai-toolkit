@@ -136,4 +136,4 @@ checklists. The full report markdown lives in `references/conventions.md` (Outpu
 | `php-security-review` | Audit the package (and its dependencies) for OWASP and supply-chain risks before publishing. |
 | `supply-chain-audit` | Review the dependency tree for known-vulnerable or unmaintained packages. |
 | `php-feature-slice` | When the package provides Laravel integration, ship a service provider following slice conventions. |
-| `tdd` | Drive the public API test-first so the released contract is the tested contract. |
+| `tdd-loop` | Drive the public API test-first so the released contract is the tested contract. |

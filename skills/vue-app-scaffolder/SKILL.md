@@ -137,4 +137,4 @@ Full markdown checklist: `references/conventions.md` → "Scaffold Checklist (Ou
 | `vue-component-scaffolder` | Generates individual components/routes within the scaffolded app. |
 | `vue-modernization-analyzer` | For an existing Vue CLI / legacy app, assess and plan the move to this Vite skeleton instead of scaffolding fresh. |
 | `vue-security-review` | Run once features land to verify CSP, env exposure, and dependency posture. |
-| `tdd` | Drive the first features test-first on top of the scaffolded Vitest harness. |
+| `tdd-loop` | Drive the first features test-first on top of the scaffolded Vitest harness. |

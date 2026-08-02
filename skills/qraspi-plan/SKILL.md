@@ -105,6 +105,6 @@ rollback), and the horizontal-vs-vertical worked example.
 | `qraspi-skeleton` | Prior phase. Its `skeleton.md` slice backlog is the source of the slice this phase plans; its CI fitness gates constrain the plan's verification. |
 | `qraspi-implement` | Next phase. Consumes the approved `plan-{slice}.md`; refuses to execute without `status: approved`. |
 | `qraspi-architecture` | The accepted ADRs the plan must respect. Plan does NOT re-open them -- a design change routes back to `/qraspi-architecture`. |
-| `tdd` | The inner loop the Implement phase runs per phase; Plan's test-first steps map onto RED-GREEN-REFACTOR. |
+| `tdd-loop` | The inner loop the Implement phase runs per phase; Plan's test-first steps map onto RED-GREEN-REFACTOR. |
 | `dotnet-vertical-slice` / `python-feature-slice` / `rust-feature-slice` | Stack scaffolders for the vertical slice this phase plans. |
 | `qrspi-plan` | Brownfield sibling. Same horizontal-refusal gate; QRASPI plans one backlog slice at a time on a fresh green skeleton, not a single `plan.md` over an existing codebase. |

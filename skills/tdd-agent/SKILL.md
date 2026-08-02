@@ -98,9 +98,9 @@ The AI discipline rules (Trust Nothing, Be Boringly Predictable, Fail Loudly, Pr
 
 ## Integration with Other Skills
 
-This skill is an *operating mode* of the canonical `tdd` loop, not a replacement for it.
+This skill is an *operating mode* of the canonical `tdd-loop`, not a replacement for it.
 
-- **`tdd`** — The canonical inner loop this mode drives. Defines the two critical test properties (behavioral, structure-insensitive), the per-cycle self-check, the GREEN strategies (Fake It / Obvious / Triangulation, with per-language idioms in its `references/`), and the REFACTOR smell catalog (the `tdd` skill's `references/code-smells.md` and `references/refactoring-catalog.md`). Load those on demand during GREEN/REFACTOR.
+- **`tdd-loop`** — The canonical inner loop this mode drives. Defines the two critical test properties (behavioral, structure-insensitive), the per-cycle self-check, the GREEN strategies (Fake It / Obvious / Triangulation, with per-language idioms in its `references/`), and the REFACTOR smell catalog. Load `skills/tdd-loop/references/code-smells.md` and `skills/tdd-loop/references/refactoring-catalog.md` on demand during GREEN/REFACTOR.
 - **`evaluate-tests`** — Run after the session to audit test quality and TDD compliance (commit-history scorecard, anti-pattern detection).
 
 ## Error Recovery

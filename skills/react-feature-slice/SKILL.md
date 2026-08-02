@@ -147,4 +147,4 @@ feature-folder diagram. Both full templates live in `references/output-templates
 | `react-app-scaffolder` | When there is no app yet, scaffold the Vite + TS + router + Vitest skeleton first, then add slices. |
 | `react-security-review` | After scaffolding, audit the slice's boundary validation, link/URL handling, and token usage against OWASP. |
 | `react-architecture-checklist` | Architecture quality gate. Run after several slices to verify isolation, hooks discipline, and coupling. |
-| `tdd` | Drive each hook and component test-first (RED → GREEN → REFACTOR) rather than scaffolding code ahead of tests. |
+| `tdd-loop` | Drive each hook and component test-first (RED → GREEN → REFACTOR) rather than scaffolding code ahead of tests. |

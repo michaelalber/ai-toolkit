@@ -78,7 +78,7 @@ These get *more* reliable on a weak model because the skill carries the procedur
 | jira-comment-writer | | Plain-language rewrite — bounded transform, ideal for local |
 | architecture-journal | 📚 | ADR template fill + retro prompts |
 | supply-chain-audit | 📚 | Tool-driven scan (cargo-audit/npm/pip); mechanical |
-| tdd | | The RED-GREEN-REFACTOR discipline — exactly the guardrail a weak model needs |
+| tdd-loop | | The RED-GREEN-REFACTOR discipline — exactly the guardrail a weak model needs |
 | qrspi-questions | | Surface unknowns; bounded interactive Q&A |
 | qraspi-questions | | Surface unknowns (greenfield) |
 | qraspi-skeleton | | Walking-skeleton scaffold from accepted ADRs |

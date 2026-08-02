@@ -117,4 +117,4 @@ Two reports drive the lifecycle gates; full markdown templates are in `reference
 | `php-architecture-checklist` | The checklist flags missing `down()` and direct-SQL risks this skill prevents. |
 | `php-security-review` | Reviews migrations for unsafe raw SQL and over-broad grants. |
 | `php-api-scaffolder` | When an endpoint needs new tables/columns, sequence the migration before shipping the route. |
-| `tdd` | Backfill logic and data transformations are driven test-first against a scratch database. |
+| `tdd-loop` | Backfill logic and data transformations are driven test-first against a scratch database. |

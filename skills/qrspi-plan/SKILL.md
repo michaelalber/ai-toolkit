@@ -91,5 +91,5 @@ worked example.
 |-------|-------------|
 | `qrspi-spec` | Prior phase. Its approved `spec.md` (vertical slices + signatures) is the contract this phase makes mechanical. |
 | `qrspi-implement` | Next phase. Consumes the approved `plan.md`; refuses to execute without `status: approved`. |
-| `tdd` | The inner loop the Implement phase runs per phase; Plan's test-first steps map onto RED-GREEN-REFACTOR. |
+| `tdd-loop` | The inner loop the Implement phase runs per phase; Plan's test-first steps map onto RED-GREEN-REFACTOR. |
 | `dotnet-vertical-slice` / `python-feature-slice` / `rust-feature-slice` | Stack scaffolders for the vertical slices each phase implements. |

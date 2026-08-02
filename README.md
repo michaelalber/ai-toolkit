@@ -190,7 +190,7 @@ See `.matt-pocock-attribution.yml` at the repo root for the full provenance mani
 
 | Skill | Description |
 |-------|-------------|
-| `tdd` | Canonical RED-GREEN-REFACTOR inner loop — the one TDD skill. Enforces behavioral, structure-insensitive tests, prohibits horizontal slicing, and carries GREEN strategies + per-language idioms and the REFACTOR smell catalog in its `references/`. |
+| `tdd-loop` | Canonical RED-GREEN-REFACTOR inner loop — the one TDD skill. Enforces behavioral, structure-insensitive tests, prohibits horizontal slicing, and carries GREEN strategies + per-language idioms and the REFACTOR smell catalog in its `references/`. |
 | `tdd-agent` | Operating mode: AI drives all phases autonomously with strict guardrails and verification at each step. Defers to `tdd` for the loop. |
 | `evaluate-tests` | Audits existing tests in two modes — test-file quality (prioritized rewrite list) and TDD compliance (commit-history scorecard + anti-patterns). |
 

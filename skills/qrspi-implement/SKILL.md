@@ -86,5 +86,5 @@ structure -- the RED proof, GREEN proof, files-changed list, and the resume note
 | Skill | Relationship |
 |-------|-------------|
 | `qrspi-plan` | Prior phase. Its approved `plan.md` is the contract this phase executes; refuses to run without `status: approved`. |
-| `tdd` | The inner loop. Each slice IS a RED-GREEN-REFACTOR cycle; load `tdd` for the test-first mechanics this skill enforces per slice. |
+| `tdd-loop` | The inner loop. Each slice IS a RED-GREEN-REFACTOR cycle; load `tdd` for the test-first mechanics this skill enforces per slice. |
 | `dotnet-vertical-slice` / `python-feature-slice` / `rust-feature-slice` | Stack scaffolders for the slice each phase builds. |

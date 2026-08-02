@@ -101,7 +101,7 @@ and the resume note.
 |-------|-------------|
 | `qraspi-plan` | Prior phase. Its approved `plan-{slice}.md` is the contract this phase executes; refuses to run without `status: approved`. |
 | `qraspi-skeleton` | Supplies the green skeleton this phase grows on and the live fitness gates GREEN must keep passing. |
-| `tdd` | The inner loop. Each phase IS a RED-GREEN-REFACTOR cycle; load `tdd` for the test-first mechanics this skill enforces per phase. |
+| `tdd-loop` | The inner loop. Each phase IS a RED-GREEN-REFACTOR cycle; load `tdd` for the test-first mechanics this skill enforces per phase. |
 | `qraspi-graduate` | Terminal next step once every backlog slice is built -- hands the repo to QRSPI for ongoing features. |
 | `dotnet-vertical-slice` / `python-feature-slice` / `rust-feature-slice` | Stack scaffolders for the slice's phases. |
 | `qrspi-implement` | Brownfield sibling. Same per-slice RGR discipline; QRASPI grows a fresh green skeleton slice-by-slice and keeps fitness gates green, instead of executing a multi-slice `plan.md` over an existing codebase. |

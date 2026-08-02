@@ -97,4 +97,4 @@ deliberate-violation proof: `dotnet.md` (NetArchTest), `python.md` (import-linte
 | `qraspi-architecture` | Specifies which fitness functions each ADR requires; this skill authors them. |
 | `qraspi-skeleton` | Lands these fitness functions as CI gates when the walking skeleton stands up. |
 | `dependency-mapper` | The ready-made coupling fitness function -- Martin Ca/Ce/I/A/D metrics. Reference it for coupling rules rather than re-deriving the math. |
-| `tdd` | Different layer: `tdd` gates *behavior* (does the code do the right thing); a fitness function gates *architecture* (is the structure still legal). Do not conflate. |
+| `tdd-loop` | Different layer: `tdd` gates *behavior* (does the code do the right thing); a fitness function gates *architecture* (is the structure still legal). Do not conflate. |

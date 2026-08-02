@@ -127,4 +127,4 @@ The scaffold checklist (Contract / Accessibility / Tests / Story / Verification)
 | `vue-app-scaffolder` | Stands up the project (Vite + TS + Vitest + Storybook) this skill scaffolds components into. |
 | `vue-security-review` | After scaffolding, audit link/URL handling and any `v-html` usage in the component. |
 | `vue-architecture-checklist` | Quality gate for reactivity discipline and render performance across components. |
-| `tdd` | Drive the component test-first (RED → GREEN → REFACTOR) instead of scaffolding code ahead of the test. |
+| `tdd-loop` | Drive the component test-first (RED → GREEN → REFACTOR) instead of scaffolding code ahead of the test. |
