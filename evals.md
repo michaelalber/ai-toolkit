@@ -35,7 +35,8 @@ A passing eval would survive scrutiny from a developer seeing the skill for the 
   - [ ] `references/` directory exists with at least 2 files, each named by a pointer in SKILL.md
   - [ ] `references/conventions.md` (or equivalents) carries the depth: principle table, ≥ 3 WRONG/RIGHT rules, ≥ 8-row anti-patterns table, ≥ 3 error-recovery scenarios
   - [ ] No placeholder text remaining (`TODO`, `[fill in]`, `[e.g., ...]`)
-- **Last Run:** — | **Result:** —
+- **Automated by:** `tools/skill-evals` — SK001–SK010 (frontmatter), SK020–SK027 (layout), SK030–SK033 (state), SK040–SK044 (references). Run `skill-evals lint`.
+- **Last Run:** 2026-08-02 (`skill-evals lint`) | **Result:** PASS — 0 error(s), 398 warning(s) over 94 skills
 - **Notes:** —
 
 ---
@@ -51,6 +52,7 @@ A passing eval would survive scrutiny from a developer seeing the skill for the 
   - [ ] OpenCode body uses `skill({ name: "..." })` calls where Claude Code uses `skills:` frontmatter
   - [ ] All 10 agent sections present in both versions
   - [ ] State block XML tag is unique across all skills and agents
+- **Automated by:** `tools/skill-evals` — SK033 (state-tag collisions across skills and agents), SK058 (Claude/OpenCode agent parity). The per-platform frontmatter shape is still a manual check.
 - **Last Run:** — | **Result:** —
 - **Notes:** —
 
@@ -82,6 +84,7 @@ A passing eval would survive scrutiny from a developer seeing the skill for the 
   - [ ] New skill appears in the correct suite row in **both** `README.md` and `AGENTS.md` Skill Suites table
   - [ ] New agent appears in the correct category table in `README.md`
   - [ ] New skill has a Green / Yellow / Red entry in `pi/SKILLS-local.md` with a one-line rationale
+- **Automated by:** `tools/skill-evals` — SK053–SK057 (Pi triage coverage and counts, README listings and badges, CLAUDE.md/AGENTS.md counts), SK059 (the mirror pair). Counts are read from the tree, never hardcoded.
 - **Last Run:** — | **Result:** —
 - **Notes:** Count drift is the most common regression here. The constraints.md now lists every exact location to update; this test case verifies they were all hit.
 
@@ -115,6 +118,7 @@ A passing eval would survive scrutiny from a developer seeing the skill for the 
   - [ ] State block XML tag is emitted and populated when the skill is multi-turn
   - [ ] No phase produces output that contradicts the skill's Core Philosophy or AI Discipline Rules
   - [ ] The skill reaches a natural conclusion (does not stall, loop, or produce an empty final report)
+- **Partially automated by:** `tools/skill-evals` — `skill-evals quality` injects a SKILL.md as the system prompt and judges the output against that skill's own acceptance criteria, over the curated set in `tools/skill-evals/datasets/quality.jsonl`. Still a manual spot-check for skills outside that set.
 - **Last Run:** — | **Result:** —
 - **Notes:** This is a manual spot-check, not automated. Run it on the gold-standard skill (`cargo-package-scaffold`) after any structural template change to confirm baseline behavior holds, then run it on any new skill before marking it done. Structural completeness (TC1) is necessary but not sufficient — a skill can pass TC1 and still produce incoherent output.
 
@@ -129,6 +133,7 @@ A passing eval would survive scrutiny from a developer seeing the skill for the 
   - [ ] Every agent name in `README.md` category tables matches an actual file in `claude/agents/` and `opencode/agents/`
   - [ ] No `references/` file mentions a skill or agent by name that no longer exists
   - [ ] The skill-to-skill cross-references in Integration sections are symmetric: if Skill A lists Skill B, Skill B's Integration section lists Skill A (or documents why the relationship is one-directional)
+- **Automated by:** `tools/skill-evals` — SK042 (references/ pointers resolve), SK050 (Integration targets exist), SK051 (symmetry, informational), SK052 (stale renames), SK054/SK056 (Pi and README entries resolve).
 - **Last Run:** — | **Result:** —
 - **Notes:** Silent link rot is common in fast-growing skill suites. Check manually after any rename or removal, or automate with a simple grep against the `skills/` directory listing.
 
@@ -148,18 +153,60 @@ A passing eval would survive scrutiny from a developer seeing the skill for the 
 
 ---
 
-## CI Gate
+### Test Case 9: Skill Rubric Scorecard
 
-This is a Markdown-only repo — there is no build or test runner. The CI gate consists of manual verification steps that must pass before any PR is merged.
+- **Input:** All `skills/*/SKILL.md`
+- **Known-Good Output:** `skills/skill-creator/references/scoring-rubric.md` — parsed at run time, so the rubric file stays the single source of truth
+- **Pass Criteria:**
+  - [ ] No skill lands a DEPRECATE verdict (< 25 / 50)
+  - [ ] The REVISE count has not increased against the committed baseline in `tools/skill-evals/baselines/`
+  - [ ] Judge parse-failure rate < 10% — above that the judge is broken and the scores say nothing about the skills
+- **Command:** `cd tools/skill-evals && uv run skill-evals scorecard --gate`
+- **Automated by:** `tools/skill-evals` — one judge call per dimension, with deterministic overrides on the mechanical dimensions (layout, state uniqueness, reference hygiene) so roughly 3 of 10 are fully reproducible.
+- **Last Run:** — | **Result:** —
+- **Notes:** Baselines are produced with `--samples 3` and median aggregation. Run the first baseline three times and publish the per-dimension variance before treating this as a gate — an uncalibrated judge is worse than none.
 
-- **Frontmatter validation:** All `SKILL.md` and agent `.md` files have `name` and `description` fields with non-empty values
-- **State block uniqueness:** `grep -r "<.*-state>" skills/ claude/agents/ opencode/agents/` — every tag must appear exactly once across all files
-- **Link integrity (README):** All skill names in `README.md` suite tables resolve to actual `skills/<name>/` directories
-- **References population:** Every `skills/<name>/` has a `references/` subdirectory with ≥ 2 files
-- **No placeholder text:** `grep -r "TODO\|\[fill in\]\|\[e\.g\." skills/ claude/agents/ opencode/agents/` — must return no results in committed files
-- **Pi skills triage coverage:** Every `skills/<name>/` directory name must appear in `pi/SKILLS-local.md` — `comm -23 <(find skills -maxdepth 1 -mindepth 1 -type d -exec basename {} \; | sort) <(grep -oP '^\| \`\K[^`]+' pi/SKILLS-local.md | sort)` must return empty
+---
 
-> Append CI gate results as a sub-item of each Test Case entry on every run.
+### Test Case 10: Trigger Precision and Description Collisions
+
+- **Input:** `tools/skill-evals/datasets/routing.jsonl` (60 cases) against the live roster built from `skills/`
+- **Pass Criteria:**
+  - [ ] Top-1 accuracy at or above the committed floor
+  - [ ] No new collision pair at or above 20% — a pair the model confuses that it did not before
+  - [ ] Every `disable-model-invocation` skill records zero auto-selections
+  - [ ] Judge/model parse-failure rate < 10%
+- **Command:** `cd tools/skill-evals && uv run skill-evals route --floor 0.85`
+- **Automated by:** `tools/skill-evals` — the roster is rebuilt from the corpus each run and its sha256 recorded, so a description change visibly invalidates a baseline instead of silently shifting it.
+- **Last Run:** — | **Result:** —
+- **Notes:** Cases are stratified: canonical trigger, confusion pair (chosen mechanically by description similarity, not taste), negative, boundary, and non-invocable.
+
+---
+
+## Local Gate (no CI)
+
+There is no CI in this repo, by design. The gate is a command you run before committing, and
+it exits non-zero.
+
+```bash
+cd tools/skill-evals
+uv run skill-evals lint --baseline baselines/known-defects.yaml   # structural — no model needed
+uv run skill-evals route --floor 0.85                             # trigger precision
+uv run skill-evals scorecard --gate                               # rubric verdicts
+```
+
+Exit codes are uniform: `0` clean · `1` gate failure · `2` usage or environment · `3` the
+judge is unusable, so "the model is broken" never reads as "the skills are bad".
+
+`skill-evals lint` replaces the six manual grep checks this section used to list. One of
+those greps — the Pi triage coverage check — **matched nothing at all**, because it assumed
+backticked table rows that `pi/SKILLS-local.md` does not have. It therefore reported every
+skill as untriaged on every run, which is why nobody ran it twice. `SK053`/`SK054`/`SK055`
+parse the table instead, and `tests/test_real_corpus.py` pins that the old grep finds
+nothing so the mistake cannot be reintroduced.
+
+> Record results with `skill-evals evals-md --date <today> --write`, which fills the
+> Last Run / Result fields above and touches nothing else.
 
 ---
 
@@ -169,12 +216,14 @@ This is a Markdown-only repo — there is no build or test runner. The CI gate c
 |---|---|---|---|
 | 1 | Skill that inlines depth or breaks the 5-section lean layout | Every always-loaded section is a per-invocation token tax; bloated SKILL.md degrades reliability, worst on small local models | Keep SKILL.md to the 5 sections (≤ 200 lines); push principle tables, anti-patterns, discipline rules, error recovery, and templates to `references/` |
 | 2 | Agent added to Claude only, no OpenCode version | Breaks parity; users on OpenCode get no equivalent | Always create both versions in the same task |
-| 3 | State block XML tag reused from another skill | Two skills competing for the same state tag corrupts multi-turn sessions | Search all `SKILL.md` and agent files for the tag before using it |
+| 3 | State block XML tag reused outside a declared family | Two unrelated skills competing for the same state tag corrupts multi-turn sessions. A *family* may share one — all six `*-security-review` run one workflow over different languages, so the tag names the workflow — but the family must be declared in `tools/skill-evals/baselines/state-tag-families.yaml` with a written rationale | `skill-evals lint --rule SK032` before using a tag; add a family entry or rename |
 | 4 | Project-template file that omits the global vs. project-level distinction | Users copy templates without understanding what the file replaces | Every CLAUDE.md and AGENTS.md template must include the file architecture note |
 | 5 | PyTorch evaluation mode method call in Python code examples | Triggers the security hook even in documentation context | Use `model.train(False)` or describe the call in prose only |
 | 6 | Modifying `claude/global/CLAUDE.md`, `opencode/global/AGENTS.md`, or any `pi/global/` file without running TC5 | These files install globally — a silent structural regression affects every project the user opens | Always run TC5 checks and get explicit human approval before committing global config changes |
 | 7 | Declaring a new skill "done" based on TC1 alone | Structural completeness does not mean behavioral correctness — a structurally complete skill can still produce incoherent output | Run TC6 (manual invocation spot-check) on any new or significantly revised skill before marking it done |
-| 8 | Renaming or removing a skill without checking Integration sections | Cross-references in Integration sections silently break; other skills point to a name that no longer exists | After any rename or removal, grep `skills/*/SKILL.md` for the old name and update all references |
+| 8 | Renaming or removing a skill without checking Integration sections | Cross-references in Integration sections silently break; other skills point to a name that no longer exists | Run `skill-evals lint --rule SK050 --rule SK052 --rule SK054 --rule SK056` after any rename. The `tdd` → `tdd-loop` rename left 18 Integration rows, 2 reference pointers, a Pi triage row, and a README row pointing at a name that no longer existed — for months, silently |
+| 9 | Adding or editing a skill without running `skill-evals lint` | Every structural invariant in this file is now executable. Not running it is choosing not to know | `cd tools/skill-evals && uv run skill-evals lint` before committing any change under `skills/` |
+| 10 | Silencing a lint finding by lowering its severity | Severity records how bad a defect is, not how inconvenient it is today. Editing it to make the gate quiet destroys the signal for everyone afterwards | Either fix the finding, or add it to `baselines/known-defects.yaml` **with a written reason**. The baseline is a decision log, not a mute button |
 
 ---
 

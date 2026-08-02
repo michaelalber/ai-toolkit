@@ -14,7 +14,13 @@
 - Follow the 5-section lean layout for skills — use `skills/cargo-package-scaffold/SKILL.md` as the gold standard; keep SKILL.md ≤ 200 lines and push depth (principle tables, anti-patterns, discipline rules, error recovery, templates) to `references/`.
 - Follow the 10-section agent template exactly — both Claude Code and OpenCode versions must be present.
 - Ensure every new skill has a `references/` directory with at least 2 supporting files.
-- Ensure every new state block XML tag is unique across all skills and agents before committing.
+- Ensure every new state block XML tag is unique **across families** before committing. A skill
+  *family* — a set of skills running one workflow over different subject matter, such as the six
+  `*-security-review` — may share a tag, provided the family is declared in
+  `tools/skill-evals/baselines/state-tag-families.yaml` with a written rationale. Verify with
+  `cd tools/skill-evals && uv run skill-evals lint --rule SK032`.
+- Run `cd tools/skill-evals && uv run skill-evals lint --baseline baselines/known-defects.yaml`
+  before committing any change under `skills/`. It exits non-zero on a structural defect.
 - Keep `claude/agents/` and `opencode/agents/` versions in sync — behavior must be identical, formats differ.
 - Update skill/agent counts whenever a skill or agent is added or removed. Exact locations:
   - `README.md`: skills badge, at-a-glance table (Skills team, Agents Claude Code, Agents OpenCode), repo structure comments (team agent counts)
@@ -27,7 +33,9 @@
 ## Must NOT Do
 
 - Do not leave placeholder text (e.g., "TODO", "[fill in]") in any committed skill or agent file.
-- Do not reuse a state block XML tag already in use by another skill or agent.
+- Do not reuse a state block XML tag owned by an unrelated skill or agent, and do not add a
+  family entry just to silence the check — the rationale field is the point.
+- Do not silence a lint finding by lowering its severity. Fix it, or baseline it with a reason.
 - Do not add a skill to `claude/agents/` without a matching `opencode/agents/` entry (unless the agent is explicitly marked single-platform with a documented reason).
 - Do not modify `claude/global/CLAUDE.md`, `opencode/global/AGENTS.md`, or any file under `pi/global/` without explicit human approval — all three are installed globally and affect every session on the user's machine.
 - Do not move a skill or agent without updating all cross-references in `AGENTS.md`, `README.md`, and any skills that reference it in their Integration section.
