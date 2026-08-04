@@ -62,6 +62,41 @@ def min_reference_files(tier: Tier) -> int:
     return {Tier.EXEMPT: 0, Tier.MINIMAL: 1, Tier.FULL: 2}[tier]
 
 
-def _canonical_section_count(skill) -> int:
+def canonical_section_count(skill) -> int:
+    """How many of the 5 canonical section headings this skill actually has.
+
+    Independent of tier: a minimal-tier skill can adopt all 5 (QRSPI/QRASPI phase
+    drivers, ``cargo-package-scaffold``) while a genuinely conversational skill
+    (``grilling``, ``domain-model``) adopts none. A purely informational count — the
+    scorecard's applicability decision uses ``attempts_five_section_layout`` below,
+    not this count directly.
+    """
     return sum(1 for prefix in CANONICAL_SECTIONS if skill.has_section(prefix))
+
+
+# "Integration" is deliberately excluded from the layout-attempt signal: it is the
+# least distinctive of the 5 headings — a near-universal "what this pairs with" note
+# that a skill can carry (``codebase-design``: ``## Integration with Other Skills``)
+# without that implying it adopted Core Philosophy/Workflow/State Block/Output
+# Template. Including it produced a false negative: codebase-design's one incidental
+# match masked that it never attempted the layout.
+_LAYOUT_SIGNAL_SECTIONS = ("Core Philosophy", "Workflow", "State Block", "Output Template")
+
+
+def attempts_five_section_layout(skill) -> bool:
+    """Was this skill even trying to follow the 5-section lean layout?
+
+    Full tier is always "trying" — a full-template skill with zero matching sections
+    (``substack-writer``) hasn't adopted the layout yet, which is real, tracked debt
+    (SK021 in ``baselines/known-defects.yaml``), not evidence it was never attempting
+    one. Below full tier, "trying" is decided by evidence: a minimal/exempt skill with
+    at least one of the four distinctive headings (the QRSPI/QRASPI phase drivers,
+    ``cargo-package-scaffold``) is judged on the full rubric like any full-template
+    skill; one with none of them (``grilling``, ``domain-model``,
+    ``improve-codebase-architecture``, ``codebase-design``) was never attempting it by
+    design, and grading it against that yardstick is a category error, not a finding.
+    """
+    if classify(skill) is Tier.FULL:
+        return True
+    return any(skill.has_section(prefix) for prefix in _LAYOUT_SIGNAL_SECTIONS)
 # <AI-Generated END>

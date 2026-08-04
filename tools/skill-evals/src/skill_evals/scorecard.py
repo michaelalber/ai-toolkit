@@ -50,6 +50,17 @@ Reply with ONLY a JSON object:
 "reasoning": "<one sentence>"}}"""
 
 
+# Dimensions tied to one specific canonical section's existence (or to depth that only
+# exists once the 5-section layout was attempted). A skill with zero canonical sections
+# was never attempting the layout, so grading it against these is a category error, not
+# a finding — see SECTION_GATED_DIMENSIONS below.
+SECTION_GATED_DIMENSIONS = frozenset({"d3", "d4", "d5", "d6", "d7", "d8"})
+NOT_APPLICABLE_REASON = (
+    "skill has no canonical 5-section structure (minimal/exempt tier by design) — "
+    "this dimension does not apply"
+)
+
+
 @dataclass
 class DimensionScore:
     key: str
@@ -59,12 +70,17 @@ class DimensionScore:
     source: str = JUDGE
     reasoning: str = ""
     parse_failure: bool = False
+    not_applicable: bool = False
 
 
 @dataclass
 class SkillScore:
     skill: str
     dimensions: list[DimensionScore] = field(default_factory=list)
+
+    @property
+    def applicable(self) -> list[DimensionScore]:
+        return [d for d in self.dimensions if not d.not_applicable]
 
     @property
     def scored(self) -> list[DimensionScore]:
@@ -75,17 +91,28 @@ class SkillScore:
         return sum(d.score for d in self.scored if d.score is not None)
 
     @property
+    def applicable_max(self) -> float:
+        return len(self.applicable) * rubric_mod.MAX_PER_DIMENSION
+
+    @property
     def incomplete(self) -> bool:
-        return len(self.scored) < len(self.dimensions)
+        # A dimension omitted because it's genuinely not applicable (score is None,
+        # not_applicable is True) doesn't make the skill unscoreable — only a real
+        # parse failure (or any other unexplained omission) does.
+        return any(d.score is None and not d.not_applicable for d in self.dimensions)
 
     @property
     def parse_failures(self) -> int:
         return sum(1 for d in self.dimensions if d.parse_failure)
 
     def verdict(self, rubric) -> str:
-        if self.incomplete:
+        if self.incomplete or not self.applicable:
             return "INCOMPLETE"
-        return rubric.verdict(self.total)
+        # Rescale onto the rubric's full-scale thresholds: a skill correctly judged on
+        # fewer dimensions (because some are N/A) is held to the same PASS/REVISE bar
+        # as one judged on all ten, not a smaller absolute one.
+        rescaled = self.total / self.applicable_max * rubric.max_total
+        return rubric.verdict(rescaled)
 
 
 def score_skill(skill, rubric, judge, ctx=None, samples: int = 1) -> SkillScore:
@@ -102,6 +129,11 @@ def _score_dimension(skill, dimension, evidence, judge, samples: int) -> Dimensi
         value, why = override
         return DimensionScore(dimension.key, dimension.number, dimension.name, float(value),
                               source=STATIC, reasoning=why)
+
+    if dimension.key in SECTION_GATED_DIMENSIONS and not evidence["attempts_layout"]:
+        return DimensionScore(dimension.key, dimension.number, dimension.name, None,
+                              source=STATIC, reasoning=NOT_APPLICABLE_REASON,
+                              not_applicable=True)
 
     prompt = _PROMPT.format(
         number=dimension.number,

@@ -70,8 +70,13 @@ def test_the_documented_gate_passes(gated):
 
 
 def test_the_ungated_lint_still_reports_the_open_backlog(findings):
-    """Baselined items are deferred, not resolved — a plain lint still names them."""
-    assert {f.rule_id for f in findings.errors} == {"SK021", "SK030", "SK041"}
+    """Baselined items are deferred, not resolved — a plain lint still names them.
+
+    SK041 (qraspi-graduate, qraspi-implement, qraspi-plan, qrspi-research) was resolved by
+    trimming each back under the minimal-tier line ceiling, not baselined — see the
+    2026-08-02 known-defects.yaml entry this superseded.
+    """
+    assert {f.rule_id for f in findings.errors} == {"SK021", "SK030"}
 
 
 def test_no_rule_crashed_on_the_real_corpus(findings):
@@ -179,6 +184,41 @@ def test_phase_drivers_are_not_promoted_to_full_on_section_count():
     for name in ("qrspi-questions", "qrspi-plan", "qrspi-implement", "qraspi-questions"):
         skill = load_skill(SKILLS / name)
         assert classify(skill) is Tier.MINIMAL, f"{name} is {skill.line_count} lines"
+
+
+def test_conversational_skills_never_attempted_the_layout_but_others_do_or_should():
+    """Pins the fact the L4 scorecard's section gate (``attempts_five_section_layout``)
+    relies on — three ways a skill's relationship to the 5-section layout can go:
+
+    1. Never attempting it, by design: ``grilling``/``grill-me``/``grill-with-docs``/
+       ``domain-model``/``improve-codebase-architecture`` (minimal/exempt tier, zero of
+       the four distinctive headings) and ``codebase-design`` (minimal tier, whose only
+       match is the near-universal ``Integration`` heading, which doesn't count — see
+       ``tier._LAYOUT_SIGNAL_SECTIONS``). The scorecard's 2026-08-02 full sweep
+       DEPRECATE-verdicted these purely for lacking a layout they were never meant to
+       have — that's the bug this gate fixes.
+    2. Adopting it despite being short: ``cargo-package-scaffold`` is MINIMAL-tier by
+       size (99 lines) yet has all 5 canonical sections — the documented full-template
+       gold standard, just lean. Must stay judged on every dimension.
+    3. Meant to have it but hasn't yet: ``substack-writer`` is FULL-tier with zero
+       matching sections — a real, already-tracked lean-layout defect (SK021 in
+       ``baselines/known-defects.yaml``), not evidence it was never attempting one.
+       Gating this would silently convert a tracked finding into a non-finding, which
+       the baseline's own rule forbids. Must also stay judged on every dimension.
+    """
+    from skill_evals.tier import attempts_five_section_layout
+
+    never_attempting = (
+        "grilling", "grill-me", "grill-with-docs", "domain-model",
+        "improve-codebase-architecture", "codebase-design",
+    )
+    for name in never_attempting:
+        skill = load_skill(SKILLS / name)
+        assert not attempts_five_section_layout(skill), f"{name} unexpectedly attempts it"
+
+    for name in ("cargo-package-scaffold", "substack-writer"):
+        skill = load_skill(SKILLS / name)
+        assert attempts_five_section_layout(skill), f"{name} must stay judged on all dimensions"
 
 
 # --- the evals.md gate this tool replaces ------------------------------------------

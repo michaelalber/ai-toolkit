@@ -306,3 +306,114 @@ def test_a_single_reference_file_caps_hygiene_at_three(skills_dir: Path, rubric)
     )
     d9 = next(d for d in result.dimensions if d.key == "d9")
     assert d9.score == 3.0
+
+
+# --- section-gated dimensions (2026-08-03: grilling/domain-model false-DEPRECATE fix) ----
+
+# TINY_BODY (via write_tiny) has zero canonical sections, mirroring `grilling`: it was
+# never attempting the 5-section layout, so grading it against dimensions that assume
+# one specific section exist is a category error, not a finding.
+
+
+def test_a_sectionless_skill_marks_the_layout_dimensions_not_applicable(skills_dir: Path, rubric):
+    write_tiny(skills_dir)
+    result = scorecard.score_skill(
+        load_skill(skills_dir / "tiny-shim"), rubric, FakeJudge([Verdict(1.0)] * 10)
+    )
+    gated = {d.key: d for d in result.dimensions if d.key in scorecard.SECTION_GATED_DIMENSIONS}
+    assert set(gated) == scorecard.SECTION_GATED_DIMENSIONS
+    for d in gated.values():
+        assert d.not_applicable
+        assert d.score is None
+        assert d.source == scorecard.STATIC
+
+
+def test_a_sectionless_skill_still_gets_universal_dimensions_judged(skills_dir: Path, rubric):
+    write_tiny(skills_dir)
+    result = scorecard.score_skill(
+        load_skill(skills_dir / "tiny-shim"), rubric, FakeJudge([Verdict(1.0)] * 10)
+    )
+    universal = {
+        d.key: d for d in result.dimensions if d.key not in scorecard.SECTION_GATED_DIMENSIONS
+    }
+    assert {"d1", "d2", "d9", "d10"} <= set(universal)
+    for key in ("d1", "d2", "d10"):
+        assert universal[key].source == scorecard.JUDGE
+        assert universal[key].score is not None
+
+
+def test_not_applicable_dimensions_do_not_make_the_skill_incomplete(skills_dir: Path, rubric):
+    """Unlike a parse failure, an N/A dimension must still yield a real verdict."""
+    write_tiny(skills_dir)
+    result = scorecard.score_skill(
+        load_skill(skills_dir / "tiny-shim"), rubric, FakeJudge([Verdict(1.0)] * 10)
+    )
+    assert not result.incomplete
+    assert result.verdict(rubric) != "INCOMPLETE"
+
+
+def test_verdict_is_rescaled_to_the_applicable_max(rubric):
+    """A skill judged on only the 4 universal dimensions, all scoring 5, is EXEMPLARY —
+    not DEPRECATE from being compared against a 50-point scale it can't reach."""
+    s = scorecard.SkillScore(skill="sectionless")
+    for d in rubric.dimensions:
+        if d.key in scorecard.SECTION_GATED_DIMENSIONS:
+            s.dimensions.append(
+                scorecard.DimensionScore(d.key, d.number, d.name, None,
+                                        source=scorecard.STATIC, not_applicable=True)
+            )
+        else:
+            s.dimensions.append(scorecard.DimensionScore(d.key, d.number, d.name, 5.0))
+    assert s.applicable_max == 4 * 5  # d1, d2, d9, d10
+    assert s.total == 20.0
+    assert s.verdict(rubric) == "EXEMPLARY"
+
+
+def test_a_full_shaped_skill_is_never_section_gated(skills_dir: Path, rubric):
+    """cargo-package-scaffold is minimal-tier by size (99 lines) but has all 5 canonical
+    sections — it must be judged on all 10 dimensions like any full-template skill."""
+    body = CANONICAL_BODY.split("Supplementary note 0")[0].replace("good-full", "lean-full")
+    write_skill(skills_dir, "lean-full", body=body,
+                references={"conventions.md": filler(), "templates.md": filler()})
+    skill = load_skill(skills_dir / "lean-full")
+    from skill_evals.tier import Tier, classify
+    assert classify(skill) is Tier.MINIMAL  # short enough, but...
+    result = scorecard.score_skill(skill, rubric, FakeJudge([Verdict(1.0)] * 10))
+    assert not any(d.not_applicable for d in result.dimensions)
+    assert len(result.scored) == 10
+
+
+def test_an_integration_heading_alone_does_not_count_as_attempting_the_layout(
+    skills_dir: Path, rubric
+):
+    """codebase-design: a minimal-tier vocabulary skill whose only matching heading is
+    ``## Integration with Other Skills`` — near-universal, and not evidence it adopted
+    Core Philosophy/Workflow/State Block/Output Template. Must still be gated."""
+    body = (
+        "# Vocab Skill\n\n## Glossary\n\ntext\n\n## Principles\n\ntext\n\n"
+        "## Integration with Other Skills\n\n| Skill | Relationship |\n|---|---|\n"
+    )
+    write_skill(skills_dir, "vocab-only", body=body)
+    skill = load_skill(skills_dir / "vocab-only")
+    from skill_evals.tier import Tier, classify
+    assert classify(skill) is Tier.MINIMAL
+    result = scorecard.score_skill(skill, rubric, FakeJudge([Verdict(1.0)] * 10))
+    gated = {d.key for d in result.dimensions if d.not_applicable}
+    assert gated == scorecard.SECTION_GATED_DIMENSIONS
+
+
+def test_a_full_tier_skill_that_never_adopted_the_layout_is_never_gated(
+    skills_dir: Path, rubric
+):
+    """substack-writer: full-tier, zero canonical sections — a real, already-tracked
+    lean-layout defect (SK021), not a skill that was never attempting the layout. Must
+    stay judged on every dimension so the finding stays visible."""
+    body = "# Never Migrated\n\n## Overview\n\ntext\n\n" + "\n".join(
+        f"padding line {i}" for i in range(150)
+    )
+    write_skill(skills_dir, "never-migrated", body=body)
+    skill = load_skill(skills_dir / "never-migrated")
+    from skill_evals.tier import Tier, classify
+    assert classify(skill) is Tier.FULL
+    result = scorecard.score_skill(skill, rubric, FakeJudge([Verdict(1.0)] * 10))
+    assert not any(d.not_applicable for d in result.dimensions)

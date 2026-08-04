@@ -4,6 +4,18 @@ Use this rubric when running `/skill-creator` in SCORE mode. Apply each dimensio
 Assign an integer 1–5 based on the evidence criteria below. The rubric scores a full-template skill
 against the 5-section lean layout: lean SKILL.md, depth in `references/`.
 
+**Applicability — minimal/exempt-tier skills:** Dimensions 3–8 each assume the skill is attempting
+the 5-section layout (Dimension 3 grades the layout as a whole; 4, 5, 6, 7 each grade one specific
+section — Workflow, State Block, Output Template, Integration; 8 grades depth relocated to
+`references/`, which only exists once the layout was attempted). A skill with **zero** of the five
+canonical section headings (a minimal-tier mode switch, a conversational skill like `grilling`, a
+vocabulary provider like `domain-model`) was never attempting this layout by design — grading it
+against these six dimensions is a category error, not a finding. Score it on Dimensions 1, 2, 9, 10
+only, and rescale the verdict thresholds below to the applicable max (5 points × dimensions
+scored) instead of the full 50. A minimal-tier skill that *does* adopt all 5 sections by choice
+(the QRSPI/QRASPI phase drivers, `cargo-package-scaffold`) is graded on all 10 as normal —
+applicability is decided by measured section count, never by tier label alone.
+
 **Score thresholds:**
 
 | Total | Verdict | Action |

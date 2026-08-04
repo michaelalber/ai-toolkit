@@ -159,6 +159,7 @@ class _SkillScore:
     def __init__(self, skill, total, verdict, weakest):
         self.skill = skill
         self.total = total
+        self.applicable_max = 50  # every dimension applicable, for these fixtures
         self.incomplete = False
         self._verdict = verdict
         self.scored = [_Dim(weakest, 2.0), _Dim("Other", 5.0)]

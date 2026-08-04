@@ -132,8 +132,10 @@ def scorecard_to_text(result, *, limit: int | None = None) -> str:
     for score in shown:
         weakest = min(score.scored, key=lambda d: d.score, default=None)
         weak = f"{weakest.name} ({weakest.score:.0f})" if weakest else "—"
+        # Per-skill max, not the corpus-wide one: some dimensions are N/A for skills
+        # with no canonical section structure (minimal/exempt tier by design).
         lines.append(
-            f"| `{score.skill}` | {score.total:.0f}/{s['max_total']} | "
+            f"| `{score.skill}` | {score.total:.0f}/{score.applicable_max:.0f} | "
             f"{score.verdict(result.rubric)} | {weak} |"
         )
     return "\n".join(lines)

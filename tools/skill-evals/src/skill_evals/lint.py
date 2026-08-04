@@ -58,7 +58,7 @@ def evidence_for(skill, ctx: LintContext | None = None) -> dict:
     of run-to-run variance, so they are measured here and handed over as evidence. The
     judge then only does the part that needs judgement.
     """
-    from .tier import classify
+    from .tier import attempts_five_section_layout, canonical_section_count, classify
 
     tag_owners: dict[str, list[str]] = {}
     for other in (ctx.skills if ctx else [skill]):
@@ -75,6 +75,8 @@ def evidence_for(skill, ctx: LintContext | None = None) -> dict:
         "tier": classify(skill).value,
         "line_count": skill.line_count,
         "sections": list(skill.sections),
+        "canonical_section_count": canonical_section_count(skill),
+        "attempts_layout": attempts_five_section_layout(skill),
         "description_chars": len(skill.description),
         "has_trigger_clause": any(
             m in skill.description.lower() for m in ("use when", "use for", "triggers on")
