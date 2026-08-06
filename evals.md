@@ -36,7 +36,7 @@ A passing eval would survive scrutiny from a developer seeing the skill for the 
   - [ ] `references/conventions.md` (or equivalents) carries the depth: principle table, ≥ 3 WRONG/RIGHT rules, ≥ 8-row anti-patterns table, ≥ 3 error-recovery scenarios
   - [ ] No placeholder text remaining (`TODO`, `[fill in]`, `[e.g., ...]`)
 - **Automated by:** `tools/skill-evals` — SK001–SK010 (frontmatter), SK020–SK027 (layout), SK030–SK033 (state), SK040–SK044 (references). Run `skill-evals lint`.
-- **Last Run:** 2026-08-02 (`skill-evals lint`) | **Result:** PASS — 0 error(s), 398 warning(s) over 94 skills
+- **Last Run:** 2026-08-02 (`skill-evals lint`) | **Result:** PASS — 0 error(s), 394 warning(s) over 94 skills
 - **Notes:** —
 
 ---

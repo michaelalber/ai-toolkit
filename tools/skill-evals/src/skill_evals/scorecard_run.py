@@ -104,7 +104,7 @@ def execute(
 
     run = mods["runner"].RunResult(
         manifest={
-            "run_id": _run_id(rubric, model, len(selected)),
+            "run_id": _run_id(),
             "suite": "scorecard",
             "models": [model],
             "base_url": getattr(cfg, "base_url", None),
@@ -162,11 +162,18 @@ def _changed_skills(repo_root: Path, ref: str) -> set[str]:
     return names
 
 
-def _run_id(rubric, model: str, n: int) -> str:
-    import hashlib
+def _run_id() -> str:
+    """A fresh id per invocation.
 
-    seed = f"{rubric.sha256}:{model}:{n}"
-    return hashlib.sha256(seed.encode()).hexdigest()[:12]
+    Two back-to-back runs (e.g. a manual variance check) must land in distinct
+    artifacts, never overwrite each other silently. Matches ollama-evals'
+    ``runner.save_run`` default (``uuid.uuid4().hex[:12]``); this used to hash
+    (rubric, model, n) instead, so identical repeat invocations collided on the
+    same filename and clobbered the prior run's data.
+    """
+    import uuid
+
+    return uuid.uuid4().hex[:12]
 
 
 def _config(mods, config_path: Path | None):

@@ -1,7 +1,7 @@
 ---
 name: session-context
 audience: team
-description: Git change summarization, ADR relevance matching, and pattern applicability for building session context. Provides techniques for analyzing recent project activity, scoring context relevance, and detecting patterns that accelerate AI coding session starts. Use when building context for a new coding session, analyzing recent changes, or matching project decisions to current work.
+description: Git change summarization, ADR relevance matching, and pattern applicability for building session context. Provides techniques for analyzing recent project activity, scoring context relevance, and detecting patterns that accelerate AI coding session starts. Use when explicitly asked to prime/build context for a new coding session or onboarding. Do NOT use for a simple factual lookup like "what did I commit yesterday?" -- that's a plain `git log`, not a context-building request.
 ---
 
 # Session Context

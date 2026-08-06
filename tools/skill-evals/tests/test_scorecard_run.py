@@ -111,10 +111,16 @@ def test_artifact_is_written(repo, tmp_path: Path):
     assert result.artifact.exists()
 
 
-def test_run_id_is_stable_for_the_same_inputs(repo):
+def test_run_id_is_fresh_per_invocation(repo):
+    """Two back-to-back runs must not collide on the same artifact filename.
+
+    Was pinned the other way (same inputs -> same run_id) until a real 3x variance
+    check silently overwrote runs 1 and 2 with run 3 — the id was a hash of
+    (rubric, model, n), which a repeat invocation always reproduces.
+    """
     _, skills = repo
     write_good_full(skills, "alpha")
-    assert _run(repo).run.manifest["run_id"] == _run(repo).run.manifest["run_id"]
+    assert _run(repo).run.manifest["run_id"] != _run(repo).run.manifest["run_id"]
 
 
 def test_deprecate_and_revise_lists_are_derived(repo):

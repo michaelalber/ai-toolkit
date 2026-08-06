@@ -6,8 +6,8 @@ source_commit: ed37663
 description: >
   Interviews the user relentlessly about a plan, decision, or idea — one question at a
   time, each with a recommended answer. Shared engine behind "grill-me" and
-  "grill-with-docs". Use on any "grill" trigger phrase or to stress-test thinking. Do
-  NOT use to build the plan; it ends at shared understanding, not implementation.
+  "grill-with-docs". Use only on the literal word "grill". Do NOT fire on "interview me
+  about this plan" with no "grill" word; let the user type the command instead.
 ---
 
 Interview me relentlessly about every aspect of this until we reach a shared understanding. Walk down each branch of the decision tree, resolving dependencies between decisions one-by-one. For each question, provide your recommended answer.

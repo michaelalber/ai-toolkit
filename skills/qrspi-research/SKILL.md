@@ -15,9 +15,8 @@ description: >
 ## Core Philosophy
 
 The Research phase maps what the codebase ACTUALLY contains -- never what the feature wants. Do
-not load the ticket or feature description into context. Research what EXISTS, not what the
-feature needs: loading the goal biases the map toward a predetermined design, the exact failure
-QRSPI exists to prevent. The phase runs three read-only subagents in parallel, each on a neutral
+not load the ticket or feature description into context: loading the goal biases the map toward a
+predetermined design. The phase runs three read-only subagents in parallel, each on a neutral
 topic string, and synthesizes one objective artifact.
 
 **Non-Negotiable Constraints:**
@@ -48,14 +47,12 @@ DELEGATE (parallel)
     Wait for ALL THREE before synthesizing
 
 DELEGATE (sequential fallback -- harnesses without subagents, e.g. Pi)
-    Run the SAME three passes in order, in this session, one prompt each, passing ONLY the
-    neutral topic string. Write each pass's raw findings to the feature folder before starting
-    the next, then synthesize from those files rather than from held context:
+    Run the SAME three passes in order, one prompt each, passing ONLY the neutral topic string.
+    Write each pass's raw findings to the feature folder before the next, then synthesize from
+    those files rather than held context. Ticket-hiding still holds; drop any claim you can't cite:
       1. LOCATE  -> Glob/Grep for files related to {neutral topic}   -> research-locate.md
       2. ANALYZE -> read the located files; structure, flow, types   -> research-analyze.md
       3. PATTERN -> conventions, naming, test patterns, precedents   -> research-pattern.md
-    Ticket-hiding still holds -- the ticket must never enter this session. Objectivity is weaker
-    than the parallel path (one context sees all three passes), so drop any claim you cannot cite.
 
 SYNTHESIZE
     De-duplicate file references; organize into overview, findings, code references, patterns,

@@ -22,8 +22,7 @@ job. Graduation is the explicit seam: a single markdown artifact, `graduation.md
 first QRSPI feature with everything QRASPI produced -- the repo, the accepted ADRs, the layers the
 skeleton exercises, the live fitness gates, and the stack declaration. Both workflows already share
 `tdd`, vertical slices, and the read-only `research-*` subagents, so the seam is **state capture +
-documentation, not new machinery**. This phase is **terminal**: it captures, hands off, and stops; it
-never fires mid-workflow.
+documentation, not new machinery**.
 
 **Non-Negotiable Constraints:**
 1. SKELETON-GATED + TERMINAL -- never graduate without `skeleton.md` (status: complete, `ci_green:
@@ -31,8 +30,7 @@ never fires mid-workflow.
    slices are built, or the human explicitly confirms V1 is done)
 2. CAPTURE, DON'T RE-DERIVE -- `graduation.md` indexes what already exists (the repo, `docs/adr/`,
    `skeleton.md`, the fitness gates, the stack); it adds no new decisions and re-opens nothing
-3. NO NEW MACHINERY -- the seam is documentation; QRSPI already shares `tdd`, vertical slices, and the
-   `research-*` subagents. Write one artifact, hand off, stop
+3. NO NEW MACHINERY -- the seam is documentation only. Write one artifact, hand off, stop
 4. EXPLICIT HANDOFF -- `graduation.md` ends with the QRSPI bootstrap instruction (run /qrspi-questions
    in this repo); after it, QRASPI is complete for this system
 5. CONTEXT BUDGET: keep utilization under 40%. At 60%, write `graduation.md` with progress and tell

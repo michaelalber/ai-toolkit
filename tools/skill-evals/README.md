@@ -260,6 +260,18 @@ per-dimension variance — the same discipline `ollama-evals calibrate` already 
 judge. Budget ~2.5 min/skill on a 20B model, so a full 94-skill sweep is ~4 hours; use
 `--only` or `--changed-since` day to day.
 
+**Measured (2026-08-02, `gpt-oss:20b`):** 3 skills (`cargo-package-scaffold`, `tdd-loop`,
+`para-file`) scored 3 times each, back to back — 30 dimension-cases total. **Range = 0.0 and
+stdev = 0.0 on every one.** This is the expected result, not a fluke: with temperature 0 and a
+fixed seed, an unchanged skill file produces byte-identical judge prompts run to run, so the
+four determinism layers above compound to zero drift. It confirms the mechanism does what it's
+built to do — `scorecard --gate` differences reflect real content changes, not judge noise — but
+it does **not** measure judge *accuracy* (whether a score is right), only run-to-run
+*reproducibility* on unchanged input, and only for three strong, unambiguous full-tier skills.
+A skill near a rubric boundary, or a genuinely revised skill, is the harder case and hasn't been
+measured; if a future baseline ever shows non-zero variance, treat that as a signal something in
+the four-layer determinism chain (e.g. the model's `seed` support) broke, not as normal noise.
+
 ---
 
 ## Baselines
