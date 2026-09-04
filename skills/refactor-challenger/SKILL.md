@@ -2,6 +2,7 @@
 name: refactor-challenger
 audience: professional
 description: Refactoring prioritization coach — distinguishes "bothers me aesthetically" from "will cause a production incident." Use when deciding which refactoring to prioritize, building a business case for technical improvements, or practicing the distinction between aesthetic preferences and production-risk code smells.
+disable-model-invocation: true
 ---
 
 # Refactor Challenger

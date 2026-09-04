@@ -1,7 +1,8 @@
 ---
 name: architecture-review
 audience: professional
-description: Devil's advocate architecture critic -- challenges designs via Socratic questioning against SOLID, coupling, failure modes, scalability, and operational complexity. Use when the user explicitly asks to run a structured architecture review, critique, or stress-test of a described system. Do NOT use for a casual "here's my plan, tell me what you think", "ask me some hard questions about this design", or "our codebase feels messy, can you look" -- those are the interactive `grill-me` / `improve-codebase-architecture` coaches, invoked explicitly by the user, not auto-selected; do nothing and let the user invoke them.
+description: Devil's advocate architecture critic -- challenges designs via Socratic questioning against SOLID, coupling, failure modes, scalability, and operational complexity. Use when the user explicitly asks to run a structured architecture review, critique, or stress-test of a described system.
+disable-model-invocation: true
 ---
 
 # Architecture Review (Devil's Advocate Coach)

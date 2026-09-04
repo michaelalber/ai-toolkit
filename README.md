@@ -1,12 +1,12 @@
 # AI Toolkit
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Skills](https://img.shields.io/badge/skills-94-blue)](#skills)
+[![Skills](https://img.shields.io/badge/skills-84-blue)](#skills)
 [![Agents](https://img.shields.io/badge/agents-51-blue)](#agents)
 [![Tools](https://img.shields.io/badge/tools-pdf2md%20%7C%20web2md%20%7C%20code2md%20%7C%20ollama--evals%20%7C%20skill--evals-blue)](#repository-structure)
 [![Platforms](https://img.shields.io/badge/platforms-Claude%20Code%20%7C%20OpenCode%20%7C%20Pi-informational)](#platforms)
 
-**94 skills, 51 agents, and 26 slash commands for AI-assisted software development — spanning TDD, .NET, Python, PHP, Rust, React, Vue, security, DDD, knowledge management, and more.**
+**84 skills, 51 agents, and 22 slash commands for AI-assisted software development — spanning TDD, .NET, Python, PHP, Rust, React, Vue, and security.**
 
 > **Edge AI, robotics, ML, and industrial automation?** Those skills now live in the companion
 > [edge-ai-robotics-automation-toolkit](../edge-ai-robotics-automation-toolkit) — install it alongside this one.
@@ -33,11 +33,11 @@ This toolkit encodes that expertise as reusable primitives. Each skill is an opi
 
 | | Count |
 |--|-------|
-| Skills (team) | 82 |
-| Skills (professional) | 12 |
+| Skills (team) | 73 |
+| Skills (professional) | 11 |
 | Agents (Claude Code) | 51 |
 | Agents (OpenCode) | 51 |
-| Slash commands (per platform) | 26 |
+| Slash commands (per platform) | 22 |
 | Platforms | Claude Code, OpenCode, Pi |
 
 ---
@@ -94,15 +94,14 @@ the agents otherwise would, and `/tree` + `/fork` let you branch at a gate and c
 mkdir -p ~/.claude/skills
 ln -sf /path/to/ai-toolkit/skills/*/ ~/.claude/skills/
 
-# Agents
+# Agents (flat tree — same one-level rule as skills)
 mkdir -p ~/.claude/agents
-ln -sf /path/to/ai-toolkit/claude/agents/team/*.md ~/.claude/agents/
-ln -sf /path/to/ai-toolkit/claude/agents/professional/*.md ~/.claude/agents/
+ln -sf /path/to/ai-toolkit/claude/agents/*.md ~/.claude/agents/
 ```
 
-To install only the team-facing agents (e.g. when sharing this with a colleague), omit the
-`professional/` line. Skills no longer split by audience on disk — `scripts/install-claude.sh`
-(recommended over manual symlinking) copies the whole `skills/` tree either way.
+Neither skills nor agents split by audience on disk — `audience:` frontmatter is metadata only,
+used to group the README's Team/Professional sections. `scripts/install-claude.sh` (recommended
+over manual symlinking) copies both trees in full.
 
 See [`claude/global/README.md`](claude/global/README.md) for global config setup (hooks, permissions, commands).
 
@@ -130,8 +129,7 @@ mkdir -p ~/.config/opencode/skills
 ln -sf /path/to/ai-toolkit/skills/*/ ~/.config/opencode/skills/
 
 mkdir -p ~/.config/opencode/agents
-ln -sf /path/to/ai-toolkit/opencode/agents/team/*.md ~/.config/opencode/agents/
-ln -sf /path/to/ai-toolkit/opencode/agents/professional/*.md ~/.config/opencode/agents/
+ln -sf /path/to/ai-toolkit/opencode/agents/*.md ~/.config/opencode/agents/
 
 # Commands
 mkdir -p ~/.config/opencode/commands
@@ -170,19 +168,9 @@ pwsh scripts/install-agents.ps1       # Windows
 
 ## Skills
 
-This toolkit is organized in two groups, tagged by each skill's `audience:` frontmatter field (the `skills/` tree itself is flat — Claude Code only discovers `skills/<name>/SKILL.md` one level deep). `audience: team` skills and agents are ones I use in production work and consider shareable — patterns extracted from years of enterprise .NET, legacy modernization, and AI-augmented development on regulated-industry codebases. It also incorporates several vendored workflow-primitive skills from Matt Pocock's repo (see [Companion Skills](#companion-skills) below). `audience: professional` is my professional-development track: deliberate-practice loops that sharpen engineering judgment (architecture critique, code review, pattern selection, refactoring prioritization) and learning scaffolds for the professional domains I'm actively growing into. (Edge AI, ML, robotics, and automation skills — including model optimization — now live in the companion [edge-ai-robotics-automation-toolkit](../edge-ai-robotics-automation-toolkit).) These are career-skill investments, not side projects — the split keeps "what I ship for the team" distinct from "the competencies I'm deliberately building."
+This toolkit is organized in two groups, tagged by each skill's `audience:` frontmatter field (the `skills/` tree itself is flat — Claude Code only discovers `skills/<name>/SKILL.md` one level deep). `audience: team` skills and agents are ones I use in production work and consider shareable — patterns extracted from years of enterprise .NET, legacy modernization, and AI-augmented development on regulated-industry codebases. `audience: professional` is my professional-development track: deliberate-practice loops that sharpen engineering judgment (architecture critique, code review, pattern selection, refactoring prioritization) and learning scaffolds for the professional domains I'm actively growing into. (Edge AI, ML, robotics, and automation skills — including model optimization — now live in the companion [edge-ai-robotics-automation-toolkit](../edge-ai-robotics-automation-toolkit).) These are career-skill investments, not side projects — the split keeps "what I ship for the team" distinct from "the competencies I'm deliberately building."
 
-## Companion Skills
-
-This toolkit incorporates several skills from Matt Pocock's [skills repo](https://github.com/mattpocock/skills) alongside my own. Vendored copies carry `source: mattpocock/skills` in their frontmatter along with the upstream commit hash they were pulled from, so the provenance is traceable. Matt updates frequently — periodically check his repo and re-vendor when meaningful changes land.
-
-Matt's skills cover the **workflow primitives** that apply to any project regardless of stack: grilling a plan until it's coherent (`grilling` + its `grill-me` / `grill-with-docs` entry points), naming module shape with a shared vocabulary (`codebase-design`), and improving a codebase's module structure (`improve-codebase-architecture`). They're small, composable, and deliberately stack-agnostic — exactly the layer my own skills don't try to replicate.
-
-The skills I've written cover the **domain-specific layers** that sit on top: enterprise .NET patterns (vertical slice, CQRS, EF Core migrations, federal-compliance security review), AI/ML infrastructure (RAG pipelines, MCP server scaffolding, local LLM workflows, model optimization), and the coaching loops in my professional-development track that build architectural and review judgment.
-
-The two layers are non-overlapping by design. Where they look adjacent — his `improve-codebase-architecture` vs. my `architecture-review` — each is solving a different layer. Matt's is the workflow primitive; mine is the domain-calibrated, opinionated version for a specific stack or practice context.
-
-See `.matt-pocock-attribution.yml` at the repo root for the full provenance manifest, including modification notes for each vendored skill.
+> **A note on vendored skills:** this toolkit previously vendored several workflow-primitive skills from Matt Pocock's [skills repo](https://github.com/mattpocock/skills) (`grilling`, `grill-me`, `grill-with-docs`, `codebase-design`, `improve-codebase-architecture`) plus a local `domain-model` skill. They were removed 2026-08-08 — his repo moves faster than this one could keep re-syncing, so it's now the better place to get them directly rather than carry a copy here that drifts. The `/grill-me` and `/grill-with-docs` commands that invoked them were removed too, along with `/para-file` and `/para-review` (their target skills were dropped in the same cleanup).
 
 ## Team Skills (`audience: team`)
 
@@ -208,7 +196,6 @@ See `.matt-pocock-attribution.yml` at the repo root for the full provenance mani
 | `oss-vetting` | OSS library vetting and SBOM analysis for federal contractor environments (LANL/DOE/CUI) — security posture, supply chain risk, license compliance, and CUI suitability against four governing frameworks; Confluence-ready report. |
 | `minimal-api-scaffolder` | .NET 10 minimal API scaffolding with OpenAPI documentation, versioning, and security patterns. |
 | `dotnet-controller-api-scaffolder` | Controller-based ASP.NET Core Web API scaffolding that detects and conforms to an existing codebase's conventions (base controller, validation, service/mediator boundary, response shape). |
-| `4d-schema-migration` | 4D (4th Dimension) to SQL Server/EF Core/Blazor full-stack migration specialist. |
 | _(planned)_ `shared-kernel-generator` | .NET shared kernel scaffolding — not yet implemented. |
 
 ### Python Suite
@@ -320,7 +307,6 @@ ADRs live in the target repo's `docs/adr/`.
 | `capture-consolidate` | Consolidates multiple capture documents (transcripts, emails, SOWs) into a unified requirements registry. |
 | `email-capture` | Extracts requirements, decisions, and action items from email threads and converts them to structured captures. |
 | `transcript-capture` | Converts meeting transcripts or Zoom/Slack summaries into structured capture documents. |
-| `domain-model` | DDD domain modeling consultant — structured interrogation (bounded contexts, aggregates, ubiquitous language, invariants, domain events), surfaces code/plan contradictions, records decisions as ADRs sparingly in `docs/adr/`. Creates `CONTEXT.md` lazily; supports the `CONTEXT-MAP.md` multi-context layout. Vendored from mattpocock/skills — see [Workflow Primitives](#workflow-primitives-vendored-from-mattpocockskills). |
 
 ### Docs, Jira & Confluence
 
@@ -329,17 +315,6 @@ ADRs live in the target repo's `docs/adr/`.
 | `jira-review` | Jira ticket review with complexity scoring and requirements extraction. |
 | `jira-comment-writer` | Plain-language Jira comment drafter — translates technical updates into stakeholder language. |
 | `confluence-guide-writer` | Reads Confluence spec pages and/or source code, generates well-formatted technical guides. |
-
-### Knowledge Management Suite (PARA)
-
-The PARA method (Tiago Forte) applied to documents across local folders, OneDrive/Teams synced
-paths, and Confluence/Jira. Both skills share a per-project `.para.yml` config and the
-actionability-first classification model (Projects → Areas → Resources → Archives).
-
-| Skill | Description |
-|-------|-------------|
-| `para-file` | Captures and files one incoming document into PARA by actionability — scaffolds the P/A/R/Archive tree if missing, classifies, summarizes + tags, and files via the matching backend (filesystem, OneDrive/Teams, Confluence, or Jira). User-invocable via `/para-file`. |
-| `para-review` | Periodic PARA review — hygiene audit (misfiled/stale/archivable/empty), the weekly review ritual, change summarization, and safe reversible archiving of completed/inactive items. User-invocable via `/para-review`. |
 
 ### Agent Design & Meta
 
@@ -359,18 +334,6 @@ actionability-first classification model (Projects → Areas → Resources → A
 | `research-synthesis` | Multi-source cross-referencing, source credibility scoring, briefing formats | research-agent |
 | `session-context` | Git change summarization, ADR relevance matching, pattern applicability | context-builder-agent |
 | `task-decomposition` | Goal breakdown heuristics, dependency DAGs, sub-agent assignment protocols | task-decomposition-agent |
-
-### Workflow Primitives (vendored from mattpocock/skills)
-
-Vendored copies of workflow-primitive skills from [Matt Pocock's skills repo](https://github.com/mattpocock/skills). Each carries `source: mattpocock/skills` and a pinned `source_commit` in its frontmatter; `.matt-pocock-attribution.yml` records every local deviation and why. `domain-model` is also vendored — it's listed under [Requirements & Workflow](#requirements--workflow-suite) since that's where it's used. See [Companion Skills](#companion-skills) for the rationale and re-vendoring guidance.
-
-| Skill | Description | Upstream path |
-|-------|-------------|---------------|
-| `grilling` | The shared interview engine — one question at a time, each with a recommended answer, ending at shared understanding. | `skills/productivity/grilling/SKILL.md` |
-| `grill-me` | Entry point: runs a `grilling` session. | `skills/productivity/grill-me/SKILL.md` |
-| `grill-with-docs` | Entry point: runs a `grilling` session that also captures ADRs and a glossary via `domain-model`. | `skills/engineering/grill-with-docs/SKILL.md` |
-| `improve-codebase-architecture` | Deep module refactoring using APOSD vocabulary — scopes to git-log hot spots first, then eliminates shallow modules, information leakage, and naming mismatches. | `skills/engineering/improve-codebase-architecture/SKILL.md` |
-| `codebase-design` | Shared deep-module vocabulary (module, interface, depth, seam, adapter, leverage, locality) that `improve-codebase-architecture` names problems with. | `skills/engineering/codebase-design/SKILL.md` |
 
 ---
 
@@ -392,19 +355,13 @@ Vendored copies of workflow-primitive skills from [Matt Pocock's skills repo](ht
 | `architecture-journal` | Lightweight ADR templates with retrospective prompts at 30/90/180 days. |
 | `spec-coach` | Interactive spec design coach — vision, PRD structure, INVEST story quality, specification by example, three-tier guardrails. |
 
-### Writing & Portfolio
-
-| Skill | Description |
-|-------|-------------|
-| `substack-writer` | Multi-pass editorial pipeline that shapes the author's raw technical notes into publication-quality Substack/blog posts — keeps the human as the source of technical substance and applies editorial craft rather than generating generic filler. |
-
 ---
 
 ## Agents
 
-Autonomous agents that make decisions and take actions independently. Each exists in both Claude Code (`claude/agents/`) and OpenCode (`opencode/agents/`) format. Agents are split into `team/` and `professional/` subdirectories mirroring the skill split.
+Autonomous agents that make decisions and take actions independently. Each exists in both Claude Code (`claude/agents/`) and OpenCode (`opencode/agents/`) format, flat — no `team`/`professional` subdirectory (matches the `skills/` layout). `audience:` frontmatter is metadata only.
 
-## claude/agents/team/ and opencode/agents/team/ (45 agents)
+## claude/agents/ and opencode/agents/ (51 agents)
 
 ### Development & DevOps
 
@@ -473,7 +430,7 @@ Autonomous agents that make decisions and take actions independently. Each exist
 
 ## Commands
 
-Twenty-five slash commands per platform. Each injects live shell state before the model acts — the model sees real output, not a description of it.
+Twenty-two slash commands per platform. Each injects live shell state before the model acts — the model sees real output, not a description of it.
 
 | Command | Injects | What it does |
 |---------|---------|--------------|
@@ -487,8 +444,6 @@ Twenty-five slash commands per platform. Each injects live shell state before th
 | `/migrate [MigrationName]` | `dotnet ef migrations list` | EF Core migration with safety checks |
 | `/research [topic]` | — | Multi-source research briefing |
 | `/context-prime` | `git log`, `git status`, `git diff` | Primes session from current repo state |
-| `/grill-me [plan]` | — | Relentless one-question-at-a-time plan/design interview with recommended answers |
-| `/grill-with-docs [plan]` | — | Same interview, capturing ADRs and a glossary as it goes |
 | `/qrspi-questions [feature]` | `ls` of the feature folder | Surfaces open technical questions; stops for human answers before research |
 | `/qrspi-research [feature]` | `ls` of the feature folder | Ticket-hidden parallel codebase research → objective `research.md` |
 | `/qrspi-spec [feature]` | `ls` of the feature folder | Design Brain-Dump → brain-surgery loop → vertical-slice Structure Outline |
@@ -543,21 +498,17 @@ The `project-templates/` directory contains per-project context files based on t
 
 ```
 ai-toolkit/
-├── skills/
-│   ├── team/                   # 82 team skills (shareable, production-ready)
-│   └── professional/           # 12 professional skills (deliberate practice)
+├── skills/                     # flat — 73 team + 11 professional skills, tagged via `audience:` frontmatter
 ├── claude/
-│   ├── agents/
-│   │   └── team/               # 51 Claude Code team agents
-│   ├── commands/               # 26 slash commands with shell injection
+│   ├── agents/                 # flat — 51 Claude Code agents
+│   ├── commands/               # 22 slash commands with shell injection
 │   └── global/                 # Global config → ~/.claude/
 │       ├── CLAUDE.md           # Global instructions (every project)
 │       ├── settings.json       # Hooks: credential stop + post-write build/lint gates
 │       └── settings.local.json # Permissions: bash allow/deny, read allow/deny
 ├── opencode/
-│   ├── agents/
-│   │   └── team/               # 51 OpenCode team agents
-│   ├── commands/               # 26 slash commands with agent routing
+│   ├── agents/                 # flat — 51 OpenCode agents
+│   ├── commands/               # 22 slash commands with agent routing
 │   └── global/                 # Global config → ~/.config/opencode/
 │       ├── AGENTS.md           # Global instructions (every project)
 │       └── opencode.json       # Providers, MCP, permissions, temperatures

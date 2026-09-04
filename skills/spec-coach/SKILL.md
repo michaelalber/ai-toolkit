@@ -7,6 +7,7 @@ description: >
   criteria to produce a complete, deployable spec. Use when designing a new skill, agent,
   feature, or any AI system that needs explicit behavioral boundaries — writing an agent spec,
   an SRS/requirements doc, a spec.md/plan.md, or running a spec-kit/specify workflow.
+disable-model-invocation: true
 ---
 
 # Spec Coach (Interactive Spec Design)

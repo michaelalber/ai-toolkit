@@ -5,7 +5,7 @@ tools: Read, Edit, Write, Bash, Glob, Grep
 model: inherit
 skills:
   - qrspi-implement
-  - tdd
+  - tdd-loop
 ---
 
 # QRSPI Implement (Per-Slice Red-Green-Refactor Execution Agent)

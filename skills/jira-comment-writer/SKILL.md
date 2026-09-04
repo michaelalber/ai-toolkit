@@ -7,6 +7,7 @@ description: >
   Use when adding a comment to a Jira issue that a non-technical stakeholder will read.
   Do NOT use when the audience is engineers or technical peers — use pr-feedback-writer
   instead; this skill targets non-technical stakeholders only.
+disable-model-invocation: true
 ---
 
 # Jira Comment Writer

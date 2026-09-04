@@ -2,6 +2,7 @@
 name: architecture-journal
 audience: professional
 description: Lightweight ADR templates with retrospective prompts at 30/90/180 days — converts experience into transferable expertise. Use when making architecture decisions, recording technical choices, or reviewing past decisions to extract lessons.
+disable-model-invocation: true
 ---
 
 # Architecture Journal

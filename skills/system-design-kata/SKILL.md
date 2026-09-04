@@ -2,6 +2,7 @@
 name: system-design-kata
 audience: professional
 description: Domain-calibrated system design exercises — security workflows, edge fleet management, hybrid cloud, and real-world scenarios. Use when practicing system design, developing distributed systems trade-off judgment, or improving design skills through domain-specific scenarios covering edge AI, security workflows, and hybrid cloud. Distinct from generic interview prep.
+disable-model-invocation: true
 ---
 
 # System Design Kata

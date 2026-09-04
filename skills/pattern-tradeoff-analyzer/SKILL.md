@@ -2,6 +2,7 @@
 name: pattern-tradeoff-analyzer
 audience: professional
 description: Pattern selection coach -- presents 2-3 patterns with explicit tradeoffs for your problem, challenges golden hammer tendencies, and builds pattern selection judgment. Use when choosing between design patterns, architectural approaches, or implementation strategies.
+disable-model-invocation: true
 ---
 
 # Pattern Tradeoff Analyzer

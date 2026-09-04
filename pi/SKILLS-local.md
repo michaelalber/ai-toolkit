@@ -42,7 +42,7 @@ uncertain; 32B can't sustain fan-out) · ⚠️ already deprecated in the toolki
 
 ---
 
-## 🟢 Green — ship as-is (35)
+## 🟢 Green — ship as-is (34)
 
 These get *more* reliable on a weak model because the skill carries the procedure.
 
@@ -82,11 +82,10 @@ These get *more* reliable on a weak model because the skill carries the procedur
 | qrspi-questions | | Surface unknowns; bounded interactive Q&A |
 | qraspi-questions | | Surface unknowns (greenfield) |
 | qraspi-skeleton | | Walking-skeleton scaffold from accepted ADRs |
-| para-file | | Config-driven PARA filing; the actionability decision tree is encoded, so the model just executes it |
 
 ---
 
-## 🟡 Yellow — usable, author a lite variant (53)
+## 🟡 Yellow — usable, author a lite variant (44)
 
 Single-pass but lean on judgment, synthesis, or large reference/input loads. The
 32B model produces the *structure* of a good result with shallower content. The
@@ -104,8 +103,6 @@ make steps explicit and imperative (the same treatment that produced the lean Pi
 | vue-architecture-checklist | | Checklist exec |
 | dependency-mapper | 📚 | Metrics are mechanical; the interpretation is judgment |
 | technical-debt-assessor | 📚 | Cost/interest estimation needs judgment |
-| improve-codebase-architecture | | Deep APOSD refactor reasoning |
-| codebase-design | | Deep-module vocabulary; reference-heavy glossary |
 | fitness-functions | | Authoring arch tests + CI wiring; multi-file |
 | evaluate-tests | | Judges test quality against Beck criteria |
 | doc-sync | | Staleness detection + generation; judgment |
@@ -123,9 +120,7 @@ make steps explicit and imperative (the same treatment that produced the lean Pi
 | react-modernization-analyzer | 📚 | Assessment + plan synthesis |
 | vue-modernization-analyzer | 📚 | Assessment + plan synthesis |
 | rust-migration-analyzer | 📚 | Assessment + plan synthesis |
-| 4d-schema-migration | 📚 | DDL gen is mechanical; UI/entity mapping is judgment |
 | confluence-guide-writer | 📚 | Doc synthesis; bounded by source but prose-quality-sensitive |
-| substack-writer | | Multi-pass editorial revision; prose-quality-sensitive, craft judgment shallower locally — drive one pass at a time |
 | transcript-capture | 📚 | **Large input** — full transcript can saturate a 32K window |
 | email-capture | 📚 | **Large input** — full thread can saturate a 32K window |
 | capture-consolidate | 📚 | Dedup + contradiction detection across docs; judgment |
@@ -138,16 +133,11 @@ make steps explicit and imperative (the same treatment that produced the lean Pi
 | refactor-challenger | | Prioritization judgment |
 | code-review-coach | 📚 | Compares to "expert analysis" — only as good as the model |
 | security-review-trainer | 📚 | Generates subtle vulns + scores findings |
-| grilling | | Socratic interview engine; multi-turn judgment |
-| grill-me | | Entry point; runs a grilling session |
-| grill-with-docs | | Grilling session + ADR/glossary capture via domain-model |
-| domain-model | | DDD interrogation; judgment |
 | qrspi-spec | | Design brain-dump + structure outline |
 | qrspi-plan | | Spec → executable sliced plan; judgment |
 | qraspi-plan | | Slice plan (greenfield) |
 | qraspi-architecture | | Lock ADRs + C4 diagrams; design judgment |
 | qraspi-graduate | | Greenfield→brownfield handoff; judgment |
-| para-review | | Multi-phase audit + weekly ritual + summarize + archive; works but drift-judgment is shallower locally — drive one mode at a time |
 
 ---
 
@@ -171,7 +161,7 @@ model, but the unattended loop will drift).
 
 ## Cross-cutting notes
 
-**`grounded-code-mcp` (📚 — 38 skills).** Roughly half the library cites the local
+**`grounded-code-mcp` (📚 — 42 skills).** Roughly half the library cites the local
 RAG server for authoritative grounding. It is itself a local server, so running it
 on the Mac Mini keeps these skills fully functional offline. Without it, 📚 skills
 silently fall back to the 32B model's training data — acceptable for scaffolders,
@@ -210,5 +200,5 @@ loop. The 24–32B/128K tier removes most of this risk.
    for a cloud model when you need an autonomous loop or subagent fan-out — except the
    two research phases, which run sequentially on Pi.
 
-> Counts: 🟢 35 · 🟡 53 · 🔴 6 = 94. (AI/ML skills moved to edge-ai-robotics-automation-toolkit.) Revisit when skills are added/removed or the
+> Counts: 🟢 34 · 🟡 44 · 🔴 6 = 84. (AI/ML skills moved to edge-ai-robotics-automation-toolkit.) Revisit when skills are added/removed or the
 > primary local model changes.

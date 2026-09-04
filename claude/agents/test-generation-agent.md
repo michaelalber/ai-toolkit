@@ -4,7 +4,7 @@ description: Autonomous test generation agent that analyzes source code and gene
 tools: Read, Edit, Write, Bash, Grep, Glob
 model: inherit
 skills:
-  - tdd
+  - tdd-loop
   - dotnet-vertical-slice
   - test-scaffold
 ---

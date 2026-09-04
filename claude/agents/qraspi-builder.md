@@ -7,7 +7,7 @@ skills:
   - qraspi-skeleton
   - qraspi-implement
   - fitness-functions
-  - tdd
+  - tdd-loop
 ---
 
 # QRASPI Builder (Greenfield Source-Writing Agent)

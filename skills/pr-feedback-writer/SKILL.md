@@ -2,6 +2,7 @@
 name: pr-feedback-writer
 audience: professional
 description: Review communication coach — practice writing constructive PR feedback with proper blocking/suggestion/nit classification, empathetic framing, and clear explanations. Use when writing PR review comments, practicing constructive feedback, improving how code review findings are communicated, or learning to classify findings as blocking, suggestion, or nit.
+disable-model-invocation: true
 ---
 
 # PR Feedback Writer
