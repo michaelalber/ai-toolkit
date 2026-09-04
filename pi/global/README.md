@@ -21,9 +21,9 @@ through community extensions; `grounded-code-mcp` also ships a CLI that Pi calls
 is what the installed `AGENTS.md` uses.
 
 **There is no `pi/commands/` directory, by design.** Pi already exposes every skill as
-`/skill:<name> <args>` — which is exactly what this toolkit's non-injecting commands do (they are
+`/skill:<name> <args>` — which is exactly what this toolkit's 4 non-injecting commands do (they are
 four-line wrappers reading "use the X skill, subject: $ARGUMENTS"). Porting those would duplicate a
-built-in. The other 20 commands inject live shell state with `` !`cmd` ``, and Pi prompt templates
+built-in. The other 18 commands inject live shell state with `` !`cmd` ``, and Pi prompt templates
 take arguments only, so a port would ship them degraded: a template can *ask* the model to run
 `git diff` first, but injection exists for determinism — the state is guaranteed present before the
 model reasons — and a local model is likelier to skip or truncate that step. Closing that gap needs
