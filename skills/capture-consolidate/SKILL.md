@@ -167,6 +167,5 @@ AI discipline rules (propose-don't-execute, contradictions block progress, prove
 
 - **`transcript-capture`** — Produces `DRAFT-NNN` capture documents from meeting transcripts. This skill is the downstream consumer.
 - **`email-capture`** — Produces `DRAFT-NNN` capture documents from email threads and documents. This skill is the downstream consumer.
-- **`jira-review`** — After consolidation produces `REQ-XXX` requirements, use `jira-review` to assess readiness for Jira ticket decomposition.
-- **`task-decomposition`** — Use after `jira-review` to decompose consolidated requirements into Jira-sized tickets.
+- **`task-decomposition`** — After consolidation produces `REQ-XXX` requirements, use this skill to decompose them into Jira-sized tickets.
 - **`confluence-guide-writer`** — If the consolidated capture bundle should be published to Confluence, use this skill after PM approval.

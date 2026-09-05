@@ -74,7 +74,6 @@ These get *more* reliable on a weak model because the skill carries the procedur
 | php-migration-manager | 📚 | Lifecycle checklist |
 | environment-health | | Docker/service diagnostics; deterministic checks |
 | session-context | | Git summarization + ADR matching; bounded |
-| jira-review | | Readiness checklist; bounded |
 | jira-comment-writer | | Plain-language rewrite — bounded transform, ideal for local |
 | architecture-journal | 📚 | ADR template fill + retro prompts |
 | supply-chain-audit | 📚 | Tool-driven scan (cargo-audit/npm/pip); mechanical |

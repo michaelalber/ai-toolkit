@@ -89,7 +89,6 @@ The skill emits a `<jira-comment-state>` block with every response. The three fu
 
 ## Integration with Other Skills
 
-- **`jira-review`** — Review a Jira issue for implementation readiness before starting work. Use jira-comment-writer afterward to communicate progress back to stakeholders.
 - **`pr-feedback-writer`** — A complementary communication skill. PR feedback targets fellow engineers; Jira comments target stakeholders. The underlying craft (audience awareness, clarity, honesty) is the same.
 - **`session-context`** — Use to understand the state of the work before drafting a progress comment.
 

@@ -125,5 +125,4 @@ Full document template and session-opening detail: `references/capture-templates
 
 - **`email-capture`** — Use when the intake source is an email thread instead of a meeting transcript. Both produce the same `DRAFT-NNN` format; use `capture-consolidate` to merge outputs.
 - **`capture-consolidate`** — Run after one or more capture sessions to assign canonical `REQ-XXX` IDs, deduplicate overlapping requirements, and surface contradictions.
-- **`jira-review`** — After capture-consolidate produces the final bundle, assess whether requirements are ready to decompose into Jira tickets.
 - **`confluence-guide-writer`** — If the final capture document should be published as a stakeholder-facing artifact, use this skill to format and publish it after PM approval.

@@ -100,5 +100,4 @@ Full capture-document template and all phase templates: `references/email-captur
 
 - **`transcript-capture`** — Use when the intake source is a meeting transcript rather than an email or document. Both skills produce the same `DRAFT-NNN` capture format. Use `capture-consolidate` to merge outputs.
 - **`capture-consolidate`** — Run after one or more capture sessions to assign canonical `REQ-XXX` IDs, deduplicate overlapping requirements, and surface contradictions.
-- **`jira-review`** — After `capture-consolidate` produces the final bundle, use `jira-review` to assess whether requirements are ready to decompose into Jira tickets.
 - **`confluence-guide-writer`** — If the final capture document should be published to Confluence, use this skill to format and publish after PM approval.

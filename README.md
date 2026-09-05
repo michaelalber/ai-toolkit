@@ -1,12 +1,12 @@
 # AI Toolkit
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Skills](https://img.shields.io/badge/skills-84-blue)](#skills)
+[![Skills](https://img.shields.io/badge/skills-83-blue)](#skills)
 [![Agents](https://img.shields.io/badge/agents-51-blue)](#agents)
 [![Tools](https://img.shields.io/badge/tools-pdf2md%20%7C%20web2md%20%7C%20code2md%20%7C%20ollama--evals%20%7C%20skill--evals-blue)](#repository-structure)
 [![Platforms](https://img.shields.io/badge/platforms-Claude%20Code%20%7C%20OpenCode%20%7C%20Pi-informational)](#platforms)
 
-**84 skills, 51 agents, and 22 slash commands for AI-assisted software development — spanning TDD, .NET, Python, PHP, Rust, React, Vue, and security.**
+**83 skills, 51 agents, and 22 slash commands for AI-assisted software development — spanning TDD, .NET, Python, PHP, Rust, React, Vue, and security.**
 
 > **Edge AI, robotics, ML, and industrial automation?** Those skills now live in the companion
 > [edge-ai-robotics-automation-toolkit](../edge-ai-robotics-automation-toolkit) — install it alongside this one.
@@ -33,7 +33,7 @@ This toolkit encodes that expertise as reusable primitives. Each skill is an opi
 
 | | Count |
 |--|-------|
-| Skills (team) | 73 |
+| Skills (team) | 72 |
 | Skills (professional) | 11 |
 | Agents (Claude Code) | 51 |
 | Agents (OpenCode) | 51 |
@@ -312,7 +312,6 @@ ADRs live in the target repo's `docs/adr/`.
 
 | Skill | Description |
 |-------|-------------|
-| `jira-review` | Jira ticket review with complexity scoring and requirements extraction. |
 | `jira-comment-writer` | Plain-language Jira comment drafter — translates technical updates into stakeholder language. |
 | `confluence-guide-writer` | Reads Confluence spec pages and/or source code, generates well-formatted technical guides. |
 
