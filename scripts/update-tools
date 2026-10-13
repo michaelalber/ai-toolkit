@@ -1,0 +1,108 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+RED='\033[0;31m'
+BOLD='\033[1m'
+NC='\033[0m'
+
+info() { echo -e "${BOLD}==>${NC} $*"; }
+ok() { echo -e "${GREEN}==>${NC} $*"; }
+warn() { echo -e "${YELLOW}==>${NC} $*"; }
+fail() { echo -e "${RED}==>${NC} $*"; }
+
+errors=0
+
+# --- Claude Code ---
+info "Updating Claude Code..."
+if command -v claude &>/dev/null; then
+  before=$(claude --version 2>/dev/null || echo "unknown")
+  if CLAUDECODE= claude update 2>&1; then
+    after=$(claude --version 2>/dev/null || echo "unknown")
+    ok "Claude Code: ${before} -> ${after}"
+  else
+    fail "Claude Code update failed"
+    ((errors++))
+  fi
+
+  versions_dir="$HOME/.local/share/claude/versions"
+  current=$(readlink -f "$(command -v claude)" 2>/dev/null || true)
+  if [[ -d "$versions_dir" && -n "$current" ]]; then
+    for f in "$versions_dir"/*; do
+      [[ "$f" == "$current" ]] && continue
+      rm -f "$f"
+      ok "Removed old Claude Code version: $(basename "$f")"
+    done
+  fi
+else
+  warn "Claude Code not found, skipping"
+fi
+
+echo
+
+# --- OpenCode ---
+info "Updating OpenCode..."
+if command -v opencode &>/dev/null; then
+  before=$(opencode --version 2>/dev/null || echo "unknown")
+  if opencode upgrade 2>&1; then
+    after=$(opencode --version 2>/dev/null || echo "unknown")
+    ok "OpenCode: ${before} -> ${after}"
+  else
+    fail "OpenCode update failed"
+    ((errors++))
+  fi
+else
+  warn "OpenCode not found, skipping"
+fi
+
+echo
+
+# --- Pi ---
+info "Updating Pi..."
+if command -v pi &>/dev/null; then
+  before=$(pi --version 2>/dev/null || echo "unknown")
+  if pi update 2>&1; then
+    after=$(pi --version 2>/dev/null || echo "unknown")
+    ok "Pi: ${before} -> ${after}"
+  else
+    fail "Pi update failed"
+    ((errors++))
+  fi
+
+  info "Updating Pi extensions..."
+  if pi update --extensions 2>&1; then
+    ok "Pi extensions reconciled"
+  else
+    fail "Pi extension update failed"
+      ((errors++))
+  fi
+else
+  warn "Pi not found, skipping"
+fi
+
+echo
+
+# --- HuggingFace ---
+info "Updating HuggingFace..."
+if command -v hf &>/dev/null; then
+  before=$(hf version 2>/dev/null || echo "unknown")
+  if hf update 2>&1; then
+    after=$(hf version 2>/dev/null || echo "unknown")
+    ok "HuggingFace: ${before} -> ${after}"
+  else
+    fail "HuggingFace update failed"
+    ((errors++))
+  fi
+else
+  warn "HF not found, skipping"
+fi
+
+echo
+
+if ((errors > 0)); then
+  fail "${errors} update(s) failed"
+  exit 1
+else
+  ok "All tools updated successfully"
+fi
