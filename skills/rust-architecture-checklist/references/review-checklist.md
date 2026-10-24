@@ -265,3 +265,16 @@ cargo audit                     # No CVEs
 cargo fmt --check               # Formatted correctly
 cargo doc --no-deps             # Documentation builds without warnings
 ```
+
+---
+
+## Knowledge Base Lookups
+
+Use `search_knowledge` (grounded-code-mcp, `collection="rust"`) to ground findings in authoritative references rather than training data.
+
+| Query | When to Call |
+|-------|--------------|
+| `search_knowledge("Rust ownership borrowing lifetime", collection="rust")` | Ownership discipline check |
+| `search_knowledge("Rust trait design generics vs trait objects", collection="rust")` | Trait boundary / crate API check |
+| `search_knowledge("Rust unsafe block invariants soundness", collection="rust")` | `unsafe` audit |
+| `search_knowledge("Rust error handling Result thiserror anyhow", collection="rust")` | Error handling check |

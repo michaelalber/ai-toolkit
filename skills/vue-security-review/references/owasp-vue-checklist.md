@@ -95,3 +95,17 @@ biggest surface — review `npm audit` chains, not just direct deps.
 - **Vite (Vue plugin)**: only `import.meta.env.VITE_*` is exposed to the client; anything else stays
   server-side. Confirm secrets aren't prefixed `VITE_`.
 - **Vue CLI**: `VUE_APP_*` vars are embedded in the bundle — same rule.
+
+---
+
+## Knowledge Base Lookups
+
+Use `search_knowledge` (grounded-code-mcp, `collection="javascript"`) for Vue-specific checks and
+`collection="internal"` for the OWASP Top 10 mapping.
+
+| Query | When to Call |
+|-------|--------------|
+| `search_knowledge("Vue v-html XSS sanitization", collection="javascript")` | A03 — XSS via `v-html` check |
+| `search_knowledge("OWASP Top 10 cross-site scripting mitigation", collection="internal")` | A03 — general XSS mapping |
+| `search_knowledge("npm audit dependency vulnerability", collection="javascript")` | A06 — vulnerable components check |
+| `search_knowledge("JWT token storage localStorage cookie", collection="javascript")` | A07 — token storage check |

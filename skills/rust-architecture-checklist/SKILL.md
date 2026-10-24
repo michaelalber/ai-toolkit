@@ -62,7 +62,7 @@ RECOMMEND  Prioritize: critical → quick wins → modernization. Edition-gate e
 | 7 | **Dependency discipline** — `cargo audit` clean; `cargo deny` for licenses/duplicates; minimal version constraints | Medium |
 | 8 | **Test organization** — unit tests in `#[cfg(test)]`, integration tests in `tests/`; behavioral, not structure-coupled | High |
 
-Clippy config: [clippy configuration](references/clippy-configuration.md). Full section-by-section list (with the `unsafe` audit table): [review checklist](references/review-checklist.md).
+Clippy config: [clippy configuration](references/clippy-configuration.md). Full section-by-section list (with the `unsafe` audit table) + grounding query map: [review checklist](references/review-checklist.md).
 
 ## State Block
 

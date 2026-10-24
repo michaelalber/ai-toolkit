@@ -85,3 +85,18 @@ it changes every row below.
 | Server Components | 18+ with a framework (Next.js App Router) |
 
 Never recommend an API the detected version lacks.
+
+---
+
+## Knowledge Base Lookups
+
+The KB has no dedicated React corpus. Use `collection="javascript"` for TypeScript/React idioms,
+`collection="ui_ux"` for accessibility, and cite **react.dev** directly for hooks/component
+semantics the KB doesn't cover.
+
+| Query | When to Call |
+|-------|--------------|
+| `search_knowledge("React hooks rules of hooks dependency array", collection="javascript")` | Hooks & effects audit |
+| `search_knowledge("TypeScript strict mode generics component props", collection="javascript")` | Type safety check |
+| `search_knowledge("React error boundary suspense data fetching", collection="javascript")` | Boundary hygiene check |
+| `search_knowledge("accessible form labels focus management", collection="ui_ux")` | Accessibility check |

@@ -69,7 +69,7 @@ RECOMMEND  Prioritize: critical → quick wins → modernization. Version-gate e
 | 7 | **Accessibility** — semantic elements over `div` soup; interactive elements keyboard-reachable; labels/`alt`/ARIA where needed; `eslint-plugin-jsx-a11y` clean | High |
 | 8 | **Boundary & dep hygiene** — no cross-feature deep imports; data-fetching isolated from presentation; error boundaries around async UI; bundle/dep weight justified | Medium |
 
-ESLint config: [eslint configuration](references/eslint-configuration.md). Full section-by-section list (with the hooks & effects audit table): [review checklist](references/review-checklist.md).
+ESLint config: [eslint configuration](references/eslint-configuration.md). Full section-by-section list (with the hooks & effects audit table) + grounding query map: [review checklist](references/review-checklist.md).
 
 ## State Block
 

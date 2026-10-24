@@ -162,3 +162,18 @@ See `references/cqrs-patterns.md` for detailed checks.
 - [ ] Nested Grids: impact assessed?
 - [ ] Charts with live data: throttled?
 - [ ] Scheduler/Gantt: date-range windowing?
+
+---
+
+## Knowledge Base Lookups
+
+Prefer the Microsoft Learn MCP for official ASP.NET Core / EF Core / C# docs. Use `search_knowledge`
+(grounded-code-mcp, `collection="dotnet"`) for third-party libraries Microsoft Learn doesn't cover
+(Telerik, FreeMediator, FluentValidation, Mapster, DI/EF Core books).
+
+| Query | When to Call |
+|-------|--------------|
+| `search_knowledge("EF Core DbContext lifetime scoped dependency injection")` (Microsoft Learn) | EF Core lifetime check |
+| `search_knowledge("Telerik Blazor Grid validation XSS sanitization", collection="dotnet")` | Telerik-specific checks |
+| `search_knowledge("ASP.NET Core Minimal API controller versioning")` (Microsoft Learn) | Controller/handler discipline check |
+| `search_knowledge("Dependency Injection in .NET service lifetime", collection="dotnet")` | DI lifetime/pattern check |

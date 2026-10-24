@@ -70,3 +70,17 @@ phpstan analyse                      # static analysis
 psalm --taint-analysis               # taint tracking (source -> sink)
 grep -rn "DB::raw\|{!! \|unserialize\|->all()" app/   # high-signal patterns
 ```
+
+---
+
+## Knowledge Base Lookups
+
+Use `search_knowledge` (grounded-code-mcp, `collection="php"`) to ground findings in authoritative references rather than training data.
+
+| Query | When to Call |
+|-------|--------------|
+| `search_knowledge("Laravel Gate Policy authorization middleware", collection="php")` | A01 — access control check |
+| `search_knowledge("Laravel mass assignment fillable guarded", collection="php")` | A01 — mass-assignment check |
+| `search_knowledge("Eloquent query builder bound parameters DB::raw", collection="php")` | A03 — injection check |
+| `search_knowledge("Blade templating XSS escaping", collection="php")` | A03 — output encoding check |
+| `search_knowledge("composer audit dependency vulnerability", collection="php")` | A06 — vulnerable components check |

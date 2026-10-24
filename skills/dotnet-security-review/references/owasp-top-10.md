@@ -481,3 +481,18 @@ grep -rn "new Uri\(" --include="*.cs" | grep -v "\"http"
 
 ### Manager Explanation
 > "SSRF allows attackers to make the server access internal resources or external services on their behalf. This could expose internal systems or be used to attack other services."
+
+---
+
+## Knowledge Base Lookups
+
+Prefer the Microsoft Learn MCP for official ASP.NET Core security guidance (authn/authz, data
+protection, HTTPS). Use `search_knowledge` (grounded-code-mcp, `collection="dotnet"`) for
+third-party library findings (Telerik, FluentValidation) Microsoft Learn doesn't cover.
+
+| Query | When to Call |
+|-------|--------------|
+| `search_knowledge("ASP.NET Core authentication authorization policies")` (Microsoft Learn) | A01 — access control check |
+| `search_knowledge("ASP.NET Core data protection API encryption")` (Microsoft Learn) | A02 — cryptographic failures check |
+| `search_knowledge("Entity Framework Core parameterized query SQL injection")` (Microsoft Learn) | A03 — injection check |
+| `search_knowledge("Telerik Blazor XSS sanitization security", collection="dotnet")` | Telerik-specific findings |

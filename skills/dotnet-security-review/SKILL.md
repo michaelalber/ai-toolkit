@@ -61,7 +61,7 @@ FINDINGS      Technical table: severity · location · OWASP · finding · remed
 | A09 Logging Failures | No passwords/tokens/PII in logs; auth and access failures logged | Medium |
 | **Telerik (when detected)** | Patched Telerik version (CVE-2019-18935 RadAsyncUpload etc.); upload handlers locked down; encryption keys rotated | Critical |
 
-Full per-category checklist: [dotnet security checklist](references/dotnet-security-checklist.md) · OWASP detail: [owasp top 10](references/owasp-top-10.md) · Telerik specifics: [telerik security](references/telerik-security.md).
+Full per-category checklist: [dotnet security checklist](references/dotnet-security-checklist.md) · OWASP detail + grounding query map: [owasp top 10](references/owasp-top-10.md) · Telerik specifics: [telerik security](references/telerik-security.md).
 
 ## State Block
 

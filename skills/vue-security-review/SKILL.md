@@ -70,7 +70,7 @@ FINDINGS      Technical table: severity · location · OWASP · finding · remed
 | A09 Logging Failures | No tokens/PII sent to client analytics/error trackers (scrub before Sentry/GA); no secrets in `console.log` | Medium |
 | A10 SSRF / Open Redirect | Redirect targets from query params allow-listed (no `router.push(route.query.next)` unvalidated); image/iframe `src` from user input validated | High |
 
-Full per-category checklist: [owasp vue checklist](references/owasp-vue-checklist.md).
+Full per-category checklist + grounding query map: [owasp vue checklist](references/owasp-vue-checklist.md).
 
 ## State Block
 

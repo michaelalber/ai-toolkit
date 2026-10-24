@@ -91,3 +91,18 @@ biggest surface — review `npm audit` chains, not just direct deps.
 - **Next.js**: check `headers()` config for CSP/HSTS; Server Actions and route handlers are *server* code — review them with the matching backend security review too. `NEXT_PUBLIC_` vars are shipped to the browser by design — confirm none are secrets.
 - **Vite**: only `import.meta.env.VITE_*` is exposed to the client; anything else stays server-side. Confirm secrets aren't prefixed `VITE_`.
 - **CRA**: `REACT_APP_*` vars are embedded in the bundle — same rule.
+
+---
+
+## Knowledge Base Lookups
+
+The KB has no dedicated React corpus. Use `collection="javascript"` for TS/bundler/dependency
+questions and `collection="internal"` for the OWASP Top 10 mapping; cite **react.dev** directly
+for React-specific API semantics.
+
+| Query | When to Call |
+|-------|--------------|
+| `search_knowledge("OWASP Top 10 cross-site scripting mitigation", collection="internal")` | A03 — XSS check |
+| `search_knowledge("npm audit dependency vulnerability", collection="javascript")` | A06 — vulnerable components check |
+| `search_knowledge("JWT token storage localStorage cookie", collection="javascript")` | A07 — token storage check |
+| `search_knowledge("Content Security Policy CSP configuration", collection="internal")` | A05 — misconfiguration check |

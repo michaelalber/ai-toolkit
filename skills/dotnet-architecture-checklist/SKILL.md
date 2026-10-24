@@ -73,7 +73,7 @@ project. Items 3–9 apply to both styles (item 3 only when a mediator is presen
 | 8 | **Config & secrets** — `IOptions<T>`/`IOptionsSnapshot<T>`; no hardcoded secrets; WASM bundles secret-free | High |
 | 9 | **Telerik (when detected)** — Grid `Data` on large datasets paged/virtualized; component version alignment | High |
 
-Layered/N-tier controller branch: [layered & n-tier](references/layered-ntier.md) · CQRS patterns: [cqrs patterns](references/cqrs-patterns.md) · framework upgrade paths: [framework detection](references/framework-detection.md) · anti-patterns: [red flags](references/red-flags.md). Full section-by-section list: [review checklist](references/review-checklist.md).
+Layered/N-tier controller branch: [layered & n-tier](references/layered-ntier.md) · CQRS patterns: [cqrs patterns](references/cqrs-patterns.md) · framework upgrade paths: [framework detection](references/framework-detection.md) · anti-patterns: [red flags](references/red-flags.md). Full section-by-section list + grounding query map: [review checklist](references/review-checklist.md).
 
 ## State Block
 

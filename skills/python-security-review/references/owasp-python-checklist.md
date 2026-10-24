@@ -173,3 +173,16 @@ Reference for the `python-security-review` skill. Use during Phase 2 (SCAN) to v
 - [ ] `requests.get(user_url)` never called without URL validation
 - [ ] Cloud metadata endpoints (169.254.169.254) explicitly blocked
 - [ ] DNS rebinding mitigated by resolving and validating IP after DNS lookup
+
+---
+
+## Knowledge Base Lookups
+
+Use `search_knowledge` (grounded-code-mcp, `collection="python"`) to ground findings in authoritative references rather than training data.
+
+| Query | When to Call |
+|-------|--------------|
+| `search_knowledge("Pydantic validation untrusted input boundary", collection="python")` | A01/A04 — validate boundary input handling |
+| `search_knowledge("FastAPI Django Flask authentication dependency decorator", collection="python")` | A01/A07 — confirm framework auth idioms are present, not bypassed |
+| `search_knowledge("SQLAlchemy Django ORM parameterized query", collection="python")` | A03 — injection check |
+| `search_knowledge("pip-audit dependency vulnerability scanning", collection="python")` | A06 — vulnerable components check |

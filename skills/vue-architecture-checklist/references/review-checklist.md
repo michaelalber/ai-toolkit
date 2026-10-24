@@ -82,3 +82,17 @@ grep -rn "const { .* } = reactive(" src/       # heuristic for destructured reac
 | Reactivity Transform (`$ref`/`$computed`) | experimental, removed after 3.4 — do not recommend |
 
 Never recommend an API the detected version lacks.
+
+---
+
+## Knowledge Base Lookups
+
+Use `search_knowledge` (grounded-code-mcp, `collection="javascript"`) for Vue/TS idioms and
+`collection="ui_ux"` for accessibility — the KB's JS corpus includes Vue 2/3 docs directly.
+
+| Query | When to Call |
+|-------|--------------|
+| `search_knowledge("Vue Composition API reactivity reactive ref", collection="javascript")` | Reactivity discipline check |
+| `search_knowledge("Vue watch watchEffect lifecycle hooks", collection="javascript")` | Watcher/lifecycle correctness check |
+| `search_knowledge("Vue script setup defineProps defineEmits TypeScript", collection="javascript")` | Type safety check |
+| `search_knowledge("accessible form labels focus management", collection="ui_ux")` | Accessibility check |

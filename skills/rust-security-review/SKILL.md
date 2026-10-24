@@ -62,7 +62,7 @@ FINDINGS      Technical table: severity · location · OWASP · finding · remed
 | A09 Logging Failures | Secrets not exposed via `Debug`/`Display`; no tokens/PII in logs | Medium |
 | A10 SSRF | Outbound URLs from user input validated/allow-listed | High |
 
-Full per-category checklist: [owasp rust checklist](references/owasp-rust-checklist.md) · `unsafe` audit method: [unsafe audit guide](references/unsafe-audit-guide.md).
+Full per-category checklist + grounding query map: [owasp rust checklist](references/owasp-rust-checklist.md) · `unsafe` audit method: [unsafe audit guide](references/unsafe-audit-guide.md).
 
 ## State Block
 

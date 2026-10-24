@@ -65,7 +65,7 @@ RECOMMEND  Prioritize: critical → quick wins → modernization. Version-gate e
 | 8 | **Thin controllers** — controllers orchestrate (validate → call service → return); no business rules or persistence inline | High |
 | 9 | **Test coverage** — behavioral tests (PHPUnit/Pest) for business logic; high-risk untested code flagged | High |
 
-PHP/Laravel conventions: [php conventions](references/php-conventions.md). Full section-by-section list: [review checklist](references/review-checklist.md).
+PHP/Laravel conventions: [php conventions](references/php-conventions.md). Full section-by-section list + grounding query map: [review checklist](references/review-checklist.md).
 
 ## State Block
 

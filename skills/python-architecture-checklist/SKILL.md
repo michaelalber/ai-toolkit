@@ -66,7 +66,7 @@ RECOMMEND  Prioritize: critical → quick wins → modernization. Version-gate e
 | 8 | **Config & secrets** — settings via `pydantic` `BaseSettings`; secrets from env; no hardcoded credentials | Critical |
 | 9 | **Test coverage** — behavioral tests exist for business logic; AAA; high-risk untested modules flagged | High |
 
-Tooling config: [ruff](references/ruff-config.md) · [mypy](references/mypy-config.md). Full section-by-section list: [review checklist](references/review-checklist.md).
+Tooling config: [ruff](references/ruff-config.md) · [mypy](references/mypy-config.md). Full section-by-section list + grounding query map: [review checklist](references/review-checklist.md).
 
 ## State Block
 

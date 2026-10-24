@@ -62,3 +62,16 @@ vendor/bin/phpunit --list-tests | wc -l # test presence
 - **C**: 0 critical, significant gaps in one area
 - **D**: 1+ critical (raw SQL on input, secrets in code, no service layer)
 - **F**: fundamental problems across multiple areas
+
+---
+
+## Knowledge Base Lookups
+
+Use `search_knowledge` (grounded-code-mcp, `collection="php"`) to ground findings in authoritative references rather than training data.
+
+| Query | When to Call |
+|-------|--------------|
+| `search_knowledge("Laravel service container dependency injection facade", collection="php")` | Section 1 — boundaries & service layer check |
+| `search_knowledge("PHP strict_types declare type hints", collection="php")` | Section 2 — typing check |
+| `search_knowledge("Laravel Form Request validation", collection="php")` | Section 3 — input validation check |
+| `search_knowledge("Eloquent query builder bound parameters N+1", collection="php")` | Section 4 — query safety check |

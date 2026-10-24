@@ -62,7 +62,7 @@ FINDINGS      Technical table: severity · location · OWASP · finding · remed
 | A09 Logging Failures | No passwords/tokens/PII in logs; auth and access failures logged | Medium |
 | A10 SSRF | Outbound URLs from user input validated/allow-listed; no raw `requests.get(user_url)` | High |
 
-Full per-category checklist: [owasp python checklist](references/owasp-python-checklist.md).
+Full per-category checklist + grounding query map: [owasp python checklist](references/owasp-python-checklist.md).
 
 ## State Block
 

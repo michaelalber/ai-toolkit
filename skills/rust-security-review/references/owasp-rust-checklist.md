@@ -292,3 +292,16 @@ grep -rn "unsafe" src/ | grep -v "// SAFETY:"  # No unsafe without SAFETY
 grep -rn "format!" src/ | grep -i "sql"  # No SQL injection candidates
 grep -rn "unwrap()" src/ | grep -v "#\[cfg(test)\]"  # No unwrap in production
 ```
+
+---
+
+## Knowledge Base Lookups
+
+Use `search_knowledge` (grounded-code-mcp, `collection="rust"`) to ground findings in authoritative references rather than training data.
+
+| Query | When to Call |
+|-------|--------------|
+| `search_knowledge("Rust unsafe soundness undefined behavior", collection="rust")` | `unsafe` audit |
+| `search_knowledge("sqlx diesel parameterized query injection", collection="rust")` | Injection check |
+| `search_knowledge("Rust secrets zeroize credential handling", collection="rust")` | Secrets management check |
+| `search_knowledge("cargo audit cargo deny supply chain", collection="rust")` | Vulnerable components check |
