@@ -18,8 +18,16 @@ bash ../../scripts/install-claude.sh
 
 # 2. Copy the global config (one-time; edit YOUR_USERNAME after)
 cp CLAUDE.md ~/.claude/CLAUDE.md
-cp settings.json ~/.claude/settings.json
-cp settings.local.json ~/.claude/settings.local.json
+cp statusline.sh ~/.claude/statusline.sh
+
+# Hooks + permissions go in ONE user-scope file. ~/.claude/settings.local.json is NOT a
+# documented user-scope file (settings.local.json is project-level only), so permissions
+# are merged into ~/.claude/settings.json. Keeps existing keys (theme, model, ...).
+[ -f ~/.claude/settings.json ] || echo '{}' > ~/.claude/settings.json
+jq -s --arg u "$USER" \
+  '.[0] * .[1] * {permissions: (.[2].permissions | walk(if type == "string" then gsub("YOUR_USERNAME"; $u) else . end))}' \
+  ~/.claude/settings.json settings.json settings.local.json > /tmp/claude-settings.merged \
+  && mv /tmp/claude-settings.merged ~/.claude/settings.json
 
 # 3. Install the hook scripts referenced by settings.json (they must be executable)
 mkdir -p ~/.claude/hooks
@@ -27,7 +35,8 @@ cp hooks/*.sh ~/.claude/hooks/
 chmod +x ~/.claude/hooks/*.sh
 ```
 
-Then edit `~/.claude/settings.local.json` — replace `YOUR_USERNAME` with your actual username.
+`YOUR_USERNAME` in the permissions is replaced with `$USER` by the merge above. `settings.local.json`
+in this repo stays the permissions source file; it is not installed under that name.
 
 The hooks require `jq` (they read tool input as JSON on stdin). The post-write gates are
 best-effort: they no-op silently when `dotnet` or `ruff`/`uvx` is not installed.
