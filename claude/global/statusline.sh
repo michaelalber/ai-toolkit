@@ -16,8 +16,13 @@ if [[ -z "$used_pct" ]]; then
   exit 0
 fi
 
+# Input is JSON from stdin — never interpolate it into awk source. Require plain
+# numbers, then hand them to awk as variables.
+[[ "$used_pct" =~ ^[0-9]+(\.[0-9]+)?$ ]] || exit 0
+[[ "$ctx_size" =~ ^[0-9]+$ ]] || ctx_size=200000
+
 # Derive token count from percentage × context window size
-tokens_k=$(awk "BEGIN { printf \"%.1fk\", ($used_pct / 100 * $ctx_size) / 1000 }")
+tokens_k=$(awk -v p="$used_pct" -v s="$ctx_size" 'BEGIN { printf "%.1fk", (p / 100 * s) / 1000 }')
 pct_fmt=$(printf "%.1f%%" "$used_pct")
 
 printf "${YELLOW}%s (%s)${NC}\n" "$tokens_k" "$pct_fmt"
