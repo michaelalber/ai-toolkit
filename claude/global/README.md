@@ -85,12 +85,14 @@ variable named `api_key`. The write must be **blocked**. If it succeeds, the hoo
 **Deny Claude write access to its own permission files.** Nothing in the harness stops a session
 from editing `~/.claude/settings.json` or `settings.local.json` — if you don't add the rule, an
 agent can widen its own permissions, and you would see only a routine-looking `Edit` prompt. Add
-both patterns to the `deny` array:
+this pattern to the `deny` array:
 
 ```json
-"Edit(//**/.claude/settings*.json)",
-"Write(//**/.claude/settings*.json)"
+"Edit(//**/.claude/settings*.json)"
 ```
+
+An `Edit(...)` rule covers every file-editing tool, `Write` included. A separate `Write(...)`
+rule never matches, and Claude Code warns about it at startup.
 
 Leave `Read` allowed so audits still work. After this, change these files by hand, via `/config`,
 or with a script you approve in the moment — each of which puts a human in the loop.

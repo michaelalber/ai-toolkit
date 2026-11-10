@@ -88,7 +88,6 @@
     ],
     "deny": [
       "Edit(//**/.claude/settings*.json)",
-      "Write(//**/.claude/settings*.json)",
       "Bash(rm -rf:*)",
       "Bash(sudo rm:*)",
       "Bash(dd:*)",
