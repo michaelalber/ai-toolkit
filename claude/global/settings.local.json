@@ -9,8 +9,6 @@
       "Bash(ollama run:*)",
       "Bash(ollama ps:*)",
       "Bash(ollama pull:*)",
-      "Bash(sudo systemctl stop:*)",
-      "Bash(sudo systemctl start:*)",
       "Bash(systemctl status:*)",
       "Bash(systemctl cat:*)",
       "Bash(nvidia-smi:*)",
@@ -18,7 +16,6 @@
       "Bash(opencode --help:*)",
       "Bash(opencode --version:*)",
       "Bash(opencode models list:*)",
-      "Bash(opencode run:*)",
       "Bash(opencode debug config:*)",
       "Bash(dpkg -l:*)",
       "Bash(snap list:*)",
@@ -84,7 +81,10 @@
       "Bash(git clean *)",
       "Bash(git restore:*)",
       "Bash(git restore *)",
-      "Bash(gh pr:*)"
+      "Bash(gh pr:*)",
+      "Bash(sudo systemctl stop:*)",
+      "Bash(sudo systemctl start:*)",
+      "Bash(opencode run:*)"
     ],
     "deny": [
       "Edit(//**/.claude/settings*.json)",

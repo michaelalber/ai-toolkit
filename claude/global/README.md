@@ -105,25 +105,31 @@ approved the command.
 
 ## What's in CLAUDE.md
 
-- **Session Boot Ritual** — context confirmation gate before any work begins
-- **Core Philosophy** — engineering values baked into every session
-- **Intent Engineering** — universal value hierarchy, tradeoff defaults, escalation boundaries
-- **Prompting Patterns** — prefix triggers (`think:`, `think hard:`, `think step:`) and the `[CANNOT COMPLETE]` escape hatch
-- **Context Management** — just-in-time loading, NOTES.md scratchpad
-- **Project File Architecture** — the `.md` context stack for non-trivial projects
-- **AI Agent Obligations** — TDD discipline enforced via prompt, including "never claim unverified"
-- **Ponytail Precedence** — optional; how the minimal-solution plugin ranks against test discipline
-- **Evaluation Design** — acceptance criteria and evals as safety infrastructure
-- **Security-By-Design** — OWASP-aligned guardrails
-- **Code Quality Gates** — cyclomatic complexity, coverage targets
-- **Language Standards** — .NET, Python, PHP, TypeScript invariants
-- **Optional sections** — Snyk, grounded-code-mcp, Jira (marked inline; remove what you don't use)
+A short file (~5.4 KB) because it is loaded with every request — and the same rules also run
+non-interactively (`claude -p`, subagents), where a "wait for confirmation" gate would stall.
+
+- **Knowledge base (Claude Code)** — when and how to search `grounded-code-mcp` through its MCP
+  tools, and when to prefer the Microsoft Learn MCP.
+- **Shared core** — byte-identical with the OpenCode and Pi globals (checked by
+  `tools/skill-evals` rule SK061): interactive vs non-interactive mode, read-before-edit, look APIs
+  up instead of recalling them, tests define done, two-failures-then-stop, design, language
+  defaults (a project file overrides them), boundaries, security, output markers.
+- **Git — the human drives** — every state-changing git command is proposed and waits for a yes.
+- **Issue tracker** — never move an issue to Done or Closed.
+
+Session-boot steps a project needs (read `intent.md` / `constraints.md`) and the deeper material —
+architecture escalation (Clean Architecture / SOLID), quality-gate targets, evaluation design —
+belong in the project's own `CLAUDE.md` (see `project-templates/`) or in skills, where they load
+only when relevant.
 
 ---
 
 ## The Four Disciplines & Five Primitives
 
 The global instruction file implements Disciplines 1–3 of a four-level prompt engineering framework. Discipline 4 requires project-level files.
+
+> This toolkit keeps specifications in the issue tracker (Jira / Confluence), not a local `spec.md`.
+> The `spec.md` template below is for projects without one.
 
 | # | Discipline | What it does | Where it lives |
 |---|---|---|---|
@@ -381,16 +387,15 @@ Do not begin execution until I approve the spec.
 | grounded-code-mcp (RAG grounding) | [grounded-code-mcp](https://github.com/michaelalber/grounded-code-mcp) running locally |
 | Jira issue management | Jira MCP or API access |
 
-Remove any section you don't use — it costs tokens every session.
+The `CLAUDE.md` knowledge-base section only applies when the grounded-code-mcp MCP server is
+configured; without it, the agent is told to say so rather than guess.
 
 ## Key learnable tricks
 
 These are non-obvious patterns you can start using immediately:
 
-**Chain-of-thought triggers** — prefix your prompt to change how Claude reasons:
-- `think: <question>` — reasons before answering
-- `think hard: <question>` — deep analysis with edge cases
-- `think step: <question>` — numbered breakdown
+**Ask for depth in plain words** — "work through the edge cases first", "list the alternatives
+before choosing". Reasoning depth is otherwise a model/session setting, not a magic prefix.
 
 **Escape hatch** — when Claude can't complete accurately, it responds:
 > `[CANNOT COMPLETE]: <reason>` then a skeleton with `# VERIFY:` comments
