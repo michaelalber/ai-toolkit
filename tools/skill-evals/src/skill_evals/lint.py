@@ -116,12 +116,14 @@ def build_context(
     repo_root: Path | None = None,
     state_tag_families: dict | None = None,
     known_non_skills: set | None = None,
+    private_blocklist: str | Path | None = None,
 ) -> LintContext:
     return LintContext(
         skills=skills,
         repo_root=repo_root,
         state_tag_families=state_tag_families or {},
         known_non_skills=known_non_skills or set(),
+        private_blocklist=private_blocklist,
     )
 
 
@@ -133,6 +135,7 @@ def lint(
     baseline: str | Path | None = None,
     state_tag_families: dict | None = None,
     known_non_skills: set | None = None,
+    private_blocklist: str | Path | None = None,
 ) -> FindingSet:
     skills = discover(skills_dir)
     ctx = build_context(
@@ -140,6 +143,7 @@ def lint(
         repo_root=Path(repo_root) if repo_root else Path(skills_dir).parent,
         state_tag_families=state_tag_families,
         known_non_skills=known_non_skills,
+        private_blocklist=private_blocklist,
     )
     rules = [get_rule(r) for r in only] if only else all_rules()
 

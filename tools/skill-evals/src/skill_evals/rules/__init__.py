@@ -70,6 +70,7 @@ class LintContext:
     repo_root: object = None
     state_tag_families: dict = field(default_factory=dict)
     known_non_skills: set = field(default_factory=set)
+    private_blocklist: object = None
 
     @property
     def skill_names(self) -> set[str]:
@@ -77,5 +78,5 @@ class LintContext:
 
 
 # Imported for their registration side effects, exactly as ollama-evals does for scorers.
-from . import crossref, frontmatter, references, state, structure  # noqa: E402,F401
+from . import crossref, frontmatter, globals, references, state, structure  # noqa: E402,F401
 # <AI-Generated END>
