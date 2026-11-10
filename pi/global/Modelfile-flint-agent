@@ -1,0 +1,27 @@
+# Ollama Modelfile — Flint 40B-A2B agent (Recursive; MoE, ~2.5B active, reasoning + tools)
+#
+# Usage:
+#   ollama pull flint:40b-a2b-qat-int4
+#   ollama create flint-agent -f pi/global/Modelfile-flint-agent
+#   pi --model ollama-lan/flint-agent:latest
+#
+# Build choice matters: qat-int4 is the Apple Silicon build. On an M4 Pro the
+# gguf-nvfp4 build ran ~11 tok/s vs ~95 tok/s for qat-int4 — check which build
+# the vendor recommends for your hardware.
+
+FROM flint:40b-a2b-qat-int4
+
+# Do NOT add a TEMPLATE block: FROM inherits Flint's renderer/parser, which
+# handles thinking and tool-call parsing.
+
+# num_ctx MUST be set here (or OLLAMA_CONTEXT_LENGTH on the server). Pi talks to
+# Ollama's OpenAI-compatible /v1 endpoint, which cannot set the context per
+# request, so without this the model falls back to Ollama's small default and
+# tool calls fail. Native window is 262144. Peak memory was ~29 GB at 32K on a
+# 48 GB Mac; lower this if 131072 does not fit your machine.
+PARAMETER num_ctx 131072
+
+# Vendor sampling (from the model's own Modelfile).
+PARAMETER temperature 1
+PARAMETER top_k 20
+PARAMETER top_p 0.95

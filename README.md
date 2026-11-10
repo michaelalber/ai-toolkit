@@ -193,7 +193,7 @@ This toolkit is organized in two groups, tagged by each skill's `audience:` fron
 | `dotnet-architecture-checklist` | .NET architecture review — detects style and grades both layered/N-tier controller APIs and vertical-slice CQRS/Blazor. |
 | `dotnet-security-review` | OWASP-based .NET security review with Telerik specialization and manager-friendly reporting. |
 | `security-review-federal` | Shared, language-agnostic federal/gov overlay for any base security review — NIST 800-53, FIPS 140-2/3, CUI, POA&M, EO 14028, DOE 205.1B. |
-| `oss-vetting` | OSS library vetting and SBOM analysis for federal contractor environments (LANL/DOE/CUI) — security posture, supply chain risk, license compliance, and CUI suitability against four governing frameworks; Confluence-ready report. |
+| `oss-vetting` | OSS library vetting and SBOM analysis for federal contractor environments (national labs / DOE / CUI) — security posture, supply chain risk, license compliance, and CUI suitability against four governing frameworks; Confluence-ready report. |
 | `minimal-api-scaffolder` | .NET 10 minimal API scaffolding with OpenAPI documentation, versioning, and security patterns. |
 | `dotnet-controller-api-scaffolder` | Controller-based ASP.NET Core Web API scaffolding that detects and conforms to an existing codebase's conventions (base controller, validation, service/mediator boundary, response shape). |
 | _(planned)_ `shared-kernel-generator` | .NET shared kernel scaffolding — not yet implemented. |
@@ -437,7 +437,7 @@ Twenty-two slash commands per platform. Each injects live shell state before the
 | `/evaluate-tests [path]` | — | Audits existing tests: test-file quality (coupling, fragility, theater) and TDD compliance (commit-history scorecard) |
 | `/code-review` | `git diff` | Reviews staged or branch changes |
 | `/security-review [path]` | — | OWASP security review scoped to a path |
-| `/oss-vetting [package@version]` | Detected dependency manifests | Vets an OSS/third-party package for federal use (LANL/DOE/CUI) — Approve / conditions / Reject report |
+| `/oss-vetting [package@version]` | Detected dependency manifests | Vets an OSS/third-party package for federal use (national labs / DOE / CUI) — Approve / conditions / Reject report |
 | `/arch-review [component]` | — | Socratic architecture challenge |
 | `/new-feature [FeatureName]` | Project structure, `.csproj` files | Scaffolds a vertical slice feature |
 | `/migrate [MigrationName]` | `dotnet ef migrations list` | EF Core migration with safety checks |
@@ -513,13 +513,11 @@ ai-toolkit/
 │       └── opencode.json       # Providers, MCP, permissions, temperatures
 ├── pi/
 │   └── global/                 # Global config → ~/.pi/agent/
-│       ├── AGENTS.md           # Pi global standard (full rules + collection map)
+│       ├── AGENTS.md           # Pi global standard (short, agent-loop-safe rules)
 │       ├── models.json         # Ollama provider config
 │       ├── settings.json       # Compaction tuned for local context windows
-│       ├── SYSTEM.md           # Per-project system prompt template
-│       ├── router-config.json.example  # Opt-in per-task model routing (off by default)
-│       ├── Modelfile-20b       # Modelfile template for dense 20–32B models
-│       └── Modelfile-moe-agent # Modelfile template for Qwen3 MoE variants
+│       ├── Modelfile-flint-agent   # Flint 40B-A2B agent: 128K context + vendor sampling
+│       └── Modelfile-gemma4-agent  # Gemma 4 31B/26B agent: 128K context + vendor sampling
 ├── project-templates/          # Per-project context files — copy to your project root
 ├── scripts/                    # Install scripts (Bash + PowerShell)
 ├── tools/                      # Standalone utilities (not skills/agents/commands)

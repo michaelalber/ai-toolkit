@@ -1,10 +1,10 @@
 {
-  "defaultThinkingLevel": "off",
+  "defaultThinkingLevel": "medium",
   "compaction": {
     "enabled": true,
     "reserveTokens": 4096,
     "keepRecentTokens": 24576
   },
   "defaultProvider": "ollama-lan",
-  "defaultModel": "qwen3.6-27b-agent:latest"
+  "defaultModel": "flint-agent:latest"
 }

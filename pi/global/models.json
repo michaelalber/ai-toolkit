@@ -1,7 +1,7 @@
 {
   "providers": {
     "ollama-cloud": {
-      "baseUrl": "https://ollama.com/api",
+      "baseUrl": "https://ollama.com/v1",
       "api": "openai-completions",
       "apiKey": "${OLLAMA_API_KEY}",
       "compat": {
@@ -10,28 +10,28 @@
       },
       "models": [
         {
-          "id": "qwen3-coder-next",
-          "name": "Qwen3 Coder Next 80B MoE (Ollama Cloud)",
-          "_notes": "Large MoE coder — cloud fallback when the local host is unavailable",
+          "id": "mistral-large-4",
+          "name": "Mistral Large 4 (Ollama Cloud)",
+          "_notes": "Large open-weight model — cloud escalation for the hard 20%; prompts leave your network",
           "input": ["text"],
           "contextWindow": 131072,
-          "maxTokens": 8192
+          "maxTokens": 32768
         },
         {
-          "id": "devstral-2:123b",
-          "name": "Devstral 2 123B (Ollama Cloud)",
-          "_notes": "Power coding model — Mistral's large coding specialist",
+          "id": "nemotron-3-ultra",
+          "name": "Nemotron 3 Ultra (Ollama Cloud)",
+          "_notes": "Large open-weight model — cloud escalation",
           "input": ["text"],
           "contextWindow": 131072,
-          "maxTokens": 8192
+          "maxTokens": 32768
         },
         {
-          "id": "devstral-small-2:24b",
-          "name": "Devstral Small 2 24B (Ollama Cloud)",
-          "_notes": "Fast coding fallback — Mistral small coder for quick tasks",
+          "id": "gemma4",
+          "name": "Gemma 4 (Ollama Cloud)",
+          "_notes": "Cloud copy of the local Gemma 4 family — fallback when the local host is down",
           "input": ["text"],
           "contextWindow": 131072,
-          "maxTokens": 4096
+          "maxTokens": 32768
         }
       ]
     },
@@ -41,74 +41,37 @@
       "apiKey": "ollama",
       "compat": {
         "supportsDeveloperRole": false,
-        "supportsReasoningEffort": false,
+        "supportsReasoningEffort": true,
         "supportsUsageInStreaming": false,
         "maxTokensField": "max_tokens"
       },
       "models": [
         {
-          "id": "qwen3.6-27b-agent:latest",
-          "name": "Qwen3.6 27B Agent",
-          "_notes": "Agent-tuned dense — primary agentic/build model; built from Modelfile-20b",
-          "input": ["text", "image"],
-          "contextWindow": 131072,
-          "maxTokens": 8192
-        },
-        {
-          "id": "qwen3.6-35b-a3b-agent:latest",
-          "name": "Qwen3.6 35B-A3B Agent",
-          "_notes": "Agent-tuned fast MoE — explore/search role; built from Modelfile-moe-agent",
-          "input": ["text", "image"],
-          "contextWindow": 131072,
-          "maxTokens": 8192
-        },
-        {
-          "id": "qwen3.6-27b-coding-agent:latest",
-          "name": "Qwen3.6 27B Coding Agent",
-          "_notes": "Agent-tuned dense, coding-focused — code generation, completions, edits",
-          "input": ["text", "image"],
-          "contextWindow": 131072,
-          "maxTokens": 8192
-        },
-        {
-          "id": "qwen3.6-35b-a3b-coding-agent:latest",
-          "name": "Qwen3.6 35B-A3B Coding Agent",
-          "_notes": "Agent-tuned MoE, coding-focused — pairs with qwen3.6-27b-coding-agent for larger/faster coding tasks",
-          "input": ["text", "image"],
-          "contextWindow": 131072,
-          "maxTokens": 8192
-        },
-        {
-          "id": "qwen3-vl:30b-a3b",
-          "name": "Qwen3-VL 30B-A3B",
-          "_notes": "Vision-capable MoE — the vision + tools option; native 262144, kept at 131072 to match the rest",
-          "input": ["text", "image"],
-          "contextWindow": 131072,
-          "maxTokens": 8192
-        },
-        {
-          "id": "devstral:latest",
-          "name": "Devstral",
-          "_notes": "Mistral coding specialist — agentic coding tasks",
+          "id": "flint-agent:latest",
+          "name": "Flint 40B-A2B Agent",
+          "_notes": "Default. MoE (~2.5B active), reasoning + tools. Built from Modelfile-flint-agent (Apple Silicon qat-int4 build). maxTokens 32768: 8192 truncates reasoning + multi-file writes",
+          "reasoning": true,
           "input": ["text"],
           "contextWindow": 131072,
-          "maxTokens": 8192
+          "maxTokens": 32768
         },
         {
-          "id": "qwen2.5-coder:7b",
-          "name": "Qwen2.5 Coder 7B",
-          "_notes": "Fast autocomplete and FIM tasks",
+          "id": "gemma4-31b-agent:latest",
+          "name": "Gemma 4 31B Agent",
+          "_notes": "Dense, slower, equally reliable fallback. Built from Modelfile-gemma4-agent",
+          "reasoning": true,
           "input": ["text"],
-          "contextWindow": 32768,
-          "maxTokens": 4096
+          "contextWindow": 131072,
+          "maxTokens": 32768
         },
         {
-          "id": "JetBrains/Mellum-4b-sft-all:latest",
-          "name": "Mellum 4B",
-          "_notes": "JetBrains FIM completion model",
-          "input": ["text"],
-          "contextWindow": 32768,
-          "maxTokens": 2048
+          "id": "gemma4-26b-agent:latest",
+          "name": "Gemma 4 26B Agent",
+          "_notes": "Faster Gemma with image input — use for screenshots/diagrams. Built from Modelfile-gemma4-agent (swap FROM)",
+          "reasoning": true,
+          "input": ["text", "image"],
+          "contextWindow": 131072,
+          "maxTokens": 32768
         }
       ]
     }

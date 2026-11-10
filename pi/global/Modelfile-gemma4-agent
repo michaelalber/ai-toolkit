@@ -1,0 +1,24 @@
+# Ollama Modelfile — Gemma 4 agent (Google; dense, reasoning + tools)
+#
+# Usage:
+#   ollama pull gemma4:31b-nvfp4
+#   ollama create gemma4-31b-agent -f pi/global/Modelfile-gemma4-agent
+#   pi --model ollama-lan/gemma4-31b-agent:latest
+#
+# For the faster 26B (adds image input): change FROM to gemma4:26b-nvfp4 and
+# create it as gemma4-26b-agent.
+
+FROM gemma4:31b-nvfp4
+
+# Do NOT add a TEMPLATE block: FROM inherits Gemma's renderer/parser.
+
+# num_ctx MUST be set here (or OLLAMA_CONTEXT_LENGTH on the server) — Pi uses
+# Ollama's /v1 endpoint, which cannot set the context per request. Gemma 4's
+# native window is larger; 131072 keeps memory in check (31B peaked ~30 GB at
+# 32K on a 48 GB Mac — lower this if 131072 does not fit).
+PARAMETER num_ctx 131072
+
+# Google's recommended sampling.
+PARAMETER temperature 1.0
+PARAMETER top_k 64
+PARAMETER top_p 0.95
