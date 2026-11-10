@@ -2,10 +2,10 @@
 name: oss-vetting
 audience: team
 description: >
-  OSS library vetting and SBOM analysis for federal contractor environments (LANL/DOE/CUI).
+  OSS library vetting and SBOM analysis for federal contractor environments (national labs / DOE / CUI).
   Use this skill when evaluating any open-source or third-party package for use in a federal
   contractor project — including NuGet packages, npm, PyPI, or any OSS library. Triggers include:
-  vet this library, can we use X in LANL, is X approved for CUI systems, evaluate this NuGet
+  vet this library, can we use X on a national-lab project, is X approved for CUI systems, evaluate this NuGet
   package, generate an SBOM, supply chain risk, check this dependency, OSS assessment,
   800-171 compliance for this package, C-SCRM review. Also trigger for any question about
   whether a library is safe, compliant, or appropriate for use on a government contract or
@@ -31,9 +31,9 @@ prevents shallow checkbox compliance:
 | **NIST SP 800-161 (C-SCRM)** | Governs provenance — where the software came from, who maintains it, whether the supply chain is auditable |
 
 **Non-Negotiable Constraints:**
-1. SCOPE FIRST — never assess without package, version, ecosystem, and target system (CUI? Yellow Network? air-gapped?). A vague request produces a shallow report; ask.
+1. SCOPE FIRST — never assess without package, version, ecosystem, and target system (CUI? restricted network? air-gapped?). A vague request produces a shallow report; ask.
 2. EVIDENCE, NOT CLAIMS — every dimension score cites a finding (CVE ID, repo signal, license SPDX), never an impression.
-3. AIR-GAP SAFE — for Yellow Network artifacts, no live-connectivity URLs, no cloud scanners (Snyk/Dependabot), offline-capable SBOM tooling only.
+3. AIR-GAP SAFE — for restricted network artifacts, no live-connectivity URLs, no cloud scanners (Snyk/Dependabot), offline-capable SBOM tooling only.
 4. RED FLAGS ESCALATE — a disqualifying finding (see `references/assessment-dimensions.md`) halts approval pending waiver, regardless of other scores.
 
 Plain-language framework explanations for stakeholder briefings live in `references/framework-glossary.md`.

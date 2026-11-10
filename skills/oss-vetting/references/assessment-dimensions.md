@@ -8,7 +8,7 @@ SCORE, and SBOM phases. SKILL.md carries the lean workflow; this file carries th
 ## Step inputs — gather before starting
 
 - Package name, version, ecosystem (NuGet / PyPI / npm / other)
-- Target system: CUI-adjacent? Yellow Network? Air-gapped?
+- Target system: CUI-adjacent? restricted network? Air-gapped?
 - Intended use — what does this library do in the application?
 - Constraints — license-type requirements, air-gap tooling limits
 
@@ -83,18 +83,18 @@ An SBOM makes the assessment continuous rather than point-in-time. Note in the r
 | Context | Tool | Notes |
 |---|---|---|
 | .NET / NuGet (online) | `dotnet sbom-tool` (Microsoft) | Generates CycloneDX or SPDX; runs offline after install |
-| .NET / NuGet (Yellow Network) | `dotnet list package --vulnerable` | Built-in, no external calls; lower fidelity |
+| .NET / NuGet (restricted network) | `dotnet list package --vulnerable` | Built-in, no external calls; lower fidelity |
 | Python (online) | `syft` + `grype` (Anchore) | Full SBOM + CVE scan; supports offline DB snapshots |
 | Any (CI/CD) | `syft` in pipeline | Artifact attached to each build |
 
-For Yellow Network / air-gapped environments: pre-download vulnerability DB snapshots and use
+For restricted network / air-gapped environments: pre-download vulnerability DB snapshots and use
 offline mode. `grype` and `syft` both support `--db-only` and offline snapshot patterns.
 
 ---
 
-## Air-Gap and Yellow Network notes
+## Air-Gap and Restricted Network notes
 
-When operating on or producing artifacts for the LANL Yellow Network:
+When operating on or producing artifacts for an air-gapped or restricted network:
 
 - Do not include external URLs in the report body that imply live connectivity
   (e.g., badge URLs, shield.io links)

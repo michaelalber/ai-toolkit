@@ -11,7 +11,7 @@ Plain-language explanations for manager and stakeholder briefings. These can be 
 
 EO 14028 is the federal government's top-level cybersecurity directive, issued in the aftermath of high-profile software supply chain attacks (SolarWinds, Log4Shell). It holds every federal agency and their contractors responsible for the security posture of the software they use and ship.
 
-**Why it matters for Denali:** This is the authority that makes OSS vetting non-optional. It directed NIST and CISA to define minimum SBOM elements and pushed "secure by design" requirements down to contractors. Without EO 14028, vetting would be a best practice. With it, it's a contractual obligation.
+**Why it matters for contractors:** This is the authority that makes OSS vetting non-optional. It directed NIST and CISA to define minimum SBOM elements and pushed "secure by design" requirements down to contractors. Without EO 14028, vetting would be a best practice. With it, it's a contractual obligation.
 
 ---
 
@@ -40,7 +40,7 @@ When evaluating an OSS library, we check whether its maintainers follow practice
 
 **Scope:** Data protection controls for contractor systems
 
-CUI (Controlled Unclassified Information) covers most of what LANL handles — personnel records, training data, organizational structures, location data, and similar. This standard defines **110 security controls** across 14 control families that any contractor whose systems touch CUI must implement.
+CUI (Controlled Unclassified Information) covers much of what national labs and other federal contractors handle — personnel records, training data, organizational structures, location data, and similar. This standard defines **110 security controls** across 14 control families that any contractor whose systems touch CUI must implement.
 
 **Why it matters for OSS vetting:** A library with known vulnerabilities, poor update cadence, or opaque ownership is a direct 110-control compliance liability. The question the vetting report answers is: *does this library introduce risk to the systems that store or process CUI?*
 
@@ -70,9 +70,9 @@ This framework makes OSS provenance — origin, ownership, contributor geography
 
 ## Classification Marking: UNCLASSIFIED // FOR OFFICIAL USE — CONTRACTOR SENSITIVE
 
-This is not boilerplate. It signals that the document contains vendor evaluation details, internal risk scoring, and procurement-relevant analysis that should not circulate outside the Denali/LANL working relationship — even though the content is not classified in the national security sense.
+This is not boilerplate. It signals that the document contains vendor evaluation details, internal risk scoring, and procurement-relevant analysis that should not circulate outside the contractor–agency working relationship — even though the content is not classified in the national security sense.
 
-Distribution should be limited to Denali staff working on LANL contracts and authorized LANL counterparts.
+Distribution should be limited to contractor staff working on the relevant contract and authorized agency counterparts.
 
 ---
 

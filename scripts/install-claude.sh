@@ -3,7 +3,7 @@
 #
 # Target defaults to ~/.claude and follows CLAUDE_CONFIG_DIR when set — the same
 # variable Claude Code itself uses to pick a profile. To deploy a second profile:
-#   CLAUDE_CONFIG_DIR=~/.claude-denali scripts/install-claude.sh
+#   CLAUDE_CONFIG_DIR=~/.claude-work scripts/install-claude.sh
 
 set -euo pipefail
 

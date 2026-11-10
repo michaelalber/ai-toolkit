@@ -1,6 +1,6 @@
 # License Compatibility Matrix — Federal Contractor Use
 
-For use in OSS vetting assessments involving LANL or other federal contractor environments. Covers proprietary/closed-source deliverables. Consult legal for novel situations.
+For use in OSS vetting assessments involving national labs or other federal contractor environments. Covers proprietary/closed-source deliverables. Consult legal for novel situations.
 
 ---
 
@@ -66,7 +66,7 @@ All rights reserved by default under copyright law. **Do not use.** Contact the 
 
 ### Dual-Licensed
 Some packages offer two licenses (e.g., GPL for open-source use, commercial license for proprietary use). In these cases:
-- Identify which license applies to the Denali/LANL use case
+- Identify which license applies to the contractor's use case
 - If the commercial license applies, confirm procurement and document it
 - Example: Qt (GPL + commercial), MySQL Connector (GPL + commercial)
 
@@ -104,4 +104,4 @@ Even Tier 1 licenses may require attribution. Track and fulfill these:
 | LGPL 3.0 / GPL 3.0 | Yes (implicit via patent retaliation clause) |
 | EPL 2.0 | Yes |
 
-When using libraries in security-sensitive or IP-sensitive LANL deliverables, prefer Apache 2.0 or EPL 2.0 over MIT/BSD for explicit patent protection.
+When using libraries in security-sensitive or IP-sensitive federal deliverables, prefer Apache 2.0 or EPL 2.0 over MIT/BSD for explicit patent protection.

@@ -13,8 +13,8 @@ Use this template verbatim. Replace all `[bracketed]` fields.
 | **Package** | `[package-name]` v`[version]` |
 | **Ecosystem** | [NuGet / PyPI / npm / other] |
 | **Assessment date** | [YYYY-MM-DD] |
-| **Assessor** | [Name], Denali Data Systems |
-| **Target system** | [System name / LANL Yellow Network / etc.] |
+| **Assessor** | [Name], [Organization] |
+| **Target system** | [System name / restricted network / etc.] |
 | **Governing frameworks** | EO 14028 · NIST SP 800-218 (SSDF) · NIST SP 800-171 Rev 2 · NIST SP 800-161 |
 
 ---
@@ -106,7 +106,7 @@ Use this template verbatim. Replace all `[bracketed]` fields.
 | Project SBOM generated | [Yes — attached / Pending / Not applicable] |
 | SBOM format | [CycloneDX / SPDX / N/A] |
 | Tooling used | [`dotnet sbom-tool` / `syft` / other] |
-| Offline-capable | [Yes / No — note if Yellow Network constraint applies] |
+| Offline-capable | [Yes / No — note if restricted network constraint applies] |
 
 ---
 
@@ -133,4 +133,4 @@ List specific controls that must be in place before this library is used:
 
 ---
 
-*This document contains vendor evaluation details and internal risk scoring. Distribution limited to Denali Data Systems staff on LANL contracts and authorized LANL counterparts.*
+*This document contains vendor evaluation details and internal risk scoring. Distribution limited to [Organization] staff on the relevant contract and authorized agency counterparts.*
