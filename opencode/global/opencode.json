@@ -8,6 +8,8 @@
   // ---------------------------------------------------------------------------
   // Agent Configuration
   // No model pins — select per-session via /models or set OPENCODE_MODEL env var.
+  // Note: a per-agent temperature overrides the model's own recommended sampling
+  // (many reasoning models expect ~1.0). Remove a line to use the model's default.
   // ---------------------------------------------------------------------------
   "agent": {
     "build": {
@@ -35,7 +37,7 @@
   //   T3  Privilege Compromise — sudo/su deny, no root execution
   //   T8  Repudiation          — snapshot: true (session history preserved)
   //   T11 RCE & Code Attacks   — bash catch-all "ask", plan/explore bash deny
-  //   T17 Supply Chain         — pinned model versions, reviewed MCP connections
+  //   T17 Supply Chain         — pipx run / wget denied or gated, reviewed MCP connections
   // ---------------------------------------------------------------------------
   "permission": {
     "read": {
@@ -162,7 +164,10 @@
       "*": "ask",
 
       // --- Allowed dev tooling (synced with claude/global/settings.local.json) ---
-      // Compilers / build tools / debuggers
+      // Compilers / build tools / debuggers.
+      // make / dotnet build|test run whatever the repo's Makefile / MSBuild targets say, and
+      // the agent can propose edits to those files — approving such an edit is approving
+      // code execution. Read build-file diffs as carefully as shell commands.
       "gcc*": "allow",
       "g++*": "allow",
       "make*": "allow",
@@ -192,8 +197,9 @@
       "opencode --help*": "allow",
       "opencode --version*": "allow",
       "opencode models list*": "allow",
-      "opencode run*": "allow",
       "opencode debug config*": "allow",
+      // Not read-only: `opencode run` starts a new agent with a prompt the model wrote.
+      "opencode run*": "ask",
 
       // Package / MCP tooling
       "grounded-code-mcp ingest*": "allow",
@@ -202,9 +208,11 @@
       "pipx run*": "ask",
 
       // Narrow sudo exceptions — MUST appear before "sudo *" deny below so the
-      // more-specific pattern wins. Each exception is intentional and scoped.
-      "sudo systemctl stop*": "allow",
-      "sudo systemctl start*": "allow",
+      // more-specific pattern wins. "ask", not "allow": a prefix match covers ANY unit,
+      // so an auto-allow would let an agent stop a firewall or EDR service. To
+      // auto-allow, name the unit: "sudo systemctl restart ollama": "allow".
+      "sudo systemctl stop*": "ask",
+      "sudo systemctl start*": "ask",
 
       // --- Privilege escalation denies (OWASP T3) ---
       "sudo *": "deny",
@@ -227,7 +235,7 @@
       // allowlists, and its T2 scenario 7 shows an approved, "no risk" tool (ping) used
       // to exfiltrate over DNS — the shape of the bypass, not the specific binary.
       // Note: OpenCode glob matching does not parse pipe metacharacters — defense
-      // against "curl ... | bash" also relies on "bash -c *": deny above.
+      // against "curl ... | bash" also relies on "bash -c *": deny below.
       "curl*": "deny",
       "nc*": "deny",
       "netcat*": "deny",
