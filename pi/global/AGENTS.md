@@ -1,20 +1,24 @@
 # Coding Agent — Pi Global
 
 Target: local 20B+ models in an agent loop. Short on purpose: every line here is sent with every request.
+
+## Knowledge base (Pi)
+
+Search with the CLI: `grounded-code-mcp search "<2-6 words>" --collection <dotnet|python|php|javascript|rust|databases|api_design|patterns|internal> --json`.
+Code samples: `grounded-code-mcp search-code "<words>" --language <lang> --json`.
+
+<!-- core:start -->
 Priorities, in order: correctness → security → maintainability → performance → speed.
 
 ## Mode
 
 - **Interactive** (a human is replying): state the task and top constraints first; ask before scope changes.
-- **Non-interactive** (`-p`, scripts, subagents, or the prompt says "proceed"): no one will answer. Do not stop to ask or wait for confirmation. Work until the acceptance criteria pass, then report. If truly blocked, stop with `[CANNOT COMPLETE]: <reason>`.
+- **Non-interactive** (`-p`, `run`, scripts, subagents, or the prompt says "proceed"): no one will answer. Do not stop to ask or wait for confirmation. Work until the acceptance criteria pass, then report. If truly blocked, stop with `[CANNOT COMPLETE]: <reason>`.
 
 ## Before writing code
 
 1. **Read before you edit.** Read the files you will change and the tests that cover them. Follow an existing example in the repo if there is one.
-2. **Look it up, don't recall it.** Before using a library API, framework feature or package you have not seen in this repo, search the knowledge base:
-   `grounded-code-mcp search "<2-6 words>" --collection <dotnet|python|php|javascript|rust|databases|api_design|patterns|internal> --json`
-   For code samples: `grounded-code-mcp search-code "<words>" --language <lang> --json`.
-   Assume recalled signatures are wrong until confirmed. Empty results usually mean a config problem: say so, don't guess.
+2. **Look it up, don't recall it.** Before using a library API, framework feature or package you have not seen in this repo, search the knowledge base. Assume recalled signatures are wrong until confirmed. Empty results usually mean a config problem: say so, don't guess.
 
 ## While working
 
@@ -26,9 +30,9 @@ Priorities, in order: correctness → security → maintainability → performan
 
 ## Design
 
-Organize by feature (vertical slice), not by layer. YAGNI: no interfaces until two real implementations exist; no speculative abstractions. A subtype that breaks its base type's contract is a bug.
+Match the existing structure. For new code, organize by feature (vertical slice), not by layer. YAGNI: no interfaces until two real implementations exist; no speculative abstractions. A subtype that breaks its base type's contract is a bug.
 
-## Language defaults (a project's AGENTS.md overrides these)
+## Language defaults (a project's AGENTS.md / CLAUDE.md overrides these)
 
 - **C#:** nullable reference types on; `async`/`await` end to end (never `.Result`/`.Wait()`); pass `CancellationToken` through.
 - **Python:** type hints on signatures; context managers for files, sessions and connections.
@@ -54,3 +58,4 @@ Organize by feature (vertical slice), not by layer. YAGNI: no interfaces until t
 - Unsure about something? Mark it `# VERIFY: <what to check>`.
 
 Ponytail governs solution size, never test discipline.
+<!-- core:end -->
