@@ -76,6 +76,63 @@ def _run(skills_dir, dataset, client=None, judge=None, **kw):
     )
 
 
+# <AI-Generated START>
+class NotFoundClient:
+    """The model under test is not on the server: every chat call 404s."""
+
+    def chat(self, model, messages, **kwargs):
+        import httpx
+
+        request = httpx.Request("POST", "http://h/v1/chat/completions")
+        response = httpx.Response(404, request=request)
+        raise httpx.HTTPStatusError("404 Not Found", request=request, response=response)
+
+
+def test_a_model_missing_on_every_case_is_an_endpoint_error(skills_dir: Path, tmp_path: Path):
+    """Was: every case recorded 'error: 404' at score 0 and reported as below threshold."""
+    from skill_evals._ollama import EndpointError
+
+    write_good_full(skills_dir, "alpha")
+    with pytest.raises(EndpointError, match=r"404 for model 'fake'.*not pulled"):
+        _run(skills_dir, _dataset(tmp_path, [_case()]), client=NotFoundClient())
+
+
+class MissingJudgeClient(RecordingClient):
+    """The model under test answers; only the judge model is missing from the server."""
+
+    def chat(self, model, messages, **kwargs):
+        if model == "missing-judge":
+            NotFoundClient().chat(model, messages)
+        return super().chat(model, messages, **kwargs)
+
+
+def test_a_missing_judge_model_is_named_not_the_model_under_test(
+    skills_dir: Path, tmp_path: Path
+):
+    from skill_evals._ollama import EndpointError
+
+    write_good_full(skills_dir, "alpha")
+    with pytest.raises(EndpointError, match=r"404 for model 'missing-judge'"):
+        quality_run.execute(  # the production path: execute builds the judge itself
+            skills_dir=skills_dir, dataset=_dataset(tmp_path, [_case()]), models=["fake"],
+            client=MissingJudgeClient(), judge_model="missing-judge",
+        )
+
+
+def test_an_endpoint_error_is_not_reported_as_a_skill_failure():
+    from ollama_evals.runner import CaseResult
+
+    run = type("Run", (), {"results": [
+        CaseResult("m", "q-alpha", "quality", 1.0, True),
+        CaseResult("m", "q-beta", "quality", 0.0, False, detail="error: 404 Not Found"),
+    ]})()
+    result = quality_run.QualityResult(run=run)
+    assert result.failed == []
+    assert result.endpoint_errors == ["q-beta"]
+    assert result.unusable_rate == 0.5
+# <AI-Generated END>
+
+
 def test_the_skill_body_becomes_the_system_prompt(skills_dir: Path, tmp_path: Path):
     write_good_full(skills_dir, "alpha")
     client = RecordingClient()

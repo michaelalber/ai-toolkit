@@ -16,8 +16,10 @@ from . import scorers  # noqa: F401 - registers skill_rubric
 from ._ollama import (
     EndpointError,
     OllamaEvalsMissing,
+    RecordingClient,
     describe_endpoint_error,
     endpoint_errors,
+    is_endpoint_error,
     require,
 )
 from .corpus import discover
@@ -35,10 +37,17 @@ class QualityResult:
 
     @property
     def failed(self) -> list[str]:
+        """Cases where the skill was followed badly — never a failed request."""
         return sorted(
             r.case_id for r in self.rows
-            if not r.passed and not (r.metadata or {}).get("parse_failure")
+            if not r.passed
+            and not (r.metadata or {}).get("parse_failure")
+            and not is_endpoint_error(r)
         )
+
+    @property
+    def endpoint_errors(self) -> list[str]:
+        return sorted(r.case_id for r in self.rows if is_endpoint_error(r))
 
     @property
     def parse_failure_rate(self) -> float:
@@ -46,6 +55,14 @@ class QualityResult:
         if not rows:
             return 0.0
         return sum(1 for r in rows if (r.metadata or {}).get("parse_failure")) / len(rows)
+
+    @property
+    def unusable_rate(self) -> float:
+        """Share of cases the endpoint failed to answer usably, for either reason."""
+        rows = self.rows
+        if not rows:
+            return 0.0
+        return self.parse_failure_rate + len(self.endpoint_errors) / len(rows)
 
 
 def execute(
@@ -90,7 +107,7 @@ def execute(
     if not model_list:
         raise RoutingSetupError("no models specified (use --models or set models: in config)")
 
-    client = client or mods["client"].OllamaClient(cfg.base_url)
+    client = RecordingClient(client or mods["client"].OllamaClient(cfg.base_url))
     if judge is None:
         judge = (
             mods["judging"].RubricJudge(client, judge_model)
@@ -106,6 +123,16 @@ def execute(
         )
     except endpoint_errors() as exc:
         raise EndpointError(describe_endpoint_error(exc, cfg.base_url, model_list[0])) from exc
+    rows = [r for r in run.results if r.category == "quality"]
+    # run_suite swallows per-case exceptions; if nothing was answered, say why instead of
+    # reporting every skill as below threshold. The judge shares this client, so the
+    # failing model may be the judge — name whichever request actually failed.
+    if rows and all(is_endpoint_error(r) for r in rows) and client.first_error:
+        raise EndpointError(
+            describe_endpoint_error(
+                client.first_error, cfg.base_url, client.first_error_model or model_list[0]
+            )
+        ) from client.first_error
 
     run.manifest["skills_under_test"] = sorted({_skill_of(c) for c in cases})
     artifact = mods["runner"].save_run(run, out_dir) if out_dir else None

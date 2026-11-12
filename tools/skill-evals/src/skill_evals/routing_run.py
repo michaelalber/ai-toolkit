@@ -20,6 +20,7 @@ from . import scorers  # noqa: F401 - registers skill_choice before any run
 from ._ollama import (
     EndpointError,
     OllamaEvalsMissing,
+    RecordingClient,
     describe_endpoint_error,
     endpoint_errors,
     require,
@@ -80,7 +81,7 @@ def execute(
     for case in cases:
         case.system = _roster_for(skills, case, roster_mode, shards).system_prompt()
 
-    client = _RecordingClient(client or mods["client"].OllamaClient(cfg.base_url))
+    client = RecordingClient(client or mods["client"].OllamaClient(cfg.base_url))
     try:
         run = mods["runner"].run_suite(
             client, cases, model_list,
@@ -96,7 +97,9 @@ def execute(
     # except above. If nothing was answered, say why instead of reporting 0% accuracy.
     if summary.total and summary.endpoint_errors == summary.total and client.first_error:
         raise EndpointError(
-            describe_endpoint_error(client.first_error, cfg.base_url, model_list[0])
+            describe_endpoint_error(
+                client.first_error, cfg.base_url, client.first_error_model or model_list[0]
+            )
         ) from client.first_error
     run.manifest["roster_sha256"] = full_roster.sha256
     run.manifest["roster_mode"] = roster_mode
@@ -115,25 +118,6 @@ def execute(
         roster_mode=roster_mode,
         artifact=artifact,
     )
-
-
-class _RecordingClient:
-    """Passes calls through; keeps the first transport failure for a useful error message."""
-
-    def __init__(self, inner):
-        self._inner = inner
-        self.first_error: Exception | None = None
-
-    def chat(self, *args, **kwargs):
-        try:
-            return self._inner.chat(*args, **kwargs)
-        except endpoint_errors() as exc:
-            if self.first_error is None:
-                self.first_error = exc
-            raise
-
-    def __getattr__(self, name):
-        return getattr(self._inner, name)
 
 
 def _require_scorers(mods, cases) -> None:

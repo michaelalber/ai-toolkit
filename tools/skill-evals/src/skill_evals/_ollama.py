@@ -51,6 +51,38 @@ def endpoint_errors() -> tuple[type[Exception], ...]:
     return (httpx.HTTPError, OSError)
 
 
+def is_endpoint_error(result) -> bool:
+    """ollama-evals' run_suite catches per-case exceptions and records them this way —
+    score 0 with ``detail="error: ..."``. That is a failed request, not a model answer."""
+    return (getattr(result, "detail", "") or "").startswith("error:")
+
+
+class RecordingClient:
+    """Passes calls through; keeps the first transport failure for a useful error message.
+
+    run_suite swallows per-case exceptions, so without this a wrong model name never
+    reaches the caller and a run of 404s reads as a run of bad answers.
+    """
+
+    def __init__(self, inner):
+        self._inner = inner
+        self.first_error: Exception | None = None
+        self.first_error_model: str | None = None
+
+    def chat(self, *args, **kwargs):
+        try:
+            return self._inner.chat(*args, **kwargs)
+        except endpoint_errors() as exc:
+            if self.first_error is None:
+                self.first_error = exc
+                # Model under test or judge — whichever request actually failed.
+                self.first_error_model = kwargs.get("model", args[0] if args else None)
+            raise
+
+    def __getattr__(self, name):
+        return getattr(self._inner, name)
+
+
 def require():
     """Import the ollama-evals surface skill-evals uses, or explain how to get it."""
     try:

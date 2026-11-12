@@ -63,6 +63,31 @@ def _run(repo, **kw):
     )
 
 
+# <AI-Generated START>
+class NotFoundJudge:
+    """A judge whose model is not on the server: every call 404s."""
+
+    def score(self, **kwargs):
+        import httpx
+
+        request = httpx.Request("POST", "http://h/v1/chat/completions")
+        response = httpx.Response(404, request=request)
+        raise httpx.HTTPStatusError("404 Not Found", request=request, response=response)
+
+
+def test_a_judge_model_missing_from_the_server_is_an_endpoint_error(repo):
+    """Must say 'not pulled', not crash or score every dimension as a parse failure."""
+    from skill_evals._ollama import EndpointError
+
+    root, skills = repo
+    write_good_full(skills, "alpha")
+    with pytest.raises(EndpointError, match=r"404 for model .*not pulled"):
+        scorecard_run.execute(
+            skills_dir=skills, repo_root=root, models=["fake"], judge=NotFoundJudge()
+        )
+# <AI-Generated END>
+
+
 def test_scores_every_skill(repo):
     _, skills = repo
     for name in ("alpha", "beta"):

@@ -328,8 +328,13 @@ def quality(
     typer.echo(reporting.quality_to_text(result))
     typer.echo(f"\nsaved run: {result.artifact}")
 
-    if result.parse_failure_rate > MAX_PARSE_FAILURE_RATE:
-        typer.echo("\njudge unusable: too many replies could not be parsed.", err=True)
+    if result.unusable_rate > MAX_PARSE_FAILURE_RATE:
+        typer.echo(
+            "\njudge/model unusable: too many replies could not be parsed or requests "
+            f"failed outright ({len(result.endpoint_errors)} endpoint errors). Fix the "
+            "endpoint before reading these scores as skill quality.",
+            err=True,
+        )
         raise typer.Exit(code=EXIT_JUDGE)
     if result.failed:
         typer.echo(f"\nbelow threshold: {', '.join(result.failed)}", err=True)

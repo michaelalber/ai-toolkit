@@ -11,6 +11,8 @@ from __future__ import annotations
 from collections import Counter, defaultdict
 from dataclasses import dataclass
 
+from ._ollama import is_endpoint_error
+
 
 @dataclass(frozen=True)
 class Collision:
@@ -59,11 +61,6 @@ class RoutingSummary:
         """Share of cases the endpoint failed to answer usably, for either reason."""
         bad = self.parse_failures + self.endpoint_errors
         return bad / self.total if self.total else 0.0
-
-
-def is_endpoint_error(result) -> bool:
-    """ollama-evals' run_suite catches per-case exceptions and records them this way."""
-    return (getattr(result, "detail", "") or "").startswith("error:")
 
 
 def summarise(results) -> RoutingSummary:

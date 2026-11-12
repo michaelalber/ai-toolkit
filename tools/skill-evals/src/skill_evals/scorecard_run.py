@@ -98,7 +98,9 @@ def execute(
     except endpoint_errors() as exc:
         raise EndpointError(
             describe_endpoint_error(
-                exc, getattr(cfg, "base_url", "?"), judge_model or getattr(cfg.judge, "model", None)
+                exc,
+                getattr(cfg, "base_url", "?"),
+                judge_model or getattr(getattr(cfg, "judge", None), "model", None),
             )
         ) from exc
 
