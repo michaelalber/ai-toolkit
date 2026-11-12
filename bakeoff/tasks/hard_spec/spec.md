@@ -1,0 +1,7 @@
+Implement `semver.py` (currently a stub), following semver.org precedence rules:
+- `parse(s)` -> `(major, minor, patch, prerelease_tuple)`; prerelease split on `.`; build metadata (`+...`) is accepted and dropped. Raise `ValueError` for anything that is not a strict `MAJOR.MINOR.PATCH[-pre][+build]` (no `v` prefix, no leading zeros in major/minor/patch, no empty pre-release).
+- `compare(a, b)` -> -1/0/1. A version without a pre-release is greater than the same version with one. Pre-release identifiers compare left to right: numeric identifiers numerically, alphanumeric ones lexically, numeric < alphanumeric, and a longer set wins when all earlier identifiers are equal. Build metadata is ignored.
+- `satisfies(version, version_range)` -> bool. A range is clauses joined by `||`; a clause is comparators separated by whitespace, all of which must hold. A comparator is `OP VERSION` with the operator attached to the version (no space): `>=`, `<=`, `>`, `<`, `=`, `^`, `~`; a bare version means `=`. `^` allows changes that do not modify the left-most non-zero part (`^1.2.3` = `>=1.2.3 <2.0.0`, `^0.2.3` = `>=0.2.3 <0.3.0`, `^0.0.3` = `>=0.0.3 <0.0.4`); `~1.2.3` = `>=1.2.3 <1.3.0`.
+- A pre-release version only satisfies a clause if some comparator in that clause has the same major.minor.patch and itself has a pre-release tag.
+- Invalid versions or ranges (empty range or clause, dangling operator) raise `ValueError`.
+All tests in `test_semver.py` must pass. Do not edit the tests.

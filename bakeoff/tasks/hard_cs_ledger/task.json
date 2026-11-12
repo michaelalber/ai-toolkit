@@ -1,0 +1,5 @@
+{
+  "test_cmd": ["dotnet", "test", "Ledger.Tests", "--nologo", "-v", "q"],
+  "test_globs": ["*Tests.cs", "*.Tests.csproj"],
+  "test_timeout": 180
+}

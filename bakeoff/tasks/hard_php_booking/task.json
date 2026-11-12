@@ -1,0 +1,5 @@
+{
+  "test_cmd": ["php", "{bakeoff}/tools/php/vendor/bin/phpunit", "-c", "phpunit.xml", "--no-progress"],
+  "test_globs": ["*Test.php", "phpunit.xml"],
+  "test_timeout": 60
+}
