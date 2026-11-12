@@ -26,7 +26,8 @@ the human can redirect. So every ADR carries >= 2 considered options, is written
 presented, and set `accepted` only after the human aligns -- the greenfield analog of `qrspi-spec`'s
 "brain surgery" gate. An ADR that names a measurable quality attribute without a fitness function is
 an intention with no teeth; this phase requires both. For high-domain-complexity systems an optional
-pre-step invokes `domain-model` (no 7th phase -- it folds in here).
+pre-step builds a domain glossary in `CONTEXT.md` (use upstream mattpocock/skills domain-modeling if
+installed; no 7th phase -- it folds in here).
 
 **Non-Negotiable Constraints:**
 1. RESEARCH-GATED -- never start without `research.md` (status: complete) on disk; never design from
@@ -48,7 +49,7 @@ PRE-FLIGHT
     [ ] Locate the project folder thoughts/shared/qraspi/YYYY-MM-DD-{slug}/
     [ ] Read research.md (status: complete). If absent -> STOP; route the user to /qraspi-research
     [ ] Read the answered questions.md for quality attributes + hard constraints
-    [ ] OPTIONAL: high domain complexity? -> invoke domain-model -> CONTEXT.md the ADRs reference
+    [ ] OPTIONAL: high domain complexity? -> domain glossary pass -> CONTEXT.md the ADRs reference
     [ ] Determine adr_dir: default <target-repo>/docs/adr/ (overridable via --adr-dir / frontmatter)
 
 DRAFT  (decisions as PROPOSED ADRs)
@@ -115,6 +116,5 @@ that hands off to the `fitness-functions` primitive.
 | `qraspi-research` | Prior phase. Its `research.md` "Options on the table" are the alternatives input for the ADRs. |
 | `qraspi-skeleton` | Next phase. Consumes `architecture.md` + the accepted ADRs; lands the specified fitness functions as CI gates. |
 | `fitness-functions` | Authors the fitness functions this phase specifies (it owns the per-stack tooling); Skeleton wires them as CI gates. |
-| `domain-model` | Optional pre-step for high domain complexity -- produces a `CONTEXT.md` the ADRs reference. No 7th phase. |
 | `architecture-journal` | Reusable ADR + retrospective skill; this phase uses a MADR variant (`references/adr-template.md`) for the greenfield decision lock. |
 | `qrspi-spec` | Brownfield sibling's design gate. Architecture is the greenfield analog -- ADRs-with-alternatives instead of a design brain-dump. |

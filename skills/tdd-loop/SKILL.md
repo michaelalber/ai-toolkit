@@ -91,7 +91,7 @@ The one canonical loop (GREEN/REFACTOR depth in `references/` above). Companions
 
 | Need | Skill |
 |------|-------|
-| AI drives all phases autonomously (defers here for mechanics) | `tdd-agent` |
+| AI drives all phases autonomously (defers here for mechanics) | `tdd-agent` (agent) |
 | Audit test quality or TDD compliance after the fact | `evaluate-tests` |
 | .NET test conventions — xUnit / AAA / mocks | `test-scaffold` |
 | RED before/after examples | [Behavioral Examples](references/behavioral-examples.md) |

@@ -149,9 +149,8 @@ Full templates (Problem Framing Prompt, Golden Hammer Challenge, Tradeoff Deep-D
 | Skill | Integration Point |
 |-------|-------------------|
 | **architecture-review** | Pattern choices aggregate into architectural style; use after selection to validate the whole |
-| **system-design-kata** | Practice problems surface pattern decisions; bring specific choices here for tradeoff analysis |
 | **dependency-mapper** | Understand current coupling before selecting patterns that change dependency directions |
 | **architecture-journal** | Record each CACR decision: forces, alternatives, tradeoffs accepted, revisit conditions |
-| **refactor-challenger** | Challenge existing pattern implementations when requirements have evolved |
+| **technical-debt-assessor** | Challenge existing pattern implementations when requirements have evolved |
 
 Reference files: [Pattern Catalog](references/pattern-catalog.md) | [Tradeoff Matrices](references/tradeoff-matrices.md)

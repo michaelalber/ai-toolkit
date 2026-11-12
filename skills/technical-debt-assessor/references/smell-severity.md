@@ -316,7 +316,7 @@ Individual smells are evaluated at their baseline severity, but smells interact.
 
 ## 8. Smell Detection Checklist
 
-Use this checklist when examining code during a refactor-challenger exercise:
+Use this checklist when examining code during a smell-prioritization round:
 
 ```
 COUPLING SMELLS (check first -- highest typical severity):

@@ -168,7 +168,6 @@ dogmatism, scalability theater, and more) and the recovery playbook for difficul
 
 - **`pattern-tradeoff-analyzer`** -- When the review identifies a design decision involving pattern selection, hand off for deeper tradeoff analysis of the specific patterns under consideration.
 - **`dependency-mapper`** -- When coupling analysis reveals complex relationships, generate a concrete dependency map from the codebase to verify the intended architecture matches the implemented architecture.
-- **`system-design-kata`** -- When the review reveals significant gaps in design judgment, recommend katas to build that judgment in a lower-stakes environment.
 - **`architecture-journal`** -- After the review, document ADRs for the decisions made, especially the accepted tradeoffs. The vulnerability report and Tradeoff Acceptance Form become inputs to the ADRs.
 
 ## Stack-Specific Guidance

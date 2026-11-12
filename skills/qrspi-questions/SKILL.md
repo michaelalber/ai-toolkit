@@ -83,4 +83,3 @@ See `references/questions-template.md` for the full `questions.md` structure and
 | `qrspi-research` | Next phase. Consumes the ANSWERED `questions.md` as its neutral topic source. |
 | `qrspi-spec` | Downstream. Design decisions trace back to the answers captured here. |
 | `spec-coach` | Use instead when you want an interactive design conversation, not a one-shot question dump. |
-| `grill-me` | Use instead to be quizzed and challenged; `qrspi-questions` surfaces unknowns FOR the human to answer. |

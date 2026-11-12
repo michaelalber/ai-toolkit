@@ -111,5 +111,5 @@ Recommendations categorized by urgency (immediate / scheduled / monitor).
 
 - **dependency-mapper** -- use to understand structural implications of dependencies before auditing. Coupling metrics reveal which dependencies are most deeply embedded and hardest to replace.
 - **technical-debt-assessor** -- outdated packages, license risks, and abandoned dependencies are quantifiable debt items with cost-to-fix and cost-to-carry.
-- **security-review-trainer** -- supply chain vulnerabilities (OWASP A06:2021) from a code review perspective; this skill covers them from a dependency audit perspective.
+- **oss-vetting** -- per-package approve/reject assessment for federal/CUI use before a dependency is adopted; this skill audits the dependencies a project already has.
 - **architecture-review** -- dependency choices are architectural decisions that constrain the system's evolution.

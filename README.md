@@ -1,12 +1,12 @@
 # AI Toolkit
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Skills](https://img.shields.io/badge/skills-83-blue)](#skills)
+[![Skills](https://img.shields.io/badge/skills-78-blue)](#skills)
 [![Agents](https://img.shields.io/badge/agents-51-blue)](#agents)
 [![Tools](https://img.shields.io/badge/tools-pdf2md%20%7C%20web2md%20%7C%20code2md%20%7C%20ollama--evals%20%7C%20skill--evals-blue)](#repository-structure)
 [![Platforms](https://img.shields.io/badge/platforms-Claude%20Code%20%7C%20OpenCode%20%7C%20Pi-informational)](#platforms)
 
-**83 skills, 51 agents, and 22 slash commands for AI-assisted software development — spanning TDD, .NET, Python, PHP, Rust, React, Vue, and security.**
+**78 skills, 51 agents, and 22 slash commands for AI-assisted software development — spanning TDD, .NET, Python, PHP, Rust, React, Vue, and security.**
 
 > **Edge AI, robotics, ML, and industrial automation?** Those skills now live in the companion
 > [edge-ai-robotics-automation-toolkit](../edge-ai-robotics-automation-toolkit) — install it alongside this one.
@@ -33,8 +33,8 @@ This toolkit encodes that expertise as reusable primitives. Each skill is an opi
 
 | | Count |
 |--|-------|
-| Skills (team) | 72 |
-| Skills (professional) | 11 |
+| Skills (team) | 71 |
+| Skills (professional) | 7 |
 | Agents (Claude Code) | 51 |
 | Agents (OpenCode) | 51 |
 | Slash commands (per platform) | 22 |
@@ -168,7 +168,7 @@ pwsh scripts/install-agents.ps1       # Windows
 
 ## Skills
 
-This toolkit is organized in two groups, tagged by each skill's `audience:` frontmatter field (the `skills/` tree itself is flat — Claude Code only discovers `skills/<name>/SKILL.md` one level deep). `audience: team` skills and agents are ones I use in production work and consider shareable — patterns extracted from years of enterprise .NET, legacy modernization, and AI-augmented development on regulated-industry codebases. `audience: professional` is my professional-development track: deliberate-practice loops that sharpen engineering judgment (architecture critique, code review, pattern selection, refactoring prioritization) and learning scaffolds for the professional domains I'm actively growing into. (Edge AI, ML, robotics, and automation skills — including model optimization — now live in the companion [edge-ai-robotics-automation-toolkit](../edge-ai-robotics-automation-toolkit).) These are career-skill investments, not side projects — the split keeps "what I ship for the team" distinct from "the competencies I'm deliberately building."
+This toolkit is organized in two groups, tagged by each skill's `audience:` frontmatter field (the `skills/` tree itself is flat — Claude Code only discovers `skills/<name>/SKILL.md` one level deep). `audience: team` skills and agents are ones I use in production work and consider shareable — patterns extracted from years of enterprise .NET, legacy modernization, and AI-augmented development on regulated-industry codebases. `audience: professional` is my professional-development track: deliberate-practice loops that sharpen engineering judgment (architecture critique, review communication, pattern selection, debt and refactoring prioritization) and learning scaffolds for the professional domains I'm actively growing into. (Edge AI, ML, robotics, and automation skills — including model optimization — now live in the companion [edge-ai-robotics-automation-toolkit](../edge-ai-robotics-automation-toolkit).) These are career-skill investments, not side projects — the split keeps "what I ship for the team" distinct from "the competencies I'm deliberately building."
 
 > **A note on vendored skills:** this toolkit previously vendored several workflow-primitive skills from Matt Pocock's [skills repo](https://github.com/mattpocock/skills) (`grilling`, `grill-me`, `grill-with-docs`, `codebase-design`, `improve-codebase-architecture`) plus a local `domain-model` skill. They were removed 2026-08-08 — his repo moves faster than this one could keep re-syncing, so it's now the better place to get them directly rather than carry a copy here that drifts. The `/grill-me` and `/grill-with-docs` commands that invoked them were removed too, along with `/para-file` and `/para-review` (their target skills were dropped in the same cleanup).
 
@@ -179,7 +179,6 @@ This toolkit is organized in two groups, tagged by each skill's `audience:` fron
 | Skill | Description |
 |-------|-------------|
 | `tdd-loop` | Canonical RED-GREEN-REFACTOR inner loop — the one TDD skill. Enforces behavioral, structure-insensitive tests, prohibits horizontal slicing, and carries GREEN strategies + per-language idioms and the REFACTOR smell catalog in its `references/`. |
-| `tdd-agent` | Operating mode: AI drives all phases autonomously with strict guardrails and verification at each step. Defers to `tdd` for the loop. |
 | `evaluate-tests` | Audits existing tests in two modes — test-file quality (prioritized rewrite list) and TDD compliance (commit-history scorecard + anti-patterns). |
 
 ### Enterprise .NET Suite
@@ -344,13 +343,9 @@ ADRs live in the target repo's `docs/adr/`.
 |-------|-------------|
 | `architecture-review` | Devil's advocate critic — challenges designs via Socratic questioning against SOLID, coupling, failure modes, scalability. |
 | `pattern-tradeoff-analyzer` | Pattern selection coach — 2-3 patterns with explicit tradeoffs; challenges golden hammer tendencies. |
-| `system-design-kata` | Domain-calibrated exercises (security workflows, edge fleet, hybrid cloud) with critique rubrics. |
 | `dependency-mapper` | Coupling visualization with Robert C. Martin metrics. |
-| `code-review-coach` | Deliberate review practice — user reviews first, then compares against expert analysis with category scoring. |
-| `refactor-challenger` | Refactoring prioritization — distinguishes aesthetic preferences from production-impact smells. |
-| `security-review-trainer` | Progressive security challenges — intentional vulnerabilities in clean code, scored findings. |
 | `pr-feedback-writer` | Review communication coach — blocking vs suggestion vs nit, constructive framing, explaining the "why". |
-| `technical-debt-assessor` | Debt quantification — deliberate vs accidental, cost-to-fix vs cost-to-carry, business case building. |
+| `technical-debt-assessor` | Debt and refactoring prioritization — deliberate vs accidental, cost-to-fix vs cost-to-carry, smell severity (aesthetic vs production-impact), business case building. |
 | `architecture-journal` | Lightweight ADR templates with retrospective prompts at 30/90/180 days. |
 | `spec-coach` | Interactive spec design coach — vision, PRD structure, INVEST story quality, specification by example, three-tier guardrails. |
 
@@ -366,8 +361,8 @@ Autonomous agents that make decisions and take actions independently. Each exist
 
 | Agent | Description | Skills |
 |-------|-------------|--------|
-| `tdd-agent` | Autonomous TDD — drives the complete RED-GREEN-REFACTOR cycle with strict guardrails. | tdd, evaluate-tests |
-| `code-review-agent` | Autonomous code review — security, correctness, performance, maintainability, style. | code-review-coach, security-review-trainer, pr-feedback-writer, automated-code-review |
+| `tdd-agent` | Autonomous TDD — drives the complete RED-GREEN-REFACTOR cycle with strict guardrails. | tdd-loop, evaluate-tests |
+| `code-review-agent` | Autonomous code review — security, correctness, performance, maintainability, style. | automated-code-review, pr-feedback-writer |
 | `test-generation-agent` | Autonomous test generation — analyzes code, identifies gaps, generates tests with TDD patterns. | tdd, test-scaffold |
 | `documentation-agent` | Autonomous documentation sync — detects staleness, generates XML docs, updates READMEs. | architecture-journal, doc-sync |
 | `dependency-audit-agent` | Autonomous dependency auditing — vulnerability scanning, license compliance, upgrade paths. | supply-chain-audit, technical-debt-assessor |
@@ -497,7 +492,7 @@ The `project-templates/` directory contains per-project context files based on t
 
 ```
 ai-toolkit/
-├── skills/                     # flat — 73 team + 11 professional skills, tagged via `audience:` frontmatter
+├── skills/                     # flat — 71 team + 7 professional skills, tagged via `audience:` frontmatter
 ├── claude/
 │   ├── agents/                 # flat — 51 Claude Code agents
 │   ├── commands/               # 22 slash commands with shell injection

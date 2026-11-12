@@ -1,7 +1,7 @@
 ---
 name: technical-debt-assessor
 audience: professional
-description: Technical debt quantification practice — deliberate vs accidental debt, cost-to-fix vs cost-to-carry analysis, interest rate estimation, and business case building. Use when developing judgment about which technical debt to pay down, building a business case for improvements, or deciding whether to accept or address identified debt.
+description: Technical debt and refactoring prioritization practice — deliberate vs accidental debt, cost-to-fix vs cost-to-carry analysis, interest rate estimation, smell severity ("bothers me aesthetically" vs "will cause a production incident"), and business case building. Use when developing judgment about which technical debt to pay down or which refactoring to do first, building a business case for improvements, or deciding whether to accept or address identified debt.
 disable-model-invocation: true
 ---
 
@@ -64,6 +64,7 @@ Coach presents a codebase description, system architecture, or code excerpts con
 
 | Scope | Debt Item Count | Debt Types |
 |-------|-----------------|------------|
+| Snippet | 4-8 smells | Code smells at mixed severity (cosmetic → critical); the user ranks them and names the ONE fix to make before the next release. Context (change frequency, coverage, domain) sets severity — see `references/smell-severity.md` and `references/refactoring-priorities.md` |
 | Module | 3-5 | Code debt, test debt, documentation debt |
 | Service | 5-8 | Above + architecture debt, dependency debt |
 | System | 7-12 | All categories including infrastructure debt |
@@ -140,6 +141,8 @@ Full comparison, priority matrix, business case, roadmap, and reflection templat
 
 **Score business case quality separately.** Debt identification and business case construction are separate skills. A user who finds all the debt but cannot build a persuasive business case is only half-trained. Score both, report both, and focus coaching on whichever is weaker.
 
+**Close every Snippet round with the one-thing question.** "If you could only fix ONE thing before the next release, which would it be, and what business outcome does fixing it protect?" Score identification, prioritization, and severity calibration separately; challenge any cosmetic smell ranked above a structural one.
+
 **Adjust challenge scope based on performance.** 2 consecutive rounds above 75% detection with accurate quantification: increase scope. 2 consecutive rounds below 30% detection: decrease scope. Business case score consistently below 2/5: focus on a business case exercise.
 
 ## Anti-Patterns
@@ -169,12 +172,14 @@ Provide the translation exercise: "Imagine you are presenting this to a product 
 ## Integration with Other Skills
 
 - **`architecture-journal`** — Record debt findings and decisions in the journal. Longitudinal data makes debt assessment more accurate over time.
-- **`refactor-challenger`** — Once debt is prioritized, use refactor-challenger to practice deciding HOW to address it. This skill answers "what is worth fixing?"; refactor-challenger answers "what is the best approach?"
 - **`dependency-mapper`** — Generates concrete dependency metrics that feed directly into cost-to-carry estimates for dependency debt.
-- **`code-review-coach`** — Code review is where debt is often first noticed. Build detection skills that feed into debt assessment.
+- **`automated-code-review`** — Code review is where debt is often first noticed; its maintainability findings (Fowler smell catalog) are raw input for an assessment.
 - **`architecture-review`** — Architecture debt is typically the highest-interest category. Use architecture-review to assess architectural decisions; this skill quantifies the cost.
+- **`pr-feedback-writer`** — Once the right fix is chosen, practice communicating it in PR comments.
 
 ## References
 
 - [Debt Taxonomy](references/debt-taxonomy.md) — The technical debt quadrant, six debt categories with interest rate estimation, realistic scenarios, and cross-category compounding effects
 - [Business Case Patterns](references/business-case-patterns.md) — Business case structure, quantification techniques, stakeholder language translation, common objections and responses, ROI calculation templates
+- [Smell Severity](references/smell-severity.md) — Code smells ranked by typical severity, context modifiers, and smell interactions (Snippet scope)
+- [Refactoring Priorities](references/refactoring-priorities.md) — Risk-weighted priority formula, business impact categories, smell inventory and prioritization comparison templates (Snippet scope)

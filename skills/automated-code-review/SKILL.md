@@ -20,8 +20,8 @@ than abstract ideals. A coaching skill teaches a human to ask "did I check error
 skill tells the agent exactly HOW — enumerate every fallible call, verify each has an error path,
 verify the path handles rather than swallows, verify the message carries diagnostic context.
 
-It does NOT teach review principles — it assumes those from `code-review-coach` and
-`security-review-trainer`. It provides the operational framework: checklists, gates, convention
+It does NOT teach review principles — it assumes those from the reviewer and the matching
+`<lang>-security-review` skill. It provides the operational framework: checklists, gates, convention
 detection, and structured output that turn review knowledge into consistent execution.
 
 **Non-Negotiable Constraints:**
@@ -86,6 +86,5 @@ next_action: [description]
 
 | Skill | Relationship |
 |-------|-------------|
-| `code-review-coach` | Provides the review rubric, scoring methodology, and category definitions this skill operationalizes. Coach teaches what to look for; this skill ensures nothing is skipped. |
-| `security-review-trainer` | Provides deep security patterns and OWASP mapping. The security checklist here is a minimum; the trainer expands it with level-appropriate subtlety. |
+| `dotnet-security-review` | Deep, stack-specific OWASP patterns (also `python-`, `php-`, `rust-`, `react-`, `vue-security-review` for those stacks). The security checklist here is a minimum; the language review expands it. |
 | `pr-feedback-writer` | Shapes how findings are communicated. After this skill produces findings, pr-feedback-writer frames them as constructive, actionable PR comments. |

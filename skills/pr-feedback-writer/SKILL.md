@@ -164,9 +164,9 @@ Full analysis templates (Per-Comment Quality Analysis, Tone Analysis, Before/Aft
 
 ## Integration
 
-- **`code-review-coach`** -- Focuses on finding issues (detection, classification, severity calibration). This skill picks up where code-review-coach leaves off: once you have found the issues, how to communicate them effectively.
-- **`refactor-challenger`** -- After communicating review findings, practice evaluating whether the proposed fixes actually address the underlying issues or just the symptoms.
-- **`security-review-trainer`** -- Security findings have unique communication challenges: urgency without panic, specificity without enabling exploitation in the PR comment thread. This skill refines how you communicate those findings.
+- **`automated-code-review`** -- Finds the issues (detection, classification, severity). This skill picks up where it leaves off: once you have found the issues, how to communicate them effectively.
+- **`technical-debt-assessor`** -- After communicating review findings, practice evaluating whether the proposed fixes actually address the underlying issues or just the symptoms.
+- **`<lang>-security-review`** -- Security findings have unique communication challenges: urgency without panic, specificity without enabling exploitation in the PR comment thread. This skill refines how you communicate those findings.
 - **`architecture-review`** -- Architectural feedback is among the hardest to write constructively because it often implies "your approach is fundamentally wrong." This skill practices the communication patterns for delivering high-level design feedback without demoralizing the author.
 
 ## Stack-Specific Guidance

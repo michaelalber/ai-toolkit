@@ -177,8 +177,7 @@ Full templates (Main Sequence Chart, Violation List, Refactoring Suggestions): `
 | **pattern-tradeoff-analyzer** | When coupling patterns are revealed, use this skill to evaluate whether a design pattern would improve structure |
 | **architecture-journal** | Record metric trends and refactoring decisions for longitudinal tracking |
 | **technical-debt-assessor** | SDP violations, cycles, and Zone of Pain modules feed directly into technical debt assessment |
-| **refactor-challenger** | When breaking a cycle or fixing an SDP violation, use this skill to evaluate the refactoring approach |
-| **code-review-coach** | Reference dependency metrics to evaluate whether a change improves or degrades structure |
+| **technical-debt-assessor** | When breaking a cycle or fixing an SDP violation, use this skill to evaluate the refactoring approach |
 
 ## Stack-Specific Guidance
 

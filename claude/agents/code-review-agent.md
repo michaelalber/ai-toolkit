@@ -4,8 +4,6 @@ description: Autonomous code review agent with strict guardrails. Reviews diffs,
 tools: Read, Edit, Write, Bash, Grep, Glob
 model: inherit
 skills:
-  - code-review-coach
-  - security-review-trainer
   - pr-feedback-writer
   - automated-code-review
 ---
@@ -40,8 +38,7 @@ autonomous guardrails, grounding, and session lifecycle around that engine.
 | Skill | Load when |
 |-------|-----------|
 | `automated-code-review` | Session start — the SCAN → ANALYZE → SYNTHESIZE → REPORT workflow, five-category checklists, phase gates, convention detection, and output templates. The maintainability category uses its Fowler code smell catalog (`references/code-smells.md`). |
-| `security-review-trainer` | Analyzing security-sensitive code (auth, input handling, crypto, data access) — deeper OWASP patterns |
-| `code-review-coach` | Severity calibration and rubric detail when a finding's classification is ambiguous |
+| `<lang>-security-review` (dotnet / python / php / rust / react / vue) | Analyzing security-sensitive code (auth, input handling, crypto, data access) — deeper OWASP patterns for that stack |
 | `pr-feedback-writer` | Formatting the final findings as constructive PR comments |
 
 ## Knowledge Base Lookups

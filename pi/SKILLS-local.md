@@ -42,7 +42,7 @@ uncertain; 32B can't sustain fan-out) · ⚠️ already deprecated in the toolki
 
 ---
 
-## 🟢 Green — ship as-is (34)
+## 🟢 Green — ship as-is (33)
 
 These get *more* reliable on a weak model because the skill carries the procedure.
 
@@ -84,7 +84,7 @@ These get *more* reliable on a weak model because the skill carries the procedur
 
 ---
 
-## 🟡 Yellow — usable, author a lite variant (44)
+## 🟡 Yellow — usable, author a lite variant (40)
 
 Single-pass but lean on judgment, synthesis, or large reference/input loads. The
 32B model produces the *structure* of a good result with shallower content. The
@@ -127,11 +127,7 @@ make steps explicit and imperative (the same treatment that produced the lean Pi
 | spec-coach | 📚 | Interactive coach — needs the model to coach well |
 | skill-creator | 📚 | Meta; must follow the 5-section template precisely |
 | research-synthesis | | Multi-source cross-referencing + credibility scoring |
-| system-design-kata | | Design practice; model must act as examiner |
 | pattern-tradeoff-analyzer | | Tradeoff reasoning |
-| refactor-challenger | | Prioritization judgment |
-| code-review-coach | 📚 | Compares to "expert analysis" — only as good as the model |
-| security-review-trainer | 📚 | Generates subtle vulns + scores findings |
 | qrspi-spec | | Design brain-dump + structure outline |
 | qrspi-plan | | Spec → executable sliced plan; judgment |
 | qraspi-plan | | Slice plan (greenfield) |
@@ -140,7 +136,7 @@ make steps explicit and imperative (the same treatment that produced the lean Pi
 
 ---
 
-## 🔴 Red — not for unattended local use (6)
+## 🔴 Red — not for unattended local use (5)
 
 Long autonomous loops, parallel subagent fan-out, or already-deprecated skills.
 Run these on a cloud model — or, for the implement phases, drive them **interactively
@@ -149,7 +145,6 @@ model, but the unattended loop will drift).
 
 | Skill | Flags | Why not local |
 |-------|-------|---------------|
-| tdd-agent | 📚 | Fully autonomous RGR loop; loses discipline over many turns |
 | task-decomposition | 🧩 | Multi-agent orchestration; PI subagent support uncertain |
 | qrspi-implement | | Slice-by-slice autonomous loop with checkpoints |
 | qraspi-implement | | Slice-by-slice autonomous loop (greenfield) |
@@ -160,7 +155,7 @@ model, but the unattended loop will drift).
 
 ## Cross-cutting notes
 
-**`grounded-code-mcp` (📚 — 42 skills).** Roughly half the library cites the local
+**`grounded-code-mcp` (📚 — 39 skills).** Roughly half the library cites the local
 RAG server for authoritative grounding. It is itself a local server, so running it
 on the Mac Mini keeps these skills fully functional offline. Without it, 📚 skills
 silently fall back to the 32B model's training data — acceptable for scaffolders,
@@ -191,7 +186,7 @@ loop. The 24–32B/128K tier removes most of this risk.
 
 1. **Wire `install-pi.sh`** to deploy the shared `skills/` tree to PI's skill dir
    (it currently installs no skills). Single source of truth — no fork.
-2. **Stand up `grounded-code-mcp` locally** to keep the 38 📚 skills functional offline.
+2. **Stand up `grounded-code-mcp` locally** to keep the 39 📚 skills functional offline.
 3. **Author lite variants** in `pi/skills/` for the handful of 🟡 skills you actually
    use most — start with the security reviews and architecture checklists, since those
    are the highest-value/highest-judgment combination.
@@ -199,5 +194,5 @@ loop. The 24–32B/128K tier removes most of this risk.
    for a cloud model when you need an autonomous loop or subagent fan-out — except the
    two research phases, which run sequentially on Pi.
 
-> Counts: 🟢 34 · 🟡 44 · 🔴 6 = 84. (AI/ML skills moved to edge-ai-robotics-automation-toolkit.) Revisit when skills are added/removed or the
+> Counts: 🟢 33 · 🟡 40 · 🔴 5 = 78. (AI/ML skills moved to edge-ai-robotics-automation-toolkit.) Revisit when skills are added/removed or the
 > primary local model changes.
