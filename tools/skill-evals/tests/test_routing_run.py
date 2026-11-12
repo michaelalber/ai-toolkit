@@ -288,6 +288,22 @@ def test_shipped_dataset_covers_all_five_strata():
     assert {"canonical", "confusion-pair", "negative", "boundary", "non-invocable"} <= tags
 
 
+# <AI-Generated START>
+def test_no_case_expects_a_skill_the_roster_withholds():
+    """A disable-model-invocation skill is withheld from the roster, so expecting it is
+    unpassable. Was: route-bound-socratic expected architecture-review."""
+    from ollama_evals.cases import load_cases
+
+    from skill_evals.roster import is_non_invocable
+
+    skills = discover(Path(__file__).resolve().parents[3] / "skills")
+    withheld = {s.name for s in skills if is_non_invocable(s)}
+    for case in load_cases(DATASETS / "routing.jsonl"):
+        named = {case.scorer.get("expected"), *case.scorer.get("acceptable", [])}
+        assert not (named & withheld), f"{case.id} expects withheld {named & withheld}"
+# <AI-Generated END>
+
+
 def test_every_expected_skill_in_the_dataset_exists():
     """A case expecting a deleted skill would be permanently unpassable."""
     from ollama_evals.cases import load_cases

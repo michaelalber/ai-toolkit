@@ -28,8 +28,9 @@ INSTRUCTION = (
     "{roster}\n\n"
     "Given the user's message, choose the ONE skill that should handle it. If no skill "
     "fits, answer \"none\" — do not force a match.\n"
-    "Reply with ONLY a JSON object:\n"
-    '{{"skill": "<name>|none", "runner_up": "<name>|none"}}'
+    "Reply with ONLY a JSON object. Each value is exactly one skill name from the list, "
+    "or the word none:\n"
+    '{{"skill": "<skill name or none>", "runner_up": "<skill name or none>"}}'
 )
 
 

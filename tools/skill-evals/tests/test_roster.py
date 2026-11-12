@@ -59,6 +59,15 @@ def test_system_prompt_carries_the_roster_and_the_json_contract(skills_dir: Path
     assert "none" in prompt
 
 
+# <AI-Generated START>
+def test_the_reply_template_has_no_alternation_a_model_can_copy(skills_dir: Path):
+    """Was: '"<name>|none"' — flint replied {"skill": "environment-health|none"} verbatim."""
+    prompt = roster.build(_corpus(skills_dir, 2)).system_prompt()
+    template = prompt[prompt.rindex("{"):]
+    assert "|" not in template
+# <AI-Generated END>
+
+
 def test_unknown_mode_is_rejected(skills_dir: Path):
     with pytest.raises(ValueError):
         roster.build(_corpus(skills_dir, 1), mode="sideways")

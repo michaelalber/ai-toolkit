@@ -164,21 +164,26 @@ Three outcomes stay distinct: a **wrong choice** is a routing failure, an **unpa
 reply** is an endpoint failure counted separately, and a **runner-up hit** earns half credit.
 Folding the second into the first would blame your descriptions for a broken server.
 
-### Measured, 2026-08-02 (`qwen3-coder-30b-agent`, 91-skill roster)
+### Measured, 2026-11-12 (`flint:40b-a2b-qat-int4`, 71-skill roster)
+
+Baseline: `baselines/routing-2026-11-12.run.json`.
 
 | | Result |
 |---|---|
-| Top-1 accuracy | **0.88** (53/60) |
-| Positive cases — a skill *should* fire | **45/45 (100%)** |
-| Abstain cases — no skill should fire | **8/15 (53%)** |
+| Top-1 accuracy | **1.00** (60/60) |
+| Positive cases — a skill *should* fire | **44/44 (100%)** |
+| Abstain cases — no skill should fire | **16/16 (100%)** |
 | Description collisions ≥ 20% | **none** |
-| Parse failures | 0 |
+| Parse failures / endpoint errors | 0 / 0 |
 
-The discrimination is excellent — every confusion pair routed correctly, including all five
-React/Vue pairs. **The weakness is abstention**: every single miss was the model firing a
-skill on a prompt where none should have. `architecture-review` (×3) and `grilling` (×2) are
-the biggest over-triggerers, plus `session-context` on "what did I commit yesterday" and
-`doc-sync` on "fix this typo". If you want one number to improve, it is that 53%.
+Every confusion pair routed correctly, and the abstention weakness from August is gone: the
+pruned roster dropped the worst over-triggerers (`grilling`, the coaching skills), and
+`architecture-review` is now withheld as `disable-model-invocation`.
+
+Two harness fixes landed before this run, so it is **not comparable** to the 2026-08-02
+baseline (`qwen3-coder-30b-agent`, 91-skill roster, 0.88): the reply template no longer
+offers a `"<name>|none"` alternation the model copied verbatim, and `route-bound-socratic`
+no longer expects a skill the roster withholds.
 
 ---
 
