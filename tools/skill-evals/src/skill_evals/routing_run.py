@@ -80,7 +80,7 @@ def execute(
     for case in cases:
         case.system = _roster_for(skills, case, roster_mode, shards).system_prompt()
 
-    client = client or mods["client"].OllamaClient(cfg.base_url)
+    client = _RecordingClient(client or mods["client"].OllamaClient(cfg.base_url))
     try:
         run = mods["runner"].run_suite(
             client, cases, model_list,
@@ -91,6 +91,13 @@ def execute(
         raise EndpointError(
             describe_endpoint_error(exc, cfg.base_url, model_list[0])
         ) from exc
+    summary = route_mod.summarise(run)
+    # run_suite swallows per-case exceptions, so a wrong model name never reaches the
+    # except above. If nothing was answered, say why instead of reporting 0% accuracy.
+    if summary.total and summary.endpoint_errors == summary.total and client.first_error:
+        raise EndpointError(
+            describe_endpoint_error(client.first_error, cfg.base_url, model_list[0])
+        ) from client.first_error
     run.manifest["roster_sha256"] = full_roster.sha256
     run.manifest["roster_mode"] = roster_mode
     run.manifest["roster_size"] = len(full_roster.names)
@@ -100,7 +107,7 @@ def execute(
 
     return RoutingResult(
         run=run,
-        summary=route_mod.summarise(run),
+        summary=summary,
         collisions=route_mod.collisions(run, threshold=collision_threshold),
         confusion=route_mod.confusion_matrix(run),
         breaches=route_mod.never_auto_selected(run, _non_invocable(skills)),
@@ -108,6 +115,25 @@ def execute(
         roster_mode=roster_mode,
         artifact=artifact,
     )
+
+
+class _RecordingClient:
+    """Passes calls through; keeps the first transport failure for a useful error message."""
+
+    def __init__(self, inner):
+        self._inner = inner
+        self.first_error: Exception | None = None
+
+    def chat(self, *args, **kwargs):
+        try:
+            return self._inner.chat(*args, **kwargs)
+        except endpoint_errors() as exc:
+            if self.first_error is None:
+                self.first_error = exc
+            raise
+
+    def __getattr__(self, name):
+        return getattr(self._inner, name)
 
 
 def _require_scorers(mods, cases) -> None:

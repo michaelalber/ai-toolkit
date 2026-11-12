@@ -174,6 +174,41 @@ def test_parse_failures_are_counted_not_scored_as_misses(skills_dir: Path, tmp_p
     assert result.summary.missed == 0
 
 
+# <AI-Generated START>
+class NotFoundClient:
+    """An endpoint that does not serve the requested model: every chat call 404s."""
+
+    def chat(self, model, messages, **kwargs):
+        import httpx
+
+        request = httpx.Request("POST", "http://h/v1/chat/completions")
+        response = httpx.Response(404, request=request)
+        raise httpx.HTTPStatusError("404 Not Found", request=request, response=response)
+
+
+def test_a_model_missing_on_every_case_is_an_endpoint_error(skills_dir: Path, tmp_path: Path):
+    """Was: silently scored 0/60 'missed' instead of saying the model is not pulled."""
+    from skill_evals._ollama import EndpointError
+
+    _corpus(skills_dir, ["alpha"])
+    ds = _dataset(tmp_path, [{"id": "c1", "category": "routing", "prompt": "x",
+                              "scorer": {"type": "skill_choice", "expected": "alpha"}}])
+    with pytest.raises(EndpointError, match=r"404 for model 'fake'.*not pulled"):
+        _run(skills_dir, ds, NotFoundClient())
+
+
+def test_the_404_hint_names_a_command_that_exists(skills_dir: Path, tmp_path: Path):
+    """Was: 'check `skill-evals list-models`' — list-models lives in ollama-evals."""
+    from skill_evals._ollama import EndpointError
+
+    _corpus(skills_dir, ["alpha"])
+    ds = _dataset(tmp_path, [{"id": "c1", "category": "routing", "prompt": "x",
+                              "scorer": {"type": "skill_choice", "expected": "alpha"}}])
+    with pytest.raises(EndpointError, match=r"`ollama-evals list-models`"):
+        _run(skills_dir, ds, NotFoundClient())
+# <AI-Generated END>
+
+
 def test_artifact_is_written_when_an_out_dir_is_given(skills_dir: Path, tmp_path: Path):
     _corpus(skills_dir, ["alpha"])
     ds = _dataset(tmp_path, [{"id": "c1", "category": "routing", "prompt": "x",

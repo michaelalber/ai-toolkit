@@ -35,7 +35,7 @@ def describe_endpoint_error(exc: Exception, base_url: str, model: str | None = N
     if status == 404:
         return (
             f"{base_url} returned 404 for model {model!r}. That model is probably not "
-            "pulled on this server — check `skill-evals list-models`."
+            "pulled on this server — check `ollama-evals list-models`."
         )
     if status is not None:
         return f"{base_url} returned HTTP {status}: {exc}"

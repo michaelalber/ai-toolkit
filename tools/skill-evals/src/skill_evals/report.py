@@ -68,6 +68,8 @@ def to_json(findings: FindingSet, *, total_skills: int = 0) -> str:
 
 def routing_to_text(result, *, show_confusion: bool = False) -> str:
     s = result.summary
+    endpoint_errors = getattr(s, "endpoint_errors", 0)
+    scoreable = s.total - s.parse_failures - endpoint_errors
     lines = [
         "# Routing eval",
         "",
@@ -75,11 +77,13 @@ def routing_to_text(result, *, show_confusion: bool = False) -> str:
         f"skills, sha {result.roster_sha[:12]})",
         f"withheld:        {len(result.run.manifest.get('roster_withheld', []))} "
         "disable-model-invocation skills, as the harness does",
-        f"top-1 accuracy:  {s.accuracy:.2f}  ({s.exact}/{s.total - s.parse_failures} scoreable)",
+        f"top-1 accuracy:  {s.accuracy:.2f}  ({s.exact}/{scoreable} scoreable)",
         f"top-2 accuracy:  {s.top2_accuracy:.2f}",
         f"missed:          {s.missed}",
         f"parse failures:  {s.parse_failures}"
         + ("  ← the endpoint, not the skills" if s.parse_failures else ""),
+        f"endpoint errors: {endpoint_errors}"
+        + ("  ← the endpoint, not the skills" if endpoint_errors else ""),
     ]
 
     if result.collisions:

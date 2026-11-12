@@ -31,32 +31,49 @@ class RoutingSummary:
     runner_up: int
     missed: int
     parse_failures: int
+    endpoint_errors: int = 0
+    """Requests that failed outright (404, refused, timeout) — the runner records these as
+    ``detail="error: ..."`` with score 0, which is NOT a routing choice."""
+
+    @property
+    def scoreable(self) -> int:
+        return self.total - self.parse_failures - self.endpoint_errors
 
     @property
     def accuracy(self) -> float:
-        """Top-1 accuracy over *scoreable* cases — parse failures are excluded.
-
-        A broken endpoint must not read as poor skill descriptions.
+        """Top-1 accuracy over *scoreable* cases — parse failures and endpoint errors are
+        excluded. A broken endpoint must not read as poor skill descriptions.
         """
-        scoreable = self.total - self.parse_failures
-        return self.exact / scoreable if scoreable else 0.0
+        return self.exact / self.scoreable if self.scoreable else 0.0
 
     @property
     def top2_accuracy(self) -> float:
-        scoreable = self.total - self.parse_failures
-        return (self.exact + self.runner_up) / scoreable if scoreable else 0.0
+        return (self.exact + self.runner_up) / self.scoreable if self.scoreable else 0.0
 
     @property
     def parse_failure_rate(self) -> float:
         return self.parse_failures / self.total if self.total else 0.0
 
+    @property
+    def unusable_rate(self) -> float:
+        """Share of cases the endpoint failed to answer usably, for either reason."""
+        bad = self.parse_failures + self.endpoint_errors
+        return bad / self.total if self.total else 0.0
+
+
+def is_endpoint_error(result) -> bool:
+    """ollama-evals' run_suite catches per-case exceptions and records them this way."""
+    return (getattr(result, "detail", "") or "").startswith("error:")
+
 
 def summarise(results) -> RoutingSummary:
-    total = exact = runner_up = missed = parse_failures = 0
+    total = exact = runner_up = missed = parse_failures = endpoint_errors = 0
     for r in _routing_results(results):
         total += 1
         meta = r.metadata or {}
-        if meta.get("parse_failure"):
+        if is_endpoint_error(r):
+            endpoint_errors += 1
+        elif meta.get("parse_failure"):
             parse_failures += 1
         elif r.score >= 1.0:
             exact += 1
@@ -64,7 +81,7 @@ def summarise(results) -> RoutingSummary:
             runner_up += 1
         else:
             missed += 1
-    return RoutingSummary(total, exact, runner_up, missed, parse_failures)
+    return RoutingSummary(total, exact, runner_up, missed, parse_failures, endpoint_errors)
 
 
 def confusion_matrix(results) -> dict[str, Counter]:
@@ -72,7 +89,7 @@ def confusion_matrix(results) -> dict[str, Counter]:
     matrix: dict[str, Counter] = defaultdict(Counter)
     for r in _routing_results(results):
         meta = r.metadata or {}
-        if meta.get("parse_failure"):
+        if meta.get("parse_failure") or is_endpoint_error(r):
             continue
         expected = meta.get("expected") or "none"
         chosen = meta.get("chosen") or "none"

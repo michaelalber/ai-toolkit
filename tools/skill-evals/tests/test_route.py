@@ -113,6 +113,30 @@ def test_accuracy_excludes_parse_failures_from_the_denominator():
     assert s.parse_failure_rate == 0.5
 
 
+# <AI-Generated START>
+def _runner_error(case_id):
+    """What ollama-evals' run_suite records when the request itself fails (e.g. a 404)."""
+    return CaseResult(
+        "m", case_id, "routing", 0.0, False,
+        detail="error: Client error '404 Not Found' for url 'http://h/v1/chat/completions'",
+    )
+
+
+def test_a_runner_recorded_request_error_is_an_endpoint_error_not_a_miss():
+    """Was: a 404 for every case read as 'missed 60, chose none' — accuracy 0.00."""
+    results = [_result("a", 1.0, {"expected": "x", "chosen": "x"}), _runner_error("b")]
+    s = route.summarise(results)
+    assert s.endpoint_errors == 1
+    assert s.missed == 0
+    assert s.accuracy == 1.0  # 1 of 1 scoreable
+    assert s.unusable_rate == 0.5
+
+
+def test_endpoint_errors_stay_out_of_the_confusion_matrix():
+    assert route.confusion_matrix([_runner_error("a")]) == {}
+# <AI-Generated END>
+
+
 def test_top2_accuracy_counts_runner_up_hits():
     results = [
         _result("a", 1.0, {"expected": "x", "chosen": "x"}),

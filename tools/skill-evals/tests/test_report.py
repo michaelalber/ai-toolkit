@@ -137,6 +137,17 @@ def test_routing_report_marks_parse_failures_as_the_endpoint():
     assert "the endpoint, not the skills" in report.routing_to_text(result)
 
 
+# <AI-Generated START>
+def test_routing_report_marks_endpoint_errors_as_the_endpoint():
+    """A 404 on some cases must show as an endpoint problem and leave the denominator."""
+    result = _RoutingResult()
+    result.summary = type("S", (_Summary,), {"endpoint_errors": 5, "exact": 50, "missed": 5})()
+    out = report.routing_to_text(result)
+    assert "endpoint errors: 5  ← the endpoint, not the skills" in out
+    assert "(50/55 scoreable)" in out
+# <AI-Generated END>
+
+
 def test_routing_report_can_include_the_confusion_matrix():
     from collections import Counter
 

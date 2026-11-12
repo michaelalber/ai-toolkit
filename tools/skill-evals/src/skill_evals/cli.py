@@ -167,11 +167,12 @@ def route(
     typer.echo(reporting.routing_to_text(result, show_confusion=show_confusion))
     typer.echo(f"\nsaved run: {result.artifact}")
 
-    if result.summary.parse_failure_rate > MAX_PARSE_FAILURE_RATE:
+    if result.summary.unusable_rate > MAX_PARSE_FAILURE_RATE:
         typer.echo(
             f"\njudge/model unusable: {result.summary.parse_failures} of "
-            f"{result.summary.total} replies could not be parsed. Fix the endpoint before "
-            "reading these scores as skill quality.",
+            f"{result.summary.total} replies could not be parsed and "
+            f"{result.summary.endpoint_errors} requests failed outright. Fix the endpoint "
+            "before reading these scores as skill quality.",
             err=True,
         )
         raise typer.Exit(code=EXIT_JUDGE)
