@@ -20,6 +20,7 @@ _PI_HEADER = re.compile(r"^##\s*(🟢|🟡|🔴)\s*(\w+).*?\((\d+)\)\s*$")
 _PI_COUNTS = re.compile(r"Counts:\s*🟢\s*(\d+)\s*·\s*🟡\s*(\d+)\s*·\s*🔴\s*(\d+)\s*=\s*(\d+)")
 _TABLE_ROW = re.compile(r"^\|\s*([^|]+?)\s*\|")
 _TABLE_SEP = re.compile(r"^\s*\|[\s:|-]+\|")
+_DATED_ROW = re.compile(r"^\|\s*\d{4}-\d{2}-\d{2}\s*\|")
 _SKILL_NAME = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 
 _BADGE_SKILLS = re.compile(r"badge/skills-(\d+)-")
@@ -127,7 +128,9 @@ def count_claims(path: Path) -> list[tuple[int, int]]:
         return []
     claims = []
     for lineno, line in enumerate(path.read_text().splitlines(), start=1):
-        for match in re.finditer(r"(?<![\d.])(\d{2,3})\s+(?:shareable\s+)?skills\b", line):
+        if _DATED_ROW.match(line):  # Persistent Decisions history: the count as of that date
+            continue
+        for match in re.finditer(r"(?<![\d.-])(\d{2,3})\s+(?:shareable\s+)?skills\b", line):
             claims.append((lineno, int(match.group(1))))
     return claims
 

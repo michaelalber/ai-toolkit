@@ -31,7 +31,9 @@ REFERENCING_FILES = ("scripts/install-claude.sh", "scripts/install-opencode.sh",
 _CORE = re.compile(r"<!-- core:start -->\n(.*?)<!-- core:end -->", re.S)
 # A confirmation gate is fine only when the same line scopes it to a mode.
 _GATE = re.compile(r"do not (?:begin|start|proceed)|wait for confirmation", re.I)
-_PRIVATE_IP = re.compile(r"\b(?:192\.168|10\.\d{1,3}|172\.(?:1[6-9]|2\d|3[01]))\.\d{1,3}\.\d{1,3}\b")
+_PRIVATE_IP = re.compile(
+    r"\b(?:192\.168|10\.\d{1,3}|172\.(?:1[6-9]|2\d|3[01]))\.\d{1,3}\.\d{1,3}\b"
+)
 _GLOBAL_PATH = re.compile(r"\b((?:claude|opencode|pi)/global/[\w./-]*[\w-])")
 
 

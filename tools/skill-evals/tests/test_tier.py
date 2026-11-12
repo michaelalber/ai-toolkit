@@ -67,3 +67,42 @@ def test_over_100_lines_is_full_regardless_of_sections(skills_dir: Path):
     body = "# T\n\n" + "\n".join(f"prose line {i}" for i in range(120))
     write_skill(skills_dir, "long", body=body, references={"a.md": "x"})
     assert _tier(skills_dir, "long") is Tier.FULL
+
+
+# <AI-Generated START>
+# --- attempts_five_section_layout: synthetic cover for the three cases the real-corpus
+# test used to pin (its conversational examples — grilling, domain-model — were deleted).
+
+
+def _attempts(skills_dir: Path, name: str) -> bool:
+    from skill_evals.tier import attempts_five_section_layout
+
+    return attempts_five_section_layout(load_skill(skills_dir / name))
+
+
+def test_a_conversational_minimal_skill_never_attempts_the_layout(skills_dir: Path):
+    body = _pad("# Grill\n\nInterview the user one question at a time.\n", to=40)
+    write_skill(skills_dir, "conversational", body=body, references={"a.md": "x"})
+    assert not _attempts(skills_dir, "conversational")
+
+
+def test_an_incidental_integration_heading_alone_is_not_an_attempt(skills_dir: Path):
+    body = _pad("# Vocab\n\nGlossary.\n\n## Integration with Other Skills\n\ni\n", to=40)
+    write_skill(skills_dir, "vocab", body=body, references={"a.md": "x"})
+    assert not _attempts(skills_dir, "vocab")
+
+
+def test_a_short_skill_with_a_distinctive_heading_is_attempting(skills_dir: Path):
+    body = _pad("# T\n\n## Core Philosophy\n\nx\n", to=40)
+    write_skill(skills_dir, "short-lean", body=body, references={"a.md": "x"})
+    assert _attempts(skills_dir, "short-lean")
+
+
+def test_a_full_tier_skill_with_no_canonical_sections_still_counts_as_attempting(
+    skills_dir: Path,
+):
+    """Full tier is always judged: missing sections there are tracked debt, not exemption."""
+    body = "# T\n\n## Two Modes\n\n" + "\n".join(f"prose line {i}" for i in range(120))
+    write_skill(skills_dir, "bespoke-full", body=body, references={"a.md": "x", "b.md": "y"})
+    assert _attempts(skills_dir, "bespoke-full")
+# <AI-Generated END>

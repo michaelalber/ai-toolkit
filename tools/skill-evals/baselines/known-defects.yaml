@@ -19,36 +19,13 @@
 # minimal-tier 100-line ceiling — not by raising the ceiling or adding a filler reference
 # file. 8 errors -> 4.
 
-note: >
-  Open backlog after the 2026-08-02 cleanup. Four findings, all content decisions on
-  skills whose owner should make the call — restructuring a skill is authorship, not
-  linting.
+#
+# 2026-11-12: backlog cleared. substack-writer's SK021/SK030 went with the skill (deleted
+# 2026-08-08); evaluate-tests was restructured onto the 5-section lean layout at the
+# owner's request (report templates relocated to references/output-templates.md).
 
-accepted:
-  # --- evaluate-tests and substack-writer never adopted the 5-section lean layout ---
-  #
-  # Both use bespoke headings ("Two Modes", "Per-Test Classification", "Core principle:
-  # the human owns the substance"). At 163 and 134 lines they are full-tier, so the layout
-  # applies. Converting them means restructuring the skill, which changes how it reads and
-  # how the model executes it — a deliberate authoring decision, not a lint fix.
-  #
-  # The 2026-06-26 Persistent Decision records the lean-layout migration as complete. It
-  # was verified on line count only; these two are the section-level remainder.
-  - rule: SK021
-    skill: evaluate-tests
-    file: skills/evaluate-tests/SKILL.md
-    message: 'missing canonical section(s): Core Philosophy, State Block, Output Template,
-      Integration'
-  - rule: SK030
-    skill: evaluate-tests
-    file: skills/evaluate-tests/SKILL.md
-    message: full-template skill has no <*-state> block
-  - rule: SK021
-    skill: substack-writer
-    file: skills/substack-writer/SKILL.md
-    message: 'missing canonical section(s): Core Philosophy, Workflow, State Block, Output
-      Template, Integration'
-  - rule: SK030
-    skill: substack-writer
-    file: skills/substack-writer/SKILL.md
-    message: full-template skill has no <*-state> block
+note: >
+  No open backlog. A plain `skill-evals lint` reports zero errors; add an entry here only
+  with a written reason a human decided the fix should wait.
+
+accepted: []

@@ -238,6 +238,30 @@ def test_sk057_flags_a_stale_count_in_a_context_file(tmp_path: Path):
     assert any("CLAUDE.md claims 87 skills; there are 1" in m for m in messages)
 
 
+# <AI-Generated START>
+def test_sk057_ignores_a_date_followed_by_the_word_skills(tmp_path: Path):
+    """Was: '...the 2026-07-30 skills decision...' read as a claim of 30 skills."""
+    root, skills = _repo(tmp_path)
+    write_good_full(skills, "alpha")
+    (root / "CLAUDE.md").write_text(
+        "Completes the flatten the 2026-07-30 skills decision deferred.\n"
+    )
+    assert _messages(skills, "SK057", root) == []
+
+
+def test_sk057_ignores_historical_counts_in_dated_decision_rows(tmp_path: Path):
+    """A Persistent Decisions row records the count *at that date*; it is history, not a claim."""
+    root, skills = _repo(tmp_path)
+    write_good_full(skills, "alpha")
+    (root / "CLAUDE.md").write_text(
+        "| Date | Decision | Rationale |\n"
+        "|---|---|---|\n"
+        "| 2026-07-30 | Flattening fixed discovery for all 94 skills. | Structural bug. |\n"
+    )
+    assert _messages(skills, "SK057", root) == []
+# <AI-Generated END>
+
+
 def test_sk057_reads_the_real_count_rather_than_hardcoding_one(tmp_path: Path):
     root, skills = _repo(tmp_path)
     for i in range(3):

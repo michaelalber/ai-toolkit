@@ -17,7 +17,12 @@ description: >
 > not the problem."
 > — Adapted from Kent Beck
 
-## Two Modes
+## Core Philosophy
+
+A behavioral test fails when the observable outcome breaks; an implementation-coupled test fails
+when internals change even if behavior is identical. Only the first kind makes refactoring safe.
+Tests written after implementation test different things than tests written first — so this skill
+audits both the tests themselves and the discipline that produced them.
 
 | Mode | Input | Output | Use when |
 |------|-------|--------|----------|
@@ -27,39 +32,20 @@ description: >
 Pick the mode from the request. Run both for a full audit — Mode 1's findings feed the Behavioral
 and Coverage categories of Mode 2's scorecard.
 
----
+**Non-Negotiable Constraints:**
+1. **Evidence-based only** — never claim compliance without commit-history proof; never classify a test without reading it.
+2. **Every test gets exactly one class** — PASS, COUPLED, FRAGILE, or THEATER — with a reason and a suggested fix.
+3. **Bounded scope** — on a directory, evaluate the most-changed test files first; ask before evaluating more than 20 tests in one turn.
+4. **Constructive, in context** — findings drive improvement, not punishment; account for legacy code, time pressure, and learning curves before scoring.
 
-# Mode 1 — Test-File Quality
+## Workflow
 
-## What This Skill Evaluates
+### Mode 1 — Test-File Quality
 
-For each test, assess two properties and one pattern:
-
-### 1. Behavioral (does the test specify behavior?)
-
-A behavioral test fails when the observable outcome breaks.
-An implementation-coupled test fails when internals change even if behavior is identical.
-
-| Signal | Behavioral | Implementation-coupled |
-|--------|-----------|----------------------|
-| Assertion target | Return value, state visible through public API, side effect via public interface | Mock call count (`assert_called_with`), private field access (`_total`), internal call order |
-| Refactor sensitivity | Survives extract-method, rename, move-class | Breaks on rename even when behavior is unchanged |
-| Failure message | "Expected 42, got 0" — points to the what | "Expected save() to be called once" — points to the how |
-
-### 2. Structure-insensitive (does the test survive internal refactors?)
-
-Run this mental test: *if I renamed every private method and field in this class, would
-this test break?* If yes, it is structure-coupled.
-
-### 3. Horizontal slice pattern (were tests written without matching implementation?)
-
-Signs in git history: a commit with 3+ test stubs followed by a commit with all implementations.
-Signs in test file: test methods that assert on code that clearly pre-existed the test
-(no trace of incremental growth in the test file).
-
-## Per-Test Classification
-
-For each test, classify as one of:
+1. **Behavioral?** Does the assertion target a return value, publicly visible state, or a side effect via a public interface (behavioral) — or mock call counts, private fields, internal call order (coupled)? A behavioral failure message points to the *what* ("Expected 42, got 0"); a coupled one to the *how* ("Expected save() to be called once").
+2. **Structure-insensitive?** If every private method and field were renamed, would this test break? If yes, it is structure-coupled.
+3. **Horizontal slicing?** A commit with 3+ test stubs followed by one with all implementations, or tests asserting on code that clearly pre-existed them.
+4. **Classify** each test:
 
 | Class | Definition | Action |
 |-------|-----------|--------|
@@ -68,64 +54,15 @@ For each test, classify as one of:
 | **FRAGILE** | Survives behavior changes but breaks on structural refactors | Rewrite: remove internal references |
 | **THEATER** | Passes trivially; no assertion or assertion always passes | Strengthen or delete |
 
-## Output Format
+Concrete rewrite examples by language: `references/coupling-patterns.md`.
 
-```markdown
-## Test Evaluation: [file or suite name]
+### Mode 2 — TDD Compliance (commit-history audit)
 
-### Summary
-Tests evaluated: N | PASS: N | COUPLED: N | FRAGILE: N | THEATER: N
-
-### Prioritized Rewrite List
-
-| Priority | Test | Class | Reason | Suggested Fix |
-|----------|------|-------|--------|---------------|
-| 1 | `test_name` | COUPLED | Asserts `repo.save.called` — tests the how, not the what | Assert `repo.find(id) is not None` instead |
-| 2 | `test_name` | FRAGILE | Reads `user._email` directly | Assert via `user.get_profile()["email"]` |
-| 3 | `test_name` | THEATER | No assertion — only calls the method | Add assertion on return value or observable state |
-
-### Horizontal Slice Signals
-[commit evidence or "not detectable from test file alone — run Mode 2 (commit history)"]
-```
-
-## Scope (Mode 1)
-
-Pass a single file: evaluate all tests in it.
-Pass a directory: evaluate the most-changed test files first; ask before evaluating more
-than 20 tests in one turn.
-
-For concrete rewrite examples by language: see [Coupling Patterns](references/coupling-patterns.md).
-
----
-
-# Mode 2 — TDD Compliance (commit-history audit)
-
-Verifies the *discipline* was followed, not just that tests exist. Tests written after
-implementation feel different, test different things, and provide different value than tests
-written first. This mode detects that from git history and scores it.
-
-## Workflow
-
-1. **Gather evidence** — chronological `git log`, test + implementation file contents, coverage
-   report (if available), test-run results.
-2. **Analyze commit order** — did a failing-test commit precede each implementation commit? Flag
-   commits containing both test and impl ("should be separate") and impl commits with no preceding
-   test.
-
-   | Commit | Type | TDD compliant? |
-   |--------|------|----------------|
-   | abc123 | Test | N/A (first) |
-   | def456 | Impl | Yes (test first) |
-   | ghi789 | Both | No (should be separate) |
-   | jkl012 | Impl | No (no preceding test) |
-
+1. **Gather evidence** — chronological `git log`, test + implementation file contents, coverage report (if available), test-run results.
+2. **Analyze commit order** — did a failing-test commit precede each implementation commit? Flag commits containing both test and impl, and impl commits with no preceding test.
 3. **Analyze test quality** — run Mode 1's classification on the changed tests.
-4. **Check coverage quality** — distinguish real coverage (tests fail when behavior breaks; edge
-   and error paths covered) from theater (passes even with broken behavior; no assertions; happy
-   path only).
-5. **Generate the scorecard.**
-
-## AI Anti-Patterns to Detect
+4. **Check coverage quality** — real coverage (fails when behavior breaks; edge and error paths covered) vs theater (passes with broken behavior; no assertions; happy path only).
+5. **Detect AI anti-patterns:**
 
 | Anti-Pattern | Detection Signal |
 |---|---|
@@ -136,28 +73,37 @@ written first. This mode detects that from git history and scores it.
 | **Implementation Coupling** | `_private_method` / `_internal_state` references in test assertions |
 | **Copy-Paste Tests** | Test names like `test_X_1`, `test_X_2` with only value differences |
 
-## Compliance Scorecard
+6. **Score** the five categories 0–5 each (`references/compliance-scoring.md`).
 
-```markdown
-## TDD Compliance Scorecard: [repo/branch]
-**Period**: [date range] | **Commits analyzed**: N
+**Exit criteria:** Mode 1 — every in-scope test classified with reason and fix; Mode 2 — every commit in the period classified and all five categories scored with cited commit evidence.
 
-| Category | Score | Status |
-|----------|-------|--------|
-| Test-First Development | X/5 | GREEN/YELLOW/RED |
-| Behavioral Testing | X/5 | GREEN/YELLOW/RED |
-| Minimal Implementation | X/5 | GREEN/YELLOW/RED |
-| Refactoring Discipline | X/5 | GREEN/YELLOW/RED |
-| Coverage Quality | X/5 | GREEN/YELLOW/RED |
-**Overall**: X/25 ([percentage]%)
+## State Block
 
-Anti-patterns: [list or "none"]
-Recommendations: Immediate: [...] | Short-term: [...] | Ongoing: [...]
+```xml
+<evaluate-tests-state>
+  mode: 1-quality | 2-compliance | both
+  scope: [file, directory, or repo/branch + date range]
+  tests_evaluated: [count]
+  classes: PASS=[n] COUPLED=[n] FRAGILE=[n] THEATER=[n]
+  commits_analyzed: [count | n/a]
+  compliance_score: [X/25 | n/a]
+  anti_patterns: [list | none]
+  last_action: [what was just done]
+  next_action: [what should happen next]
+</evaluate-tests-state>
 ```
 
-Full scoring methodology: [Compliance Scoring](references/compliance-scoring.md).
-AI-specific anti-pattern catalog: [AI Anti-Patterns](references/ai-antipatterns.md).
+## Output Template
 
-**Discipline rules:** evidence-based only — never claim compliance without commit-history proof;
-be constructive (findings drive improvement, not punishment); account for context (legacy code,
-time pressure, learning curves) before scoring.
+- Mode 1 Test Evaluation report (summary, prioritized rewrite list, horizontal-slice signals) and the Mode 2 TDD Compliance Scorecard (+ commit-order table): `references/output-templates.md`
+- Scoring methodology for the scorecard: `references/compliance-scoring.md`
+- AI-specific anti-pattern catalog with examples: `references/ai-antipatterns.md`
+
+## Integration with Other Skills
+
+| Skill | Relationship |
+|-------|-------------|
+| `tdd-loop` | Writes new tests test-first; this skill audits tests that already exist. Mode 2 verifies its discipline was followed. |
+| `test-scaffold` | .NET test conventions; COUPLED/FRAGILE rewrites in C# should follow its naming and mocking patterns. |
+| `automated-code-review` | Its maintainability category covers test code in a diff; use this skill for a dedicated suite audit. |
+| `technical-debt-assessor` | A high COUPLED/FRAGILE count is test debt — quantify its cost-to-carry there. |

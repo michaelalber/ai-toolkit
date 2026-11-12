@@ -9,7 +9,10 @@ from pathlib import Path
 
 from skill_evals.lint import lint
 
-CORE = "<!-- core:start -->\n## Mode\n\n- Interactive: ask. Non-interactive: proceed.\n<!-- core:end -->\n"
+CORE = (
+    "<!-- core:start -->\n## Mode\n\n- Interactive: ask. Non-interactive: proceed.\n"
+    "<!-- core:end -->\n"
+)
 GLOBALS = {
     "claude": "claude/global/CLAUDE.md",
     "opencode": "opencode/global/AGENTS.md",
@@ -105,7 +108,9 @@ def test_sk063_accepts_a_gate_scoped_to_interactive_mode(tmp_path: Path):
 
 
 def test_sk063_flags_an_unconditional_do_not_begin_gate(tmp_path: Path):
-    files = _globals(opencode=f"# oc\n\n{CORE}\n4. **Do NOT begin work until context is confirmed**\n")
+    files = _globals(
+        opencode=f"# oc\n\n{CORE}\n4. **Do NOT begin work until context is confirmed**\n"
+    )
     messages = _messages(tmp_path, "SK063", files)
     assert len(messages) == 1
     assert "opencode/global/AGENTS.md" in messages[0]
@@ -117,12 +122,16 @@ def test_sk063_ignores_until_confirmed_that_is_not_about_starting_work(tmp_path:
 
 
 def test_sk063_ignores_do_not_start_without_a_confirmation(tmp_path: Path):
-    files = _globals(claude=f"# c\n\n{CORE}\nDo not start a task whose acceptance criteria cannot be stated.\n")
+    files = _globals(
+        claude=f"# c\n\n{CORE}\nDo not start a task whose acceptance criteria cannot be stated.\n"
+    )
     assert _messages(tmp_path, "SK063", files) == []
 
 
 def test_sk063_flags_finish_show_stop_until_confirmed(tmp_path: Path):
-    files = _globals(claude=f"# c\n\n{CORE}\nDo not begin a second change until the first is confirmed.\n")
+    files = _globals(
+        claude=f"# c\n\n{CORE}\nDo not begin a second change until the first is confirmed.\n"
+    )
     assert len(_messages(tmp_path, "SK063", files)) == 1
 
 
@@ -163,6 +172,8 @@ def test_sk065_flags_a_reference_to_a_missing_global_file(tmp_path: Path):
 def test_sk065_accepts_references_that_resolve(tmp_path: Path):
     files = _globals()
     files["pi/global/Modelfile-flint-agent"] = "FROM flint\n"
-    files["scripts/install-pi.sh"] = "ollama create flint-agent -f pi/global/Modelfile-flint-agent\n"
+    files["scripts/install-pi.sh"] = (
+        "ollama create flint-agent -f pi/global/Modelfile-flint-agent\n"
+    )
     assert _messages(tmp_path, "SK065", files) == []
 # <AI-Generated END>

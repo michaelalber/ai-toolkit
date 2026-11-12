@@ -61,7 +61,10 @@ def _skills_for(findings, rule_id) -> set[str]:
 
 
 def test_corpus_is_discovered():
-    assert len(discover(SKILLS)) >= 90
+    """Every skills/<name>/SKILL.md is discovered — no hardcoded size to go stale on a prune."""
+    on_disk = {p.parent.name for p in SKILLS.glob("*/SKILL.md")}
+    assert on_disk
+    assert {s.name for s in discover(SKILLS)} == on_disk
 
 
 def test_the_documented_gate_passes(gated):
@@ -74,9 +77,11 @@ def test_the_ungated_lint_still_reports_the_open_backlog(findings):
 
     SK041 (qraspi-graduate, qraspi-implement, qraspi-plan, qrspi-research) was resolved by
     trimming each back under the minimal-tier line ceiling, not baselined — see the
-    2026-08-02 known-defects.yaml entry this superseded.
+    2026-08-02 known-defects.yaml entry this superseded. The last backlog (evaluate-tests
+    SK021/SK030) was resolved 2026-11-12, so the open backlog is now empty: a plain lint
+    and the gated lint must agree.
     """
-    assert {f.rule_id for f in findings.errors} == {"SK021", "SK030"}
+    assert {f.rule_id for f in findings.errors} == set()
 
 
 def test_no_rule_crashed_on_the_real_corpus(findings):
@@ -208,15 +213,10 @@ def test_conversational_skills_never_attempted_the_layout_but_others_do_or_shoul
     """
     from skill_evals.tier import attempts_five_section_layout
 
-    never_attempting = (
-        "grilling", "grill-me", "grill-with-docs", "domain-model",
-        "improve-codebase-architecture", "codebase-design",
-    )
-    for name in never_attempting:
-        skill = load_skill(SKILLS / name)
-        assert not attempts_five_section_layout(skill), f"{name} unexpectedly attempts it"
-
-    for name in ("cargo-package-scaffold", "substack-writer"):
+    # Case 1's examples were all deleted (2026-08-08); it is now pinned synthetically in
+    # test_tier.py. Case 3's example moved from substack-writer (deleted) to evaluate-tests,
+    # the remaining FULL-tier skill baselined under SK021.
+    for name in ("cargo-package-scaffold", "evaluate-tests"):
         skill = load_skill(SKILLS / name)
         assert attempts_five_section_layout(skill), f"{name} must stay judged on all dimensions"
 
