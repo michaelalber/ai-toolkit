@@ -4,8 +4,7 @@
 
 `CLAUDE.md` is Claude Code's global instruction file. It applies to **every project** you open — Claude reads it automatically at the start of each session.
 
-`settings.json` installs deterministic hooks (credential stop, shell-exec-chain stop, bash audit log, post-write build/lint gates) and wires up the status line. The hook bodies live in `hooks/` as standalone scripts — `settings.json` only references them.
-`settings.local.json` controls Claude Code's permissions and tool allowlist.
+`settings.json` holds Claude Code's permissions (allow / deny / ask), the deterministic hooks (credential stop, shell-exec-chain stop, bash audit log, post-write build/lint gates) and the status line. The hook bodies live in `hooks/` as standalone scripts — `settings.json` only references them. It installs as `~/.claude/settings.json`, the one user-scope settings file Claude Code reads (a `settings.local.json` is read only inside a project's `.claude/`).
 `statusline.sh` renders token count and context window usage below the prompt (e.g. `57.5k (6.0%)`).
 
 ## Installation
@@ -20,13 +19,12 @@ bash ../../scripts/install-claude.sh
 cp CLAUDE.md ~/.claude/CLAUDE.md
 cp statusline.sh ~/.claude/statusline.sh
 
-# Hooks + permissions go in ONE user-scope file. ~/.claude/settings.local.json is NOT a
-# documented user-scope file (settings.local.json is project-level only), so permissions
-# are merged into ~/.claude/settings.json. Keeps existing keys (theme, model, ...).
+# Merge permissions + hooks + status line into ~/.claude/settings.json. Keeps your own
+# keys (theme, model, plugins, ...); this repo's permissions/hooks replace yours wholesale.
 [ -f ~/.claude/settings.json ] || echo '{}' > ~/.claude/settings.json
 jq -s --arg u "$USER" \
-  '.[0] * .[1] * {permissions: (.[2].permissions | walk(if type == "string" then gsub("YOUR_USERNAME"; $u) else . end))}' \
-  ~/.claude/settings.json settings.json settings.local.json > /tmp/claude-settings.merged \
+  '.[0] * (.[1] | walk(if type == "string" then gsub("YOUR_USERNAME"; $u) else . end))' \
+  ~/.claude/settings.json settings.json > /tmp/claude-settings.merged \
   && mv /tmp/claude-settings.merged ~/.claude/settings.json
 
 # 3. Install the hook scripts referenced by settings.json (they must be executable)
@@ -35,8 +33,8 @@ cp hooks/*.sh ~/.claude/hooks/
 chmod +x ~/.claude/hooks/*.sh
 ```
 
-`YOUR_USERNAME` in the permissions is replaced with `$USER` by the merge above. `settings.local.json`
-in this repo stays the permissions source file; it is not installed under that name.
+`YOUR_USERNAME` in the permissions is replaced with `$USER` by the merge above. Restart Claude
+Code, then run `/status`: the `Setting sources` line should list `~/.claude/settings.json`.
 
 The hooks require `jq` (they read tool input as JSON on stdin). The post-write gates are
 best-effort: they no-op silently when `dotnet` or `ruff`/`uvx` is not installed.
@@ -83,9 +81,9 @@ variable named `api_key`. The write must be **blocked**. If it succeeds, the hoo
 ## Two gotchas worth knowing before you edit these files
 
 **Deny Claude write access to its own permission files.** Nothing in the harness stops a session
-from editing `~/.claude/settings.json` or `settings.local.json` — if you don't add the rule, an
-agent can widen its own permissions, and you would see only a routine-looking `Edit` prompt. Add
-this pattern to the `deny` array:
+from editing `~/.claude/settings.json` or a project's `.claude/settings.local.json` — without the
+rule, an agent can widen its own permissions, and you would see only a routine-looking `Edit`
+prompt. The shipped `deny` array already includes:
 
 ```json
 "Edit(//**/.claude/settings*.json)"

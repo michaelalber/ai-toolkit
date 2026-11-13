@@ -117,7 +117,8 @@ See [`claude/global/README.md`](claude/global/README.md) for global config setup
 >   cwd, not filesystem-wide. Working in any project directory left `~/.ssh`, `~/.aws`, `~/.npmrc`
 >   and similar readable. The `//` prefix (`Read(//**/.env)`) is what makes a rule absolute.
 >
-> **To upgrade:** re-copy `settings.json` and `settings.local.json`, and install the new `hooks/`
+> **To upgrade:** re-merge `settings.json` (permissions now live in it; `settings.local.json` is
+> gone — a user-level copy was never loaded), and install the new `hooks/`
 > directory, per [`claude/global/README.md`](claude/global/README.md). Then run the verification
 > checks in that file — a misconfigured hook is silent, so confirm rather than assume. Fixed in
 > `957222c`.
@@ -498,8 +499,8 @@ ai-toolkit/
 │   ├── commands/               # 22 slash commands with shell injection
 │   └── global/                 # Global config → ~/.claude/
 │       ├── CLAUDE.md           # Global instructions (every project)
-│       ├── settings.json       # Hooks: credential stop + post-write build/lint gates
-│       └── settings.local.json # Permissions: bash allow/deny, read allow/deny
+│       ├── settings.json       # Permissions (allow/deny/ask) + hooks + status line
+│       └── hooks/              # Hook scripts → ~/.claude/hooks/
 ├── opencode/
 │   ├── agents/                 # flat — 51 OpenCode agents
 │   ├── commands/               # 22 slash commands with agent routing

@@ -92,7 +92,7 @@ A passing eval would survive scrutiny from a developer seeing the skill for the 
 
 ### Test Case 5: Global Config File Integrity
 
-- **Input:** Any commit that modifies `claude/global/CLAUDE.md`, `opencode/global/AGENTS.md`, `claude/global/settings.local.json`, any file under `pi/global/`, or either `README.md` under `claude/global/` or `opencode/global/`
+- **Input:** Any commit that modifies `claude/global/CLAUDE.md`, `opencode/global/AGENTS.md`, `claude/global/settings.json`, any file under `pi/global/`, or either `README.md` under `claude/global/` or `opencode/global/`
 - **Known-Good Output:** Both global files retain all expected top-level sections; installation instructions in READMEs match actual platform paths; optional sections remain properly marked
 - **Pass Criteria:**
   - [ ] `claude/global/CLAUDE.md` still contains all mandatory sections: Session Boot Ritual, Core Philosophy, Intent Engineering, Prompting Patterns, Context Management, Project File Architecture, AI Agent Obligations, Evaluation Design, Security-By-Design, Code Quality Gates, and all language-standard sections
