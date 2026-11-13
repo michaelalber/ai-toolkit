@@ -58,7 +58,7 @@ and refactoring that was never constrained by a safety net. **Never accumulate u
 1. Write the minimum code to pass the failing test — nothing it does not require (no unrequested error handling, config, edge cases, or "while I'm here" features)
 2. Prefer: Fake It (hardcode) → Obvious Implementation → Triangulation
 3. Run the suite — all tests must pass
-4. Strategies & per-language idioms (.NET/Python/PHP/TS): [green idioms](references/green-minimal-patterns.md) on demand; for .NET test structure see `test-scaffold`
+4. Strategies & per-language idioms (.NET/Python/PHP/TS): [green idioms](references/green-minimal-patterns.md) on demand, plus per-language `references/green-dotnet-idioms.md`, `references/green-python-idioms.md`, `references/green-php-idioms.md`, `references/green-typescript-idioms.md`; for .NET test structure see `test-scaffold`
 
 ### REFACTOR
 1. One structural change at a time — behavior must not change (no bug fixes, no new features; those start a new RED)
@@ -85,6 +85,8 @@ failure_reason: [semantic description — not "syntax error"]
 tests_passing: true | false
 </tdd-state>
 ```
+
+Field rules and examples: `references/state-management.md`. Detailed transition gates between phases: `references/phase-transitions.md`.
 
 ## Modes & Companions
 

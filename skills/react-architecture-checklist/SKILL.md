@@ -30,15 +30,12 @@ Shared across the `dotnet` / `python` / `php` / `rust` / `react` architecture ch
 
 | # | Value | What it means |
 |---|-------|---------------|
-| 1 | **Detect before judge** | Determine React version / bundler / TS / state lib before applying any item; context decides what is idiomatic. |
-| 2 | **Evidence over opinion** | Every finding cites `file:line` and the offending pattern. "Too many re-renders" is not a finding; "`features/cart/Cart.tsx:31` recreates `onAdd` every render, breaking the memoized `<Row>`" is. |
-| 3 | **Feature cohesion** | Organized by feature, not by technical type (`components/`, `hooks/`, `utils/` dumping grounds). Cross-feature imports are a violation. |
-| 4 | **Dependencies point inward** | UI components depend on hooks/services, not the reverse; data-fetching is isolated from presentation. Boundaries are explicit via barrels. |
-| 5 | **Hooks honor the rules** | Hooks called unconditionally at the top level; effect dependency arrays complete; effects clean up. A lint suppression of `react-hooks/exhaustive-deps` is a finding. |
-| 6 | **Config & secrets hygiene** | No secrets in client bundles; only intentionally-public `VITE_`/`NEXT_PUBLIC_` values exposed; config injected, not hardcoded. |
-| 7 | **Version awareness** | Recommendations gated to the detected React version; never suggest an API that does not exist there (e.g. `use()` / Actions on React 17). |
-| 8 | **Tests gate change** | Untested components/hooks are a finding; high-risk interactive components without RTL tests are prioritized. |
-| 9 | **Graded, actionable output** | A letter grade (A–F) from counted findings, plus prioritized, version-correct recommendations. |
+| 1 | **Evidence over opinion** | Every finding cites `file:line` and the offending pattern. "Too many re-renders" is not a finding; "`features/cart/Cart.tsx:31` recreates `onAdd` every render, breaking the memoized `<Row>`" is. |
+| 2 | **Feature cohesion** | Organized by feature, not by technical type (`components/`, `hooks/`, `utils/` dumping grounds). Cross-feature imports are a violation. |
+| 3 | **Dependencies point inward** | UI components depend on hooks/services, not the reverse; data-fetching is isolated from presentation. Boundaries are explicit via barrels. |
+| 4 | **Hooks honor the rules** | Hooks called unconditionally at the top level; effect dependency arrays complete; effects clean up. A lint suppression of `react-hooks/exhaustive-deps` is a finding. |
+| 5 | **Config & secrets hygiene** | No secrets in client bundles; only intentionally-public `VITE_`/`NEXT_PUBLIC_` values exposed; config injected, not hardcoded. |
+| 6 | **Tests gate change** | Untested components/hooks are a finding; high-risk interactive components without RTL tests are prioritized. |
 
 ## Workflow
 

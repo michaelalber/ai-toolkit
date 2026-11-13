@@ -28,15 +28,12 @@ Shared across the `dotnet` / `python` / `php` / `rust` architecture checklists â
 
 | # | Value | What it means |
 |---|-------|---------------|
-| 1 | **Detect before judge** | Determine version/framework/structure before applying any item; context decides what is idiomatic. |
-| 2 | **Evidence over opinion** | Every finding cites `file:line` and the offending pattern. "Handlers are coupled" is not a finding; "`OrderHandler.cs:12` inherits `BaseCrudHandler<T>`" is. |
-| 3 | **Feature cohesion** | Organized by business capability (feature folders), not technical layer. Cross-feature imports are a violation. |
-| 4 | **Dependencies point inward** | Domain logic does not depend on infrastructure; entities do not leak across API boundaries (anti-corruption layers). |
-| 5 | **Explicit error handling** | Failures handled at the right layer (pipeline behaviors); no silent swallowing; errors carry diagnostic context. |
-| 6 | **Config & secrets hygiene** | No hardcoded secrets; configuration via `IOptions<T>`; no secrets in WASM bundles. |
-| 7 | **Version awareness** | Recommendations are gated to the detected `<TargetFramework>`; never suggest an API absent from that version. |
-| 8 | **Tests gate change** | Untested code is a finding; high-risk handlers without tests are prioritized. |
-| 9 | **Graded, actionable output** | A letter grade (Aâ€“F) from counted findings, plus prioritized, version-correct recommendations. |
+| 1 | **Evidence over opinion** | Every finding cites `file:line` and the offending pattern. "Handlers are coupled" is not a finding; "`OrderHandler.cs:12` inherits `BaseCrudHandler<T>`" is. |
+| 2 | **Feature cohesion** | Organized by business capability (feature folders), not technical layer. Cross-feature imports are a violation. |
+| 3 | **Dependencies point inward** | Domain logic does not depend on infrastructure; entities do not leak across API boundaries (anti-corruption layers). |
+| 4 | **Explicit error handling** | Failures handled at the right layer (pipeline behaviors); no silent swallowing; errors carry diagnostic context. |
+| 5 | **Config & secrets hygiene** | No hardcoded secrets; configuration via `IOptions<T>`; no secrets in WASM bundles. |
+| 6 | **Tests gate change** | Untested code is a finding; high-risk handlers without tests are prioritized. |
 
 ## Workflow
 

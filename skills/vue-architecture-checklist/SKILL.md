@@ -32,15 +32,12 @@ Shared across the `dotnet` / `python` / `php` / `rust` / `react` / `vue` archite
 
 | # | Value | What it means |
 |---|-------|---------------|
-| 1 | **Detect before judge** | Determine Vue version / API style (Options vs Composition) / bundler / TS / state lib before applying any item; context decides what is idiomatic. |
-| 2 | **Evidence over opinion** | Every finding cites `file:line` and the offending pattern. "Reactivity is broken" is not a finding; "`features/cart/CartSummary.vue:18` destructures `const { total } = props`, losing reactivity" is. |
-| 3 | **Feature cohesion** | Organized by feature, not by technical type (`components/`, `composables/`, `utils/` dumping grounds). Cross-feature imports are a violation. |
-| 4 | **Dependencies point inward** | Components depend on composables/services, not the reverse; data-fetching is isolated from presentation. Boundaries are explicit via barrels. |
-| 5 | **Composition API honors reactivity** | `ref`/`reactive` unwrapped correctly; no destructuring `reactive()` (loses reactivity — use `toRefs`); `watch`/`watchEffect` dependency lists complete; watchers/effects clean up. |
-| 6 | **Config & secrets hygiene** | No secrets in client bundles; only intentionally-public `VITE_`/`VUE_APP_` values exposed; config injected, not hardcoded. |
-| 7 | **Version awareness** | Recommendations gated to the detected Vue version; never suggest an API that does not exist there (e.g. `<script setup>` on Vue 2 without the Composition API plugin). |
-| 8 | **Tests gate change** | Untested components/composables are a finding; high-risk interactive components without Vue Testing Library tests are prioritized. |
-| 9 | **Graded, actionable output** | A letter grade (A–F) from counted findings, plus prioritized, version-correct recommendations. |
+| 1 | **Evidence over opinion** | Every finding cites `file:line` and the offending pattern. "Reactivity is broken" is not a finding; "`features/cart/CartSummary.vue:18` destructures `const { total } = props`, losing reactivity" is. |
+| 2 | **Feature cohesion** | Organized by feature, not by technical type (`components/`, `composables/`, `utils/` dumping grounds). Cross-feature imports are a violation. |
+| 3 | **Dependencies point inward** | Components depend on composables/services, not the reverse; data-fetching is isolated from presentation. Boundaries are explicit via barrels. |
+| 4 | **Composition API honors reactivity** | `ref`/`reactive` unwrapped correctly; no destructuring `reactive()` (loses reactivity — use `toRefs`); `watch`/`watchEffect` dependency lists complete; watchers/effects clean up. |
+| 5 | **Config & secrets hygiene** | No secrets in client bundles; only intentionally-public `VITE_`/`VUE_APP_` values exposed; config injected, not hardcoded. |
+| 6 | **Tests gate change** | Untested components/composables are a finding; high-risk interactive components without Vue Testing Library tests are prioritized. |
 
 ## Workflow
 

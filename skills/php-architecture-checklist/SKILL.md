@@ -26,15 +26,12 @@ Shared across the `dotnet` / `python` / `php` / `rust` architecture checklists â
 
 | # | Value | What it means |
 |---|-------|---------------|
-| 1 | **Detect before judge** | Determine version/framework/structure before applying any item; context decides what is idiomatic. |
-| 2 | **Evidence over opinion** | Every finding cites `file:line` and the offending pattern. "Overuses facades" is not a finding; "`OrderController.php:42` calls `DB::raw` with request input" is. |
-| 3 | **Feature cohesion** | Organized by business capability, not technical layer. Cross-feature coupling is a violation. |
-| 4 | **Dependencies point inward** | Domain/service logic does not depend on framework facades or HTTP. Boundaries are explicit. |
-| 5 | **Explicit error handling** | Failures handled at the right layer; no silent swallowing; errors carry diagnostic context. |
-| 6 | **Config & secrets hygiene** | No hardcoded secrets; configuration injected, not reached for globally; secrets from env / secret-manager. |
-| 7 | **Version awareness** | Recommendations are gated to the detected version; never suggest an API that does not exist there. |
-| 8 | **Tests gate change** | Untested code is a finding; high-risk modules without tests are prioritized. |
-| 9 | **Graded, actionable output** | A letter grade (Aâ€“F) from counted findings, plus prioritized, version-correct recommendations. |
+| 1 | **Evidence over opinion** | Every finding cites `file:line` and the offending pattern. "Overuses facades" is not a finding; "`OrderController.php:42` calls `DB::raw` with request input" is. |
+| 2 | **Feature cohesion** | Organized by business capability, not technical layer. Cross-feature coupling is a violation. |
+| 3 | **Dependencies point inward** | Domain/service logic does not depend on framework facades or HTTP. Boundaries are explicit. |
+| 4 | **Explicit error handling** | Failures handled at the right layer; no silent swallowing; errors carry diagnostic context. |
+| 5 | **Config & secrets hygiene** | No hardcoded secrets; configuration injected, not reached for globally; secrets from env / secret-manager. |
+| 6 | **Tests gate change** | Untested code is a finding; high-risk modules without tests are prioritized. |
 
 ## Workflow
 
