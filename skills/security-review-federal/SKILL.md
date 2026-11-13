@@ -95,4 +95,3 @@ Full POA&M format: [poam template](references/poam-template.md).
 
 - **`dotnet` / `python` / `php` / `rust`-security-review** — The required base review this overlay extends; run one first.
 - **`supply-chain-audit`** — SBOM / provenance / CVE depth for the EO 14028 dimension.
-- **`dotnet-security-review-federal` / `python-security-review-federal`** — Superseded by this shared overlay (removed 2026-06-03).
