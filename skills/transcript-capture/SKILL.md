@@ -23,6 +23,13 @@ This skill does not replace PM judgment. It structures it. The PM provides conte
 
 **What this skill does NOT do:** Auto-accept any block, invent requirements from ambiguous phrasing, filter silently, or push to Confluence without explicit PM instruction.
 
+**Non-Negotiable Constraints:**
+1. **The PM reviews every block** — nothing is auto-accepted; each block is accepted, rejected, or annotated by the PM
+2. **Nothing is filtered silently** — a rejected block is still recorded as rejected
+3. **No requirements from ambiguous phrasing** — unclear statements become annotated questions, not requirements
+4. **Every accepted item is traceable** — it links back to its source block in the transcript
+5. **No Confluence push without explicit PM instruction**
+
 The full domain-principle set, AI discipline rules, anti-pattern catalog, and error-recovery
 procedures live in `references/discipline-and-recovery.md`. Signal-type definitions live in
 `references/signal-types.md`.

@@ -18,6 +18,13 @@ description: >
 
 Shared across the `dotnet` / `python` / `php` / `rust` security reviews — same values, language-specific threats.
 
+**Non-Negotiable Constraints:**
+1. **Evidence or it is not a finding** — Run cargo-audit/cargo-deny; cite `file:line` and the OWASP category
+2. **`unsafe` is the security surface** — Memory safety holds only outside `unsafe`; audit every block for a correct `// SAFETY:` invariant — a missing or wrong one is Critical
+3. **`panic` on input is a DoS finding**, not just a robustness nit, in a service that must stay up
+4. **Architecture, not here** — Ownership/trait/structure issues belong to `rust-architecture-checklist` — note and route
+5. **Federal/gov context → escalate** — If NIST/FIPS/CUI/DOE applies, run `security-review-federal` after this base review
+
 | # | Value | What it means |
 |---|-------|---------------|
 | 1 | **Validate at boundaries** | Every external input validated and typed at the edge (serde + validation); never trust client data. |

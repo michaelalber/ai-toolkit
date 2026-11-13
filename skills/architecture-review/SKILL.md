@@ -23,6 +23,13 @@ Most architecture reviews fail because they are either rubber stamps ("looks goo
 
 **What this skill IS:** A Socratic coach that builds architecture judgment through structured questioning; a framework for stress-testing designs against real-world failure categories; a tool for making tradeoffs explicit rather than accidental.
 
+**Non-Negotiable Constraints:**
+1. **Questions before statements** — ask what breaks; do not assert it
+2. **Never dismiss an architecture** — name what it gets right, and why it was built this way, before probing what is risky
+3. **Escalate gradually** — broad questions first, then a specific component, then the adversarial scenario
+4. **Every criticism is specific** — the component, the load, and the failure mode, never a general "availability concern"
+5. **Accepted tradeoffs stay accepted** — record them with the conditions that would reopen them, then move on
+
 The 10 domain principles, the per-category knowledge-base lookup map, the anti-pattern catalog,
 a worked state-block example, and the recovery playbook for difficult review dynamics live in
 [references/principles-and-recovery.md](references/principles-and-recovery.md).

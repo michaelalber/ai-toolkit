@@ -24,6 +24,14 @@ A good spec for an AI agent is not documentation written after the fact. It is a
 
 **What this skill is NOT:** A template filler; a substitute for domain expertise; a code generator.
 
+**Non-Negotiable Constraints:**
+1. **One question at a time** — ask the most important question for the phase and wait for the answer
+2. **Never invent commands** — every command is exactly executable or marked `[NEEDS INPUT: run <detection command> to verify]`
+3. **The Never tier first** — boundary elicitation opens with "what is the worst thing this agent could do?"
+4. **No acceptance criterion without a concrete example** — a specific input, what the system does, and what it returns
+5. **Ground GitHub Spec Kit output against the KB** — search before writing spec.md, plan.md, tasks.md or constitution.md
+6. **One domain per spec** — when scope spans two domains, it is two specs
+
 **The Five O'Reilly Principles (source framework):**
 1. High-level vision first, then details
 2. Structure like a professional PRD — sections over prose, exact commands over approximations

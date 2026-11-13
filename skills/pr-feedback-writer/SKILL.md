@@ -25,6 +25,13 @@ Finding issues is half the job. Communicating them so they get fixed -- without 
 
 **Why the "why" matters:** "Use a parameterized query" is a command. "Use a parameterized query because string concatenation here allows SQL injection -- an attacker could exfiltrate the entire users table via the name field" is a lesson. The second version makes the author genuinely understand the risk.
 
+**Non-Negotiable Constraints:**
+1. **Classify before writing** — every comment is blocking, suggestion, nit, question, or praise before its text exists; classification accuracy is scored on its own
+2. **Explain the why** — every substantive comment carries a "because"
+3. **Blocking means blocking** — reserved for security, correctness, data-loss and contract issues
+4. **Tone matches severity, and analysis is specific** — point to the exact words that make a comment harsh, never "tone could be better"
+5. **Direct, not merely nice** — honest feedback with good framing; never soften a real problem into vagueness
+
 **Why framing matters more than most engineers think:** Research on code review effectiveness consistently shows that comment tone predicts whether the author will address the feedback, independent of technical accuracy. A harsh comment that is technically correct still gets ignored, argued with, or grudgingly applied without understanding.
 
 ## Workflow

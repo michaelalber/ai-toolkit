@@ -22,6 +22,14 @@ Shared across the `dotnet` / `python` / `php` / `rust` / `react` security review
 > `collection="javascript"` for JS/TS specifics, and `collection="ui_ux"` for safe-by-default UI; cite
 > **react.dev** and the OWASP cheat sheets as the React authority. Never invent a `react` collection.
 
+**Non-Negotiable Constraints:**
+1. **Evidence or it is not a finding** — Run the tools; cite `file:line` and the OWASP category
+2. **Detect the framework first** — React escapes JSX by default and Next.js adds headers/CSP options — confirm the safe defaults are used, not bypassed, before flagging
+3. **Client guards are UX, not security** — A hidden admin route is never a control; the finding is the *missing server-side check*, not the visible button
+4. **Severity reflects exploitability + impact**, not how unusual the pattern looks
+5. **Architecture, not here** — Structural/maintainability issues belong to `react-architecture-checklist` — note and route
+6. **Federal/gov context → escalate** — If NIST/FIPS/CUI/DOE applies, run `security-review-federal` after this base review
+
 | # | Value | What it means |
 |---|-------|---------------|
 | 1 | **Validate at boundaries** | Every external input (URL params, `postMessage`, API responses) validated/typed before use; never trust client-controlled data — even your own API's response shapes. |

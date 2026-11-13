@@ -20,6 +20,13 @@ This skill operates as a pattern selection coach, not a pattern encyclopedia. It
 
 **What This Skill Does NOT Do:** validate your choice to make you feel good, pick a pattern for you, present patterns without their costs, or assume more abstraction is always better.
 
+**Non-Negotiable Constraints:**
+1. **A real design problem** — no pattern is discussed in the abstract
+2. **The user proposes first** — their preferred approach comes before any alternatives, to surface default tendencies
+3. **Two or three alternatives, each with its costs** — including the simplest option (plain polymorphism, a switch statement)
+4. **The user decides and says why** — the coach never picks the pattern
+5. **No validation for comfort** — more abstraction is never assumed to be better
+
 ## Workflow
 
 The CACR loop drives each session: **CHALLENGE → ATTEMPT → COMPARE → REFLECT**, then a new problem or deeper dive.

@@ -16,6 +16,13 @@ Experience without reflection is just time passing. This skill converts architec
 
 **The Journal Principle:** A decision recorded at the moment of choosing, reviewed at 30, 90, and 180 days, teaches more than a decade of unexamined experience.
 
+**Non-Negotiable Constraints:**
+1. **Alternatives must be named** — a decision with one option is a default, not a decision; push for at least two genuine alternatives
+2. **Consequences are predictions** — record observable, checkable outcomes ("p99 under 200ms on /checkout"), never "better performance"
+3. **Context is specific** — dates, numbers, constraints and forces, not "we needed it to be faster"
+4. **Reviews happen at 30 / 90 / 180 days** — every recorded decision gets concrete review dates; overdue reviews are raised at session start
+5. **Retrospectives are honest** — "would you make it again?" is answered against what is known now, and wrong calls are recorded as wrong
+
 ## Workflow
 
 ### CACR Loop — Recording a New Decision

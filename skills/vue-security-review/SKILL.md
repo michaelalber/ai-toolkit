@@ -23,6 +23,14 @@ Shared across the `dotnet` / `python` / `php` / `rust` / `react` / `vue` securit
 > `collection="internal"` for OWASP and `collection="ui_ux"` for safe-by-default UI; cite **vuejs.org**
 > and the OWASP cheat sheets as the Vue authority. Never invent a `vue` collection.
 
+**Non-Negotiable Constraints:**
+1. **Evidence or it is not a finding** — Run the tools; cite `file:line` and the OWASP category
+2. **Detect the framework first** — Vue escapes interpolation by default and Nuxt adds headers/CSP options — confirm the safe defaults are used, not bypassed, before flagging
+3. **Client guards are UX, not security** — A `beforeEnter`/`beforeEach` route guard is never a control; the finding is the *missing server-side check*, not the visible redirect
+4. **Severity reflects exploitability + impact**, not how unusual the pattern looks
+5. **Architecture, not here** — Structural/maintainability issues belong to `vue-architecture-checklist` — note and route
+6. **Federal/gov context → escalate** — If NIST/FIPS/CUI/DOE applies, run `security-review-federal` after this base review
+
 | # | Value | What it means |
 |---|-------|---------------|
 | 1 | **Validate at boundaries** | Every external input (route params, `postMessage`, API responses) validated/typed before use; never trust client-controlled data — even your own API's response shapes. |

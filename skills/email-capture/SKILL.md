@@ -23,6 +23,14 @@ This skill reads email threads and documents methodically — parsing by sender 
 
 **What this skill does NOT do:** Access email accounts or inboxes (input is manual paste or file), synthesize requirements from ambiguous phrasing, resolve contradictions autonomously, or push to Confluence without explicit PM instruction.
 
+**Non-Negotiable Constraints:**
+1. **Read in chronological order** — the final agreed version may be message 12 of 15; a later message can supersede an earlier one
+2. **Every item is attributed** — sender and message date on each requirement, decision, commitment, and open question
+3. **Contradictions are surfaced, not resolved** — flag the earlier and later statements for the PM
+4. **No requirements from ambiguous phrasing** — unclear wording becomes an open question, not a requirement
+5. **IDs are provisional** — `DRAFT-NNN` only; canonical numbering belongs to `capture-consolidate`
+6. **No Confluence push without explicit PM instruction**
+
 The seven domain principles (chronology, sender authority, attachments-first-class, contradictions-surfaced-not-resolved, commitments-as-requirements, provisional IDs, logged trimming), the knowledge-base lookups, the AI discipline rules, anti-patterns, and error-recovery procedures live in `references/capture-discipline.md`.
 
 ## Workflow

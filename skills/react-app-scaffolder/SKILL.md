@@ -33,13 +33,12 @@ target for a new project — if an existing CRA app is in play, route to `react-
 > **react.dev** / Vite + Vitest docs as the authority. Never invent a `react` collection.
 
 **Non-Negotiable Constraints:**
-1. **Vite + TypeScript `strict`** — `strict: true` in `tsconfig` from the first commit
+1. **Vite + TypeScript `strict` + React Compiler** — `strict: true` in `tsconfig` from the first commit, and React Compiler wired (stable since 1.0, Oct 2025; by 2026 the default assumption for a new project, not an opt-in experiment)
 2. **Test runner wired** — Vitest + React Testing Library with a `test` script and a passing smoke test
 3. **Lint + format wired** — ESLint (react-hooks + jsx-a11y) and Prettier with scripts
 4. **Router from the start** — a router with a typed route table and a not-found route
 5. **Error boundary at the shell** — a top-level error boundary so one throw does not blank the app
 6. **Env via Vite convention** — only `VITE_*` exposed to the client; secrets stay server-side
-7. **React Compiler wired** — stable since React Compiler 1.0 (Oct 2025); by 2026 it is the default assumption for a new React project, not an opt-in experiment
 
 **What this skill is NOT:**
 - It is NOT a feature generator — use `react-feature-slice` / `react-component-scaffolder` for that

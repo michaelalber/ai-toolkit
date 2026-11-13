@@ -24,6 +24,12 @@ Shared across the `dotnet` / `python` / `php` / `rust` / `react` / `vue` archite
 > TS/JS idioms) and `collection="ui_ux"` for accessibility, `collection="internal"` for architecture
 > standards; cite **vuejs.org** as the primary Vue authority. Never invent a `vue` collection.
 
+**Non-Negotiable Constraints:**
+1. **Detect before judging** — no checklist item is applied until the version, framework, and structure are known
+2. **Evidence or it is not a finding** — every finding cites `file:line` and the offending pattern
+3. **Version-correct advice only** — never recommend an API the detected version does not have
+4. **The grade is counted, not felt** — the A–F grade comes from the tally of findings
+
 | # | Value | What it means |
 |---|-------|---------------|
 | 1 | **Detect before judge** | Determine Vue version / API style (Options vs Composition) / bundler / TS / state lib before applying any item; context decides what is idiomatic. |

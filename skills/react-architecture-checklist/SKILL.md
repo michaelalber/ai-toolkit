@@ -22,6 +22,12 @@ Shared across the `dotnet` / `python` / `php` / `rust` / `react` architecture ch
 > idioms, `collection="ui_ux"` for accessibility, and `collection="internal"` for architecture standards;
 > cite **react.dev** as the primary React authority. Never invent a `react` collection.
 
+**Non-Negotiable Constraints:**
+1. **Detect before judging** — no checklist item is applied until the version, framework, and structure are known
+2. **Evidence or it is not a finding** — every finding cites `file:line` and the offending pattern
+3. **Version-correct advice only** — never recommend an API the detected version does not have
+4. **The grade is counted, not felt** — the A–F grade comes from the tally of findings
+
 | # | Value | What it means |
 |---|-------|---------------|
 | 1 | **Detect before judge** | Determine React version / bundler / TS / state lib before applying any item; context decides what is idiomatic. |

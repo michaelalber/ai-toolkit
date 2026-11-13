@@ -24,6 +24,13 @@ This is a PM-supervised process. The skill makes proposals; the PM decides. No r
 
 **What this skill does NOT do:** Write specs, resolve contradictions autonomously, drop requirements without PM approval, or push to Confluence without explicit PM instruction.
 
+**Non-Negotiable Constraints:**
+1. **The skill proposes; the PM decides** — no requirement is dropped, merged, or renumbered without PM awareness
+2. **Contradictions are surfaced, never resolved** — conflicting statements across documents go to the PM with both sources
+3. **IDs are canonical per project** — every accepted item gets a `REQ-XXX` ID; `DRAFT-NNN` IDs from different sessions are never assumed to match
+4. **Every requirement keeps its sources** — a merged item lists each capture document it came from
+5. **No Confluence push without explicit PM instruction**
+
 ## Workflow
 
 ### Phase 1: LOAD

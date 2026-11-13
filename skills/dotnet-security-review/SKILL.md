@@ -18,6 +18,13 @@ description: >
 
 Shared across the `dotnet` / `python` / `php` / `rust` security reviews — same values, language-specific threats.
 
+**Non-Negotiable Constraints:**
+1. **Evidence or it is not a finding** — Run the vulnerable-package scan; cite `file:line` and the OWASP category
+2. **Detect the framework first** — WebForms (ViewState, `LosFormatter`) and modern ASP.NET Core have different threat surfaces; .NET Framework 4.x is also an EOL-risk finding
+3. **Always run the Telerik section when Telerik is detected** — Unpatched RadAsyncUpload is a remote code execution risk
+4. **Architecture, not here** — Structural/maintainability issues belong to `dotnet-architecture-checklist` — note and route
+5. **Federal/gov context → escalate** — If NIST/FIPS/CUI/DOE applies, run `security-review-federal` after this base review
+
 | # | Value | What it means |
 |---|-------|---------------|
 | 1 | **Validate at boundaries** | Every external input validated and typed at the edge (model validation/FluentValidation); never trust client data. |

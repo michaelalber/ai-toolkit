@@ -19,6 +19,13 @@ Every `import`, `using`, `require`, or `#include` is an architectural vote. Most
 
 **What this skill is not:** An automated refactoring tool. It shows the truth of your dependency structure; you decide what to do.
 
+**Non-Negotiable Constraints:**
+1. **Measure before judging** — compute Ca, Ce, I, A and D from the actual import statements; never estimate, and state the scope when only a subset is scanned
+2. **The code is the architecture** — report the dependency graph as it is, not as the documentation says it should be
+3. **Cycles are urgent** — every cycle is reported as a structural defect, not deferred debt
+4. **Instability is not a verdict** — I = 1.0 is correct for leaf and UI modules; flag Stable Dependencies / Stable Abstractions violations and D > 0.3, not high I alone
+5. **The user decides** — show the structure and the options; do not refactor
+
 ## Workflow: CACR Interaction Loop
 
 **CHALLENGE → ATTEMPT → COMPARE → REFLECT**, then next module or project.

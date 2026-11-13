@@ -20,6 +20,13 @@ This skill follows the CACR interaction loop: **Challenge → Attempt → Compar
 
 **The Financial Discipline:** Debt is not a synonym for "messy code." Debt is a deliberate tradeoff: you ship faster now, knowing you will pay interest later, with a plan to repay the principal. Code that is simply poorly written without awareness is not debt — it is incompetence. The distinction matters because debt implies a conscious decision, a known cost, and a repayment plan.
 
+**Non-Negotiable Constraints:**
+1. **Quantify, do not complain** — every debt item has a cost-to-fix (principal) and a cost-to-carry (interest); "this code is bad" is not an assessment
+2. **Classify every item** — deliberate or accidental, and by type
+3. **Debt is not entropy** — code that works and does not change accrues no interest
+4. **Prioritize by ROI** — highest interest first, not what annoys you most
+5. **Business language for business cases** — "a 2-day feature takes 8 days", not "the coupling violates dependency inversion"
+
 **Three capabilities this skill develops:**
 1. **Identification and Classification** — Find debt items, distinguish deliberate from accidental, categorize by type (architecture, code, test, documentation, infrastructure, dependency)
 2. **Quantification** — Estimate cost-to-fix (the principal), cost-to-carry (the interest), and interest rate (how fast the cost grows)

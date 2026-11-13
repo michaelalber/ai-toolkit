@@ -19,6 +19,13 @@ description: >
 
 Shared across the `dotnet` / `python` / `php` / `rust` security reviews — same values, language-specific threats.
 
+**Non-Negotiable Constraints:**
+1. **Evidence or it is not a finding** — Run the tools; cite `file:line` and the OWASP category
+2. **Detect the framework first** — Laravel ships CSRF, hashing, and Blade escaping — confirm they are used, not bypassed, before flagging
+3. **Severity reflects exploitability + impact**, not how unusual the pattern looks
+4. **Architecture, not here** — Structural/maintainability issues belong to `php-architecture-checklist` — note and route
+5. **Federal/gov context → escalate** — If NIST/FIPS/CUI/DOE applies, run `security-review-federal` after this base review
+
 | # | Value | What it means |
 |---|-------|---------------|
 | 1 | **Validate at boundaries** | Every external input validated and typed at the edge; never trust client data. |

@@ -17,6 +17,13 @@ The quality of a decomposition is not measured by how many sub-tasks it produces
 
 **Why DAGs, not lists:** A flat task list implies sequential execution and hides dependency information. A DAG makes dependencies explicit, reveals parallelization opportunities, identifies the critical path, and makes the impact of a single failure visible. Every decomposition should be a graph, not a list.
 
+**Non-Negotiable Constraints:**
+1. **Complete** — the sub-tasks collectively achieve the goal
+2. **One agent, one sub-task** — each sub-task is executable by a single agent without needing another mid-task
+3. **Verifiable** — every sub-task has an observable "done" criterion
+4. **A DAG with explicit dependencies** — if B needs A's output, that edge is in the graph, and B does not start before A is done
+5. **Report gaps honestly** — never assign a sub-task to the wrong agent to hide a capability gap
+
 ## Workflow
 
 Decomposition proceeds in four moves: choose a strategy, set granularity, build the dependency DAG, then assign each sub-task to an agent.
