@@ -46,7 +46,7 @@ skill({ name: "tdd-loop" })               — the RED-GREEN-REFACTOR inner-loop 
 ```
 
 Load both when starting any QRSPI implement session: `qrspi-implement` supplies the slice loop and
-checkpoint protocol; `tdd` supplies the test-first discipline you apply inside each slice.
+checkpoint protocol; `tdd-loop` supplies the test-first discipline you apply inside each slice.
 
 ## Guardrails
 

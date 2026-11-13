@@ -45,7 +45,7 @@ Load the skill for the phase you are running:
 | `skill({ name: "qrspi-spec" })` | At the start of a SPEC session for the brain-surgery loop and the `spec.md` template |
 | `skill({ name: "qrspi-plan" })` | At the start of a PLAN session for the vertical-not-horizontal gate and the `plan.md` template |
 
-> The Implement phase runs in a separate agent, `qrspi-implement` (edit access, loads `tdd`). This
+> The Implement phase runs in a separate agent, `qrspi-implement` (edit access, loads `tdd-loop`). This
 > orchestrator drives the Questions, Research, Spec, and Plan alignment phases, then hands the
 > approved feature folder forward to a fresh `/qrspi-implement` session.
 

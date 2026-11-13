@@ -7,7 +7,7 @@ description: >
   theater tests with a prioritized rewrite list; (2) TDD compliance — analyzes git history for
   test-first discipline, producing a 0-25 scorecard with AI anti-pattern findings. Use when
   auditing inherited suites, checking AI-generated tests before merge, prepping for safe
-  refactoring, or verifying TDD was followed. Not for writing new tests (tdd), or when there are
+  refactoring, or verifying TDD was followed. Not for writing new tests (tdd-loop), or when there are
   no tests yet.
 ---
 

@@ -21,7 +21,7 @@ new features stop being greenfield -- they are additions to an existing codebase
 job. Graduation is the explicit seam: a single markdown artifact, `graduation.md`, that bootstraps the
 first QRSPI feature with everything QRASPI produced -- the repo, the accepted ADRs, the layers the
 skeleton exercises, the live fitness gates, and the stack declaration. Both workflows already share
-`tdd`, vertical slices, and the read-only `research-*` subagents, so the seam is **state capture +
+`tdd-loop`, vertical slices, and the read-only `research-*` subagents, so the seam is **state capture +
 documentation, not new machinery**.
 
 **Non-Negotiable Constraints:**

@@ -49,7 +49,7 @@ are captured command results, never claims.
 4. FITNESS GATES ARE LAW — SKELETON wires them as merge-blocking CI gates; IMPLEMENT keeps them green
    (part of GREEN). Never disable a gate to force green.
 5. TEST FIRST (IMPLEMENT) — production code before a failing test is a STOP; each phase runs
-   RED → GREEN → REFACTOR, the inner loop delegated to `tdd`.
+   RED → GREEN → REFACTOR, the inner loop delegated to `tdd-loop`.
 6. NO INVENTION — SKELETON adapts the archetype recipe to the ADRs (never copy-paste); IMPLEMENT
    follows `plan-{slice}.md` exactly. Anything not covered is a STOP: route to /qraspi-architecture
    (design) or /qraspi-plan (slice scope).
@@ -65,7 +65,7 @@ skill({ name: "tdd-loop" })                 — the Red-Green-Refactor inner loo
 ```
 
 Load the skill for your mode: `qraspi-skeleton` (+ `fitness-functions` at the GATE step) for a Skeleton
-session; `qraspi-implement` (+ `tdd` for the inner loop) for an Implement session.
+session; `qraspi-implement` (+ `tdd-loop` for the inner loop) for an Implement session.
 
 ## Guardrails
 

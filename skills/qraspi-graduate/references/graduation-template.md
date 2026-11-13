@@ -8,7 +8,7 @@ state that already exists -- it makes no new decisions.
 
 ## Why an explicit artifact (not just "start using QRSPI")
 
-The seam between the workflows is conceptual -- both share `tdd`, vertical slices, and the read-only
+The seam between the workflows is conceptual -- both share `tdd-loop`, vertical slices, and the read-only
 `research-*` subagents. But QRSPI's inherited-repo Research maps a codebase without knowing *why* it
 looks the way it does. `graduation.md` is the bridge: it points QRSPI at the accepted ADRs (the locked
 decisions), the live fitness gates (the rules new features must keep green), and the stack -- so the

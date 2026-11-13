@@ -5,7 +5,7 @@ description: >
   QRSPI Implement phase -- executes an approved plan.md slice-by-slice with strict Red-Green-Refactor
   per slice and a fresh-session checkpoint after each. Use for "/qrspi-implement <feature>", "execute
   the qrspi plan", "build the approved plan slice by slice". Not for a bare TDD cycle with no plan
-  (use tdd); this phase requires plan.md status: approved and writes per-slice logs.
+  (use tdd-loop); this phase requires plan.md status: approved and writes per-slice logs.
 ---
 
 # QRSPI Implement
@@ -86,5 +86,5 @@ structure -- the RED proof, GREEN proof, files-changed list, and the resume note
 | Skill | Relationship |
 |-------|-------------|
 | `qrspi-plan` | Prior phase. Its approved `plan.md` is the contract this phase executes; refuses to run without `status: approved`. |
-| `tdd-loop` | The inner loop. Each slice IS a RED-GREEN-REFACTOR cycle; load `tdd` for the test-first mechanics this skill enforces per slice. |
+| `tdd-loop` | The inner loop. Each slice IS a RED-GREEN-REFACTOR cycle; load `tdd-loop` for the test-first mechanics this skill enforces per slice. |
 | `dotnet-vertical-slice` / `python-feature-slice` / `rust-feature-slice` | Stack scaffolders for the slice each phase builds. |

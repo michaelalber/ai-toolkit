@@ -6,7 +6,7 @@ description: >
   structure, then checks ownership discipline, trait coherence, error-handling conventions,
   unsafe-block justification, and crate-boundary hygiene with file:line evidence. Use to review
   or grade a Rust codebase. Not for Socratic critique (architecture-review), security audits
-  (rust-security-review), or new test-first code (tdd).
+  (rust-security-review), or new test-first code (tdd-loop).
 ---
 
 # Rust Architecture Checklist
@@ -113,5 +113,5 @@ Grading: **A** 0 crit/0 high/≤3 med · **B** 0 crit/≤2 high · **C** 0 crit,
 - **`architecture-review`** — When the grade is D/F, escalate to the Socratic critic: this checklist finds _what_ is wrong; `architecture-review` builds _why_.
 - **`rust-security-review`** — Companion for the security dimension (`unsafe` audit for memory-safety vulns, `cargo-audit`).
 - **`rust-feature-slice`** — Correct-pattern reference when the checklist flags structural violations.
-- **`tdd`** — Methodology for adding tests the checklist flags as missing, and for driving any refactor.
+- **`tdd-loop`** — Methodology for adding tests the checklist flags as missing, and for driving any refactor.
 - **`dotnet` / `python` / `php`-architecture-checklist** — Sibling skills sharing this exact Core Values + workflow + output.

@@ -51,7 +51,7 @@ Load the skill for the phase you are running:
 | `skill({ name: "qraspi-graduate" })` | At the TERMINAL graduation handoff for the `graduation.md` capture (repo + ADRs + skeleton state + fitness gates + stack) and the QRSPI bootstrap instruction |
 
 > The Skeleton and Implement phases run in the `qraspi-builder` agent (edit access, loads
-> `qraspi-skeleton`, `fitness-functions`, `tdd`). Plan sits AFTER Skeleton in phase order but on this
+> `qraspi-skeleton`, `fitness-functions`, `tdd-loop`). Plan sits AFTER Skeleton in phase order but on this
 > no-edit orchestrator -- it is gated by `skeleton.md` (`ci_green: true`) on disk, the artifact the
 > builder produced. Graduate (the terminal QRASPI->QRSPI handoff) also runs here, gated by a green
 > skeleton + shipped V1; it writes `graduation.md` and hands new feature work to QRSPI. This

@@ -45,7 +45,7 @@ Load these skills on-demand for detailed guidance. Use the `skill` tool when you
 **Skill Loading Protocol:**
 1. Load `test-scaffold` at session start for naming conventions and mock patterns
 2. Load `dotnet-vertical-slice` when testing handler/validator/endpoint patterns
-3. Load `tdd` if the session involves a full TDD workflow or writing implementation alongside tests
+3. Load `tdd-loop` if the session involves a full TDD workflow or writing implementation alongside tests
 
 **Note:** Skills are located in `~/.config/opencode/skills/`.
 

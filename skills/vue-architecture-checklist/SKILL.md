@@ -8,7 +8,7 @@ description: >
   lifecycle/watcher correctness, render performance, state boundaries, accessibility, and
   type safety with file:line evidence. Use to review or grade a Vue codebase. Not for
   Socratic critique (architecture-review), security audits (vue-security-review), or new
-  test-first code (tdd).
+  test-first code (tdd-loop).
 ---
 
 # Vue Architecture Checklist
@@ -123,5 +123,5 @@ Grading: **A** 0 crit/0 high/≤3 med · **B** 0 crit/≤2 high · **C** 0 crit,
 - **`vue-security-review`** — Companion for the security dimension (XSS, bundle secrets, `npm audit`).
 - **`vue-feature-slice`** — Correct-pattern reference when the checklist flags structural/cross-feature violations.
 - **`vue-modernization-analyzer`** — When findings cluster around legacy patterns (Options API sprawl, Vue CLI), route to the modernization plan.
-- **`tdd`** — Methodology for adding the missing tests the checklist flags, and for driving any refactor.
+- **`tdd-loop`** — Methodology for adding the missing tests the checklist flags, and for driving any refactor.
 - **`dotnet` / `python` / `php` / `rust` / `react`-architecture-checklist** — Sibling skills sharing this exact Core Values + workflow + output.

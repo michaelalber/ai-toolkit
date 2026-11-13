@@ -19,7 +19,7 @@ ready-for-review). Then run the **baseline suite** (tests + the skeleton's fitne
 baseline is a STOP, not yours to fix.
 
 Execute the phases inside `plan-{slice}.md` **in order**, one vertical increment at a time, delegating
-the inner loop to `tdd`: **RED** (write the failing test, RUN it, confirm it FAILS) → **GREEN** (minimal
+the inner loop to `tdd-loop`: **RED** (write the failing test, RUN it, confirm it FAILS) → **GREEN** (minimal
 code; RUN build + tests + the fitness gates; ALL must pass) → **REFACTOR** (stays green). The skeleton's
 fitness gates are part of GREEN — a change that trips a gate is not done; fix it, never disable the gate.
 **RECORD** each phase's RED and GREEN output to `implementation-log-{slice}.md`, then suggest a commit.

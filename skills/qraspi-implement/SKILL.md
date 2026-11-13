@@ -7,7 +7,7 @@ description: >
   log. Use for '/qraspi-implement <project>', 'implement the slice on the skeleton', 'build the
   approved plan-{slice} with RGR'. Requires plan-{slice}.md status: approved and a green
   skeleton. Not for a feature in an EXISTING codebase (qrspi-implement), the deprecated RPI
-  workflow, or a bare TDD cycle with no plan (tdd).
+  workflow, or a bare TDD cycle with no plan (tdd-loop).
 ---
 
 # QRASPI Implement
@@ -48,7 +48,7 @@ PRE-FLIGHT
         (tests + fitness gates). If red -> STOP; report; do not fix it
     [ ] Read the ENTIRE plan-{slice}.md; identify the next unfinished phase from implementation-log-{slice}.md
 
-PHASE LOOP  (one phase = one vertical increment inside the slice; inner loop delegated to tdd)
+PHASE LOOP  (one phase = one vertical increment inside the slice; inner loop delegated to tdd-loop)
     1. RED   — write the phase's failing test; RUN it; it MUST FAIL. If it passes, fix the test.
     2. GREEN — write the minimal production code; RUN build + tests + fitness gates; ALL MUST PASS.
     3. REFACTOR — clean up; RUN again; it MUST stay GREEN (tests AND gates).

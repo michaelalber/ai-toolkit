@@ -35,8 +35,8 @@ Load these skills on-demand for detailed guidance. Use the `skill` tool when you
 | `skill({ name: "evaluate-tests" })` | When auditing test quality or TDD compliance (commit-history scorecard, anti-patterns) |
 
 **Skill Loading Protocol:**
-1. Load `tdd` at the start of each TDD session for full protocol details
-2. During GREEN/REFACTOR, load `tdd`'s `references/` (green idioms, code-smells, refactoring-catalog) on demand
+1. Load `tdd-loop` at the start of each TDD session for full protocol details
+2. During GREEN/REFACTOR, load `tdd-loop`'s `references/` (green idioms, code-smells, refactoring-catalog) on demand
 3. Load `evaluate-tests` if you suspect TDD violations or need to audit the session
 
 **Note:** Skills are located in `~/.config/opencode/skills/`.

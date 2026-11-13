@@ -6,7 +6,7 @@ description: >
   (Laravel/Symfony/plain), and autoloading layout, then checks service-layer boundaries, strict
   typing, input validation, query safety, and config/secrets hygiene with file:line evidence.
   Use to review or grade a PHP codebase. Not for Socratic critique (architecture-review),
-  security audits (php-security-review), or new test-first code (tdd).
+  security audits (php-security-review), or new test-first code (tdd-loop).
 ---
 
 # PHP Architecture Checklist
@@ -108,11 +108,11 @@ Grading: **A** 0 crit/0 high/≤3 med · **B** 0 crit/≤2 high · **C** 0 crit,
 - **Detect the PHP/Laravel version first.** Recommending enums or readonly properties to a PHP 7.4 project produces invalid findings.
 - **Evidence or it is not a finding.** Run the tools; cite `file:line`. Never grade on vibes.
 - **Architecture, not security.** Injection, mass-assignment, and secrets-exposure findings belong to `php-security-review` — note them and route there.
-- **Do not rewrite during a review.** Produce findings + recommendations; the team decides and `tdd` drives the fix.
+- **Do not rewrite during a review.** Produce findings + recommendations; the team decides and `tdd-loop` drives the fix.
 
 ## Integration with Other Skills
 
 - **`architecture-review`** — When the grade is D/F, escalate to the Socratic critic: this checklist finds _what_ is wrong; `architecture-review` builds _why_.
 - **`php-security-review`** — Companion for the security dimension (OWASP, mass-assignment, query injection).
-- **`tdd`** — Methodology for adding tests the checklist flags as missing, and for driving any refactor.
+- **`tdd-loop`** — Methodology for adding tests the checklist flags as missing, and for driving any refactor.
 - **`dotnet` / `python` / `rust`-architecture-checklist** — Sibling skills sharing this exact Core Values + workflow + output.

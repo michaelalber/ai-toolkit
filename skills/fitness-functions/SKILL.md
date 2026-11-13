@@ -6,7 +6,7 @@ description: >
   gatekeepers. Use for "add a fitness function", "wire an arch test as a CI gate", "enforce
   layering in CI", "fail the build when the dependency rule is violated". Per-stack tool selection
   (NetArchTest, import-linter, cargo-deny, Conftest). Do NOT use to run an existing test suite --
-  that is tdd. Do NOT use to analyze coupling for insight without gating -- that is dependency-mapper.
+  that is tdd-loop. Do NOT use to analyze coupling for insight without gating -- that is dependency-mapper.
 ---
 
 # Fitness Functions
@@ -97,4 +97,4 @@ deliberate-violation proof: `dotnet.md` (NetArchTest), `python.md` (import-linte
 | `qraspi-architecture` | Specifies which fitness functions each ADR requires; this skill authors them. |
 | `qraspi-skeleton` | Lands these fitness functions as CI gates when the walking skeleton stands up. |
 | `dependency-mapper` | The ready-made coupling fitness function -- Martin Ca/Ce/I/A/D metrics. Reference it for coupling rules rather than re-deriving the math. |
-| `tdd-loop` | Different layer: `tdd` gates *behavior* (does the code do the right thing); a fitness function gates *architecture* (is the structure still legal). Do not conflate. |
+| `tdd-loop` | Different layer: `tdd-loop` gates *behavior* (does the code do the right thing); a fitness function gates *architecture* (is the structure still legal). Do not conflate. |

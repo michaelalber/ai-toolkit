@@ -8,7 +8,7 @@ description: >
   vertical-slice), then checking architectural coherence, controller/handler discipline, EF Core
   lifetimes, framework health, and config/secrets hygiene with file:line evidence. Use to review
   or grade a .NET solution. Not for Socratic critique (architecture-review), security audits
-  (dotnet-security-review), or new test-first code (tdd).
+  (dotnet-security-review), or new test-first code (tdd-loop).
 ---
 
 # .NET / Blazor Architecture Checklist
@@ -130,5 +130,5 @@ style — a coherent layered controller API with clean boundaries is an A.
 - **`dotnet-controller-api-scaffolder`** — Correct-pattern reference when a layered controller API flags structural violations (fat controllers, entity leakage, inconsistent conventions).
 - **`ef-migration-manager`** — For EF Core lifetime/migration findings.
 - **`legacy-migration-analyzer`** — When EOL/.NET Framework is detected, for a phased upgrade plan.
-- **`tdd`** — Methodology for adding tests the checklist flags as missing.
+- **`tdd-loop`** — Methodology for adding tests the checklist flags as missing.
 - **`python` / `php` / `rust`-architecture-checklist** — Sibling skills sharing this exact Core Values + workflow + output.

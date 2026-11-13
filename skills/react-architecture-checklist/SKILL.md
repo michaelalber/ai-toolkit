@@ -6,7 +6,7 @@ description: >
   TypeScript usage, state library, and router, then checks hooks discipline, component cohesion,
   effect correctness, render performance, state boundaries, accessibility, and type safety with
   file:line evidence. Use to review or grade a React codebase. Not for Socratic critique
-  (architecture-review), security audits (react-security-review), or new test-first code (tdd).
+  (architecture-review), security audits (react-security-review), or new test-first code (tdd-loop).
 ---
 
 # React Architecture Checklist
@@ -121,5 +121,5 @@ Grading: **A** 0 crit/0 high/≤3 med · **B** 0 crit/≤2 high · **C** 0 crit,
 - **`react-security-review`** — Companion for the security dimension (XSS, bundle secrets, `npm audit`).
 - **`react-feature-slice`** — Correct-pattern reference when the checklist flags structural/cross-feature violations.
 - **`react-modernization-analyzer`** — When findings cluster around legacy patterns (class components, CRA), route to the modernization plan.
-- **`tdd`** — Methodology for adding the RTL tests the checklist flags as missing, and for driving any refactor.
+- **`tdd-loop`** — Methodology for adding the RTL tests the checklist flags as missing, and for driving any refactor.
 - **`dotnet` / `python` / `php` / `rust`-architecture-checklist** — Sibling skills sharing this exact Core Values + workflow + output.

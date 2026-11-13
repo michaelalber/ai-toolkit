@@ -6,7 +6,7 @@ description: >
   and package layout, then checks clean-architecture boundaries, type-safety discipline,
   complexity, dependency direction, and config/secrets hygiene with file:line evidence. Use to
   review or grade a Python codebase. Not for Socratic critique (architecture-review), security
-  audits (python-security-review), or new test-first code (tdd).
+  audits (python-security-review), or new test-first code (tdd-loop).
 ---
 
 # Python Architecture Checklist
@@ -109,12 +109,12 @@ Grading: **A** 0 crit/0 high/≤3 med · **B** 0 crit/≤2 high · **C** 0 crit,
 - **Detect the Python version first.** Recommending `match` statements or `tomllib` to a 3.9 project produces invalid findings.
 - **Evidence or it is not a finding.** Run the tools; cite `file:line`. Never grade on vibes.
 - **Architecture, not security.** Vulnerability findings (injection, deserialization, secrets exposure) belong to `python-security-review` — note them and route there.
-- **Do not rewrite during a review.** Produce findings + recommendations; the team decides and `tdd` drives the fix.
+- **Do not rewrite during a review.** Produce findings + recommendations; the team decides and `tdd-loop` drives the fix.
 
 ## Integration with Other Skills
 
 - **`architecture-review`** — When the grade is D/F, escalate to the Socratic critic: this checklist finds _what_ is wrong; `architecture-review` builds _why_.
 - **`python-security-review`** — Companion for the security dimension (OWASP, bandit, pip-audit).
 - **`python-feature-slice`** — Correct-pattern reference when the checklist flags structural violations.
-- **`tdd`** — Methodology for adding tests the checklist flags as missing, and for driving any refactor.
+- **`tdd-loop`** — Methodology for adding tests the checklist flags as missing, and for driving any refactor.
 - **`dotnet` / `php` / `rust`-architecture-checklist** — Sibling skills sharing this exact Core Values + workflow + output.

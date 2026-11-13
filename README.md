@@ -363,7 +363,7 @@ Autonomous agents that make decisions and take actions independently. Each exist
 |-------|-------------|--------|
 | `tdd-agent` | Autonomous TDD — drives the complete RED-GREEN-REFACTOR cycle with strict guardrails. | tdd-loop, evaluate-tests |
 | `code-review-agent` | Autonomous code review — security, correctness, performance, maintainability, style. | automated-code-review, pr-feedback-writer |
-| `test-generation-agent` | Autonomous test generation — analyzes code, identifies gaps, generates tests with TDD patterns. | tdd, test-scaffold |
+| `test-generation-agent` | Autonomous test generation — analyzes code, identifies gaps, generates tests with TDD patterns. | tdd-loop, test-scaffold |
 | `documentation-agent` | Autonomous documentation sync — detects staleness, generates XML docs, updates READMEs. | architecture-journal, doc-sync |
 | `dependency-audit-agent` | Autonomous dependency auditing — vulnerability scanning, license compliance, upgrade paths. | supply-chain-audit, technical-debt-assessor |
 | `spec-extractor-agent` | Extracts structured agent specs from natural-language descriptions or existing code. | spec-coach |
