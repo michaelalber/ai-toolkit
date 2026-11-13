@@ -62,8 +62,9 @@ and refactoring that was never constrained by a safety net. **Never accumulate u
 
 ### REFACTOR
 1. One structural change at a time — behavior must not change (no bug fixes, no new features; those start a new RED)
-2. Run tests after every change — revert immediately if red
-3. Smell→refactoring recipes: [code smells](references/code-smells.md) · [refactoring catalog](references/refactoring-catalog.md) on demand
+2. Replacing a fake with real logic is allowed only if no test-free branch comes with it. Handling an input shape no test uses yet is new behavior: write its RED test first, and never claim behavior no test covers
+3. Run tests after every change — revert immediately if red
+4. Smell→refactoring recipes: [code smells](references/code-smells.md) · [refactoring catalog](references/refactoring-catalog.md) on demand
 
 ## Per-Cycle Self-Check
 
