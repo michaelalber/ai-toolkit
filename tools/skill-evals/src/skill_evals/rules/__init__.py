@@ -78,5 +78,13 @@ class LintContext:
 
 
 # Imported for their registration side effects, exactly as ollama-evals does for scorers.
-from . import crossref, frontmatter, globals, references, state, structure  # noqa: E402,F401
+from . import (  # noqa: E402,F401
+    crossref,
+    frontmatter,
+    globals,
+    primitives,
+    references,
+    state,
+    structure,
+)
 # <AI-Generated END>

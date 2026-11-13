@@ -94,6 +94,8 @@ today — a lint that fails on 43% of skills on day one gets switched off rather
 | State | SK030–SK033 | block presence, balanced tags, family ownership, agent collisions |
 | References | SK040–SK044 | directory presence, count per tier, **pointer resolution**, reachability, stubs |
 | Cross-reference | SK050–SK059 | Integration targets, Pi triage coverage and counts, README listings, published counts, agent parity, the CLAUDE.md/AGENTS.md mirror |
+| Global files | SK060–SK065 | the shared CORE block across the three harness globals, size budgets, no confirm-gate, no private data, referenced paths exist |
+| Agents & commands | SK070–SK073 | agent skill references resolve (Claude `skills:` and OpenCode `skill()`), each agent pair loads the same skills, command parity, stale skill names in agent/command bodies |
 
 `SK050`–`SK059` replace the six manual grep bullets in `evals.md`'s CI Gate. Nothing
 hardcodes a corpus size — every count is compared against the tree, so the rules stay
@@ -109,6 +111,11 @@ Two scope notes worth knowing before you read the output:
   prefix-match far too eagerly (a backticked `python` "resembles" `python-feature-slice`),
   burying the real hits. Single-word stale names are still caught by SK050 wherever they
   appear in an Integration table, which is where they do damage.
+- **SK073** applies SK052 to agent and command bodies, plus one single-word case: a bare
+  backticked word that is a *command* name and prefixes a skill (`tdd` after the
+  `tdd` → `tdd-loop` rename). OpenCode resolves that name to the `/tdd` command, so the
+  skill never loads. Names of `references/` files are ignored; commands cited as `/tdd`
+  don't match.
 
 ### Tiers
 

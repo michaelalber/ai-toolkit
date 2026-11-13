@@ -52,7 +52,7 @@ A passing eval would survive scrutiny from a developer seeing the skill for the 
   - [ ] OpenCode body uses `skill({ name: "..." })` calls where Claude Code uses `skills:` frontmatter
   - [ ] All 10 agent sections present in both versions
   - [ ] State block XML tag is unique across all skills and agents
-- **Automated by:** `tools/skill-evals` — SK033 (state-tag collisions across skills and agents), SK058 (Claude/OpenCode agent parity). The per-platform frontmatter shape is still a manual check.
+- **Automated by:** `tools/skill-evals` — SK033 (state-tag collisions across skills and agents), SK058 (Claude/OpenCode agent parity), SK070 (agent skill references resolve), SK071 (each agent pair loads the same skills), SK072 (command parity), SK073 (stale skill names in agent/command bodies). The per-platform frontmatter shape is still a manual check.
 - **Last Run:** — | **Result:** —
 - **Notes:** —
 
