@@ -32,17 +32,6 @@ def test_sk031_flags_an_unclosed_state_tag(skills_dir: Path):
     assert "opened but never closed" in _messages(skills_dir, "SK031")[0]
 
 
-def test_sk031b_flags_a_tag_unrelated_to_the_skill_name(skills_dir: Path):
-    write_good_full(skills_dir, "alpha", body=_with_tag("Alpha", "totally-different-state"))
-    assert "shares no token" in _messages(skills_dir, "SK031b")[0]
-
-
-def test_sk031b_accepts_a_tag_sharing_one_token(skills_dir: Path):
-    write_good_full(skills_dir, "python-security-review",
-                    body=_with_tag("X", "security-review-state"))
-    assert _ids(skills_dir, "SK031b") == []
-
-
 # --- SK032: family ownership -------------------------------------------------------
 
 

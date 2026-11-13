@@ -90,7 +90,7 @@ today — a lint that fails on 43% of skills on day one gets switched off rather
 | Group | Rules | Covers |
 |---|---|---|
 | Frontmatter | SK001–SK010 | schema, description length, trigger and boundary clauses |
-| Structure | SK020–SK027 | line budget, the 5 canonical sections, epigraph, constraints, placeholders |
+| Structure | SK020–SK027 | line budget, the 5 canonical sections, constraints, placeholders |
 | State | SK030–SK033 | block presence, balanced tags, family ownership, agent collisions |
 | References | SK040–SK044 | directory presence, count per tier, **pointer resolution**, reachability, stubs |
 | Cross-reference | SK050–SK059 | Integration targets, Pi triage coverage and counts, README listings, published counts, agent parity, the CLAUDE.md/AGENTS.md mirror |
@@ -101,12 +101,8 @@ today — a lint that fails on 43% of skills on day one gets switched off rather
 hardcodes a corpus size — every count is compared against the tree, so the rules stay
 correct as skills are added and removed.
 
-Two scope notes worth knowing before you read the output:
+A scope note worth knowing before you read the output:
 
-- **SK051** (Integration symmetry) is informational and fires ~100 times. One-directional
-  references are the norm here — a scaffolder points at a security review without the
-  review pointing back at every scaffolder. `evals.md` TC7 asks for the check, so it
-  exists; it is a warning and never gates.
 - **SK052** only considers *hyphenated* backticked tokens. A single word would
   prefix-match far too eagerly (a backticked `python` "resembles" `python-feature-slice`),
   burying the real hits. Single-word stale names are still caught by SK050 wherever they

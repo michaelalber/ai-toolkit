@@ -100,22 +100,6 @@ def sk023_no_extra_sections(skill, ctx):
                      evals_tc="Taste Rule 1")
 
 
-@rule("SK024", severity=Severity.WARNING, summary="title is followed by an epigraph",
-      evals_tc="Lean Layout")
-def sk024_epigraph(skill, ctx):
-    if classify(skill) is not Tier.FULL:
-        return
-    lines = skill.lines
-    for idx, line in enumerate(lines):
-        if line.startswith("# "):
-            window = lines[idx + 1 : idx + 6]
-            if not any(w.lstrip().startswith(">") for w in window):
-                yield _f("SK024", Severity.WARNING, skill,
-                         "no '> ' epigraph within 5 lines of the title", line=idx + 1,
-                         evals_tc="Lean Layout")
-            return
-
-
 @rule("SK025", severity=Severity.WARNING, summary="3-6 numbered Non-Negotiable Constraints",
       evals_tc="TC1")
 def sk025_constraints_count(skill, ctx):

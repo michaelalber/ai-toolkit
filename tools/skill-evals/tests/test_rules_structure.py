@@ -74,15 +74,6 @@ def test_sk023_accepts_the_canonical_set(clean_corpus: Path):
     assert _ids(clean_corpus, "SK023") == []
 
 
-# --- SK024 epigraph ----------------------------------------------------------------
-
-
-def test_sk024_flags_a_missing_epigraph(skills_dir: Path):
-    body = CANONICAL_BODY.replace('> "An epigraph that says something."\n', "")
-    write_good_full(skills_dir, "s", body=body)
-    assert _ids(skills_dir, "SK024") == ["SK024"]
-
-
 # --- SK025 / SK025b constraints ----------------------------------------------------
 
 

@@ -38,7 +38,7 @@ def _write_pi(root: Path, names, green=None, footer=None):
     )
 
 
-# --- SK050 / SK051 / SK052 ---------------------------------------------------------
+# --- SK050 / SK052 ---------------------------------------------------------
 
 
 def test_sk050_flags_an_integration_target_that_is_not_a_skill(tmp_path: Path):
@@ -73,20 +73,6 @@ def test_sk050_ignores_the_relationship_column(tmp_path: Path):
     write_good_full(skills, "alpha", body=body)
     write_good_full(skills, "beta")
     assert _messages(skills, "SK050", root) == []
-
-
-def test_sk051_flags_a_one_directional_reference(tmp_path: Path):
-    root, skills = _repo(tmp_path)
-    write_good_full(skills, "alpha", body=_integration("beta"))
-    write_good_full(skills, "beta")
-    assert "does not name `alpha` back" in _messages(skills, "SK051", root)[0]
-
-
-def test_sk051_accepts_a_reciprocal_pair(tmp_path: Path):
-    root, skills = _repo(tmp_path)
-    write_good_full(skills, "alpha", body=_integration("beta"))
-    write_good_full(skills, "beta", body=_integration("alpha"))
-    assert _messages(skills, "SK051", root) == []
 
 
 def test_sk052_flags_a_stale_skill_name_in_prose(tmp_path: Path):

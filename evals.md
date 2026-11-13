@@ -133,7 +133,7 @@ A passing eval would survive scrutiny from a developer seeing the skill for the 
   - [ ] Every agent name in `README.md` category tables matches an actual file in `claude/agents/` and `opencode/agents/`
   - [ ] No `references/` file mentions a skill or agent by name that no longer exists
   - [ ] The skill-to-skill cross-references in Integration sections are symmetric: if Skill A lists Skill B, Skill B's Integration section lists Skill A (or documents why the relationship is one-directional)
-- **Automated by:** `tools/skill-evals` — SK042 (references/ pointers resolve), SK050 (Integration targets exist), SK051 (symmetry, informational), SK052 (stale renames), SK054/SK056 (Pi and README entries resolve).
+- **Automated by:** `tools/skill-evals` — SK042 (references/ pointers resolve), SK050 (Integration targets exist), SK052 (stale renames), SK054/SK056 (Pi and README entries resolve).
 - **Last Run:** — | **Result:** —
 - **Notes:** Silent link rot is common in fast-growing skill suites. Check manually after any rename or removal, or automate with a simple grep against the `skills/` directory listing.
 

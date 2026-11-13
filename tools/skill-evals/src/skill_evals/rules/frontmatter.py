@@ -9,6 +9,8 @@ lint that fails on 43% of the corpus on day one gets switched off rather than fi
 
 from __future__ import annotations
 
+import re
+
 from ..findings import Finding, Severity
 from . import rule
 
@@ -23,11 +25,23 @@ KNOWN_KEYS = {
     "source_note",
     "disable-model-invocation",
     "references",
+    # Optional fields from the Agent Skills spec (agentskills.io/specification).
+    "license",
+    "compatibility",
+    "metadata",
+    "allowed-tools",
 }
 
 MAX_DESCRIPTION_CHARS = 1024
 
-TRIGGER_MARKERS = ("use when", "use for", "use this skill when", "triggers on", "trigger for")
+# agentskills.io/specification: <= 64 chars, lowercase/digits, no leading/trailing/double hyphen.
+_SPEC_NAME = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*")
+MAX_NAME_CHARS = 64
+RESERVED_NAME_WORDS = ("anthropic", "claude")  # Anthropic's skill docs reserve these
+
+TRIGGER_MARKERS = (
+    "use when", "use to", "use for", "use this skill when", "triggers on", "trigger for",
+)
 NEGATIVE_MARKERS = ("do not use", "don't use", "not for", "not when", "does not", "do NOT use")
 FIRST_PERSON_STARTS = ("i ", "i'll", "we ", "we'll", "you ", "you'll", "you can", "let me")
 
@@ -66,6 +80,14 @@ def sk002_name_matches_directory(skill, ctx):
         yield _f("SK002", Severity.ERROR, skill,
                  f"name: {declared!r} does not match the directory {skill.name!r}",
                  evals_tc="TC1, TC7")
+    if declared and (len(declared) > MAX_NAME_CHARS or not _SPEC_NAME.fullmatch(declared)):
+        yield _f("SK002", Severity.ERROR, skill,
+                 f"name: {declared!r} breaks the Agent Skills name format (<= 64 chars, "
+                 "lowercase letters/digits, single hyphens)", evals_tc="TC1")
+    elif declared and any(word in declared for word in RESERVED_NAME_WORDS):
+        yield _f("SK002", Severity.ERROR, skill,
+                 f"name: {declared!r} contains a reserved word ({', '.join(RESERVED_NAME_WORDS)})",
+                 evals_tc="TC1")
 
 
 @rule("SK003", severity=Severity.ERROR, summary="description present", evals_tc="CI Gate")

@@ -91,6 +91,28 @@ def test_sk043_accepts_fully_pointed_references(clean_corpus: Path):
     assert _ids(clean_corpus, "SK043") == []
 
 
+def test_sk043_accepts_a_placeholder_pattern_pointer(skills_dir: Path):
+    """`references/<stack>.md` names every per-stack file, as fitness-functions does."""
+    body = CANONICAL_BODY.replace(
+        "## Output Template", "Load `references/<stack>.md` for the stack.\n\n## Output Template"
+    )
+    write_good_full(skills_dir, "s", body=body,
+                    references={"conventions.md": filler(), "templates.md": filler(),
+                                "python.md": filler(), "rust.md": filler()})
+    assert _ids(skills_dir, "SK043") == []
+
+
+def test_sk043_placeholder_does_not_cross_directories(skills_dir: Path):
+    body = CANONICAL_BODY.replace(
+        "## Output Template", "Load `references/<stack>.md` for the stack.\n\n## Output Template"
+    )
+    write_good_full(skills_dir, "s", body=body,
+                    references={"conventions.md": filler(), "templates.md": filler()})
+    (skills_dir / "s" / "references" / "deep").mkdir()
+    (skills_dir / "s" / "references" / "deep" / "x.md").write_text(filler())
+    assert _ids(skills_dir, "SK043") == ["SK043"]
+
+
 def test_sk044_flags_a_stub_reference(skills_dir: Path):
     write_good_full(skills_dir, "s",
                     references={"conventions.md": filler(), "templates.md": "just one line"})

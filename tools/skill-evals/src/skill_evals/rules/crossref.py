@@ -43,24 +43,6 @@ def sk050_integration_targets_resolve(skill, ctx):
                       skill.name, skill.skill_md, None, "TC7")
 
 
-@rule("SK051", severity=Severity.WARNING, scope="repo",
-      summary="Integration cross-references are symmetric", evals_tc="TC7")
-def sk051_integration_symmetry(skills, ctx):
-    by_name = {s.name: s for s in skills}
-    for skill in skills:
-        for target in skill.integration_targets:
-            other = by_name.get(target)
-            if other is None or not other.has_section("Integration"):
-                # A minimal-tier skill has no Integration section by design; demanding
-                # reciprocity from it would be asking for a section it must not have.
-                continue
-            if skill.name not in other.integration_targets:
-                yield Finding("SK051", Severity.WARNING,
-                              f"names `{target}` in Integration, but `{target}` does not name "
-                              f"`{skill.name}` back",
-                              skill.name, skill.skill_md, None, "TC7")
-
-
 @rule("SK052", severity=Severity.WARNING, summary="backticked skill-like names resolve",
       evals_tc="TC7")
 def sk052_stale_skill_references(skill, ctx):

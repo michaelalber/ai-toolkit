@@ -44,18 +44,6 @@ def sk031_state_tags_balanced(skill, ctx):
                      f"<{tag}> is opened but never closed", evals_tc="Rubric D5")
 
 
-@rule("SK031b", severity=Severity.WARNING, summary="state tag derives from the skill name",
-      evals_tc="Rubric D5")
-def sk031b_state_tag_related_to_name(skill, ctx):
-    name_tokens = set(skill.name.split("-"))
-    for tag in skill.state_tags:
-        tag_tokens = set(tag.removesuffix("-state").split("-"))
-        if not (name_tokens & tag_tokens):
-            yield _f("SK031b", Severity.WARNING, skill,
-                     f"<{tag}> shares no token with the skill name {skill.name!r}",
-                     evals_tc="Rubric D5")
-
-
 @rule("SK032", severity=Severity.ERROR, scope="repo",
       summary="state tags are owned by one skill or one declared family",
       evals_tc="Taste Rule 3")

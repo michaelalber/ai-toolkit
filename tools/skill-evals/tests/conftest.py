@@ -59,7 +59,7 @@ the code templates.
 """
 # The canonical body names no sibling on purpose: most tests write one skill into an
 # otherwise empty tree, and a cross-reference there is an unresolvable target (SK050),
-# not a clean skill. Tests for SK050/SK051 build their own tables.
+# not a clean skill. Tests for SK050 build their own tables.
 
 # Padded past the 100-line minimal ceiling so this fixture is genuinely FULL tier — the
 # structural rules (SK021-SK026, SK030) only apply there, and a fixture that classifies

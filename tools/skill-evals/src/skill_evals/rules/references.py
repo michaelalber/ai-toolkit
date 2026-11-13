@@ -8,11 +8,24 @@ survives review indefinitely. The ``tdd`` -> ``tdd-loop`` rename left exactly th
 
 from __future__ import annotations
 
+import re
+
 from ..findings import Finding, Severity
 from ..tier import Tier, classify, min_reference_files
 from . import rule
 
 STUB_MAX_LINES = 20
+
+# `references/<stack>.md` or `references/archetypes/<archetype>.md`: one pointer naming a set.
+_PLACEHOLDER_POINTER = re.compile(r"references/[\w./<>-]*<[\w-]+>[\w./<>-]*\.md")
+
+
+def _placeholder_patterns(text: str) -> list[re.Pattern]:
+    """Each `<placeholder>` matches one path segment's worth of characters, never a `/`."""
+    return [
+        re.compile(re.sub(r"<[\w-]+>", r"[\\w.-]+", re.escape(p)))
+        for p in _PLACEHOLDER_POINTER.findall(text)
+    ]
 
 
 def _f(rule_id, severity, skill, message, *, line=None, evals_tc=None) -> Finding:
@@ -61,9 +74,10 @@ def sk043_references_are_reachable(skill, ctx):
     if tier is Tier.EXEMPT:
         return
     named = {p.target for p in skill.reference_pointers}
+    patterns = _placeholder_patterns(skill.text)
     for path in skill.reference_files:
         relative = path.relative_to(skill.path).as_posix()
-        if relative not in named:
+        if relative not in named and not any(p.fullmatch(relative) for p in patterns):
             yield _f("SK043", Severity.WARNING, skill,
                      f"{relative} is never named in SKILL.md — it will not be discovered",
                      evals_tc="Rubric D9")

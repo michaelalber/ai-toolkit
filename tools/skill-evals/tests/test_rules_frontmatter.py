@@ -61,6 +61,27 @@ def test_sk002_accepts_matching_name(clean_corpus: Path):
     assert _ids(clean_corpus, "SK002") == []
 
 
+def test_sk002_flags_a_name_outside_the_agent_skills_spec_format(skills_dir: Path):
+    """agentskills.io/specification: lowercase, digits, single hyphens, <= 64 chars."""
+    for bad in ("double--hyphen", "x" * 65):
+        write_good_full(
+            skills_dir, bad,
+            frontmatter={"name": bad, "audience": "team", "description": "d. Use when."},
+        )
+    messages = _messages(skills_dir, "SK002")
+    assert len(messages) == 2
+    assert all("Agent Skills name format" in m for m in messages)
+
+
+def test_sk002_flags_a_reserved_word_in_the_name(skills_dir: Path):
+    """Anthropic's skill docs reserve 'anthropic' and 'claude'."""
+    write_good_full(
+        skills_dir, "claude-helper",
+        frontmatter={"name": "claude-helper", "audience": "team", "description": "d. Use when."},
+    )
+    assert "reserved word" in _messages(skills_dir, "SK002")[0]
+
+
 # --- SK003 / SK004 -----------------------------------------------------------------
 
 
@@ -146,6 +167,16 @@ def test_sk007_flags_missing_trigger_clause(skills_dir: Path):
     assert _ids(skills_dir, "SK007") == ["SK007"]
 
 
+def test_sk007_accepts_use_to(skills_dir: Path):
+    """'Use to review X' states when to use the skill as plainly as 'Use when reviewing X'."""
+    write_good_full(
+        skills_dir, "s",
+        frontmatter={"name": "s", "audience": "team",
+                     "description": "Grades a codebase. Use to review or grade a codebase."},
+    )
+    assert _ids(skills_dir, "SK007") == []
+
+
 def test_sk008_flags_missing_negative_boundary(skills_dir: Path):
     write_good_full(
         skills_dir, "s",
@@ -184,6 +215,16 @@ def test_sk009_accepts_vendored_attribution_keys(skills_dir: Path):
         frontmatter={"name": "s", "audience": "team", "description": "d. Use when. Not for.",
                      "source": "https://example.com", "source_commit": "abc1234",
                      "source_note": "vendored", "disable-model-invocation": "true"},
+    )
+    assert _ids(skills_dir, "SK009") == []
+
+
+def test_sk009_accepts_agent_skills_spec_optional_keys(skills_dir: Path):
+    write_good_full(
+        skills_dir, "s",
+        frontmatter={"name": "s", "audience": "team", "description": "d. Use when. Not for.",
+                     "license": "MIT", "compatibility": "Claude Code",
+                     "metadata": "{}", "allowed-tools": "Read"},
     )
     assert _ids(skills_dir, "SK009") == []
 
