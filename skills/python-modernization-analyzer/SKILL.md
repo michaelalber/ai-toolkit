@@ -71,6 +71,10 @@ Deliver the plan with evidence, risk scores, and effort estimates. Use the risk 
 Apply the domain principles throughout (`references/domain-principles.md`), and follow the AI
 discipline rules in `references/discipline-and-recovery.md` at every phase.
 
+Evidence before recommendation, quantify before scoring, and incremental plans only — with worked
+WRONG/RIGHT examples, the 10-row anti-pattern catalog, and error-recovery procedures (tools missing,
+unknown dependency compatibility, zero test coverage) — are in `references/discipline-and-recovery.md`.
+
 ## State Block
 
 ```xml
@@ -93,12 +97,6 @@ discipline rules in `references/discipline-and-recovery.md` at every phase.
 The full Modernization Assessment Summary (Markdown — header block, migration-paths table, blockers
 table, phased plan) is in `references/assessment-summary-template.md`. Before/after compatibility
 examples for Python 2→3, sync→async, and Flask→FastAPI are in `references/compatibility-patterns.md`.
-
-## AI Discipline
-
-Evidence before recommendation, quantify before scoring, and incremental plans only — with worked
-WRONG/RIGHT examples, the 10-row anti-pattern catalog, and error-recovery procedures (tools missing,
-unknown dependency compatibility, zero test coverage) — are in `references/discipline-and-recovery.md`.
 
 ## Integration with Other Skills
 

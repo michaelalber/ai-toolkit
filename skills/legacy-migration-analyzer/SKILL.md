@@ -26,19 +26,6 @@ This skill analyzes legacy .NET Framework codebases and produces actionable migr
 The full 10-row domain principle table, AI discipline rules, and the anti-pattern catalog live in
 `references/migration-decision-matrix.md`.
 
-## Knowledge Base Lookups
-
-| Query | When to Call |
-|-------|--------------|
-| `search_knowledge(".NET Framework to .NET 8 10 migration breaking changes")` | At SCAN phase — load authoritative breaking changes catalog |
-| `search_knowledge(".NET Upgrade Assistant compatibility analyzer tool")` | During ASSESS phase — confirms tooling commands and output |
-| `search_knowledge("Entity Framework 6 EF Core migration differences lazy loading")` | When assessing data access layer |
-| `search_knowledge("ASP.NET MVC to ASP.NET Core migration web.config appsettings")` | When analyzing web projects |
-| `search_knowledge("NuGet package compatibility .NET Standard target framework")` | During dependency audit |
-| `search_knowledge("strangler fig pattern incremental migration legacy modernization")` | During PLAN phase |
-
-Search at the start of SCAN and ASSESS phases. Every risk finding must cite its authoritative source.
-
 ## Workflow
 
 Analysis proceeds through four phases: **SCAN** (codebase inventory) → **ASSESS** (risk scoring) → **PLAN** (migration roadmap) → **VALIDATE** (feasibility confirmation). Do not skip phases or reorder them.
@@ -85,6 +72,8 @@ Standard phase order: Phase 0 (prerequisites: characterization tests, NuGet upda
 When the Upgrade Assistant, a NuGet package, WCF, or `System.Web` blocks progress, follow the
 recovery procedures in `references/api-replacement-patterns.md` (Error Recovery).
 
+**Load on demand — `references/breaking-changes-catalog.md`:** Knowledge Base Lookups (run them at the start of SCAN and ASSESS; every risk finding cites its source).
+
 ## State Block
 
 ```
@@ -108,13 +97,7 @@ The Migration Inventory Report template (metrics, package compatibility, breakin
 category, hard blockers, risk score) is in `references/migration-decision-matrix.md`
 (Output Report Template).
 
-## Integration with Other Skills
-
-- **`ef-migration-manager`** — When the analysis identifies EF6 usage, coordinate for the EF6→EF Core migration. The database schema migration is often the riskiest part and should be planned and tested independently.
-- **`dotnet-vertical-slice`** — When the plan calls for decomposing a monolithic application, use this skill to structure new .NET 10 projects as vertical slices. Especially relevant in strangler fig migrations.
-- **`nuget-package-scaffold`** — When shared libraries need to be extracted or multi-targeted (`net48;net10.0`) during the transition period.
-
-## Reference Files
+**Reference files:**
 
 - [Breaking Changes: .NET Framework 4.x to .NET 10](references/breaking-changes-4x-to-10.md)
 - [Package Replacement Map](references/package-replacement-map.md)
@@ -122,3 +105,9 @@ category, hard blockers, risk score) is in `references/migration-decision-matrix
 - [ASP.NET to Blazor Patterns](references/aspnet-to-blazor-patterns.md)
 - [Migration Decision Matrix](references/migration-decision-matrix.md) — scoring + domain principles, discipline rules, anti-patterns, output template
 - [Breaking Changes Catalog](references/breaking-changes-catalog.md) — catalog + .NET Framework upgrade commands/tools/complexity
+
+## Integration with Other Skills
+
+- **`ef-migration-manager`** — When the analysis identifies EF6 usage, coordinate for the EF6→EF Core migration. The database schema migration is often the riskiest part and should be planned and tested independently.
+- **`dotnet-vertical-slice`** — When the plan calls for decomposing a monolithic application, use this skill to structure new .NET 10 projects as vertical slices. Especially relevant in strangler fig migrations.
+- **`nuget-package-scaffold`** — When shared libraries need to be extracted or multi-targeted (`net48;net10.0`) during the transition period.

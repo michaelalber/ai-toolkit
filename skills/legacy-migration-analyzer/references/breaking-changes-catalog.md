@@ -720,3 +720,16 @@ SDK-style `.csproj` target:
   </PropertyGroup>
 </Project>
 ```
+
+## Knowledge Base Lookups
+
+| Query | When to Call |
+|-------|--------------|
+| `search_knowledge(".NET Framework to .NET 8 10 migration breaking changes")` | At SCAN phase — load authoritative breaking changes catalog |
+| `search_knowledge(".NET Upgrade Assistant compatibility analyzer tool")` | During ASSESS phase — confirms tooling commands and output |
+| `search_knowledge("Entity Framework 6 EF Core migration differences lazy loading")` | When assessing data access layer |
+| `search_knowledge("ASP.NET MVC to ASP.NET Core migration web.config appsettings")` | When analyzing web projects |
+| `search_knowledge("NuGet package compatibility .NET Standard target framework")` | During dependency audit |
+| `search_knowledge("strangler fig pattern incremental migration legacy modernization")` | During PLAN phase |
+
+Search at the start of SCAN and ASSESS phases. Every risk finding must cite its authoritative source.

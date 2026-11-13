@@ -27,16 +27,6 @@ The full domain-principle set, AI discipline rules, anti-pattern catalog, and er
 procedures live in `references/discipline-and-recovery.md`. Signal-type definitions live in
 `references/signal-types.md`.
 
-## Knowledge Base Lookups
-
-| Query | When to Call |
-|-------|-------------|
-| `search_knowledge("requirements extraction meeting transcript interview")` | Start of FILTER — ground extraction heuristics in authoritative requirements engineering practices |
-| `search_knowledge("acceptance criteria given when then format")` | Before OUTPUT — confirm output format for extracted requirements |
-| `search_knowledge("stakeholder requirements elicitation ambiguity")` | When flagging uncertain blocks — calibrate uncertainty thresholds |
-
-Do not repeat the same query within a session. Cite the source path if a heuristic is drawn from KB content.
-
 ## Workflow
 
 The INTAKE–FILTER–REVIEW–OUTPUT loop. Fill-in templates for every phase are in
@@ -85,6 +75,8 @@ current one. Order: HIGH → MEDIUM → LOW.
 3. Assign provisional `DRAFT-NNN` IDs to all extracted requirements
 4. Produce the capture markdown (see Output Template below)
 5. If Confluence publish is requested: ask for target space and parent page before publishing
+
+**Load on demand — `references/discipline-and-recovery.md`:** Knowledge Base Lookups (run them before the first phase).
 
 ## State Block
 

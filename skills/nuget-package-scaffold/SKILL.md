@@ -104,6 +104,8 @@ dotnet nuget push ./artifacts/PackageName.1.0.0.nupkg \
   --source https://pkgs.dev.azure.com/org/project/_packaging/feed/nuget/v3/index.json
 ```
 
+AI discipline rules (never publish without tests, validate metadata, multi-target verification, API-surface review), the anti-pattern catalog, and step-by-step error recovery all live in `references/conventions.md`.
+
 ## State Block
 
 ```
@@ -129,18 +131,14 @@ blockers: [issues]
 
 Full templates: `references/cicd-templates.md`.
 
-## Discipline, Anti-Patterns & Recovery
+**Reference files:**
 
-AI discipline rules (never publish without tests, validate metadata, multi-target verification, API-surface review), the anti-pattern catalog, and step-by-step error recovery all live in `references/conventions.md`.
+- [.csproj Metadata Reference](references/csproj-metadata.md) -- Complete property reference for package metadata
+- [CI/CD Pipeline Templates](references/cicd-templates.md) -- GitHub Actions and Azure DevOps pipeline templates
+- [Conventions, Discipline & Recovery](references/conventions.md) -- Domain principles, KB lookups, discipline rules, anti-patterns, error recovery
 
 ## Integration with Other Skills
 
 - **`dotnet-vertical-slice`** -- use to structure the internal architecture, then use this skill to wrap it as a distributable NuGet package
 - **TDD** (`tdd-loop` skill, `tdd-agent` agent) -- develop the package internals using TDD workflows before progressing to the Pack step; the test project created by this scaffold integrates directly with TDD phase management
 - **`mcp-server-scaffold`** (in the `edge-ai-robotics-automation-toolkit` supplement) -- when building an MCP server that ships as a dotnet tool NuGet package, use this skill for the packaging and `mcp-server-scaffold` for the server implementation
-
-## Reference Files
-
-- [.csproj Metadata Reference](references/csproj-metadata.md) -- Complete property reference for package metadata
-- [CI/CD Pipeline Templates](references/cicd-templates.md) -- GitHub Actions and Azure DevOps pipeline templates
-- [Conventions, Discipline & Recovery](references/conventions.md) -- Domain principles, KB lookups, discipline rules, anti-patterns, error recovery

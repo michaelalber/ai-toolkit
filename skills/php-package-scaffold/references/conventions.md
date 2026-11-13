@@ -110,3 +110,15 @@ Symptom: matrix fails only on PHP 8.1.
 Cause: used a feature from a newer PHP (readonly classes, `json_validate`, etc.) below the floor.
 Fix: either raise `require.php` (a MAJOR bump if it drops support) or guard/replace the newer feature.
 ```
+
+## Knowledge Base Lookups
+
+Use `search_knowledge` (grounded-code-mcp, `collection="php"`).
+
+| Query | When to Call |
+|-------|--------------|
+| `search_knowledge("composer.json schema autoload require require-dev", collection="php")` | When writing `composer.json` |
+| `search_knowledge("Composer PSR-4 autoloading namespace mapping", collection="php")` | When laying out `src/` |
+| `search_knowledge("Composer library versioning semantic version constraints", collection="php")` | When choosing version constraints |
+| `search_knowledge("Composer publishing packagist", collection="php")` | When configuring the publish flow |
+| `search_code_examples("phpunit test class assertion", language="php")` | When scaffolding the test harness |

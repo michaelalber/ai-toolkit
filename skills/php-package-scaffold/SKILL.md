@@ -39,18 +39,6 @@ bump is the only place a breaking change is allowed. The public API surface is e
 The full domain principles, AI discipline rules, anti-pattern catalog, and error-recovery
 procedures live in `references/conventions.md`.
 
-## Knowledge Base Lookups
-
-Use `search_knowledge` (grounded-code-mcp, `collection="php"`).
-
-| Query | When to Call |
-|-------|--------------|
-| `search_knowledge("composer.json schema autoload require require-dev", collection="php")` | When writing `composer.json` |
-| `search_knowledge("Composer PSR-4 autoloading namespace mapping", collection="php")` | When laying out `src/` |
-| `search_knowledge("Composer library versioning semantic version constraints", collection="php")` | When choosing version constraints |
-| `search_knowledge("Composer publishing packagist", collection="php")` | When configuring the publish flow |
-| `search_code_examples("phpunit test class assertion", language="php")` | When scaffolding the test harness |
-
 ## Workflow
 
 ### Phase 1: PLAN
@@ -104,6 +92,8 @@ git push origin v1.0.0
 
 First-time only: submit the repo URL once at packagist.org and enable the GitHub service hook so future
 tags publish automatically.
+
+**Load on demand — `references/conventions.md`:** Knowledge Base Lookups (`collection="php"`; run them before the first phase).
 
 ## State Block
 

@@ -237,7 +237,7 @@ def test_the_evals_md_pi_grep_matches_nothing():
     assert documented_grep.findall(text) == []
 
 
-# --- open: what the lean-layout migration did not cover ----------------------------
+# --- the lean-layout migration holds -------------------------------------------------
 
 
 def test_lean_layout_migration_is_complete_on_line_count(findings):
@@ -245,14 +245,12 @@ def test_lean_layout_migration_is_complete_on_line_count(findings):
     assert findings.for_rule("SK020") == []
 
 
-def test_lean_layout_migration_is_incomplete_on_sections(findings):
-    """This part does not.
+def test_lean_layout_sections_stay_canonical(findings):
+    """Every full-template skill keeps only the 5 canonical sections; depth lives in references/.
 
-    The decision records the migration as complete; it was verified on line count only.
-    Over a hundred non-canonical `##` sections remain — AI Discipline Rules, Error
-    Recovery, Anti-Patterns, Domain Principles — the exact four the 2026-06-03 decision
-    said must move to references/. They are warnings, so they do not gate; this test
-    keeps the claim and the reality linked until someone closes the gap.
+    Completed 2026-11-13 (see the Persistent Decision). SK023 is only a warning, so without
+    this guard a re-added AI Discipline / Error Recovery / Anti-Patterns section would pass
+    lint silently.
     """
     leftovers = findings.for_rule("SK023")
-    assert leftovers, "SK023 is clean — update the 2026-06-26 decision and delete this test"
+    assert not leftovers, [f.skill for f in leftovers]

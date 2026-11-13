@@ -50,3 +50,13 @@ AI discipline rules, the anti-pattern catalog, and error-recovery procedures.
 **Output File Conflicts:** Alert the PM that a capture file already exists at the path. Offer options: overwrite, append, or save as `-v2`. Wait for PM instruction. Do not overwrite without explicit approval.
 
 **Transcript Is a Slack AI Summary:** Note to the PM that this is a pre-filtered artifact — Slack's model may have dropped relevant content. Recommend retrieving the original thread. If the PM proceeds, treat the summary as a single HIGH block for annotation rather than segmenting it.
+
+## Knowledge Base Lookups
+
+| Query | When to Call |
+|-------|-------------|
+| `search_knowledge("requirements extraction meeting transcript interview")` | Start of FILTER — ground extraction heuristics in authoritative requirements engineering practices |
+| `search_knowledge("acceptance criteria given when then format")` | Before OUTPUT — confirm output format for extracted requirements |
+| `search_knowledge("stakeholder requirements elicitation ambiguity")` | When flagging uncertain blocks — calibrate uncertainty thresholds |
+
+Do not repeat the same query within a session. Cite the source path if a heuristic is drawn from KB content.
