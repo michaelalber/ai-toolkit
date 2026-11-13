@@ -1,9 +1,12 @@
 # Ollama Modelfile — Gemma 4 agent (Google; dense, reasoning + tools)
 #
+# Optional: only needed if the server does not set OLLAMA_CONTEXT_LENGTH. The
+# shipped models.json uses the base tags; add a gemma4-31b-agent:latest entry if you build this.
+#
 # Usage:
 #   ollama pull gemma4:31b-nvfp4
 #   ollama create gemma4-31b-agent -f pi/global/Modelfile-gemma4-agent
-#   pi --model ollama-lan/gemma4-31b-agent:latest
+#   pi --model ollama/gemma4-31b-agent:latest
 #
 # For the faster 26B (adds image input): change FROM to gemma4:26b-nvfp4 and
 # create it as gemma4-26b-agent.

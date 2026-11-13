@@ -52,7 +52,8 @@ Then follow the five steps below.
 curl -fsSL https://ollama.com/install.sh | sh
 
 # Recommended before starting the server
-export OLLAMA_KV_CACHE_TYPE=q8_0   # roughly halves KV-cache memory vs FP16
+export OLLAMA_CONTEXT_LENGTH=131072   # see Step 2 — Pi cannot set the context per request
+export OLLAMA_KV_CACHE_TYPE=q8_0      # roughly halves KV-cache memory vs FP16
 export OLLAMA_KEEP_ALIVE=30m
 ollama serve &
 
@@ -70,6 +71,7 @@ To persist the environment via systemd (Linux):
 ```bash
 sudo systemctl edit ollama
 # Add under [Service]:
+# Environment="OLLAMA_CONTEXT_LENGTH=131072"
 # Environment="OLLAMA_KV_CACHE_TYPE=q8_0"
 # Environment="OLLAMA_KEEP_ALIVE=30m"
 sudo systemctl restart ollama
@@ -77,22 +79,22 @@ sudo systemctl restart ollama
 
 ---
 
-## Step 2 — Create Agent Models with the Right Context Window
+## Step 2 — Give the Models the Right Context Window
 
 **This step is critical.** Pi talks to Ollama through its OpenAI-compatible `/v1` endpoint, which
-**cannot set the context window per request**. Without a `num_ctx` override the model runs at
-Ollama's small default, which tool schemas plus the system prompt fill before you type anything —
-tool calls then fail or the agent "forgets" files it just read.
+**cannot set the context window per request**. Without an override the model runs at Ollama's
+small default, which tool schemas plus the system prompt fill before you type anything — tool
+calls then fail or the agent "forgets" files it just read.
 
-Two ways to fix it — use either:
+**Recommended — server-wide:** set `OLLAMA_CONTEXT_LENGTH=131072` on the server (Step 1). Every
+model, including the base tags the shipped `models.json` lists, then runs at 128K. Nothing to build.
+
+**Alternative — per model:** if you can't change the server, bake `num_ctx` (plus vendor sampling)
+into an `-agent` variant, and add its id to `models.json`:
 
 ```bash
-# A. Per model: bake num_ctx into an -agent variant (also sets vendor sampling)
 ollama create flint-agent      -f pi/global/Modelfile-flint-agent
 ollama create gemma4-31b-agent -f pi/global/Modelfile-gemma4-agent
-
-# B. Server-wide: one context length for every model
-#    Environment="OLLAMA_CONTEXT_LENGTH=131072"   (same systemd edit as Step 1)
 ```
 
 `contextWindow` in `models.json` tells Pi how much context to budget for; it does **not** change
@@ -108,14 +110,14 @@ which handles thinking blocks and tool-call parsing; a hand-written template bre
 The install script copies `models.json` to `~/.pi/agent/models.json` (fresh installs only). Pi
 reads it at startup and via `/model`.
 
-It defines two providers — `ollama-lan` (your local/LAN host) and `ollama-cloud` (escalation /
-fallback; prompts leave your network). **Set `baseUrl` on `ollama-lan` to your Ollama host and
-delete entries for models you have not created.** A minimal local entry:
+It defines two providers — `ollama` (your local/LAN host) and `ollama-cloud` (escalation /
+fallback; prompts leave your network). **Set `baseUrl` on `ollama` to your Ollama host and
+delete entries for models you have not pulled.** A minimal local entry:
 
 ```json
 {
   "providers": {
-    "ollama-lan": {
+    "ollama": {
       "baseUrl": "http://YOUR-OLLAMA-HOST:11434/v1",
       "api": "openai-completions",
       "apiKey": "ollama",
@@ -127,8 +129,8 @@ delete entries for models you have not created.** A minimal local entry:
       },
       "models": [
         {
-          "id": "flint-agent:latest",
-          "name": "Flint 40B-A2B Agent",
+          "id": "flint:40b-a2b-qat-int4",
+          "name": "Flint 40B-A2B qat-int4",
           "reasoning": true,
           "input": ["text"],
           "contextWindow": 131072,
@@ -140,8 +142,9 @@ delete entries for models you have not created.** A minimal local entry:
 }
 ```
 
-- The `id` must match `ollama list` exactly (the `-agent` name from Step 2, or the base tag if you
-  used the server-wide setting instead).
+- The `id` must match `ollama list` exactly (the base tag with the server-wide setting, or the
+  `-agent` name if you built one in Step 2).
+- Cloud entries without `contextWindow` / `maxTokens` fall back to Pi's defaults (128000 / 16384).
 - **`maxTokens` is the per-reply output cap. Keep it at 32768 for reasoning models.** At 8192,
   replies that think and then write a whole file get cut off (`stopReason: "length"`), and in a
   non-interactive run that ends the session early — it looks like the model gave up.
@@ -205,7 +208,7 @@ every file loads on session boot. Lean files = more context left for actual work
 
 **Pi runs one model that you choose — there is no automatic per-task model switching.**
 The model Pi launches with is `defaultModel` (+ `defaultProvider`) in
-`~/.pi/agent/settings.json` (shipped default: `flint-agent:latest`). Change it during a session
+`~/.pi/agent/settings.json` (shipped default: `ollama/flint:40b-a2b-qat-int4`). Change it during a session
 with `/model` (Ctrl+L), or cycle favorites with Ctrl+P. Start with a specific model from the shell
 with `pi --model <provider>/<id>`.
 
@@ -214,13 +217,13 @@ tasks in C#, Python and PHP; 30 runs each at temperature 0, November 2026):
 
 | Model | Type | Passed | Speed | Peak memory (32K ctx) | Best for |
 |-------|------|--------|-------|-----------------------|----------|
-| `flint-agent` (Flint 40B-A2B, Recursive) | MoE, ~2.5B active | 30/30 | ~95 tok/s | ~29 GB | **Default** — agentic coding |
-| `gemma4-31b-agent` (Google) | 31B dense | 30/30 | ~33 tok/s | ~30 GB | Reliable, slower fallback |
-| `gemma4-26b-agent` (Google) | 26B | 28/30 | ~65 tok/s | ~25 GB | Image input (screenshots, diagrams) |
+| `flint:40b-a2b-qat-int4` (Flint 40B-A2B, Recursive) | MoE, ~2.5B active | 30/30 | ~95 tok/s | ~29 GB | **Default** — agentic coding |
+| `gemma4:31b-nvfp4` (Google) | 31B dense | 30/30 | ~33 tok/s | ~30 GB | Reliable, slower fallback |
+| `gemma4:26b-nvfp4` (Google) | 26B | 28/30 | ~65 tok/s | ~25 GB | Image input (screenshots, diagrams) |
 
 These are a starting point, not a ranking — the field moves monthly. Benchmark candidates on your
-own tasks and hardware (`tools/ollama-evals/` helps), and swap the Modelfile `FROM` line and
-`models.json` entries for whatever wins.
+own tasks and hardware (`tools/ollama-evals/` helps), and swap the `models.json` entries (and any
+Modelfile `FROM` line) for whatever wins.
 
 **The agentic floor is 20B+.** Under 7B, tool-selection accuracy collapses; 7B itself picks tools
 acceptably but cannot sustain a multi-step loop.
@@ -254,7 +257,7 @@ The global file is loaded once at session start and does not reload when you swi
 
 Measured peak memory at a 32K context is in the model table above. A larger `num_ctx` adds
 KV cache on top: plan headroom, raise the macOS GPU memory limit on Apple Silicon if needed, and
-lower `num_ctx` in the Modelfile if a model at 131072 does not fit. `OLLAMA_KV_CACHE_TYPE=q8_0`
+lower `OLLAMA_CONTEXT_LENGTH` (or a Modelfile's `num_ctx`) if a model at 131072 does not fit. `OLLAMA_KV_CACHE_TYPE=q8_0`
 roughly halves KV-cache memory compared to FP16.
 
 ---
@@ -266,8 +269,8 @@ roughly halves KV-cache memory compared to FP16.
 | `AGENTS.md` | `~/.pi/agent/` or project root | Agent instructions (merged from all levels) |
 | `models.json` | `~/.pi/agent/` or `.pi/` | Provider and model definitions |
 | `settings.json` | `~/.pi/agent/` or `.pi/` | Default model, thinking level, compaction |
-| `Modelfile-flint-agent` | (use with `ollama create`) | Flint 40B-A2B: 128K context + vendor sampling |
-| `Modelfile-gemma4-agent` | (use with `ollama create`) | Gemma 4 31B/26B: 128K context + vendor sampling |
+| `Modelfile-flint-agent` | (optional, `ollama create`) | Flint 40B-A2B: 128K context + vendor sampling, when the server context can't be set |
+| `Modelfile-gemma4-agent` | (optional, `ollama create`) | Gemma 4 31B/26B: 128K context + vendor sampling, when the server context can't be set |
 
 ---
 
@@ -300,7 +303,7 @@ The `project-detect` extension in each package auto-loads the right skill from p
 
 | Symptom | Cause | Fix |
 |---------|-------|-----|
-| Tool calls fail; agent forgets files it just read | Model running at Ollama's small default context | Set `num_ctx` in a Modelfile (Step 2A) or `OLLAMA_CONTEXT_LENGTH` on the server (2B). `contextWindow` in models.json does not change it |
+| Tool calls fail; agent forgets files it just read | Model running at Ollama's small default context | Set `OLLAMA_CONTEXT_LENGTH` on the server, or `num_ctx` in a Modelfile (Step 2). `contextWindow` in models.json does not change it |
 | Run ends early mid-task; replies cut off mid-file | `maxTokens` too low (`stopReason: "length"`) | Raise `maxTokens` in models.json (32,768 shipped) |
 | `max_tokens` error | `maxTokens` above what the model or server accepts | Lower it for that model |
 | Very slow generation (~10 tok/s on a 30B-class MoE) | Wrong build for your hardware | Use the vendor's recommended build (e.g. `qat-int4` on Apple Silicon) |

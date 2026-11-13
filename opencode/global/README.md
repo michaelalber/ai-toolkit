@@ -48,10 +48,15 @@ in that project's `AGENTS.md` — see `project-templates/`.
   `wget`, inline interpreters (`python -c`, `bash -c`) and destructive commands are denied.
 - **Known limit** — permission patterns match by prefix and do not parse `|`, `;` or `&&`, so a
   command chained inside an allowed prefix is not caught. Read proposed commands before approving.
-- **MCP servers** — Microsoft Learn, grounded-code-mcp, Semgrep, Snyk and Atlassian, all commented
-  out; enable what you use.
+- **MCP servers** — Microsoft Learn, grounded-code-mcp (local or remote), Playwright, Semgrep, Snyk
+  and Atlassian, all commented out; enable what you use.
 - **Agent temperatures** override each model's recommended sampling; remove a line to use the
-  model's default.
+  model's default. `plan` and `explore` cap `steps` so a looping local model stops.
+- **Optional agent routing** (commented out) — pin a cloud model to an `escalate` primary agent so
+  reaching cloud is a deliberate Tab switch, and send the hidden `title` / `summary` / `compaction`
+  calls to a small, cheap model.
+- **Personal additions** — keep machine- or person-specific instructions out of the shared
+  `AGENTS.md`; add `"instructions": ["/path/to/your/personal.md"]` to your installed config.
 
 **Scripting `opencode run`:** OpenCode takes its project directory from the `PWD` environment
 variable, not the process's working directory. A script that changes directory without updating
@@ -61,11 +66,11 @@ caller's directory**. Set `PWD` to the target directory in the child environment
 ## Local models (Ollama)
 
 Use the Pi guide, [`pi/global/README.md`](../../pi/global/README.md) — the Ollama setup is the same
-for every harness: pick the vendor's build for your hardware, and set the context window in a
-Modelfile (`num_ctx`) or on the server (`OLLAMA_CONTEXT_LENGTH`). OpenCode reaches Ollama through
-the OpenAI-compatible `/v1` endpoint, which cannot set the context window per request.
+for every harness: pick the vendor's build for your hardware, and set the context window on the
+server (`OLLAMA_CONTEXT_LENGTH`, recommended) or in a Modelfile (`num_ctx`). OpenCode reaches Ollama
+through the OpenAI-compatible `/v1` endpoint, which cannot set the context window per request.
 
-An OpenCode provider entry for a local Ollama host:
+OpenCode provider entries for a local Ollama host and Ollama Cloud:
 
 ```jsonc
 "provider": {
@@ -74,16 +79,23 @@ An OpenCode provider entry for a local Ollama host:
     "name": "Local Ollama",
     "options": { "baseURL": "http://YOUR-OLLAMA-HOST:11434/v1", "apiKey": "ollama" },
     "models": {
-      "flint-agent:latest": {
-        "name": "Flint 40B-A2B Agent",
+      "flint:40b-a2b-qat-int4": {
+        "name": "Flint 40B-A2B qat-int4",
         "tool_call": true,
         "reasoning": true,
         "limit": { "context": 131072, "output": 32768 }
       }
     }
+  },
+  "ollama-cloud": {
+    "npm": "@ai-sdk/openai-compatible",
+    "name": "Ollama Cloud",
+    "options": { "baseURL": "https://ollama.com/v1", "apiKey": "{env:OLLAMA_API_KEY}" }
   }
 }
 ```
+
+Then pin models per agent, e.g. `"build": { "model": "ollama-local/flint:40b-a2b-qat-int4" }`.
 
 Set `limit.output` explicitly (32768 for reasoning models): too low and replies are cut off
 mid-file; unset and OpenCode may request more than a local server accepts. `limit.context` is

@@ -17,8 +17,8 @@ a lite variant under `pi/skills/`, and which to leave for cloud.
 | | |
 |---|---|
 | Hardware | Mac Mini, 48 GB unified memory |
-| Primary model | `flint-agent` (Flint 40B-A2B MoE, ~29 GB peak at 32K) — 30/30 on the hard bake-off tasks, ~95 tok/s |
-| Alternates | `gemma4-31b-agent` (dense, 30/30, slower), `gemma4-26b-agent` (image input) |
+| Primary model | `flint:40b-a2b-qat-int4` (Flint 40B-A2B MoE, ~29 GB peak at 32K) — 30/30 on the hard bake-off tasks, ~95 tok/s |
+| Alternates | `gemma4:31b-nvfp4` (dense, 30/30, slower), `gemma4:26b-nvfp4` (image input) |
 | Context window | 128K on the 24–32B tier; **32K** on smaller models — the binding limit |
 | Tool calling | Rated "excellent" at this tier — file scaffolding is reliable |
 

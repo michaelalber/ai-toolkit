@@ -5,6 +5,6 @@
     "reserveTokens": 4096,
     "keepRecentTokens": 24576
   },
-  "defaultProvider": "ollama-lan",
-  "defaultModel": "flint-agent:latest"
+  "defaultProvider": "ollama",
+  "defaultModel": "flint:40b-a2b-qat-int4"
 }
