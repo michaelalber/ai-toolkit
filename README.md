@@ -154,7 +154,7 @@ smaller local models. Its companion [`LOCAL-AI-CHEATSHEET.md`](LOCAL-AI-CHEATSHE
 
 ### Other agent tools (`~/.agents/skills/`)
 
-For any tool that discovers skills under the generic `~/.agents/skills/` directory, install the shared skills tree (both `team/` and `professional/`) with:
+For any tool that discovers skills under the generic `~/.agents/skills/` directory (Pi, Goose, Open WebUI), install the shared skills tree with the command below. `install-pi` already runs it. Re-running it also removes skills that were deleted from the repo; skills you added by hand are kept.
 
 ```bash
 bash scripts/install-agents.sh        # macOS / Linux

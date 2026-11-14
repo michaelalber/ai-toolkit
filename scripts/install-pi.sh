@@ -9,8 +9,8 @@
 # Global config (AGENTS.md, models.json, settings.json) is copy-if-absent: a new
 # install gets a working set, but an existing file is never overwritten. All
 # three are expected to be edited after install (host URLs, model names, local
-# rules), so a re-run must not discard those edits. Skills are still a full
-# resync — they are repo-owned and carry no user state.
+# rules), so a re-run must not discard those edits. Skills are a full resync
+# into ~/.agents/skills/ via install-agents.sh — repo-owned, no user state.
 # Target model tier is 20B+ — smaller models are below the agentic-coding floor.
 
 set -euo pipefail
@@ -36,19 +36,20 @@ for f in AGENTS.md models.json settings.json; do
   fi
 done
 
-# Skills — single source of truth in skills/, identical Agent Skills format
-# across Claude Code, OpenCode, and Pi. Pi discovers SKILL.md directories
-# recursively under ~/.pi/agent/skills/. See pi/SKILLS-local.md for which
-# skills are suited to local 32B inference vs. cloud.
+# Skills — installed once to ~/.agents/skills/ by install-agents.sh. Pi reads
+# both ~/.pi/agent/skills/ and ~/.agents/skills/, and a name found in both is a
+# collision warning, so the repo skills are NOT copied to ~/.pi/agent/skills/.
+# See pi/SKILLS-local.md for which skills suit local inference vs. cloud.
 #
-# Full resync of the repo-owned skills. cp -r overwrites and adds but never
-# deletes, so a skill removed from the repo would linger here and stay
-# invocable. Prune by what the repo currently ships -- skills/ is flat, so the
-# old `rm -rf team professional` no longer matches anything. Skills you added
-# by hand under skills/ are not in the repo listing, so they are left untouched.
-mkdir -p "${PI_DIR}/skills"
-for d in "${REPO_ROOT}/skills/"*/; do rm -rf "${PI_DIR}/skills/$(basename "$d")"; done
-cp -rv "${REPO_ROOT}/skills/"* "${PI_DIR}/skills/"
+# <AI-Generated START>
+# Migration: an older version of this script copied the repo skills into
+# ~/.pi/agent/skills/. Remove those copies; skills you added by hand stay.
+if [[ -d "${PI_DIR}/skills" ]]; then
+  for d in "${REPO_ROOT}/skills/"*/; do rm -rf "${PI_DIR:?}/skills/$(basename "$d")"; done
+  rmdir "${PI_DIR}/skills" 2>/dev/null || echo "  ${PI_DIR}/skills/ kept — it holds skills not from this repo"
+fi
+bash "${REPO_ROOT}/scripts/install-agents.sh"
+# <AI-Generated END>
 
 # Knowledge grounding — Pi reaches MCP only through a community extension, so
 # the 50 skills that ground
@@ -62,7 +63,7 @@ fi
 
 echo ""
 echo "Done."
-echo "  skills        → ${PI_DIR}/skills/"
+echo "  skills        → ${HOME}/.agents/skills/ (shared with Goose / Open WebUI)"
 echo "  grounded-code-mcp CLI → ${GROUNDED_STATUS}"
 echo ""
 if [[ -n "${GLOBAL_SKIPPED// /}" ]]; then

@@ -9,8 +9,8 @@
 # Global config (AGENTS.md, models.json, settings.json) is copy-if-absent: a new
 # install gets a working set, but an existing file is never overwritten. All
 # three are expected to be edited after install (host URLs, model names, local
-# rules), so a re-run must not discard those edits. Skills are still a full
-# resync — they are repo-owned and carry no user state.
+# rules), so a re-run must not discard those edits. Skills are a full resync
+# into ~/.agents/skills/ via install-agents.ps1 — repo-owned, no user state.
 # Target model tier is 20B+ — smaller models are below the agentic-coding floor.
 
 $ErrorActionPreference = 'Stop'
@@ -37,29 +37,29 @@ foreach ($f in 'AGENTS.md', 'models.json', 'settings.json') {
     }
 }
 
-# Skills — single source of truth in skills/, identical Agent Skills format
-# across Claude Code, OpenCode, and Pi. Pi discovers SKILL.md directories
-# recursively under ~/.pi/agent/skills/. See pi/SKILLS-local.md for which
-# skills are suited to local 32B inference vs. cloud.
+# Skills — installed once to ~/.agents/skills/ by install-agents.ps1. Pi reads
+# both ~/.pi/agent/skills/ and ~/.agents/skills/, and a name found in both is a
+# collision warning, so the repo skills are NOT copied to ~/.pi/agent/skills/.
+# See pi/SKILLS-local.md for which skills suit local inference vs. cloud.
 #
-# Full resync of the repo-owned skills. Copy-Item overwrites and adds but
-# never deletes, so a skill removed from the repo would linger here and stay
-# invocable. Prune by what the repo currently ships -- skills\ is flat, so this
-# walks each skills\<name> dir and removes its counterpart in $SkillsDir. Skills
-# you added by hand under skills\ are not in the repo listing, so they are left
-# untouched. Also clears any stale team\/professional\ subtrees left behind by
-# an older, pre-flatten install.
-$SkillsDir = Join-Path $PiDir 'skills'
-New-Item -ItemType Directory -Force -Path $SkillsDir | Out-Null
-foreach ($Sub in 'team', 'professional') {
-    $StaleDir = Join-Path $SkillsDir $Sub
-    if (Test-Path $StaleDir) { Remove-Item -Path $StaleDir -Recurse -Force }
+# <AI-Generated START>
+# Migration: an older version of this script copied the repo skills into
+# ~/.pi/agent/skills/. Remove those copies; skills you added by hand stay.
+$PiSkillsDir = Join-Path $PiDir 'skills'
+if (Test-Path $PiSkillsDir) {
+    foreach ($Name in @('team', 'professional') + (Get-ChildItem -Path (Join-Path $RepoRoot 'skills') -Directory | ForEach-Object Name)) {
+        $Dest = Join-Path $PiSkillsDir $Name
+        if (Test-Path $Dest) { Remove-Item -Path $Dest -Recurse -Force }
+    }
+    if (-not (Get-ChildItem -Path $PiSkillsDir -Force)) {
+        Remove-Item -Path $PiSkillsDir
+    } else {
+        Write-Host "  $PiSkillsDir kept — it holds skills not from this repo"
+    }
 }
-Get-ChildItem -Path (Join-Path $RepoRoot 'skills') -Directory | ForEach-Object {
-    $Dest = Join-Path $SkillsDir $_.Name
-    if (Test-Path $Dest) { Remove-Item -Path $Dest -Recurse -Force }
-}
-Copy-Item -Path (Join-Path $RepoRoot 'skills\*') -Destination $SkillsDir -Recurse -Force -Verbose
+& (Join-Path $PSScriptRoot 'install-agents.ps1')
+$SkillsDir = Join-Path $HOME '.agents\skills'
+# <AI-Generated END>
 
 # Knowledge grounding — Pi reaches MCP only through a community extension, so
 # the 50 skills that ground against the knowledge base call the grounded-code-mcp
@@ -74,7 +74,7 @@ if ($Grounded) {
 
 Write-Host ""
 Write-Host "Done."
-Write-Host "  skills        → $SkillsDir"
+Write-Host "  skills        → $SkillsDir (shared with Goose / Open WebUI)"
 Write-Host "  grounded-code-mcp CLI → $GroundedStatus"
 Write-Host ""
 if ($GlobalSkipped.Count -gt 0) {
