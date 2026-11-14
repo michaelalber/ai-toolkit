@@ -142,3 +142,33 @@ def test_chat_raises_on_http_error():
     client = OllamaClient("http://host:11434/v1", http_client=_mock_client(handler))
     with pytest.raises(httpx.HTTPStatusError):
         client.chat(model="x", messages=[{"role": "user", "content": "hi"}])
+
+
+def _auth_seen(monkeypatch, key: str | None) -> list[str | None]:
+    """Authorization header on a chat and a list_models call, with OLLAMA_API_KEY = key."""
+    if key is None:
+        monkeypatch.delenv("OLLAMA_API_KEY", raising=False)
+    else:
+        monkeypatch.setenv("OLLAMA_API_KEY", key)
+    seen: list[str | None] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        seen.append(request.headers.get("authorization"))
+        if request.url.path.endswith("/api/tags"):
+            return httpx.Response(200, json={"models": []})
+        return httpx.Response(200, json={"choices": [{"message": {"content": "ok"}}]})
+
+    client = OllamaClient("https://ollama.com/v1", http_client=_mock_client(handler))
+    client.chat(model="x", messages=[{"role": "user", "content": "hi"}])
+    client.list_models()
+    return seen
+
+
+def test_sends_bearer_token_from_ollama_api_key(monkeypatch):
+    """Ollama Cloud (https://ollama.com/v1) requires `Authorization: Bearer <key>`."""
+    assert _auth_seen(monkeypatch, "test-key") == ["Bearer test-key", "Bearer test-key"]
+
+
+def test_sends_no_authorization_without_ollama_api_key(monkeypatch):
+    """A local server needs no key; send nothing rather than an empty bearer."""
+    assert _auth_seen(monkeypatch, None) == [None, None]

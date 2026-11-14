@@ -9,6 +9,7 @@ An ``httpx.Client`` can be injected for testing.
 from __future__ import annotations
 
 import json
+import os
 from dataclasses import dataclass, field
 
 import httpx
@@ -33,6 +34,10 @@ class OllamaClient:
     ) -> None:
         self.base_url = base_url.rstrip("/")
         self._client = http_client or httpx.Client(timeout=timeout)
+        # Ollama Cloud needs a bearer token; a local server needs none. Read from the
+        # environment only — never from a committed config file.
+        key = os.environ.get("OLLAMA_API_KEY")
+        self._headers = {"Authorization": f"Bearer {key}"} if key else {}
 
     def _tags_url(self) -> str:
         # /api/tags is the native Ollama endpoint and is NOT under /v1.
@@ -62,7 +67,9 @@ class OllamaClient:
         if max_tokens is not None:
             payload["max_tokens"] = max_tokens
 
-        resp = self._client.post(f"{self.base_url}/chat/completions", json=payload)
+        resp = self._client.post(
+            f"{self.base_url}/chat/completions", json=payload, headers=self._headers
+        )
         resp.raise_for_status()
         data = resp.json()
         message = (data.get("choices") or [{}])[0].get("message") or {}
@@ -74,7 +81,7 @@ class OllamaClient:
         )
 
     def list_models(self) -> list[str]:
-        resp = self._client.get(self._tags_url())
+        resp = self._client.get(self._tags_url(), headers=self._headers)
         resp.raise_for_status()
         return [m["name"] for m in resp.json().get("models", [])]
 
