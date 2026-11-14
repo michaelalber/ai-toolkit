@@ -24,8 +24,24 @@
 # 2026-08-08); evaluate-tests was restructured onto the 5-section lean layout at the
 # owner's request (report templates relocated to references/output-templates.md).
 
-note: >
-  No open backlog. A plain `skill-evals lint` reports zero errors; add an entry here only
-  with a written reason a human decided the fix should wait.
+#
+# 2026-11-13: SK074 (least privilege, OWASP LLM06 / ASI02) added. Five read-and-report
+# agents hold Edit/Write in both runtimes. Removing those tools changes what the agents may
+# do — a security decision for the owner, not a lint fix. Some may need Write to save a
+# report file. Baselined until the owner decides per agent.
 
-accepted: []
+note: >
+  Open backlog: the five SK074 agents below, pending the owner's per-agent decision on
+  whether each needs Write (report file) and none needs Edit.
+
+accepted:
+  - {rule: SK074, skill: null, file: claude/agents/code-review-agent.md, message: "claude agent 'code-review-agent' is read-only but is granted Edit, Write"}
+  - {rule: SK074, skill: null, file: opencode/agents/code-review-agent.md, message: "opencode agent 'code-review-agent' is read-only but sets edit: true, write: true"}
+  - {rule: SK074, skill: null, file: claude/agents/context-builder-agent.md, message: "claude agent 'context-builder-agent' is read-only but is granted Edit, Write"}
+  - {rule: SK074, skill: null, file: opencode/agents/context-builder-agent.md, message: "opencode agent 'context-builder-agent' is read-only but sets edit: true, write: true"}
+  - {rule: SK074, skill: null, file: claude/agents/dependency-audit-agent.md, message: "claude agent 'dependency-audit-agent' is read-only but is granted Edit, Write"}
+  - {rule: SK074, skill: null, file: opencode/agents/dependency-audit-agent.md, message: "opencode agent 'dependency-audit-agent' is read-only but sets edit: true, write: true"}
+  - {rule: SK074, skill: null, file: claude/agents/research-agent.md, message: "claude agent 'research-agent' is read-only but is granted Edit, Write"}
+  - {rule: SK074, skill: null, file: opencode/agents/research-agent.md, message: "opencode agent 'research-agent' is read-only but sets edit: true, write: true"}
+  - {rule: SK074, skill: null, file: claude/agents/task-decomposition-agent.md, message: "claude agent 'task-decomposition-agent' is read-only but is granted Edit, Write"}
+  - {rule: SK074, skill: null, file: opencode/agents/task-decomposition-agent.md, message: "opencode agent 'task-decomposition-agent' is read-only but sets edit: true, write: true"}

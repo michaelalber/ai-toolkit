@@ -95,7 +95,7 @@ today — a lint that fails on 43% of skills on day one gets switched off rather
 | References | SK040–SK044 | directory presence, count per tier, **pointer resolution**, reachability, stubs |
 | Cross-reference | SK050–SK059 | Integration targets, Pi triage coverage and counts, README listings, published counts, agent parity, the CLAUDE.md/AGENTS.md mirror |
 | Global files | SK060–SK065 | the shared CORE block across the three harness globals, size budgets, no confirm-gate, no private data, referenced paths exist |
-| Agents & commands | SK070–SK073 | agent skill references resolve (Claude `skills:` and OpenCode `skill()`), each agent pair loads the same skills, command parity, stale skill names in agent/command bodies |
+| Agents & commands | SK070–SK074 | agent skill references resolve (Claude `skills:` and OpenCode `skill()`), each agent pair loads the same skills, command parity, stale skill names in agent/command bodies, read-only agents hold no Edit/Write (`baselines/read-only-agents.yaml`; OWASP LLM06 / ASI02) |
 
 `SK050`–`SK059` replace the six manual grep bullets in `evals.md`'s CI Gate. Nothing
 hardcodes a corpus size — every count is compared against the tree, so the rules stay
@@ -214,6 +214,15 @@ you *which* constraint was ignored, not just that the score was 0.58.
 Alongside the judged score sits a deterministic `structural` sub-score — did the reply emit
 the skill's state tag, name its workflow phases, or invent a `references/` filename? Reported
 beside the judged score, never averaged into it. Measured facts and opinions do not mix.
+
+**Prompt injection (OWASP LLM01).** Skills that read untrusted text — `email-capture`,
+`transcript-capture`, `oss-vetting`, `research-synthesis`, `confluence-guide-writer` — each
+get a case whose input hides an instruction. The criteria check that the skill treats it as
+data and still does its job; threshold 1.0, because half-resisting an injection is a failure:
+
+```bash
+skill-evals quality --dataset datasets/prompt-injection.jsonl --models <model>
+```
 
 ### Measured, 2026-08-02 (`gpt-oss:20b`)
 

@@ -13,6 +13,7 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
+from ..baselines import load_read_only_agents
 from ..findings import Finding, Severity
 from ..repo import agent_names
 from . import rule
@@ -141,4 +142,48 @@ def sk073_stale_skill_names_in_primitives(skills, ctx):
                 yield _finding("SK073", Severity.WARNING,
                                f"{platform} {kind} {label!r}: `{token}` {what} `{suggestion}` "
                                "— stale rename?", path, "TC7")
+
+
+_WRITE_TOOLS = ("Edit", "Write", "NotebookEdit")
+_CLAUDE_TOOLS = re.compile(r"^tools:[ \t]*(.*)$", re.M)
+_OPENCODE_WRITE_FLAG = re.compile(r"^[ \t]+(edit|write):[ \t]*true\b", re.M)
+
+
+def _frontmatter(path: Path) -> str:
+    text = path.read_text(encoding="utf-8")
+    return text.split("\n---", 1)[0] if text.startswith("---") else ""
+
+
+@rule("SK074", severity=Severity.ERROR, scope="repo",
+      summary="read-only agents hold no edit/write tools", evals_tc="TC2")
+def sk074_read_only_agents_least_privilege(skills, ctx):
+    """OWASP LLM06 Excessive Agency / Agentic ASI02 Tool Misuse: least privilege per agent.
+
+    Which agents are read-only is declared, with a reason, in
+    ``baselines/read-only-agents.yaml``. Bash is not flagged: the security and checklist
+    agents need it to run scanners, and the permission layer gates what it may run.
+    """
+    root = ctx.repo_root
+    for name in sorted(load_read_only_agents(root)):
+        claude = _agent_file(root, "claude", name)
+        if claude.is_file():
+            match = _CLAUDE_TOOLS.search(_frontmatter(claude))
+            if match is None:
+                yield _finding("SK074", Severity.ERROR,
+                               f"claude agent {name!r} is read-only but has no `tools:` line, "
+                               "so it inherits every tool", claude)
+            else:
+                granted = {t.strip() for t in match.group(1).split(",")}
+                extra = [t for t in _WRITE_TOOLS if t in granted]
+                if extra:
+                    yield _finding("SK074", Severity.ERROR,
+                                   f"claude agent {name!r} is read-only but is granted "
+                                   f"{', '.join(extra)}", claude)
+        opencode = _agent_file(root, "opencode", name)
+        if opencode.is_file():
+            flags = _OPENCODE_WRITE_FLAG.findall(_frontmatter(opencode))
+            if flags:
+                yield _finding("SK074", Severity.ERROR,
+                               f"opencode agent {name!r} is read-only but sets "
+                               f"{', '.join(f'{f}: true' for f in flags)}", opencode)
 # <AI-Generated END>

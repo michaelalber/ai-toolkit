@@ -1,0 +1,40 @@
+# Agents whose role never needs Edit or Write — checked by SK074.
+#
+# Source: OWASP LLM06:2025 Excessive Agency and OWASP Agentic Top 10 ASI02 Tool Misuse
+# ("Least Agency and Least Privilege for Tools ... read-only queries for databases, no
+# send/delete rights for email summarizers").
+#
+# SK074 flags a listed agent if its Claude `tools:` line grants Edit/Write/NotebookEdit (or
+# is missing, which inherits every tool) or its OpenCode copy sets `edit: true` / `write:
+# true`. Bash is allowed: scanners (bandit, cargo-audit, npm audit) need it, and the
+# permission layer in claude/global/settings.json gates what it may run.
+#
+# Add an agent here when its job is to read and report. Remove it only with a reason.
+
+agents:
+  # Read-only research subagents spawned by the QRSPI orchestrator.
+  research-code-analyzer: analyzes code structure; returns file:line references
+  research-file-locator: finds files; returns listings
+  research-pattern-finder: finds conventions; returns pattern notes
+  # Analysis agents: assess and report, never change the code they assess.
+  spec-extractor-agent: drafts a spec from a codebase into its reply
+  oss-vetting-agent: produces a vetting assessment
+  python-security-agent: security review report
+  python-federal-security-agent: federal security review report
+  rust-security-agent: security review report
+  react-security-agent: security review report
+  vue-security-agent: security review report
+  rust-arch-checklist-agent: architecture grade report
+  react-arch-checklist-agent: architecture grade report
+  vue-arch-checklist-agent: architecture grade report
+  python-modernization-agent: produces a plan; "does NOT perform the migration"
+  react-modernization-agent: produces a plan; "does NOT perform the migration"
+  vue-modernization-agent: produces a plan; "does NOT perform the migration"
+  rust-migration-agent: produces a plan; "does NOT perform the migration"
+  # Read-and-report roles that currently hold Edit/Write — baselined in known-defects.yaml
+  # pending the owner's decision (2026-11-13).
+  code-review-agent: reviews diffs and produces findings
+  research-agent: produces a research briefing
+  context-builder-agent: produces a session context briefing
+  dependency-audit-agent: scans dependencies and reports
+  task-decomposition-agent: decomposes and assigns only; "does NOT execute tasks itself"

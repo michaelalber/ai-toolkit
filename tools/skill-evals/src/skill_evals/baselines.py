@@ -16,6 +16,7 @@ BASELINE_DIR = Path(__file__).resolve().parent.parent.parent / "baselines"
 
 STATE_TAG_FAMILIES = "state-tag-families.yaml"
 KNOWN_NON_SKILLS = "known-non-skills.yaml"
+READ_ONLY_AGENTS = "read-only-agents.yaml"
 
 
 def _read(name: str, repo_root: Path | None = None) -> dict:
@@ -35,6 +36,11 @@ def load_state_tag_families(repo_root: Path | None = None) -> dict:
     """``{tag: {"skills": [...], "rationale": "..."}}`` — see SK032."""
     data = _read(STATE_TAG_FAMILIES, repo_root)
     return data.get("families", {}) or {}
+
+
+def load_read_only_agents(repo_root: Path | None = None) -> dict:
+    """``{agent: rationale}`` — agents whose role never needs Edit or Write (SK074)."""
+    return _read(READ_ONLY_AGENTS, repo_root).get("agents", {}) or {}
 
 
 def load_known_non_skills(repo_root: Path | None = None) -> set[str]:

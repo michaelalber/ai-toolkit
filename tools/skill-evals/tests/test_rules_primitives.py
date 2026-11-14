@@ -171,4 +171,71 @@ def test_sk073_accepts_skills_agents_and_slash_commands(tmp_path: Path):
     _agent(root, "tdd-agent", claude=["tdd-loop"], opencode=["tdd-loop"],
            body="Load `tdd-loop`; hand off to `tdd-agent`; the user may type `/tdd`.")
     assert _messages(skills, "SK073", root) == []
+
+
+# --- SK074: least privilege for read-only agents (OWASP LLM06 / Agentic ASI02) --------
+
+
+def _read_only(root: Path, *names: str):
+    base = root / "tools" / "skill-evals" / "baselines"
+    base.mkdir(parents=True, exist_ok=True)
+    listed = "".join(f"  {n}: reviewer\n" for n in names)
+    (base / "read-only-agents.yaml").write_text(f"agents:\n{listed}")
+
+
+def _tooled_agent(root: Path, name: str, *, claude_tools: str | None, opencode_flags: dict):
+    c_dir, o_dir = root / "claude" / "agents", root / "opencode" / "agents"
+    c_dir.mkdir(parents=True, exist_ok=True)
+    o_dir.mkdir(parents=True, exist_ok=True)
+    tools_line = f"tools: {claude_tools}\n" if claude_tools is not None else ""
+    (c_dir / f"{name}.md").write_text(f"---\nname: {name}\ndescription: d\n{tools_line}---\n")
+    flags = "".join(f"  {k}: {str(v).lower()}\n" for k, v in opencode_flags.items())
+    (o_dir / f"{name}.md").write_text(f"---\ndescription: d\nmode: subagent\ntools:\n{flags}---\n")
+
+
+READ_ONLY_FLAGS = {"read": True, "edit": False, "write": False, "bash": True}
+
+
+def test_sk074_flags_a_read_only_claude_agent_granted_edit_or_write(tmp_path: Path):
+    root, skills = _repo(tmp_path)
+    _read_only(root, "rev-agent")
+    _tooled_agent(root, "rev-agent", claude_tools="Read, Edit, Write, Bash",
+                  opencode_flags=READ_ONLY_FLAGS)
+    messages = _messages(skills, "SK074", root)
+    assert len(messages) == 1
+    assert "claude agent 'rev-agent'" in messages[0] and "Edit, Write" in messages[0]
+
+
+def test_sk074_flags_a_read_only_opencode_agent_with_edit_true(tmp_path: Path):
+    root, skills = _repo(tmp_path)
+    _read_only(root, "rev-agent")
+    _tooled_agent(root, "rev-agent", claude_tools="Read, Bash",
+                  opencode_flags={**READ_ONLY_FLAGS, "edit": True})
+    messages = _messages(skills, "SK074", root)
+    assert len(messages) == 1
+    assert "opencode agent 'rev-agent'" in messages[0] and "edit" in messages[0]
+
+
+def test_sk074_flags_a_read_only_claude_agent_with_no_tools_line(tmp_path: Path):
+    """No `tools:` line means the agent inherits every tool, including Edit and Write."""
+    root, skills = _repo(tmp_path)
+    _read_only(root, "rev-agent")
+    _tooled_agent(root, "rev-agent", claude_tools=None, opencode_flags=READ_ONLY_FLAGS)
+    assert "inherits every tool" in _messages(skills, "SK074", root)[0]
+
+
+def test_sk074_accepts_a_read_only_agent_with_read_tools(tmp_path: Path):
+    root, skills = _repo(tmp_path)
+    _read_only(root, "rev-agent")
+    _tooled_agent(root, "rev-agent", claude_tools="Read, Bash, Glob, Grep",
+                  opencode_flags=READ_ONLY_FLAGS)
+    assert _messages(skills, "SK074", root) == []
+
+
+def test_sk074_ignores_agents_not_declared_read_only(tmp_path: Path):
+    root, skills = _repo(tmp_path)
+    _read_only(root, "rev-agent")
+    _tooled_agent(root, "builder-agent", claude_tools="Read, Edit, Write, Bash",
+                  opencode_flags={**READ_ONLY_FLAGS, "edit": True, "write": True})
+    assert _messages(skills, "SK074", root) == []
 # <AI-Generated END>
