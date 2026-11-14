@@ -1,7 +1,7 @@
 ---
 name: context-builder-agent
 description: Autonomous context builder agent that assembles relevant project context for AI coding sessions. Summarizes recent git changes, identifies relevant ADRs, maps dependency patterns, and produces a context briefing that accelerates session start. Use when beginning a coding session, onboarding to a codebase, or preparing context for a focused task.
-tools: Read, Edit, Write, Bash, Grep, Glob
+tools: Read, Bash, Grep, Glob
 model: inherit
 skills:
   - architecture-journal

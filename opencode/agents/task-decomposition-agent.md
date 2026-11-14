@@ -3,8 +3,8 @@ description: Meta-orchestration agent that decomposes complex goals into sub-tas
 mode: subagent
 tools:
   read: true
-  edit: true
-  write: true
+  edit: false
+  write: false
   bash: true
   glob: true
   grep: true

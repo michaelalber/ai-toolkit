@@ -1,7 +1,7 @@
 ---
 name: task-decomposition-agent
 description: Meta-orchestration agent that decomposes complex goals into sub-tasks and assigns them to appropriate specialized agents. Constrained to decompose and assign ONLY -- does NOT execute tasks itself. Fully autonomous for decomposition and planning; requires approval before dispatching to sub-agents.
-tools: Read, Edit, Write, Bash, Grep, Glob
+tools: Read, Bash, Grep, Glob
 model: inherit
 skills:
   - task-decomposition

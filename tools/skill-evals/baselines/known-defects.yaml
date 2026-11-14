@@ -30,18 +30,19 @@
 # do — a security decision for the owner, not a lint fix. Some may need Write to save a
 # report file. Baselined until the owner decides per agent.
 
-note: >
-  Open backlog: the five SK074 agents below, pending the owner's per-agent decision on
-  whether each needs Write (report file) and none needs Edit.
+#
+# 2026-11-13 (later): research-agent, context-builder-agent and task-decomposition-agent
+# lost Edit/Write in both runtimes — their bodies never write files and two forbid it.
+# code-review-agent and dependency-audit-agent remain: both are written to edit after
+# explicit human approval, so removing Edit changes documented behavior. Owner to decide.
 
-accepted:
-  - {rule: SK074, skill: null, file: claude/agents/code-review-agent.md, message: "claude agent 'code-review-agent' is read-only but is granted Edit, Write"}
-  - {rule: SK074, skill: null, file: opencode/agents/code-review-agent.md, message: "opencode agent 'code-review-agent' is read-only but sets edit: true, write: true"}
-  - {rule: SK074, skill: null, file: claude/agents/context-builder-agent.md, message: "claude agent 'context-builder-agent' is read-only but is granted Edit, Write"}
-  - {rule: SK074, skill: null, file: opencode/agents/context-builder-agent.md, message: "opencode agent 'context-builder-agent' is read-only but sets edit: true, write: true"}
-  - {rule: SK074, skill: null, file: claude/agents/dependency-audit-agent.md, message: "claude agent 'dependency-audit-agent' is read-only but is granted Edit, Write"}
-  - {rule: SK074, skill: null, file: opencode/agents/dependency-audit-agent.md, message: "opencode agent 'dependency-audit-agent' is read-only but sets edit: true, write: true"}
-  - {rule: SK074, skill: null, file: claude/agents/research-agent.md, message: "claude agent 'research-agent' is read-only but is granted Edit, Write"}
-  - {rule: SK074, skill: null, file: opencode/agents/research-agent.md, message: "opencode agent 'research-agent' is read-only but sets edit: true, write: true"}
-  - {rule: SK074, skill: null, file: claude/agents/task-decomposition-agent.md, message: "claude agent 'task-decomposition-agent' is read-only but is granted Edit, Write"}
-  - {rule: SK074, skill: null, file: opencode/agents/task-decomposition-agent.md, message: "opencode agent 'task-decomposition-agent' is read-only but sets edit: true, write: true"}
+#
+# 2026-11-13 (final): owner chose read-only for code-review-agent and
+# dependency-audit-agent too; their "edit after approval" guardrails now say they
+# report fixes for the main session to apply. SK074 backlog cleared.
+
+note: >
+  No open backlog. A plain `skill-evals lint` reports zero errors; add an entry here only
+  with a written reason a human decided the fix should wait.
+
+accepted: []

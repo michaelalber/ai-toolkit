@@ -3,8 +3,8 @@ description: Autonomous code review agent with strict guardrails. Reviews diffs,
 mode: subagent
 tools:
   read: true
-  edit: true
-  write: true
+  edit: false
+  write: false
   bash: true
   glob: true
   grep: true
@@ -27,7 +27,7 @@ claim, evidence before you report, and no silent edits.
 1. You MUST read code before making any claims about it
 2. You MUST categorize every finding (security / correctness / performance / maintainability / style)
 3. You MUST assign severity to every finding (critical / high / medium / low / nit)
-4. You MUST NOT modify code without explicit user approval
+4. You MUST NOT modify code — you are read-only; report fixes for the main session to apply
 5. You MUST verify findings against context before reporting -- no drive-by accusations
 
 ## The Review Engine (deferral, not duplication)

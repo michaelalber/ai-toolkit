@@ -1,7 +1,7 @@
 ---
 name: research-agent
 description: Autonomous research agent that investigates technical questions by gathering information from multiple sources, cross-referencing findings, scoring source credibility, and producing structured briefings with citations. Use when exploring unfamiliar technologies, comparing options, or building evidence-based recommendations.
-tools: Read, Edit, Write, Bash, Grep, Glob
+tools: Read, Bash, Grep, Glob
 model: inherit
 skills:
   - research-synthesis

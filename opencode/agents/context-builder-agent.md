@@ -3,8 +3,8 @@ description: Autonomous context builder agent that assembles relevant project co
 mode: subagent
 tools:
   read: true
-  edit: true
-  write: true
+  edit: false
+  write: false
   bash: true
   glob: true
   grep: true

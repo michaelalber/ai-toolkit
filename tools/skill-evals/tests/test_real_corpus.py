@@ -81,9 +81,7 @@ def test_the_ungated_lint_still_reports_the_open_backlog(findings):
     SK021/SK030) was resolved 2026-11-12, so the open backlog is now empty: a plain lint
     and the gated lint must agree.
     """
-    # SK074 (2026-11-13) reopened the backlog: five read-and-report agents hold Edit/Write,
-    # baselined pending the owner's per-agent decision. Back to set() once they're resolved.
-    assert {f.rule_id for f in findings.errors} == {"SK074"}
+    assert {f.rule_id for f in findings.errors} == set()
 
 
 def test_no_rule_crashed_on_the_real_corpus(findings):

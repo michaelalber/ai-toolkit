@@ -3,8 +3,8 @@ description: Autonomous research agent that investigates technical questions by 
 mode: subagent
 tools:
   read: true
-  edit: true
-  write: true
+  edit: false
+  write: false
   bash: true
   glob: true
   grep: true
