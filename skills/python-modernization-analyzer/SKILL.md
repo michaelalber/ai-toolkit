@@ -4,7 +4,8 @@ audience: team
 description: >
   Analyzes legacy Python codebases and produces actionable modernization plans. Primary
   migration paths include Python 2 to 3.12+, sync to async, Flask/Django monolith to FastAPI,
-  requirements.txt to pyproject.toml, and bare classes to Pydantic/dataclasses. Does NOT perform
+  requirements.txt to pyproject.toml, and bare classes to Pydantic/dataclasses. Use when
+  assessing or planning a Python upgrade or framework migration before doing it. Does NOT perform
   the migration — assesses, quantifies risk, and plans.
 ---
 

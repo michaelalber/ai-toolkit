@@ -6,7 +6,8 @@ description: >
   migration paths include Options API to Composition API, Vue 2 to Vue 3, Vue CLI to Vite,
   JavaScript to TypeScript, Vue Test Utils/Karma/Mocha to Vitest + Vue Testing Library,
   legacy Vuex to Pinia, and removed-in-Vue-3 pattern cleanup (filters, event bus,
-  `$listeners`). Does NOT perform the migration — assesses, quantifies risk, and plans.
+  `$listeners`). Use when assessing or planning a Vue upgrade or legacy-pattern migration
+  before doing it. Does NOT perform the migration — assesses, quantifies risk, and plans.
 ---
 
 # Vue Modernization Analyzer
