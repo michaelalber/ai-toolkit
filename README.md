@@ -3,528 +3,233 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![Skills](https://img.shields.io/badge/skills-78-blue)](#skills)
 [![Agents](https://img.shields.io/badge/agents-51-blue)](#agents)
-[![Tools](https://img.shields.io/badge/tools-pdf2md%20%7C%20web2md%20%7C%20code2md%20%7C%20ollama--evals%20%7C%20skill--evals-blue)](#repository-structure)
-[![Platforms](https://img.shields.io/badge/platforms-Claude%20Code%20%7C%20OpenCode%20%7C%20Pi-informational)](#platforms)
+[![Commands](https://img.shields.io/badge/commands-22-blue)](#commands)
+[![Platforms](https://img.shields.io/badge/platforms-Claude%20Code%20%7C%20OpenCode%20%7C%20Pi-informational)](#install)
 
-**78 skills, 51 agents, and 22 slash commands for AI-assisted software development — spanning TDD, .NET, Python, PHP, Rust, React, Vue, and security.**
+**78 skills, 51 agents, and 22 slash commands for AI-assisted software development** — TDD,
+structured feature workflows, and architecture/security/scaffolding families for .NET, Python, PHP,
+Rust, React, and Vue. Works with [Claude Code](https://claude.ai/code), [OpenCode](https://opencode.ai/),
+and [Pi](https://pi.dev).
 
-> **Edge AI, robotics, ML, and industrial automation?** Those skills now live in the companion
-> [edge-ai-robotics-automation-toolkit](../edge-ai-robotics-automation-toolkit) — install it alongside this one.
-
-Works with [Claude Code](https://claude.ai/code), [OpenCode](https://opencode.ai/), and [Pi](https://pi.dev) (Ollama local models).
-
----
-
-## Why I built this
-
-I work across a wide range of domains — enterprise .NET, Python, Rust, edge AI, robotics, and federal security compliance. As AI coding assistants became central to my workflow, I found myself writing the same guidance over and over: how to run a proper TDD cycle, how to review code for OWASP compliance, how to scaffold a vertical slice feature correctly.
-
-This toolkit encodes that expertise as reusable primitives. Each skill is an opinionated, structured prompt that reflects how I actually work — not a generic template. The result is an AI coding assistant that reasons the way I'd want a senior engineer to reason: with discipline, with domain knowledge, and with the right tradeoffs in mind.
-
-**Design decisions:**
-- **Three primitives, one toolkit** — skills (model-invoked expertise), agents (autonomous executors), commands (user-triggered with live shell context). Each has a distinct role.
-- **Platform parity, bounded by capability** — every skill and agent exists in both Claude Code and OpenCode format with identical behavior. Pi shares the same `skills/` tree and gets its own global config; it has no agents, because Pi has no subagents and the local tier can't sustain autonomous fan-out.
-- **Two-tier skill design** — full-template skills (5-section lean layout: philosophy, workflow, state, output-template pointers, integrations; depth such as principle tables, anti-patterns, and error recovery loads on demand from `references/`) for domain-expert tools; minimal-tier skills (≤ 100 lines, focused instructions) for mode switches and conversational tools.
-- **Global + project layered config** — global standards apply everywhere; project-level files add specificity without duplicating the global.
+> Edge AI, ML, robotics, and industrial automation skills live in the companion
+> [edge-ai-robotics-automation-toolkit](../edge-ai-robotics-automation-toolkit).
 
 ---
 
-## At a glance
+## Why
 
-| | Count |
-|--|-------|
-| Skills (team) | 71 |
-| Skills (professional) | 7 |
-| Agents (Claude Code) | 51 |
-| Agents (OpenCode) | 51 |
-| Slash commands (per platform) | 22 |
-| Platforms | Claude Code, OpenCode, Pi |
-
----
+I kept writing the same guidance for AI coding assistants: how to run a real TDD cycle, how to review
+for OWASP, how to scaffold a vertical slice. This toolkit encodes that guidance as reusable,
+opinionated prompts so the assistant reasons the way I'd want a senior engineer to — with discipline,
+domain knowledge, and explicit tradeoffs.
 
 ## How it works
 
-Three distinct primitives compose the toolkit:
-
-**Skills** — Structured, opinionated prompt files that encode domain expertise. Model-invoked autonomously. Live in `skills/<name>/SKILL.md` (flat — Claude Code only discovers skills one level deep); an `audience: team|professional` frontmatter field tags each one. Full-template skills follow a 5-section lean layout with depth in `references/`.
-
-**Agents** — Autonomous executors that combine skills with tool access and guardrails. Operate independently within defined boundaries. Live in `claude/agents/` and `opencode/agents/`.
-
-**Commands** — User-triggered slash commands (type `/command-name`) that inject live shell state before the model acts. Live in `claude/commands/` and `opencode/commands/`.
+| Primitive                                                   | Invoked by               | Lives in                                                    |
+| ----------------------------------------------------------- | ------------------------ | ----------------------------------------------------------- |
+| **Skills** — domain expertise as structured prompts         | the model, automatically | `skills/<name>/SKILL.md` (+ `references/` loaded on demand) |
+| **Agents** — autonomous executors with tools and guardrails | you or another agent     | `claude/agents/`, `opencode/agents/` (kept in parity)       |
+| **Commands** — `/name` that injects live shell state first  | you                      | `claude/commands/`, `opencode/commands/`                    |
 
 ```
-User types /tdd
-    → command injects live dotnet test output
-    → model reads failing tests
-    → tdd skill drives RED-GREEN-REFACTOR
-    → hooks run dotnet build after every file write
+/tdd → injects live test output → tdd-loop skill drives RED-GREEN-REFACTOR → hooks build after each write
 ```
+
+Global config (`claude/global/`, `opencode/global/`, `pi/global/`) sets standards for every project;
+[`project-templates/`](project-templates/README.md) adds per-project context on top.
 
 ---
 
-## Platforms
+## Install
 
-Harness and model provider are **orthogonal** — all three harnesses can run local or cloud models.
-What actually differs is the primitives each one supports natively.
-
-| Platform | Typical provider | Also runs | Best for |
-|----------|------------------|-----------|----------|
-| **[Claude Code](https://claude.ai/code)** | Anthropic subscription | local via base-URL override (rarely worth it — the harness is Claude-tuned) | Best reasoning, MCP ecosystem, Claude-native workflows |
-| **[OpenCode](https://opencode.ai/)** | Any cloud provider (Anthropic, OpenAI, Google, Mistral…) | local Ollama, configurable | Provider flexibility, multi-model teams |
-| **[Pi](https://pi.dev)** | Local Ollama (20B+ tier) | any OpenAI-compatible cloud endpoint | Zero API cost, privacy-first, air-gapped, minimal prompt overhead |
-
-| Primitive | Claude Code | OpenCode | Pi |
-|---|---|---|---|
-| **Skills** | ✅ | ✅ | ✅ same `skills/` tree; `/skill:<name>` to invoke |
-| **Commands** | ✅ `claude/commands/` | ✅ `opencode/commands/` | ✅ as prompt templates — arguments only, no `!` shell injection |
-| **Agents** | ✅ 51 | ✅ 51 | ❌ Pi has no subagents by design |
-| **Hooks** | shell, via `settings.json` | ✅ | ✅ TypeScript extension events — `tool_call` can block, `tool_result` can rewrite |
-| **MCP** | native | native | via extension; `grounded-code-mcp` also ships a CLI Pi calls directly |
-
-**Pi is first-class for skills and commands, and deliberately not for agents.** That boundary is
-Pi's capability surface plus the local model tier — not a gap waiting to be filled. Multi-phase
-work still runs on Pi: the QRSPI and QRASPI phases are artifact-gated, so each phase is a single
-invocation that reads one markdown artifact and writes the next. You drive phase-to-phase where
-the agents otherwise would, and `/tree` + `/fork` let you branch at a gate and compare.
-
-### Claude Code
+|          | Claude Code | OpenCode | Pi                                                                                        |
+| -------- | ----------- | -------- | ----------------------------------------------------------------------------------------- |
+| Skills   | ✅          | ✅       | ✅ (`/skill:<name>`)                                                                      |
+| Commands | ✅          | ✅       | ✅ as prompt templates (no `!` shell injection)                                           |
+| Agents   | ✅          | ✅       | ❌ no subagents — QRSPI/QRASPI phases are artifact-gated, so you drive them one at a time |
 
 ```bash
-# Skills (flat tree — Claude Code only discovers skills/<name>/SKILL.md one level deep)
-mkdir -p ~/.claude/skills
-ln -sf /path/to/ai-toolkit/skills/*/ ~/.claude/skills/
-
-# Agents (flat tree — same one-level rule as skills)
-mkdir -p ~/.claude/agents
-ln -sf /path/to/ai-toolkit/claude/agents/*.md ~/.claude/agents/
+bash scripts/install-claude.sh     # → ~/.claude (respects CLAUDE_CONFIG_DIR)
+bash scripts/install-opencode.sh   # → ~/.config/opencode
+bash scripts/install-pi.sh         # → ~/.pi/agent
+bash scripts/install-agents.sh     # → ~/.agents/skills (Goose, Open WebUI, other tools)
 ```
 
-Neither skills nor agents split by audience on disk — `audience:` frontmatter is metadata only,
-used to group the README's Team/Professional sections. `scripts/install-claude.sh` (recommended
-over manual symlinking) copies both trees in full.
+PowerShell equivalents (`*.ps1`) sit next to each script. Re-running a script removes skills,
+agents, and commands deleted from the repo; skills you added by hand are kept.
 
-See [`claude/global/README.md`](claude/global/README.md) for global config setup (hooks, permissions, commands).
+The scripts install skills, agents, and commands only. **Global config is a manual step** — see each
+platform's guide:
 
-> **Upgrade notice (2026-07-17) — if you installed `claude/global/` before this date, its hooks and
-> secret deny-rules were not doing anything.** Two bugs made them silently inert, and neither
-> produced an error, so the config reviewed as protective while enforcing nothing:
->
-> - **No hook ever ran.** The `matcher` values used permission-rule syntax (`Bash(*)`,
->   `Write(*.cs)`). Matchers test the tool *name*, so those matched nothing. The hook bodies also
->   read `$CLAUDE_TOOL_INPUT_*` environment variables, which do not exist — had the matchers been
->   right, the guards would have failed *open* and allowed what they were meant to block.
-> - **Secret deny-rules only covered the working directory.** `Read(**/.env)` matches at or under
->   cwd, not filesystem-wide. Working in any project directory left `~/.ssh`, `~/.aws`, `~/.npmrc`
->   and similar readable. The `//` prefix (`Read(//**/.env)`) is what makes a rule absolute.
->
-> **To upgrade:** re-merge `settings.json` (permissions now live in it; `settings.local.json` is
-> gone — a user-level copy was never loaded), and install the new `hooks/`
-> directory, per [`claude/global/README.md`](claude/global/README.md). Then run the verification
-> checks in that file — a misconfigured hook is silent, so confirm rather than assume. Fixed in
-> `957222c`.
+- [`claude/global/README.md`](claude/global/README.md) — `CLAUDE.md`, hooks, permissions. Run its
+  verification checks: a misconfigured hook fails silently.
+- [`opencode/global/README.md`](opencode/global/README.md) — providers, Ollama tuning, permissions.
+- [`pi/global/README.md`](pi/global/README.md) — Ollama setup, context length, model choice.
 
-### OpenCode
+Other tools (Cursor, Windsurf, Copilot) read the root [`AGENTS.md`](AGENTS.md).
 
-```bash
-mkdir -p ~/.config/opencode/skills
-ln -sf /path/to/ai-toolkit/skills/*/ ~/.config/opencode/skills/
-
-mkdir -p ~/.config/opencode/agents
-ln -sf /path/to/ai-toolkit/opencode/agents/*.md ~/.config/opencode/agents/
-
-# Commands
-mkdir -p ~/.config/opencode/commands
-ln -sf /path/to/ai-toolkit/opencode/commands/*.md ~/.config/opencode/commands/
-```
-
-See [`opencode/global/README.md`](opencode/global/README.md) for provider config, Ollama tuning, and permissions.
-
-### Pi (Ollama / Local Models)
-```bash
-bash scripts/install-pi.sh         # macOS / Linux
-```
-```powershell
-pwsh scripts/install-pi.ps1        # Windows
-```
-See [`pi/global/README.md`](pi/global/README.md) for the full Ollama setup guide — Modelfile config, compaction tuning, model selection by VRAM.
-
-**Working local-first?** [`LOCAL-FIRST-WORKFLOW.md`](LOCAL-FIRST-WORKFLOW.md) is the methodology for running ~80% of coding work on a self-hosted ~30B model and escalating the hard 20% to a frontier cloud model — the routing rule, escalation triggers, the cost-of-being-wrong routing matrix, the refusal list
-(work that no model tier should touch), portability discipline, and how to adjust prompting for
-smaller local models. Its companion [`LOCAL-AI-CHEATSHEET.md`](LOCAL-AI-CHEATSHEET.md) is the tool picker — which local-AI tool (Pi, OpenCode, Open WebUI, Goose, …) to reach for per task.
-
-### Other agent tools (`~/.agents/skills/`)
-
-For any tool that discovers skills under the generic `~/.agents/skills/` directory (Pi, Goose, Open WebUI), install the shared skills tree with the command below. `install-pi` already runs it. Re-running it also removes skills that were deleted from the repo; skills you added by hand are kept.
-
-```bash
-bash scripts/install-agents.sh        # macOS / Linux
-```
-```powershell
-pwsh scripts/install-agents.ps1       # Windows
-```
-
-**Other AI tools** (Cursor, Windsurf, Copilot, etc.): [`AGENTS.md`](AGENTS.md) follows the universal agent instructions standard and is auto-discovered from the project root.
+Running mostly on local models? See [`docs/LOCAL-FIRST-WORKFLOW.md`](docs/LOCAL-FIRST-WORKFLOW.md)
+(when to escalate to a cloud model) and [`docs/LOCAL-AI-CHEATSHEET.md`](docs/LOCAL-AI-CHEATSHEET.md)
+(which local tool for which task).
 
 ---
 
 ## Skills
 
-This toolkit is organized in two groups, tagged by each skill's `audience:` frontmatter field (the `skills/` tree itself is flat — Claude Code only discovers `skills/<name>/SKILL.md` one level deep). `audience: team` skills and agents are ones I use in production work and consider shareable — patterns extracted from years of enterprise .NET, legacy modernization, and AI-augmented development on regulated-industry codebases. `audience: professional` is my professional-development track: deliberate-practice loops that sharpen engineering judgment (architecture critique, review communication, pattern selection, debt and refactoring prioritization) and learning scaffolds for the professional domains I'm actively growing into. (Edge AI, ML, robotics, and automation skills — including model optimization — now live in the companion [edge-ai-robotics-automation-toolkit](../edge-ai-robotics-automation-toolkit).) These are career-skill investments, not side projects — the split keeps "what I ship for the team" distinct from "the competencies I'm deliberately building."
+One line per skill; the `SKILL.md` frontmatter says exactly when each one triggers.
 
-> **A note on vendored skills:** this toolkit previously vendored several workflow-primitive skills from Matt Pocock's [skills repo](https://github.com/mattpocock/skills) (`grilling`, `grill-me`, `grill-with-docs`, `codebase-design`, `improve-codebase-architecture`) plus a local `domain-model` skill. They were removed 2026-08-08 — his repo moves faster than this one could keep re-syncing, so it's now the better place to get them directly rather than carry a copy here that drifts. The `/grill-me` and `/grill-with-docs` commands that invoked them were removed too, along with `/para-file` and `/para-review` (their target skills were dropped in the same cleanup).
+### Workflows
 
-## Team Skills (`audience: team`)
+| Skill                 | Purpose                                         |
+| --------------------- | ----------------------------------------------- |
+| `tdd-loop`            | The canonical RED-GREEN-REFACTOR loop           |
+| `evaluate-tests`      | Audit test quality and TDD compliance           |
+| `qrspi-questions`     | QRSPI (existing codebase) 1/5: surface unknowns |
+| `qrspi-research`      | 2/5: ticket-hidden codebase research            |
+| `qrspi-spec`          | 3/5: design brain-dump → structure outline      |
+| `qrspi-plan`          | 4/5: vertically sliced plan                     |
+| `qrspi-implement`     | 5/5: execute the plan slice by slice            |
+| `qraspi-questions`    | QRASPI (new system) 1/7: surface unknowns       |
+| `qraspi-research`     | 2/7: map the solution landscape                 |
+| `qraspi-architecture` | 3/7: MADR ADRs + Mermaid C4                     |
+| `qraspi-skeleton`     | 4/7: walking skeleton, CI green                 |
+| `qraspi-plan`         | 5/7: plan the next slice                        |
+| `qraspi-implement`    | 6/7: grow the skeleton slice by slice           |
+| `qraspi-graduate`     | 7/7: hand off to QRSPI                          |
+| `fitness-functions`   | Architecture rules as CI gates                  |
 
-### TDD Suite
+### Language families
 
-| Skill | Description |
-|-------|-------------|
-| `tdd-loop` | Canonical RED-GREEN-REFACTOR inner loop — the one TDD skill. Enforces behavioral, structure-insensitive tests, prohibits horizontal slicing, and carries GREEN strategies + per-language idioms and the REFACTOR smell catalog in its `references/`. |
-| `evaluate-tests` | Audits existing tests in two modes — test-file quality (prioritized rewrite list) and TDD compliance (commit-history scorecard + anti-patterns). |
+Each language has the same set: architecture checklist, security review, feature slice,
+scaffolders, migrations, and a modernization analyzer.
 
-### Enterprise .NET Suite
+| Skill                              | Purpose                                           |
+| ---------------------------------- | ------------------------------------------------- |
+| `dotnet-architecture-checklist`    | Grade a .NET solution (layered or vertical slice) |
+| `dotnet-security-review`           | OWASP review, Telerik-aware                       |
+| `dotnet-vertical-slice`            | CQRS + FreeMediator feature slice                 |
+| `dotnet-controller-api-scaffolder` | Controller API that matches existing conventions  |
+| `minimal-api-scaffolder`           | .NET Minimal API endpoints                        |
+| `ef-migration-manager`             | EF Core migrations with safety checks             |
+| `nuget-package-scaffold`           | NuGet package + CI                                |
+| `legacy-migration-analyzer`        | .NET Framework → .NET 10 plan                     |
+| `python-architecture-checklist`    | Grade a Python codebase                           |
+| `python-security-review`           | OWASP review with bandit, pip-audit               |
+| `python-feature-slice`             | FastAPI feature slice                             |
+| `fastapi-scaffolder`               | FastAPI endpoints                                 |
+| `alembic-migration-manager`        | Alembic migrations                                |
+| `pypi-package-scaffold`            | PyPI package + CI                                 |
+| `python-modernization-analyzer`    | Python upgrade / migration plan                   |
+| `php-architecture-checklist`       | Grade a PHP/Laravel codebase                      |
+| `php-security-review`              | OWASP review for PHP/Laravel                      |
+| `php-feature-slice`                | Laravel feature slice                             |
+| `php-api-scaffolder`               | Laravel API endpoints                             |
+| `php-migration-manager`            | Laravel migrations                                |
+| `php-package-scaffold`             | Composer package + CI                             |
+| `rust-architecture-checklist`      | Grade a Rust codebase                             |
+| `rust-security-review`             | OWASP review + `unsafe` audit                     |
+| `rust-feature-slice`               | Axum feature slice                                |
+| `axum-scaffolder`                  | Axum endpoints                                    |
+| `sqlx-migration-manager`           | SQLx migrations                                   |
+| `cargo-package-scaffold`           | Crate + CI + crates.io publish                    |
+| `rust-migration-analyzer`          | C/C++ → Rust or edition upgrade plan              |
+| `react-architecture-checklist`     | Grade a React codebase                            |
+| `react-security-review`            | OWASP review for React front-ends                 |
+| `react-feature-slice`              | React feature slice                               |
+| `react-component-scaffolder`       | Component + test + story                          |
+| `react-app-scaffolder`             | Vite + React + TS app skeleton                    |
+| `react-modernization-analyzer`     | React upgrade / migration plan                    |
+| `vue-architecture-checklist`       | Grade a Vue codebase                              |
+| `vue-security-review`              | OWASP review for Vue front-ends                   |
+| `vue-feature-slice`                | Vue feature slice                                 |
+| `vue-component-scaffolder`         | SFC + test + story                                |
+| `vue-app-scaffolder`               | Vite + Vue + TS app skeleton                      |
+| `vue-modernization-analyzer`       | Vue upgrade / migration plan                      |
 
-| Skill | Description |
-|-------|-------------|
-| `dotnet-vertical-slice` | Scaffold vertical slice architecture with CQRS + FreeMediator + optional Telerik Blazor UI generation. |
-| `ef-migration-manager` | EF Core migration lifecycle with safety checks, data loss detection, SQL review, and rollback verification. |
-| `nuget-package-scaffold` | NuGet package creation with multi-targeting, CI/CD pipelines, and semantic versioning. |
-| `legacy-migration-analyzer` | .NET Framework to .NET 10 migration analysis with risk scoring, upgrade strategies, and incremental patterns. |
-| `dotnet-architecture-checklist` | .NET architecture review — detects style and grades both layered/N-tier controller APIs and vertical-slice CQRS/Blazor. |
-| `dotnet-security-review` | OWASP-based .NET security review with Telerik specialization and manager-friendly reporting. |
-| `security-review-federal` | Shared, language-agnostic federal/gov overlay for any base security review — NIST 800-53, FIPS 140-2/3, CUI, POA&M, EO 14028, DOE 205.1B. |
-| `oss-vetting` | OSS library vetting and SBOM analysis for federal contractor environments (national labs / DOE / CUI) — security posture, supply chain risk, license compliance, and CUI suitability against four governing frameworks; Confluence-ready report. |
-| `minimal-api-scaffolder` | .NET 10 minimal API scaffolding with OpenAPI documentation, versioning, and security patterns. |
-| `dotnet-controller-api-scaffolder` | Controller-based ASP.NET Core Web API scaffolding that detects and conforms to an existing codebase's conventions (base controller, validation, service/mediator boundary, response shape). |
-| _(planned)_ `shared-kernel-generator` | .NET shared kernel scaffolding — not yet implemented. |
+### Security, judgment, and support
 
-### Python Suite
-
-| Skill | Description |
-|-------|-------------|
-| `python-architecture-checklist` | Python architecture checklist executor — clean-arch boundaries, type safety, complexity, config/secrets; graded report with ruff/mypy/radon evidence. |
-| `python-security-review` | OWASP-based Python security review (FastAPI, Django, Flask) with bandit and pip-audit. |
-| `python-feature-slice` | Feature-based Python architecture using FastAPI routers, Pydantic v2, and a service layer. |
-| `alembic-migration-manager` | Full Alembic migration lifecycle with safety checks and rollback planning. |
-| `python-modernization-analyzer` | Legacy Python modernization — Python 2→3, sync→async, Flask→FastAPI paths. |
-| `fastapi-scaffolder` | FastAPI endpoints with OpenAPI docs, Pydantic v2, JWT auth, rate limiting, and health checks. |
-| `pypi-package-scaffold` | Python package scaffolding for PyPI — pyproject.toml, CI/CD, test harness, supply chain checks. |
-
-### PHP Suite
-
-| Skill | Description |
-|-------|-------------|
-| `php-architecture-checklist` | PHP/Laravel architecture checklist executor — service-layer boundaries, strict typing, input validation, query safety, config/secrets; graded report with phpstan/php-cs-fixer evidence. |
-| `php-security-review` | OWASP-based PHP/Laravel security review — mass-assignment, query injection, Blade XSS, auth/session, file uploads; composer audit + psalm/phpstan; graded manager-friendly report. |
-| `php-feature-slice` | Feature-based Laravel architecture — feature folders, thin controllers, Form Requests, service/action layer, API Resources, structural CQRS. |
-| `php-api-scaffolder` | Laravel API endpoints with API Resources, Form Request validation, Sanctum auth, throttle rate limiting, URI versioning, OpenAPI, and health checks. |
-| `php-package-scaffold` | Composer package scaffolding for Packagist — composer.json, PSR-4, Pest/PHPUnit harness, GitHub Actions matrix CI, semver tag publish workflow. |
-| `php-migration-manager` | Full Laravel migration lifecycle — tested down(), expand-contract for zero-downtime, dangerous-operation guards, batched backfills. |
-
-### Rust Suite
-
-| Skill | Description |
-|-------|-------------|
-| `rust-architecture-checklist` | Rust architecture review — ownership discipline, trait design, error handling, unsafe audit, crate boundaries. |
-| `rust-security-review` | OWASP Rust security review with cargo-audit, cargo-deny, and unsafe block audit. |
-| `rust-feature-slice` | Vertical slice modules for Rust/Axum — router, service trait, impl, models, error types, integration tests. |
-| `sqlx-migration-manager` | SQLx migration lifecycle — create, review, rollback test, apply, regenerate offline cache. |
-| `rust-migration-analyzer` | C/C++ to Rust rewrite planning and Rust edition upgrade/modernization analysis. |
-| `axum-scaffolder` | Production-ready Axum HTTP APIs with utoipa OpenAPI, JWT middleware, rate limiting, and CORS. |
-| `cargo-package-scaffold` | Rust crate scaffolding — Cargo.toml metadata, CI, test harness, CHANGELOG, crates.io publish workflow. |
-
-### React Suite
-
-| Skill | Description |
-|-------|-------------|
-| `react-architecture-checklist` | React architecture checklist executor — hooks discipline, effect correctness, component cohesion, state placement, render performance, type safety, accessibility; graded report with eslint/tsc evidence. |
-| `react-security-review` | OWASP-based React/TypeScript front-end security review — XSS escape hatches, bundle-secret exposure, token storage, CSP, open redirects; npm audit + eslint-plugin-security; graded manager-friendly report. |
-| `react-feature-slice` | Feature-based React architecture — feature folders, presentational + container components, custom hooks, a typed data layer, and structural CQRS (query vs mutation hooks). |
-| `react-component-scaffolder` | Single React component/route scaffolding — typed props, co-located RTL test, accessibility baseline, optional Storybook story. |
-| `react-app-scaffolder` | Vite + React + TypeScript app skeleton — strict TS, Vitest + RTL, ESLint (hooks + a11y), router, error boundary, feature-folder layout. |
-| `react-modernization-analyzer` | Legacy React modernization — class→hooks, CRA→Vite, React 17→18→19, JS→TS, Enzyme→RTL, legacy Redux→RTK paths (assess & plan, no execution). |
-
-### Vue Suite
-
-| Skill | Description |
-|-------|-------------|
-| `vue-architecture-checklist` | Vue architecture checklist executor — reactivity discipline, watcher/lifecycle correctness, component cohesion, state placement, render performance, type safety, accessibility; graded report with eslint/vue-tsc evidence. |
-| `vue-security-review` | OWASP-based Vue/TypeScript front-end security review — v-html XSS, bundle-secret exposure, token storage, CSP, open redirects; npm audit + eslint-plugin-security; graded manager-friendly report. |
-| `vue-feature-slice` | Feature-based Vue architecture — feature folders, presentational + container SFCs, composables, a typed data layer, and structural CQRS (query vs mutation composables). |
-| `vue-component-scaffolder` | Single Vue SFC/route scaffolding — typed defineProps, co-located Vue Testing Library test, accessibility baseline, optional Storybook story. |
-| `vue-app-scaffolder` | Vite + Vue + TypeScript app skeleton — strict TS, Vitest + Vue Testing Library, ESLint (vue + a11y), router, app-level error handling, feature-folder layout. |
-| `vue-modernization-analyzer` | Legacy Vue modernization — Options→Composition API, Vue CLI→Vite, Vue 2→3, JS→TS, Vue Test Utils v1→Vitest+VTL, Vuex→Pinia paths (assess & plan, no execution). |
-
-### AI/ML Bridge Suite
-
-> Moved to the companion **[edge-ai-robotics-automation-toolkit](../edge-ai-robotics-automation-toolkit)** —
-> RAG pipelines (`rag-pipeline-python`, `rag-pipeline-dotnet`), `mcp-server-scaffold`, and
-> `ollama-model-workflow` now ship there alongside the edge-AI, robotics, and automation skills.
-
-### QRSPI Workflow Suite
-
-A structured Questions → Research → Spec → Plan → Implement loop — the instruction-budget-disciplined
-replacement for RPI. Correct behavior is the default through artifact gates (no magic words): each phase
-refuses to run until the prior artifact exists. Driven by the `qrspi-orchestrator` (alignment) and
-`qrspi-implement` (execution) agents, with shared read-only `research-*` subagents. Artifacts co-locate in
-`thoughts/shared/qrspi/YYYY-MM-DD-{slug}/`.
-
-| Skill | Description |
-|-------|-------------|
-| `qrspi-questions` | Surfaces what the agent doesn't know as targeted technical questions; stops for human answers before research. |
-| `qrspi-research` | Ticket-hidden codebase research — spawns the `research-*` subagents in parallel, writes objective facts only (no recommendations). |
-| `qrspi-spec` | Design Brain-Dump → human "brain-surgery" alignment loop → vertical-slice Structure Outline. |
-| `qrspi-plan` | Converts the spec into a vertically-sliced tactical plan; refuses horizontal-layer plans. |
-| `qrspi-implement` | Executes an approved plan slice-by-slice through strict Red-Green-Refactor, checkpointing per slice. |
-
-### QRASPI Workflow Suite
-
-A structured Questions → Research → Architecture → Skeleton → Plan → Implement loop for **new systems** —
-the greenfield (V0/V1) counterpart to QRSPI. Where QRSPI maps an existing codebase and grows a feature,
-QRASPI maps a problem domain, locks the path-dependent decisions as MADR ADRs (with alternatives) +
-Mermaid C4, lands a runnable **walking skeleton** with fitness functions as merge-blocking CI gates,
-grows it slice-by-slice with Red-Green-Refactor, then **graduates** the result to QRSPI once real
-features begin. Same no-magic-words artifact gates; the Skeleton's exit gate is CI green, not a claim.
-Driven by the `qraspi-orchestrator` (no-edit Q/R/A/P/graduate) and `qraspi-builder` (edit
-Skeleton/Implement) agents. Artifacts co-locate in `thoughts/shared/qraspi/YYYY-MM-DD-{slug}/`; accepted
-ADRs live in the target repo's `docs/adr/`.
-
-| Skill | Description |
-|-------|-------------|
-| `qraspi-questions` | Surfaces unknowns across the six greenfield categories (functional · quality attributes · integration · compliance · deployment · domain); stops for human answers. |
-| `qraspi-research` | Maps the solution landscape (external-domain via `research-synthesis`, or inherited-repo via the `research-*` subagents) — factual, no recommendations. |
-| `qraspi-architecture` | Locks path-dependent decisions as MADR ADRs with ≥ 2 alternatives (align-before-lock), draws the C4 in Mermaid, and specifies the required fitness functions. |
-| `qraspi-skeleton` | Scaffolds a runnable walking skeleton from the ADRs (one slice through every layer) and lands the fitness functions as CI gates; the exit gate is CI green. |
-| `qraspi-plan` | Converts the next slice from the skeleton's backlog into a vertically-sliced `plan-{slice}.md`; refuses horizontal-layer plans. |
-| `qraspi-implement` | Grows the green skeleton one approved slice at a time with Red-Green-Refactor, keeping the fitness gates green; checkpoints per slice. |
-| `qraspi-graduate` | Terminal handoff — captures the repo + ADRs + skeleton state + fitness gates + stack into `graduation.md` and hands new feature work to QRSPI. |
-| `fitness-functions` | Authors architectural fitness functions and wires them into CI as merge-blocking gates (NetArchTest, import-linter, cargo-deny, Conftest). QRASPI's one new primitive. |
-
-### Requirements & Workflow Suite
-
-| Skill | Description |
-|-------|-------------|
-| `capture-consolidate` | Consolidates multiple capture documents (transcripts, emails, SOWs) into a unified requirements registry. |
-| `email-capture` | Extracts requirements, decisions, and action items from email threads and converts them to structured captures. |
-| `transcript-capture` | Converts meeting transcripts or Zoom/Slack summaries into structured capture documents. |
-
-### Docs, Jira & Confluence
-
-| Skill | Description |
-|-------|-------------|
-| `jira-comment-writer` | Plain-language Jira comment drafter — translates technical updates into stakeholder language. |
-| `confluence-guide-writer` | Reads Confluence spec pages and/or source code, generates well-formatted technical guides. |
-
-### Agent Design & Meta
-
-| Skill | Description |
-|-------|-------------|
-| `skill-creator` | Creates, revises, and scores SKILL.md definitions against the 5-section lean gold standard. |
-
-### Agent Support Suite (Team)
-
-| Skill | Description | Used By |
-|-------|-------------|---------|
-| `automated-code-review` | Autonomous review checklists — security, correctness, performance, maintainability, style | code-review-agent |
-| `test-scaffold` | Test generation conventions, AAA naming, mock patterns for FreeMediator/repositories | test-generation-agent |
-| `doc-sync` | Documentation staleness detection, XML doc generation, README sync | documentation-agent |
-| `supply-chain-audit` | NuGet/npm/pip vulnerability scanning, license matrix, CVE correlation | dependency-audit-agent |
-| `environment-health` | Docker health checks, service monitoring, container lifecycle | environment-health-agent |
-| `research-synthesis` | Multi-source cross-referencing, source credibility scoring, briefing formats | research-agent |
-| `session-context` | Git change summarization, ADR relevance matching, pattern applicability | context-builder-agent |
-| `task-decomposition` | Goal breakdown heuristics, dependency DAGs, sub-agent assignment protocols | task-decomposition-agent |
-
----
-
-## Professional Skills (`audience: professional`)
-
-### Coaching & Learning Suite
-
-| Skill | Description |
-|-------|-------------|
-| `architecture-review` | Devil's advocate critic — challenges designs via Socratic questioning against SOLID, coupling, failure modes, scalability. |
-| `pattern-tradeoff-analyzer` | Pattern selection coach — 2-3 patterns with explicit tradeoffs; challenges golden hammer tendencies. |
-| `dependency-mapper` | Coupling visualization with Robert C. Martin metrics. |
-| `pr-feedback-writer` | Review communication coach — blocking vs suggestion vs nit, constructive framing, explaining the "why". |
-| `technical-debt-assessor` | Debt and refactoring prioritization — deliberate vs accidental, cost-to-fix vs cost-to-carry, smell severity (aesthetic vs production-impact), business case building. |
-| `architecture-journal` | Lightweight ADR templates with retrospective prompts at 30/90/180 days. |
-| `spec-coach` | Interactive spec design coach — vision, PRD structure, INVEST story quality, specification by example, three-tier guardrails. |
-
----
+| Skill                       | Purpose                                                          |
+| --------------------------- | ---------------------------------------------------------------- |
+| `security-review-federal`   | NIST 800-53 / FIPS / CUI overlay on any `<lang>-security-review` |
+| `oss-vetting`               | OSS/SBOM assessment for federal and CUI projects                 |
+| `supply-chain-audit`        | Dependency CVEs and license compliance                           |
+| `architecture-review`       | Socratic critique of a design                                    |
+| `pattern-tradeoff-analyzer` | Compare 2–3 patterns with tradeoffs                              |
+| `dependency-mapper`         | Coupling and stability metrics                                   |
+| `technical-debt-assessor`   | Prioritize debt and refactoring with a business case             |
+| `architecture-journal`      | Lightweight ADRs with retrospectives                             |
+| `pr-feedback-writer`        | Write clear review comments                                      |
+| `spec-coach`                | Interactive spec / PRD design                                    |
+| `automated-code-review`     | Review engine behind `/code-review`                              |
+| `test-scaffold`             | .NET test conventions                                            |
+| `doc-sync`                  | Find and fix stale docs                                          |
+| `environment-health`        | Diagnose Docker, services, ports                                 |
+| `research-synthesis`        | Multi-source research with citations                             |
+| `session-context`           | Prime a session from git state                                   |
+| `task-decomposition`        | Break goals into agent-assigned tasks                            |
+| `transcript-capture`        | Meeting transcript → requirements                                |
+| `email-capture`             | Email / SOW → requirements                                       |
+| `capture-consolidate`       | Merge captures into one bundle                                   |
+| `jira-comment-writer`       | Stakeholder-friendly Jira comments                               |
+| `confluence-guide-writer`   | User guides from specs or code                                   |
+| `skill-creator`             | Create and score skills in this repo                             |
 
 ## Agents
 
-Autonomous agents that make decisions and take actions independently. Each exists in both Claude Code (`claude/agents/`) and OpenCode (`opencode/agents/`) format, flat — no `team`/`professional` subdirectory (matches the `skills/` layout). `audience:` frontmatter is metadata only.
+51 agents, identical in Claude Code and OpenCode format.
 
-## claude/agents/ and opencode/agents/ (51 agents)
-
-### Development & DevOps
-
-| Agent | Description | Skills |
-|-------|-------------|--------|
-| `tdd-agent` | Autonomous TDD — drives the complete RED-GREEN-REFACTOR cycle with strict guardrails. | tdd-loop, evaluate-tests |
-| `code-review-agent` | Autonomous code review — security, correctness, performance, maintainability, style. | automated-code-review, pr-feedback-writer |
-| `test-generation-agent` | Autonomous test generation — analyzes code, identifies gaps, generates tests with TDD patterns. | tdd-loop, test-scaffold |
-| `documentation-agent` | Autonomous documentation sync — detects staleness, generates XML docs, updates READMEs. | architecture-journal, doc-sync |
-| `dependency-audit-agent` | Autonomous dependency auditing — vulnerability scanning, license compliance, upgrade paths. | supply-chain-audit, technical-debt-assessor |
-| `spec-extractor-agent` | Extracts structured agent specs from natural-language descriptions or existing code. | spec-coach |
-| `confluence-guide-writer` | Reads Confluence spec pages and/or source code, generates formatted technical guides. | confluence-guide-writer |
-| `migration-orchestrator` | Semi-autonomous migration orchestration — EF Core and .NET Framework migrations with approval gates. | ef-migration-manager, legacy-migration-analyzer |
-| `environment-health-agent` | Autonomous environment health monitoring — Docker, services, connections, recovery. | environment-health |
-| `task-decomposition-agent` | Meta-orchestrator — decomposes complex goals into sub-tasks, assigns to specialized agents. | task-decomposition |
-| `pm-capture-agent` | Converts meeting transcripts, Slack summaries, and SOWs into structured capture documents. | transcript-capture, email-capture, capture-consolidate |
-| `research-agent` | Autonomous research — multi-source investigation, credibility scoring, structured briefings. | research-synthesis |
-| `context-builder-agent` | Autonomous context assembly — git change summarization, ADR matching, dependency mapping. | session-context |
-
-### Language & Security
-
-| Agent | Description |
-|-------|-------------|
-| `python-security-agent` | OWASP Python security review with bandit, pip-audit, and executive summary. |
-| `python-federal-security-agent` | Federal Python security review — NIST 800-53, FISMA, FIPS compliance. |
-| `python-modernization-agent` | Legacy Python modernization analysis — Python 2→3, sync→async, Flask→FastAPI. |
-| `rust-arch-checklist-agent` | Rust architecture review — ownership, trait design, error handling, unsafe audit, Clippy. |
-| `rust-security-agent` | OWASP Rust security review with cargo-audit, cargo-deny, unsafe block audit. |
-| `rust-migration-agent` | C/C++ to Rust migration analysis and Rust modernization planning. |
-| `react-arch-checklist-agent` | React architecture review — hooks discipline, effects, state placement, render perf, type safety, accessibility. |
-| `react-security-agent` | OWASP React/front-end security review — XSS, bundle secrets, token storage, npm audit, executive summary. |
-| `react-modernization-agent` | Legacy React modernization analysis — class→hooks, CRA→Vite, React 17→18→19, JS→TS, Enzyme→RTL. |
-| `vue-arch-checklist-agent` | Vue architecture review — reactivity discipline, watchers, state placement, render perf, type safety, accessibility. |
-| `vue-security-agent` | OWASP Vue/front-end security review — v-html XSS, bundle secrets, token storage, npm audit, executive summary. |
-| `vue-modernization-agent` | Legacy Vue modernization analysis — Options→Composition API, Vue CLI→Vite, Vue 2→3, JS→TS, Vuex→Pinia. |
-| `oss-vetting-agent` | Federal OSS/SBOM vetting — scores a package across security, supply chain, maintainership, license, and CUI suitability against EO 14028/SSDF/800-171/800-161; Confluence-ready Approve / Approve-with-conditions / Reject report. |
-
-### Scaffolding
-
-| Agent | Description |
-|-------|-------------|
-| `fastapi-scaffold-agent` | FastAPI endpoints with OpenAPI docs, Pydantic v2, JWT auth, rate limiting, health checks. |
-| `axum-scaffold-agent` | Production-ready Axum APIs with utoipa OpenAPI, JWT middleware, rate limiting. |
-| `python-feature-slice-agent` | Feature-based Python architecture with FastAPI routers, Pydantic v2, service layer. |
-| `rust-feature-slice-agent` | Vertical slice modules for Rust/Axum with router, service trait, models, integration tests. |
-| `cargo-package-scaffold-agent` | Rust crate scaffolding — Cargo.toml, CI, test harness, crates.io publish workflow. |
-| `pypi-package-agent` | Python package scaffolding for PyPI — pyproject.toml, CI/CD, supply chain checks. |
-| `alembic-migration-agent` | Full Alembic migration lifecycle with safety checks and rollback planning. |
-| `sqlx-migration-agent` | SQLx migration lifecycle — create, review, rollback test, apply, regenerate offline cache. |
-| `php-feature-slice-agent` | Feature-based Laravel architecture — feature folders, thin controllers, Form Requests, service layer, API Resources. |
-| `php-api-scaffold-agent` | Laravel API endpoints — API Resources, Sanctum auth, throttle rate limiting, URI versioning, OpenAPI, health checks. |
-| `php-package-agent` | Composer package scaffolding for Packagist — composer.json, PSR-4, matrix CI, semver tag publish workflow. |
-| `php-migration-agent` | Full Laravel migration lifecycle — tested down(), expand-contract, dangerous-operation guards, batched backfills. |
-| `react-feature-slice-agent` | Feature-based React architecture — feature folders, presentational + container components, custom hooks, typed data layer, structural CQRS. |
-| `react-component-scaffold-agent` | Single React component/route — typed props, co-located RTL test, accessibility baseline, optional Storybook story. |
-| `react-app-scaffold-agent` | Vite + React + TS app skeleton — strict TS, Vitest + RTL, ESLint (hooks + a11y), router, error boundary, feature-folder layout. |
-| `vue-feature-slice-agent` | Feature-based Vue architecture — feature folders, presentational + container SFCs, composables, typed data layer, structural CQRS. |
-| `vue-component-scaffold-agent` | Single Vue SFC/route — typed defineProps, co-located Vue Testing Library test, accessibility baseline, optional Storybook story. |
-| `vue-app-scaffold-agent` | Vite + Vue + TS app skeleton — strict TS, Vitest + Vue Testing Library, ESLint (vue + a11y), router, app-level error handling, feature-folder layout. |
-
-> QRSPI workflow agents (`qrspi-orchestrator`, `qrspi-implement`) and the shared read-only research subagents (`research-file-locator`, `research-code-analyzer`, `research-pattern-finder`) are spawned automatically by the QRSPI skills/commands — not invoked directly.
->
-> QRASPI greenfield agents (`qraspi-orchestrator`, `qraspi-builder`) are spawned automatically by the QRASPI skills/commands — the orchestrator drives the no-edit Questions/Research/Architecture/Plan/Graduate phases, the builder the edit Skeleton/Implement phases. They reuse the same `research-*` subagents.
-
----
+- **General:** `tdd-agent`, `code-review-agent`, `test-generation-agent`, `documentation-agent`,
+  `dependency-audit-agent`, `environment-health-agent`, `research-agent`, `context-builder-agent`,
+  `task-decomposition-agent`, `migration-orchestrator`, `spec-extractor-agent`, `pm-capture-agent`,
+  `confluence-guide-writer`, `oss-vetting-agent`
+- **Per language:** each family has review, security, modernization, and scaffolding agents
+  (`<lang>-arch-checklist-agent`, `<lang>-security-agent`, `<lang>-feature-slice-agent`, …), plus
+  `python-federal-security-agent`. Browse [`claude/agents/`](claude/agents/).
+- **Workflow (spawned by the commands, not called directly):** `qrspi-orchestrator`,
+  `qrspi-implement`, `qraspi-orchestrator`, `qraspi-builder`, and the read-only `research-file-locator`,
+  `research-code-analyzer`, `research-pattern-finder`.
 
 ## Commands
 
-Twenty-two slash commands per platform. Each injects live shell state before the model acts — the model sees real output, not a description of it.
+| Command                                                                                | What it does                          |
+| -------------------------------------------------------------------------------------- | ------------------------------------- |
+| `/tdd`                                                                                 | TDD cycle against live test output    |
+| `/evaluate-tests [path]`                                                               | Audit test quality and TDD compliance |
+| `/code-review`                                                                         | Review the current `git diff`         |
+| `/security-review [path]`                                                              | OWASP review of a path                |
+| `/oss-vetting [pkg@ver]`                                                               | Vet a package for federal/CUI use     |
+| `/arch-review [component]`                                                             | Socratic architecture challenge       |
+| `/new-feature [Name]`                                                                  | Scaffold a .NET vertical slice        |
+| `/migrate [Name]`                                                                      | EF Core migration with safety checks  |
+| `/research [topic]`                                                                    | Multi-source research briefing        |
+| `/context-prime`                                                                       | Session brief from git state          |
+| `/qrspi-{questions,research,spec,plan,implement} [feature]`                            | One QRSPI phase each                  |
+| `/qraspi-{questions,research,architecture,skeleton,plan,implement,graduate} [project]` | One QRASPI phase each                 |
 
-| Command | Injects | What it does |
-|---------|---------|--------------|
-| `/tdd` | `dotnet test` output | Runs the TDD cycle against live failing tests |
-| `/evaluate-tests [path]` | — | Audits existing tests: test-file quality (coupling, fragility, theater) and TDD compliance (commit-history scorecard) |
-| `/code-review` | `git diff` | Reviews staged or branch changes |
-| `/security-review [path]` | — | OWASP security review scoped to a path |
-| `/oss-vetting [package@version]` | Detected dependency manifests | Vets an OSS/third-party package for federal use (national labs / DOE / CUI) — Approve / conditions / Reject report |
-| `/arch-review [component]` | — | Socratic architecture challenge |
-| `/new-feature [FeatureName]` | Project structure, `.csproj` files | Scaffolds a vertical slice feature |
-| `/migrate [MigrationName]` | `dotnet ef migrations list` | EF Core migration with safety checks |
-| `/research [topic]` | — | Multi-source research briefing |
-| `/context-prime` | `git log`, `git status`, `git diff` | Primes session from current repo state |
-| `/qrspi-questions [feature]` | `ls` of the feature folder | Surfaces open technical questions; stops for human answers before research |
-| `/qrspi-research [feature]` | `ls` of the feature folder | Ticket-hidden parallel codebase research → objective `research.md` |
-| `/qrspi-spec [feature]` | `ls` of the feature folder | Design Brain-Dump → brain-surgery loop → vertical-slice Structure Outline |
-| `/qrspi-plan [feature]` | `ls` of the feature folder | Vertically-sliced tactical plan; refuses horizontal-layer plans |
-| `/qrspi-implement [feature]` | Feature folder + existing slice logs | Executes an approved plan slice-by-slice with Red-Green-Refactor |
-| `/qraspi-questions [project]` | `ls` of the qraspi project folders | Surfaces unknowns across the six greenfield categories; stops for human answers |
-| `/qraspi-research [project]` | `ls` of the qraspi project folders | Maps the solution landscape (factual, no recommendations) |
-| `/qraspi-architecture [project]` | `ls` of the qraspi project folders | Locks decisions as MADR ADRs + Mermaid C4; specifies fitness functions |
-| `/qraspi-skeleton [project]` | `ls` of the qraspi project folders | Scaffolds a runnable walking skeleton with fitness-gate CI; exit gate is CI green |
-| `/qraspi-plan [project]` | `ls` of the qraspi project folders | Plans the next backlog slice; refuses horizontal-layer plans |
-| `/qraspi-implement [project]` | `ls` of the qraspi project folders | Grows the skeleton one approved slice at a time with Red-Green-Refactor |
-| `/qraspi-graduate [project]` | `ls` of the qraspi project folders | Terminal QRASPI→QRSPI handoff — writes `graduation.md` |
+QRSPI and QRASPI phase artifacts go in `thoughts/shared/qrspi/` and `thoughts/shared/qraspi/`; each
+phase refuses to run until the previous artifact exists. See
+[`docs/structured-workflows-overview.md`](docs/structured-workflows-overview.md).
 
 ---
 
-## Usage
+## Repository layout
 
 ```
-/tdd                               # runs TDD cycle with live test output
-/code-review                       # reviews git diff
-/security-review src/              # OWASP scan scoped to src/
-/arch-review OrderService          # Socratic challenge of a component
-/new-feature CreateInvoice         # scaffold a vertical slice feature
-/migrate AddInvoiceTable           # EF Core migration with safety checks
-/research "WebSocket vs SSE"       # structured research briefing
-/context-prime                     # session brief from git state
-
-Use tdd-agent to implement a Calculator.add method
-Use code-review-agent to review the latest changes
-Use migration-orchestrator to plan the EF Core migration
-Use research-agent to investigate WebSocket vs SSE for real-time updates
+skills/              78 skills (flat; one directory per skill)
+claude/              agents/, commands/, global/ (→ ~/.claude)
+opencode/            agents/, commands/, global/ (→ ~/.config/opencode)
+pi/global/           Pi config (→ ~/.pi/agent)
+project-templates/   per-project context files to copy into your repo
+scripts/             install scripts (Bash + PowerShell)
+tools/               standalone utilities, each with its own README:
+                     pdf2md, web2md, code2md (→ RAG-ready Markdown),
+                     ollama-evals (local model evals), skill-evals (lints and evaluates skills/)
+bakeoff/             harness that benchmarks agent setups on fixed coding tasks
+docs/                workflow and local-AI guides
 ```
 
----
-
-## Project Templates
-
-The `project-templates/` directory contains per-project context files based on the **Four Prompt Disciplines & Five Primitives** framework by [Nate B. Jones](https://natesnewsletter.substack.com/). Copy the relevant files into your project root — see [`project-templates/README.md`](project-templates/README.md) for the full guide.
-
-| File | Purpose | When to use |
-|------|---------|-------------|
-| `CLAUDE.md` / `AGENTS.md` | Project context: stack, architecture, key files, boot ritual | Every project |
-| `intent.md` | What the agent optimizes for: goals, values, tradeoff hierarchy | Every project |
-| `constraints.md` | Musts, must-nots, preferences, escalation triggers | Every project |
-| `evals.md` | Test cases, CI gate definitions, taste rules, rejection log | Every project |
-| `domain-memory.md` | Dark factory backlog and progress log | Multi-session agentic work only |
-| `design.md` | Design system tokens, component hierarchy, interaction patterns | UI-heavy projects only |
-
----
-
-## Repository Structure
-
-```
-ai-toolkit/
-├── skills/                     # flat — 71 team + 7 professional skills, tagged via `audience:` frontmatter
-├── claude/
-│   ├── agents/                 # flat — 51 Claude Code agents
-│   ├── commands/               # 22 slash commands with shell injection
-│   └── global/                 # Global config → ~/.claude/
-│       ├── CLAUDE.md           # Global instructions (every project)
-│       ├── settings.json       # Permissions (allow/deny/ask) + hooks + status line
-│       └── hooks/              # Hook scripts → ~/.claude/hooks/
-├── opencode/
-│   ├── agents/                 # flat — 51 OpenCode agents
-│   ├── commands/               # 22 slash commands with agent routing
-│   └── global/                 # Global config → ~/.config/opencode/
-│       ├── AGENTS.md           # Global instructions (every project)
-│       └── opencode.json       # Providers, MCP, permissions, temperatures
-├── pi/
-│   └── global/                 # Global config → ~/.pi/agent/
-│       ├── AGENTS.md           # Pi global standard (short, agent-loop-safe rules)
-│       ├── models.json         # Ollama provider config
-│       ├── settings.json       # Compaction tuned for local context windows
-│       ├── Modelfile-flint-agent   # Flint 40B-A2B agent: 128K context + vendor sampling
-│       └── Modelfile-gemma4-agent  # Gemma 4 31B/26B agent: 128K context + vendor sampling
-├── project-templates/          # Per-project context files — copy to your project root
-├── scripts/                    # Install scripts (Bash + PowerShell)
-├── tools/                      # Standalone utilities (not skills/agents/commands)
-│   ├── pdf2md/                 # PDF → Markdown converter for RAG ingestion
-│   ├── web2md/                 # Web pages & docs sites → Markdown for RAG ingestion
-│   ├── code2md/                # Codebase → language-tagged Markdown for RAG ingestion
-│   ├── ollama-evals/           # Local Ollama model evaluation & regression harness
-│   └── skill-evals/            # Executable eval harness for skills/ — lint, routing, quality, rubric
-├── ollama/modelfiles/          # Ollama Modelfile templates for local agent models
-└── docs/                       # Supplementary documentation
-```
+Contributing: read [`CLAUDE.md`](CLAUDE.md) (conventions), [`constraints.md`](constraints.md), and
+[`DEVELOPER.md`](DEVELOPER.md) (setup). Run `skill-evals lint` before committing a skill change.
 
 ---
 
@@ -532,14 +237,9 @@ ai-toolkit/
 
 **Michael K. Alber** — [codeberg.org/michaelkalber](https://codeberg.org/michaelkalber)
 
-Software engineer working across enterprise .NET, Python, Rust, edge AI, robotics, and federal security domains. I build tools that encode engineering standards into AI-assisted workflows — grounding AI output in deliberate practice rather than generic defaults.
-
-Related projects:
-- [grounded-code-mcp](https://codeberg.org/michaelkalber/grounded-code-mcp) — local RAG server that grounds AI coding agents in the books, standards, and docs you actually trust; 17 curated collections, fully local embeddings via Ollama
-- [pi-packages](https://codeberg.org/michaelkalber/pi-packages) — domain-specific Pi harnesses for local Ollama inference: hardware routing, RAG integration, context budgeting, and project-type auto-detection across six project types
-
----
+Related: [grounded-code-mcp](https://codeberg.org/michaelkalber/grounded-code-mcp) (local RAG server
+for coding agents)
 
 ## License
 
-MIT — see [LICENSE](LICENSE) for details.
+MIT — see [LICENSE](LICENSE).
