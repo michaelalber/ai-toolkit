@@ -57,8 +57,8 @@ without it. Vue SFCs need `vue-tsc` (not raw `tsc`) to type-check `<template>` b
 ```bash
 npx eslint . --max-warnings 0     # baseline gate
 npx vue-tsc --noEmit              # type gate (SFC-aware)
-npx knip                          # dead exports / unused deps (Boundary & dep hygiene)
-npx vite-bundle-visualizer        # bundle weight evidence (optional)
+npx knip@6.47.0                   # dead exports / unused deps (Boundary & dep hygiene)
+npx vite-bundle-visualizer@1.2.1  # bundle weight evidence (optional)
 ```
 
 A destructured `reactive()` losing reactivity is **not** a clean pass — grep for the pattern and treat

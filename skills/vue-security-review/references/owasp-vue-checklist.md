@@ -54,7 +54,7 @@ grep -rniE "\beval\b|\bFunction\b" src/    # dynamic code evaluation sinks
 
 ```bash
 npm audit --omit=dev
-npx npm-check-updates       # surface stale majors
+npx npm-check-updates@23.1.1 # surface stale majors
 ```
 
 Lockfile committed; no `latest`/`*` ranges; remove abandoned UI deps. The transitive npm tree is the

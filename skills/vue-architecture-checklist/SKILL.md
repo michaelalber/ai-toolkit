@@ -52,7 +52,7 @@ DETECT     Vue version (package.json `vue`), API style (Options vs `<script setu
 SCAN       Run the Vue Checklist below section by section. Gather evidence with tooling:
              npx eslint . --max-warnings 0          # baseline — incl. eslint-plugin-vue
              npx vue-tsc --noEmit                    # type errors gate the review
-             npx knip                                # dead code / unused exports / deps
+             npx knip@6.47.0                         # dead code / unused exports / deps
              grep -rn "watchEffect\|watch(" src/ | wc -l   # watcher surface to audit
            Every violation becomes a finding with file:line and a severity (critical/high/medium/low).
 

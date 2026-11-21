@@ -50,7 +50,7 @@ DETECT     React version (package.json `react`), bundler (Vite/CRA/Next.js), Typ
 SCAN       Run the React Checklist below section by section. Gather evidence with tooling:
              npx eslint . --max-warnings 0          # baseline — incl. eslint-plugin-react-hooks
              npx tsc --noEmit                        # type errors gate the review
-             npx knip                                # dead code / unused exports / deps
+             npx knip@6.47.0                         # dead code / unused exports / deps
              grep -rn "useEffect" src/ | wc -l       # effect surface to audit
            Every violation becomes a finding with file:line and a severity (critical/high/medium/low).
 

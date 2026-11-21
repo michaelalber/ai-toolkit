@@ -55,8 +55,8 @@ without it.
 ```bash
 npx eslint . --max-warnings 0     # baseline gate
 npx tsc --noEmit                  # type gate
-npx knip                          # dead exports / unused deps (Boundary & dep hygiene)
-npx vite-bundle-visualizer        # bundle weight evidence (optional)
+npx knip@6.47.0                   # dead exports / unused deps (Boundary & dep hygiene)
+npx vite-bundle-visualizer@1.2.1  # bundle weight evidence (optional)
 ```
 
 A suppressed rule (`// eslint-disable-next-line react-hooks/exhaustive-deps`) is **not** a clean pass —

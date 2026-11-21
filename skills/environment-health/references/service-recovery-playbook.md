@@ -357,7 +357,8 @@ docker restart <container>
 # Recreate with new memory limit
 docker compose up -d <service>
 
-# Clear host-level caches if memory pressure is severe
+# Clear host-level caches if memory pressure is severe.
+# Host-wide sudo change: ask the user first, never run it unattended.
 sync && echo 3 | sudo tee /proc/sys/vm/drop_caches
 
 # Verify memory is released

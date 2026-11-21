@@ -129,7 +129,7 @@ npx vitest --reporter=verbose
 
 # Mocha
 npm test
-npx mocha --grep "adds two numbers"
+npx --no-install mocha --grep "adds two numbers"
 ```
 
 ## Exception Handling

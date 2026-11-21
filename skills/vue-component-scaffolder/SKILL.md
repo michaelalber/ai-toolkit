@@ -94,7 +94,7 @@ npx vue-tsc --noEmit
 npx eslint src/<location>/<Name>
 npx vitest run src/<location>/<Name>
 # Story renders (if Storybook present):
-npx storybook build --quiet >/dev/null 2>&1 && echo "stories build OK"
+npx --no-install storybook build --quiet >/dev/null 2>&1 && echo "stories build OK"
 ```
 
 ## State Block

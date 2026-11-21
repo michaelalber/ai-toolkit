@@ -224,7 +224,7 @@ Your Application Code
 
 | Tool | Ecosystems | Command | Output |
 |------|-----------|---------|--------|
-| license-checker (npm) | npm | `npx license-checker --json --production` | Package name, license, repository |
+| license-checker (npm) | npm | `npx license-checker@25.0.1 --json --production` | Package name, license, repository |
 | pip-licenses (Python) | pip | `pip-licenses --format=json` | Package name, version, license |
 | dotnet-project-licenses | NuGet | `dotnet-project-licenses --input <sln>` | Package name, version, license URL |
 | FOSSA | All | `fossa analyze` | Comprehensive license compliance |
@@ -265,8 +265,8 @@ Relocated from `SKILL.md` (Phase 2).
 
 ```bash
 # npm
-npx license-checker --json --production
-npx license-checker --onlyAllow "MIT;Apache-2.0;BSD-2-Clause;BSD-3-Clause;ISC"
+npx license-checker@25.0.1 --json --production
+npx license-checker@25.0.1 --onlyAllow "MIT;Apache-2.0;BSD-2-Clause;BSD-3-Clause;ISC"
 
 # pip
 pip-licenses --format=json
