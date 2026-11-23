@@ -9,7 +9,34 @@ from ollama_evals.cases import load_cases
 from ollama_evals.scorers import get_scorer
 
 DATASETS = Path(__file__).resolve().parent.parent / "datasets"
-CASE_FILES = ["coding.jsonl", "chat.jsonl", "tool_use.jsonl", "structured.jsonl"]
+VENDORED = ["bfcl_irrelevance.jsonl", "ifeval.jsonl"]
+
+
+@pytest.mark.parametrize("output", ["", "Hello, world.\n\n* a\n***\n\"quoted\" P.S. done"])
+def test_every_ifeval_case_scores_without_error(output):
+    from ollama_evals.scorers import score_output
+
+    for case in load_cases(DATASETS / "ifeval.jsonl"):
+        result = score_output(output, case.scorer, {})
+        assert 0.0 <= result.score <= 1.0
+CASE_FILES = ["coding.jsonl", "chat.jsonl", "tool_use.jsonl", "structured.jsonl", *VENDORED]
+
+
+@pytest.mark.parametrize("name", VENDORED)
+def test_vendored_cases_carry_attribution(name):
+    import json
+
+    for line in (DATASETS / name).read_text().splitlines():
+        source = json.loads(line)["source"]
+        assert source["license"] == "Apache-2.0"
+        assert len(source["commit"]) == 40  # pinned to an upstream commit, not a branch
+        assert source["dataset"] and source["upstream_id"] is not None
+
+
+def test_every_dataset_file_is_a_cli_suite():
+    from ollama_evals.cli import SUITES
+
+    assert {n.removesuffix(".jsonl") for n in CASE_FILES} == set(SUITES)
 
 
 @pytest.mark.parametrize("name", CASE_FILES)

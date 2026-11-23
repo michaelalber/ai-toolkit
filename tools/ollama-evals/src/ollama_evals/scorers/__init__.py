@@ -7,6 +7,7 @@ from . import (
     code_exec,  # noqa: F401  (import registers code_exec)
     deterministic,  # noqa: F401  (import registers exact/contains/regex/json_schema)
 )
+from . import ifeval as _ifeval  # noqa: F401  (import registers ifeval)
 from . import judge as _judge  # noqa: F401  (import registers judge)
 from . import tool_use as _tool_use  # noqa: F401  (import registers tool_use)
 from .base import ScoreResult, get_scorer, register, score_output

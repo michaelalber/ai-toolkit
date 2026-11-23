@@ -27,8 +27,14 @@ ollama-evals ──> http://<ollama-host>:11434/v1   (qwen2.5-coder:7b, llama3.1
 | **chat** | LLM-as-judge | Reasoning, instruction-following, summarization, tone — scored by a rubric (calibrate before trusting). |
 | **tool_use** | trajectory | Did the model select the right tool with the right arguments? |
 | **structured** | JSON-schema | Output validity and format adherence — cheap deterministic regression canaries. |
+| **bfcl_irrelevance** | trajectory | 44 hand-reviewed BFCL cases where no offered tool fits: the model must answer without calling one. |
+| **ifeval** | code checks | 387 IFEval prompts with verifiable instructions (no commas, word counts, sections, endings…). No judge. |
 
-Scorer types: `exact`, `contains`, `regex`, `json_schema`, `code_exec`, `tool_use`, `judge`.
+Scorer types: `exact`, `contains`, `regex`, `json_schema`, `code_exec`, `tool_use`, `ifeval`, `judge`.
+
+`bfcl_irrelevance` and `ifeval` are bundled from upstream datasets (Apache-2.0) with
+attribution, the pinned upstream commit, and the review notes in
+[`datasets/THIRD_PARTY.md`](datasets/THIRD_PARTY.md). Nothing is downloaded at run time.
 
 ---
 
@@ -183,7 +189,8 @@ uv run --extra dev bandit -c pyproject.toml -r src  # security lint (medium+: ad
 | `client.py` | Ollama OpenAI-compatible client (`/v1/chat/completions`, `/api/tags`) |
 | `config.py` | Config + endpoint precedence (env > local.yaml > yaml > default) |
 | `cases.py` | Case model + JSONL dataset loading |
-| `scorers/` | `exact`, `contains`, `regex`, `json_schema`, `code_exec`, `tool_use`, `judge` |
+| `scorers/` | `exact`, `contains`, `regex`, `json_schema`, `code_exec`, `tool_use`, `ifeval`, `judge` |
+| `vendor_import.py` | One-time conversion of pinned upstream datasets (BFCL, IFEval) into cases |
 | `judging.py` | Rubric (local) + DeepEval (opt-in) judges; pairwise compare |
 | `runner.py` | Run model × case → scored artifact |
 | `compare.py` | Per-category deltas, pairwise, regression gate |

@@ -32,7 +32,7 @@ from .runner import load_run, run_suite, save_run
 
 app = typer.Typer(help="Evaluate and regression-test local Ollama models.", no_args_is_help=True)
 
-SUITES = ["coding", "chat", "tool_use", "structured"]
+SUITES = ["coding", "chat", "tool_use", "structured", "bfcl_irrelevance", "ifeval"]
 
 
 def resolve_config(config_path: str | None):
@@ -57,7 +57,7 @@ def _load_cases(datasets_dir: str, suite: str):
 @app.command()
 def run(
     models: str = typer.Option(None, help="Comma-separated models; defaults to config."),
-    suite: str = typer.Option("all", help="coding|chat|tool_use|structured|all"),
+    suite: str = typer.Option("all", help="|".join([*SUITES, "all"])),
     datasets_dir: str = typer.Option("datasets"),
     out: str = typer.Option("runs", help="Directory for the run artifact."),
     samples: int = typer.Option(1, help="Repeat each case N times and average."),

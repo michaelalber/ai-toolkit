@@ -41,6 +41,20 @@ def test_non_dict_arguments_do_not_pass():
     assert "not valid JSON object" in r.detail
 
 
+NO_CALL = {"type": "tool_use", "expected": {"no_call": True}}
+
+
+def test_no_call_expectation_passes_when_model_answers_in_text():
+    r = score_output("None of the tools can do that.", NO_CALL, _ctx([]))
+    assert r.passed and r.score == 1.0
+
+
+def test_no_call_expectation_fails_on_any_tool_call():
+    r = score_output("", NO_CALL, _ctx([{"name": "get_weather", "arguments": {}}]))
+    assert not r.passed and r.score == 0.0
+    assert "get_weather" in r.detail
+
+
 def test_name_only_expectation_passes_when_tool_selected():
     spec = {"type": "tool_use", "expected": {"name": "get_weather"}}
     ctx = _ctx([{"name": "get_weather", "arguments": {"city": "Paris"}}])

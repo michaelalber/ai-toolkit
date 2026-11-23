@@ -4,6 +4,7 @@
 Reads the parsed ``tool_calls`` from the scoring context (populated by the runner from
 the model's response). Scoring: 0.5 for selecting the expected tool + 0.5 weighted by
 the fraction of expected arguments matched. Passes only on an exact tool + argument match.
+``expected: {"no_call": true}`` inverts it: passes only when the model calls no tool.
 """
 
 from __future__ import annotations
@@ -14,9 +15,14 @@ from .base import ScoreResult, register
 @register("tool_use")
 def tool_use(output: str, spec: dict, context: dict) -> ScoreResult:
     expected = spec["expected"]
+    calls = context.get("tool_calls") or []
+    if expected.get("no_call"):  # relevance check: none of the offered tools fits the request
+        if calls:
+            names = [c.get("name") for c in calls]
+            return ScoreResult(0.0, False, f"expected no tool call, got {names}")
+        return ScoreResult(1.0, True)
     name = expected["name"]
     expected_args = expected.get("arguments")
-    calls = context.get("tool_calls") or []
 
     matched = next((c for c in calls if c.get("name") == name), None)
     if matched is None:
