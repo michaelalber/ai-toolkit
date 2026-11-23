@@ -24,6 +24,10 @@ models:
 # committed.
 judge:
   provider: local          # local | remote
-  model: qwen2.5:14b       # a stronger local model than those under test
+  model: qwen2.5:14b       # a stronger model than those under test, from a DIFFERENT family
+  # Judge on Ollama Cloud while the models under test stay local. Needs OLLAMA_API_KEY in the
+  # environment; the key is only ever sent to https://ollama.com, never to a local server.
+  # base_url: https://ollama.com/v1
+  # model: glm-5.3
   # remote_model: claude-opus-4-8   # used only when provider: remote
   # remote_api_key_env: ANTHROPIC_API_KEY

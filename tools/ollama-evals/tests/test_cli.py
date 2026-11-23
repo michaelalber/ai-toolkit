@@ -56,6 +56,39 @@ def test_run_creates_artifact_and_prints_matrix(monkeypatch, tmp_path: Path):
     assert list(out.glob("*.run.json"))  # artifact written
 
 
+def _judged_run(monkeypatch, tmp_path: Path, judge_model: str, models: str):
+    ds = tmp_path / "datasets"
+    ds.mkdir()
+    case = {"id": "j", "category": "chat", "prompt": "q",
+            "scorer": {"type": "judge", "criteria": "c", "threshold": 0.5}}
+    (ds / "chat.jsonl").write_text(json.dumps(case) + "\n")
+    cfg = tmp_path / "models.yaml"
+    cfg.write_text(f"judge: {{model: {judge_model}}}\n")
+    _patch_client(monkeypatch, FakeClient(content="an answer"))
+
+    class Judge:
+        def score(self, **kwargs):
+            from ollama_evals.judging import Verdict
+            return Verdict(1.0)
+
+    monkeypatch.setattr(cli, "build_judge", lambda cfg, client: Judge())
+    args = ["run", "--models", models, "--suite", "chat", "--config", str(cfg),
+            "--datasets-dir", str(ds), "--out", str(tmp_path / "runs")]
+    return runner.invoke(cli.app, args)
+
+
+def test_run_warns_when_the_judge_grades_its_own_family(monkeypatch, tmp_path: Path):
+    result = _judged_run(monkeypatch, tmp_path, "gemma4", "gemma4-26b-agent:latest,flint:40b")
+    assert result.exit_code == 0, result.output
+    assert "same family" in result.output and "gemma4-26b-agent:latest" in result.output
+
+
+def test_run_does_not_warn_for_a_judge_from_another_family(monkeypatch, tmp_path: Path):
+    result = _judged_run(monkeypatch, tmp_path, "glm-5.3", "gemma4-26b-agent:latest")
+    assert result.exit_code == 0, result.output
+    assert "same family" not in result.output
+
+
 def test_run_with_no_models_errors(monkeypatch, tmp_path: Path):
     ds = tmp_path / "datasets"
     ds.mkdir()

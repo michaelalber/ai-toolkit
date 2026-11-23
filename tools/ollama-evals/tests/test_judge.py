@@ -97,6 +97,35 @@ def test_rubric_judge_pairwise_defaults_to_tie_on_junk():
     assert judge.compare(criteria="c", prompt="p", output_a="a", output_b="b") == "tie"
 
 
+def test_judge_without_its_own_endpoint_shares_the_models_client():
+    client = FakeClient("{}")
+    judge = build_judge(Config(judge=JudgeConfig(model="j")), client=client)
+    assert judge._client is client
+
+
+def test_judge_with_its_own_endpoint_gets_its_own_client():
+    from ollama_evals.client import OllamaClient
+
+    cfg = Config(base_url="http://192.168.1.20:11434/v1",
+                 judge=JudgeConfig(model="glm-5.3", base_url="https://ollama.com/v1"))
+    judge = build_judge(cfg, client=FakeClient("{}"))
+    assert isinstance(judge._client, OllamaClient)
+    assert judge._client.base_url == "https://ollama.com/v1"
+    assert judge._model == "glm-5.3"
+
+
+@pytest.mark.parametrize("judge_model,models,expected", [
+    ("gemma4", ["gemma4-26b-agent:latest", "flint:40b-a2b-qat-int4"], ["gemma4-26b-agent:latest"]),
+    ("qwen3.8:27b-mlx", ["qwen3.8:27b-mxfp8"], ["qwen3.8:27b-mxfp8"]),
+    ("glm-5.3", ["gemma4-26b-agent:latest", "qwen3.8:27b-mlx", "flint:40b-a2b-qat-int4"], []),
+    ("gpt-oss", ["gpt-oss:20b"], ["gpt-oss:20b"]),
+])
+def test_same_family_models_are_flagged(judge_model, models, expected):
+    from ollama_evals.judging import same_family
+
+    assert same_family(judge_model, models) == expected
+
+
 def test_build_judge_unknown_provider_raises():
     cfg = Config(judge=JudgeConfig(provider="nope"))
     with pytest.raises(ValueError):

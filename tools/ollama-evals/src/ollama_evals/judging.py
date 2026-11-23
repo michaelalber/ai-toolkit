@@ -139,13 +139,27 @@ class DeepEvalJudge:
 
 
 def build_judge(config, client):
-    """Construct the judge selected by config.judge.provider."""
+    """Construct the judge selected by config.judge.provider. With judge.base_url set, the
+    rubric judge gets its own client on that endpoint (e.g. an Ollama Cloud model)."""
     jc = config.judge
     if jc.provider == "local":
-        return RubricJudge(client, jc.model)
+        from .client import OllamaClient  # local import: judging stays importable without httpx
+
+        return RubricJudge(OllamaClient(jc.base_url) if jc.base_url else client, jc.model)
     if jc.provider == "remote":
         return DeepEvalJudge(jc.remote_model or jc.model)
     raise ValueError(f"unknown judge provider: {jc.provider!r}")
+
+
+def _family(model: str) -> str:
+    match = re.match(r"[a-z]+", model.lower())
+    return match.group(0) if match else model.lower()
+
+
+def same_family(judge_model: str, models: list[str]) -> list[str]:
+    """Models under test from the judge's own family (by name prefix: gemma, qwen, gpt...).
+    A judge tends to favour its own family's outputs, so such scores are suspect."""
+    return [m for m in models if _family(m) == _family(judge_model)]
 
 
 def extract_json_obj(text: str):

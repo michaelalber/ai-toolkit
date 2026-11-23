@@ -125,6 +125,20 @@ The default judge is a **local** Ollama model (see `judge:` in `models.yaml`) pr
 `.[judge]`) to use a DeepEval-backed or hosted judge; the API key is read from the
 environment, never committed.
 
+**Ollama Cloud judge, local models under test.** Give the judge its own endpoint in
+`models.local.yaml`; the models under test keep using `base_url` / `OLLAMA_BASE_URL`:
+
+```yaml
+base_url: http://<mac-mini>:11434/v1   # models under test
+judge:
+  model: glm-5.3                       # pick a different family from the models under test
+  base_url: https://ollama.com/v1      # needs OLLAMA_API_KEY in the environment
+```
+
+`OLLAMA_API_KEY` is only ever sent to `https://ollama.com` — never to a local or LAN server.
+`run` warns when the judge shares a family (gemma, qwen, gpt…) with a model under test,
+because a judge tends to favour its own family's answers.
+
 ---
 
 ## Add a case

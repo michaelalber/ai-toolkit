@@ -21,7 +21,7 @@ from .cases import load_cases
 from .client import OllamaClient
 from .compare import compare_runs
 from .config import load_config, resolve_config_path
-from .judging import build_judge
+from .judging import build_judge, same_family
 from .report import (
     comparison_to_html,
     comparison_to_markdown,
@@ -88,6 +88,9 @@ def run(
     client = resolve_client(cfg)
     needs_judge = any(c.scorer["type"] == "judge" for c in cases)
     judge = build_judge(cfg, client) if needs_judge else None
+    if needs_judge and (biased := same_family(cfg.judge.model, model_list)):
+        typer.echo(f"warning: judge {cfg.judge.model!r} is the same family as {biased}; "
+                   "judged scores for those models may be inflated", err=True)
 
     result = run_suite(
         client,

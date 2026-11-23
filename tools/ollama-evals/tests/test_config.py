@@ -35,6 +35,19 @@ def test_loads_models_and_judge_from_yaml(tmp_path: Path):
     assert cfg.judge.provider == "remote"
     assert cfg.judge.remote_model == "claude"
     assert cfg.judge.remote_api_key_env == "ANTHROPIC_API_KEY"
+    assert cfg.judge.base_url is None  # judge shares the models' endpoint by default
+
+
+def test_judge_can_have_its_own_endpoint(tmp_path: Path):
+    yaml_file = tmp_path / "models.yaml"
+    yaml_file.write_text(
+        "base_url: http://192.168.1.20:11434/v1\n"
+        "judge: {model: glm-5.3, base_url: 'https://ollama.com/v1'}\n"
+    )
+    cfg = load_config(path=yaml_file, env={"OLLAMA_BASE_URL": "http://other:11434/v1"})
+    assert cfg.base_url == "http://other:11434/v1"  # env overrides the models' endpoint only
+    assert cfg.judge.base_url == "https://ollama.com/v1"
+    assert cfg.judge.model == "glm-5.3"
 
 
 def test_resolve_config_path_prefers_local(tmp_path: Path):

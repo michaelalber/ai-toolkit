@@ -30,6 +30,9 @@ class JudgeConfig:
     model: str = "qwen2.5:14b"
     remote_model: str | None = None
     remote_api_key_env: str | None = None
+    # Own OpenAI-compatible endpoint for the judge (e.g. https://ollama.com/v1 for an Ollama
+    # Cloud model) while the models under test stay on a local server. None = same endpoint.
+    base_url: str | None = None
 
 
 @dataclass(frozen=True)
@@ -67,6 +70,7 @@ def load_config(path: Path | None = None, env: Mapping[str, str] | None = None) 
         model=judge_raw.get("model", "qwen2.5:14b"),
         remote_model=judge_raw.get("remote_model"),
         remote_api_key_env=judge_raw.get("remote_api_key_env"),
+        base_url=judge_raw.get("base_url"),
     )
 
     base_url = env.get("OLLAMA_BASE_URL") or raw.get("base_url") or DEFAULT_BASE_URL
