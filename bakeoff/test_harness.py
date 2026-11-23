@@ -134,6 +134,26 @@ def test_aggregate_keeps_models_in_first_seen_order():
     assert body.index("zeta") < body.index("alpha")
 
 
+def test_pi_models_are_the_local_ollama_providers_models(tmp_path):
+    cfg = tmp_path / "models.json"
+    cfg.write_text(json.dumps({"providers": {
+        "ollama-cloud": {"models": [{"id": "glm-5.3"}]},
+        "ollama": {"models": [{"id": "flint:40b-a2b-qat-int4"}, {"id": "qwen3.8:27b-mlx"}]},
+    }}))
+    assert harness.pi_models(cfg) == ["flint:40b-a2b-qat-int4", "qwen3.8:27b-mlx"]
+
+
+def test_pi_models_without_pi_config_exits_with_a_hint(tmp_path):
+    with pytest.raises(SystemExit, match="--models"):
+        harness.pi_models(tmp_path / "missing.json")
+
+
+def test_resolve_models_takes_an_explicit_list_or_pi(tmp_path, monkeypatch):
+    monkeypatch.setattr(harness, "pi_models", lambda: ["from-pi"])
+    assert harness.resolve_models("pi") == ["from-pi"]
+    assert harness.resolve_models("a, b") == ["a", "b"]
+
+
 def test_task_without_config_defaults_to_pytest(tmp_path):
     cfg = load_task_config(tmp_path)
     assert cfg["test_globs"] == ["test_*.py"]

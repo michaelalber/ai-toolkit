@@ -1,7 +1,8 @@
 # <AI-Generated START>
 """Bake-off: each model x task in a tool loop against Ollama, one model loaded at a time.
 
-Usage: python harness.py [--host URL] [--models m1,m2] [--tasks t1,t2] [--tag NAME] [--n 3]
+Usage: python harness.py [--host URL] [--models pi|m1,m2] [--tasks t1,t2] [--tag NAME] [--n 3]
+--models defaults to 'pi': the local Ollama models listed in ~/.pi/agent/models.json.
 Appends rows to results.jsonl and writes results-<tag>.md (pass counts per model x task, then every run).
 """
 import argparse
@@ -17,19 +18,21 @@ from pathlib import Path
 from sandbox import PYTEST_CMD, Sandbox
 
 HERE = Path(__file__).parent
-MODELS = [
-    "flint:40b-a2b-gguf-nvfp4",
-    "devstral-small-2:latest",
-    "muse-glimmer:30b-mlx",
-    "gpt-oss:20b",
-    "laguna-xs-2.1:nvfp4",
-    "gemma4:26b-nvfp4",
-    "gemma4:31b-nvfp4",
-    "gemma4:26b-mxfp8",
-    "granite4.2:30b-q5_K_M",
-    "nemotron-3.5-lightning:30b-mlx",
-    "nemotron-3.5-bolt:e4b-mlx-bf16",
-]
+PI_MODELS_JSON = Path.home() / ".pi" / "agent" / "models.json"
+
+
+def pi_models(path=None, provider="ollama"):
+    """Model ids of Pi's local provider: the bake-off tests the lineup the agent actually uses,
+    so the list cannot go stale. Cloud providers are not read."""
+    path = Path(path or PI_MODELS_JSON)
+    if not path.is_file():
+        raise SystemExit(f"{path} not found: pass --models m1,m2 to name the models to test")
+    return [m["id"] for m in json.loads(path.read_text())["providers"][provider]["models"]]
+
+
+def resolve_models(spec):
+    """'pi' = Pi's local models; otherwise a comma-separated list."""
+    return pi_models() if spec == "pi" else [m.strip() for m in spec.split(",") if m.strip()]
 TASKS = ["hard_debug", "hard_refactor", "hard_spec", "hard_cs_ledger", "hard_py_jobs", "hard_php_booking"]
 MAX_TURNS = 30
 TASK_WALL_CAP_S = 900
@@ -226,7 +229,9 @@ def summarize(rows):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--host", default="http://localhost:11434")
-    ap.add_argument("--models", default=",".join(MODELS))
+    ap.add_argument("--models", default="pi",
+                    help="comma-separated models, or 'pi' (default) for the local models in "
+                         "~/.pi/agent/models.json")
     ap.add_argument("--tasks", default=",".join(TASKS))
     ap.add_argument("--tag", default="hard")
     ap.add_argument("--n", type=int, default=3, help="runs per model x task (>=3 to see run-to-run variance)")
@@ -237,7 +242,7 @@ def main():
     a = ap.parse_args()
     if a.n < 1:
         raise SystemExit("--n must be >= 1")
-    models = a.models.split(",")
+    models = resolve_models(a.models)
     headers = auth_headers("OLLAMA_API_KEY") if a.cloud else None
     host = "https://ollama.com" if a.cloud else a.host
     if not a.cloud:
