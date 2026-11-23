@@ -53,6 +53,36 @@ def test_custom_globs_protect_csharp_tests(tmp_path):
     assert (work / "CartTests.cs").read_text() == "orig"
 
 
+@pytest.mark.parametrize("name", ["conftest.py", "pkg/conftest.py", "pytest.ini", "pyproject.toml",
+                                  "sitecustomize.py", "Directory.Build.props"])
+def test_model_added_grader_config_is_removed_and_flagged(tmp_path, name):
+    src, work = _dirs(tmp_path)
+    (work / name).parent.mkdir(parents=True, exist_ok=True)
+    (work / name).write_text("hijack")
+    assert restore_tests(src, work) is True
+    assert not (work / name).exists()
+
+
+def test_task_shipped_grader_config_is_restored(tmp_path):
+    src, work = _dirs(tmp_path)
+    (src / "pyproject.toml").write_text("orig")
+    (work / "pyproject.toml").write_text("hacked")
+    assert restore_tests(src, work) is True
+    assert (work / "pyproject.toml").read_text() == "orig"
+
+
+def test_conftest_cannot_force_a_stub_to_pass(tmp_path):
+    from sandbox import Sandbox
+    src = HERE / "tasks" / "hard_spec"
+    import shutil
+    shutil.copytree(src, tmp_path, dirs_exist_ok=True)
+    (tmp_path / "conftest.py").write_text(
+        "import pytest\n@pytest.hookimpl(hookwrapper=True)\n"
+        "def pytest_runtest_makereport(item, call):\n    (yield).get_result().outcome = 'passed'\n")
+    assert restore_tests(src, tmp_path) is True
+    assert Sandbox(tmp_path).run_tests()[0] is False
+
+
 def test_task_without_config_defaults_to_pytest(tmp_path):
     cfg = load_task_config(tmp_path)
     assert cfg["test_globs"] == ["test_*.py"]

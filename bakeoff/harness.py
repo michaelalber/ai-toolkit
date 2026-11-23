@@ -65,9 +65,21 @@ def build_options(modelfile_defaults):
     return {} if modelfile_defaults else {"num_ctx": NUM_CTX, "temperature": 0}
 
 
+# Files that change how tests are collected or graded rather than what the code does.
+# shortcut: model-written source can still patch the test runner at import time; hidden tests are the real fix.
+GRADER_CONFIG = ("conftest.py", "pytest.ini", "pyproject.toml", "setup.cfg", "tox.ini",
+                 "sitecustomize.py", "usercustomize.py", "*.pth", "Directory.Build.*", "Directory.Packages.props")
+
+
 def restore_tests(src, work, globs=("test_*.py",)):
-    """Reset every protected test file in work to the task original. True if any was edited or deleted."""
+    """Reset protected test and grader-config files in work to the task original; delete ones the model
+    added. True if any was added, edited or deleted."""
+    globs = (*globs, *GRADER_CONFIG)
     tampered = False
+    for f in [f for g in globs for f in Path(work).rglob(g)]:
+        if f.is_file() and not (Path(src) / f.relative_to(work)).exists():
+            f.unlink()
+            tampered = True
     for t in (f for g in globs for f in Path(src).rglob(g)):
         dst = Path(work) / t.relative_to(src)
         if not dst.exists() or dst.read_bytes() != t.read_bytes():
