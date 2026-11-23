@@ -177,6 +177,20 @@ def test_cloud_key_is_never_sent_to_any_other_endpoint(monkeypatch, base_url):
     assert _auth_seen(monkeypatch, "test-key", base_url) == [None, None]
 
 
+def test_chat_without_sampling_values_sends_none_of_them():
+    captured = {}
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        import json
+
+        captured["body"] = json.loads(request.content)
+        return httpx.Response(200, json={"choices": [{"message": {"content": "ok"}}]})
+
+    client = OllamaClient("http://host:11434/v1", http_client=_mock_client(handler))
+    client.chat(model="x", messages=[{"role": "user", "content": "hi"}], temperature=None)
+    assert not {"temperature", "seed", "options"} & captured["body"].keys()
+
+
 def test_sends_bearer_token_from_ollama_api_key(monkeypatch):
     """Ollama Cloud (https://ollama.com/v1) requires `Authorization: Bearer <key>`."""
     assert _auth_seen(monkeypatch, "test-key") == ["Bearer test-key", "Bearer test-key"]

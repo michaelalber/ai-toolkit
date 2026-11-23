@@ -266,3 +266,41 @@ def test_manifest_never_records_a_lan_address():
     run = run_suite(RecordingClient("4 ok"), _cases()[:1], ["m"],
                     config=Config(base_url="http://192.168.42.7:11434/v1"))
     assert run.manifest["base_url"] == "http://<private-host>:11434/v1"
+
+
+class KwargsClient:
+    """Captures the sampling kwargs of every chat() call."""
+
+    def __init__(self):
+        self.kwargs = []
+
+    def chat(self, model, messages, **kwargs):
+        self.kwargs.append(kwargs)
+
+        class R:
+            content = "4 ok"
+            tool_calls: list = []
+
+        return R()
+
+
+def test_fixed_sampling_sends_config_values():
+    from ollama_evals.config import Config
+
+    client = KwargsClient()
+    cfg = Config(temperature=0.0, seed=7, num_ctx=8192)
+    run = run_suite(client, _cases()[:1], ["m"], config=cfg)
+    sent = client.kwargs[0]
+    assert (sent["temperature"], sent["seed"], sent["num_ctx"]) == (0.0, 7, 8192)
+    assert run.manifest["sampling"] == "fixed"
+
+
+def test_modelfile_defaults_send_no_sampling_overrides():
+    from ollama_evals.config import Config
+
+    client = KwargsClient()
+    run = run_suite(client, _cases()[:1], ["m"], config=Config(), modelfile_defaults=True)
+    sent = client.kwargs[0]
+    assert (sent["temperature"], sent["seed"], sent["num_ctx"]) == (None, None, None)
+    assert run.manifest["sampling"] == "modelfile"
+    assert run.manifest["temperature"] is None

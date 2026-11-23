@@ -68,6 +68,10 @@ def run(
     system_prompt_file: str = typer.Option(
         None, help="Read the system prompt from this file instead of passing it inline."
     ),
+    modelfile_defaults: bool = typer.Option(
+        False, help="Send no temperature/seed/num_ctx: test each model with its own Modelfile "
+        "settings, as an agent such as Pi runs it. Use --samples 3 or more."
+    ),
 ):
     cfg = resolve_config(config)
     if system_prompt and system_prompt_file:
@@ -101,6 +105,7 @@ def run(
         samples=samples,
         system_prompt=system_prompt,
         suite=suite,
+        modelfile_defaults=modelfile_defaults,
     )
     path = save_run(result, out)
     typer.echo(run_to_markdown(result))

@@ -69,16 +69,23 @@ def run_suite(
     output_preview_chars: int = OUTPUT_PREVIEW_CHARS,
     run_id: str | None = None,
     created_at: str | None = None,
+    modelfile_defaults: bool = False,
 ) -> RunResult:
-    temperature = getattr(config, "temperature", 0.0)
-    seed = getattr(config, "seed", 7)
-    num_ctx = getattr(config, "num_ctx", None)
+    """modelfile_defaults: send no temperature/seed/num_ctx, so each model runs with its own
+    Modelfile settings -- how agents such as Pi use it. Pair with samples >= 3."""
+    if modelfile_defaults:
+        temperature, seed, num_ctx = None, None, None
+    else:
+        temperature = getattr(config, "temperature", 0.0)
+        seed = getattr(config, "seed", 7)
+        num_ctx = getattr(config, "num_ctx", None)
 
     manifest = {
         "run_id": run_id or uuid.uuid4().hex[:12],
         "created_at": created_at or datetime.now(timezone.utc).isoformat(),
         "base_url": public_url(getattr(config, "base_url", None)),
         "models": models,
+        "sampling": "modelfile" if modelfile_defaults else "fixed",
         "temperature": temperature,
         "seed": seed,
         "num_ctx": num_ctx,

@@ -86,6 +86,20 @@ uv run ollama-evals run --models qwen2.5-coder:7b,llama3.1:8b
 uv run ollama-evals run --suite coding --models qwen2.5-coder:7b
 ```
 
+**Fixed vs. Modelfile sampling.** By default every request sends `temperature`, `seed` and
+`num_ctx` from `models.yaml` (temperature 0) — repeatable, good for a regression gate. Agents
+such as Pi send none of these, so each model runs with its own Modelfile settings (often
+temperature 1.0 for reasoning models). To measure the models *as your agent uses them*:
+
+```bash
+uv run ollama-evals run --modelfile-defaults --samples 3 --models flint:40b-a2b-qat-int4
+```
+
+Sampled output varies, so use `--samples 3` or more. The run manifest records `sampling:
+fixed|modelfile`; compare runs only within the same mode. Note that Ollama's `/v1` endpoint
+ignores a per-request `num_ctx` — context length comes from the Modelfile or the server's
+`OLLAMA_CONTEXT_LENGTH`. The judge always uses temperature 0.
+
 ### Regression-test a new model against the old one
 
 ```bash

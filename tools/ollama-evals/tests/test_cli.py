@@ -89,6 +89,22 @@ def test_run_does_not_warn_for_a_judge_from_another_family(monkeypatch, tmp_path
     assert "same family" not in result.output
 
 
+def test_run_modelfile_defaults_flag_is_recorded(monkeypatch, tmp_path: Path):
+    ds = tmp_path / "datasets"
+    ds.mkdir()
+    scorer = {"type": "contains", "value": "a"}
+    case = {"id": "x", "category": "coding", "prompt": "q", "scorer": scorer}
+    (ds / "coding.jsonl").write_text(json.dumps(case) + "\n")
+    _patch_client(monkeypatch, FakeClient(content="a"))
+    out = tmp_path / "runs"
+    args = ["run", "--models", "m", "--suite", "coding", "--datasets-dir", str(ds),
+            "--out", str(out), "--modelfile-defaults"]
+    result = runner.invoke(cli.app, args)
+    assert result.exit_code == 0, result.output
+    manifest = json.loads(next(out.glob("*.run.json")).read_text())["manifest"]
+    assert manifest["sampling"] == "modelfile"
+
+
 def test_run_with_no_models_errors(monkeypatch, tmp_path: Path):
     ds = tmp_path / "datasets"
     ds.mkdir()

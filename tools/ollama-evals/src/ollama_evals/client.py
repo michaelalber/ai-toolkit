@@ -53,13 +53,16 @@ class OllamaClient:
         self,
         model: str,
         messages: list[dict],
-        temperature: float = 0.0,
+        temperature: float | None = 0.0,
         seed: int | None = None,
         num_ctx: int | None = None,
         tools: list[dict] | None = None,
         max_tokens: int | None = None,
     ) -> ChatResult:
-        payload: dict = {"model": model, "messages": messages, "temperature": temperature}
+        """A None sampling value is not sent, so the model's own Modelfile setting applies."""
+        payload: dict = {"model": model, "messages": messages}
+        if temperature is not None:
+            payload["temperature"] = temperature
         if seed is not None:
             payload["seed"] = seed
         if num_ctx is not None:
