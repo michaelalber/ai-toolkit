@@ -1,5 +1,7 @@
 from pathlib import Path
 
+import pytest
+
 from ollama_evals.config import load_config, resolve_config_path
 
 
@@ -36,6 +38,21 @@ def test_loads_models_and_judge_from_yaml(tmp_path: Path):
     assert cfg.judge.remote_model == "claude"
     assert cfg.judge.remote_api_key_env == "ANTHROPIC_API_KEY"
     assert cfg.judge.base_url is None  # judge shares the models' endpoint by default
+
+
+@pytest.mark.parametrize("url,expected", [
+    ("http://192.168.42.7:11434/v1", "http://<private-host>:11434/v1"),
+    ("http://mac-mini.lan:11434/v1", "http://<private-host>:11434/v1"),
+    ("http://10.0.0.5/v1", "http://<private-host>/v1"),
+    ("http://127.0.0.1:11434/v1", "http://127.0.0.1:11434/v1"),
+    ("http://localhost:11434/v1", "http://localhost:11434/v1"),
+    ("https://ollama.com/v1", "https://ollama.com/v1"),
+    (None, None),
+])
+def test_public_url_hides_every_host_but_loopback_and_ollama_cloud(url, expected):
+    from ollama_evals.config import public_url
+
+    assert public_url(url) == expected
 
 
 def test_judge_can_have_its_own_endpoint(tmp_path: Path):

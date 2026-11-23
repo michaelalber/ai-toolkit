@@ -109,7 +109,7 @@ def execute(
             "run_id": _run_id(),
             "suite": "scorecard",
             "models": [model],
-            "base_url": getattr(cfg, "base_url", None),
+            "base_url": mods["config"].public_url(getattr(cfg, "base_url", None)),
             "samples": samples,
             "n_cases": len(selected),
             "rubric_sha256": rubric.sha256,

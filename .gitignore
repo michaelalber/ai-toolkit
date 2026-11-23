@@ -316,3 +316,9 @@ pyrightconfig.json
 
 ### Bake-off harness: local composer vendor for the PHP task fixture ###
 bakeoff/tools/php/vendor/
+
+### Bake-off run outputs: full agent transcripts and results stay local; publish curated tables ###
+bakeoff/results.jsonl
+bakeoff/results-*.md
+bakeoff/pi-results.jsonl
+bakeoff/pibench-events/

@@ -16,6 +16,7 @@ import os
 from collections.abc import Mapping
 from dataclasses import dataclass, field
 from pathlib import Path
+from urllib.parse import urlsplit, urlunsplit
 
 import yaml
 
@@ -43,6 +44,22 @@ class Config:
     num_ctx: int = 8192
     models: list[str] = field(default_factory=list)
     judge: JudgeConfig = field(default_factory=JudgeConfig)
+
+
+_PUBLIC_HOSTS = {"localhost", "127.0.0.1", "::1", "ollama.com"}
+
+
+def public_url(url: str | None) -> str | None:
+    """The endpoint as it may appear in a saved run artifact: loopback and Ollama Cloud are
+    kept, any other host (a LAN IP or hostname) becomes <private-host>. Artifacts get
+    committed and shared, and a LAN address has leaked into one before."""
+    if not url:
+        return url
+    parts = urlsplit(url)
+    if parts.hostname in _PUBLIC_HOSTS:
+        return url
+    netloc = "<private-host>" + (f":{parts.port}" if parts.port else "")
+    return urlunsplit(parts._replace(netloc=netloc))
 
 
 def resolve_config_path(search_dir: Path) -> Path | None:

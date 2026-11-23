@@ -258,3 +258,11 @@ def test_load_cases_from_jsonl(tmp_path: Path):
     assert [c.id for c in cases] == ["a", "b"]
     assert cases[0].messages == [{"role": "user", "content": "x"}]  # prompt -> messages
     assert cases[1].category == "coding"
+
+
+def test_manifest_never_records_a_lan_address():
+    from ollama_evals.config import Config
+
+    run = run_suite(RecordingClient("4 ok"), _cases()[:1], ["m"],
+                    config=Config(base_url="http://192.168.42.7:11434/v1"))
+    assert run.manifest["base_url"] == "http://<private-host>:11434/v1"

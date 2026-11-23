@@ -107,6 +107,26 @@ def test_manifest_pins_the_rubric_sha(repo):
     assert result.run.manifest["n_dimensions"] == 10
 
 
+def test_manifest_never_records_a_lan_address(repo, monkeypatch):
+    _, skills = repo
+    write_good_full(skills, "alpha")
+
+    class Lan(Cfg):
+        base_url = "http://192.168.7.9:11434/v1"
+
+    monkeypatch.setattr(scorecard_run, "_config", lambda *a, **k: Lan())
+    assert _run(repo).run.manifest["base_url"] == "http://<private-host>:11434/v1"
+
+
+def test_committed_baselines_contain_no_private_addresses():
+    import re
+
+    private = re.compile(r"\b(10\.\d{1,3}|192\.168|172\.(1[6-9]|2\d|3[01]))\.\d{1,3}\.\d{1,3}\b")
+    baselines = Path(__file__).resolve().parents[1] / "baselines"
+    leaks = [p.name for p in baselines.rglob("*") if p.is_file() and private.search(p.read_text())]
+    assert leaks == []
+
+
 def test_results_are_one_case_result_per_scored_dimension(repo):
     _, skills = repo
     write_good_full(skills, "alpha")

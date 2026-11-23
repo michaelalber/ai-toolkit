@@ -17,6 +17,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from .cases import Case
+from .config import public_url
 from .scorers import score_output
 
 OUTPUT_PREVIEW_CHARS = 600
@@ -76,7 +77,7 @@ def run_suite(
     manifest = {
         "run_id": run_id or uuid.uuid4().hex[:12],
         "created_at": created_at or datetime.now(timezone.utc).isoformat(),
-        "base_url": getattr(config, "base_url", None),
+        "base_url": public_url(getattr(config, "base_url", None)),
         "models": models,
         "temperature": temperature,
         "seed": seed,
