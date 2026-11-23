@@ -26,6 +26,9 @@ class CalibrationResult:
     n: int
     agreement: float
     rows: list[dict] = field(default_factory=list)
+    false_passes: list[str] = field(default_factory=list)  # judge passed, human failed
+    false_fails: list[str] = field(default_factory=list)   # judge failed, human passed
+    unparsed: list[str] = field(default_factory=list)      # judge reply unreadable
 
 
 def load_calibration(path: str | Path) -> list[CalibrationExample]:
@@ -47,16 +50,25 @@ def load_calibration(path: str | Path) -> list[CalibrationExample]:
     return examples
 
 
-def calibrate(judge, examples: list[CalibrationExample], pass_threshold: float = 0.5):
-    rows = []
+def calibrate(judge, examples: list[CalibrationExample], pass_threshold: float = 0.7):
+    """pass_threshold matches the judge scorer's default (0.7): a 3/5 verdict fails a real
+    case, so it must fail here too. An unreadable verdict never counts as agreement."""
+    result = CalibrationResult(n=len(examples), agreement=0.0)
     agree = 0
     for ex in examples:
         verdict = judge.score(criteria=ex.criteria, prompt=ex.prompt, output=ex.output)
+        parsed = getattr(verdict, "parsed", True)
         predicted_pass = verdict.score >= pass_threshold
         human_pass = ex.human_score >= pass_threshold
-        matched = predicted_pass == human_pass
+        matched = parsed and predicted_pass == human_pass
         agree += int(matched)
-        rows.append(
+        if not parsed:
+            result.unparsed.append(ex.id)
+        elif predicted_pass and not human_pass:
+            result.false_passes.append(ex.id)
+        elif human_pass and not predicted_pass:
+            result.false_fails.append(ex.id)
+        result.rows.append(
             {
                 "id": ex.id,
                 "judge_score": verdict.score,
@@ -64,6 +76,6 @@ def calibrate(judge, examples: list[CalibrationExample], pass_threshold: float =
                 "agree": matched,
             }
         )
-    n = len(examples)
-    return CalibrationResult(n=n, agreement=(agree / n if n else 0.0), rows=rows)
+    result.agreement = agree / result.n if result.n else 0.0
+    return result
 # <AI-Generated END>

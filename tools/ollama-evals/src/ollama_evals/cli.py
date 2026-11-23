@@ -157,6 +157,11 @@ def calibrate(
     judge = build_judge(cfg, resolve_client(cfg))
     result = run_calibration(judge, load_calibration(dataset))
     typer.echo(f"judge agreement: {result.agreement:.2f} over {result.n} labelled examples")
+    for label, ids in [("false passes (judge passed what a human failed)", result.false_passes),
+                       ("false fails (judge failed what a human passed)", result.false_fails),
+                       ("unreadable judge replies", result.unparsed)]:
+        if ids:
+            typer.echo(f"{label}: {', '.join(ids)}")
     if result.agreement < 0.8:
         typer.echo("WARNING: agreement < 0.80 — do not trust this judge as a gate yet.", err=True)
 

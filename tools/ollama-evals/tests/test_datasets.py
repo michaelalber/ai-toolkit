@@ -58,7 +58,23 @@ def test_case_ids_are_unique_across_datasets():
 
 def test_calibration_set_loads_and_is_balanced():
     examples = load_calibration(DATASETS / "judge-calibration.jsonl")
-    assert len(examples) >= 4
-    goods = sum(1 for e in examples if e.human_score >= 0.5)
-    bads = len(examples) - goods
-    assert goods and bads  # need both classes to measure agreement meaningfully
+    assert len(examples) >= 30
+    goods = sum(1 for e in examples if e.human_score >= 0.7)
+    assert 0.4 <= goods / len(examples) <= 0.6  # a lopsided set rewards an always-pass judge
+
+
+def test_calibration_covers_every_judged_case_with_its_real_rubric():
+    """Calibration must test the prompt and criteria the judge actually grades, with at
+    least two passes and two fails for each judged case."""
+    import json
+
+    judged = {c.id: c for c in load_cases(DATASETS / "chat.jsonl") if c.scorer["type"] == "judge"}
+    rows = [json.loads(x) for x in (DATASETS / "judge-calibration.jsonl").read_text().splitlines()]
+    for case_id, case in judged.items():
+        mine = [r for r in rows if r["case"] == case_id]
+        assert all(r["prompt"] == case.user_prompt for r in mine), case_id
+        assert all(r["criteria"] == case.scorer["criteria"] for r in mine), case_id
+        assert sum(r["human_score"] >= 0.7 for r in mine) >= 2, case_id
+        assert sum(r["human_score"] < 0.7 for r in mine) >= 2, case_id
+    assert {r["case"] for r in rows} <= judged.keys()
+    assert all(r.get("rationale") for r in rows)  # every label says why, for review

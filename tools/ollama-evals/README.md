@@ -128,11 +128,20 @@ uv run ollama-evals report runs/<id>.run.json --html matrix.html
 ## Calibrate the judge (do this before trusting chat scores)
 
 An uncalibrated LLM-as-judge is worse than none. `datasets/judge-calibration.jsonl` holds
-human-labelled good/bad answers; `calibrate` measures how often the judge agrees.
+30 labelled answers — 3 passes and 3 fails for each judged `chat` case, using that case's exact
+prompt and criteria, each with a one-line `rationale`. Most fails are near misses (a correct
+derivation that ends on "10 cents", a polite rewrite that drops the missing-tests point), since
+absurd wrong answers tell you nothing about a judge. `calibrate` measures how often the judge
+agrees, at the same 0.7 pass mark the `judge` scorer uses, and lists the disagreements:
 
 ```bash
 uv run ollama-evals calibrate            # aim for agreement >= 0.80
 ```
+
+**False passes** (the judge passed an answer a human failed) are the dangerous ones: they
+inflate scores. Unreadable judge replies count as disagreements, never as agreement. The
+labels were drafted with AI assistance; review them (the `rationale` field says why each one
+is labelled as it is) before relying on agreement numbers.
 
 The default judge is a **local** Ollama model (see `judge:` in `models.yaml`) prompting a
 1–5 rubric — fully offline, no extra dependencies. Set `judge.provider: remote` (and install

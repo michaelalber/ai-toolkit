@@ -240,3 +240,4 @@ def test_calibrate_reports_agreement(monkeypatch, tmp_path: Path):
     result = runner.invoke(cli.app, ["calibrate", "--dataset", str(calib)])
     assert result.exit_code == 0
     assert "agreement: 0.50" in result.output
+    assert "false passes (judge passed what a human failed): b" in result.output
