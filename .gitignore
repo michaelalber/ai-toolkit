@@ -2,6 +2,9 @@
 .claude/
 .opencode/
 
+# Local session scratchpad / handoff notes
+NOTES.md
+
 # Created by https://www.toptal.com/developers/gitignore/api/windows,linux,macos,jetbrains,visualstudiocode
 # Edit at https://www.toptal.com/developers/gitignore?templates=windows,linux,macos,jetbrains,visualstudiocode
 
