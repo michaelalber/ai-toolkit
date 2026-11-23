@@ -1,18 +1,20 @@
 # <AI-Generated START>
 """Bake-off: each model x task in a tool loop against Ollama, one model loaded at a time.
 
-Usage: python harness.py [--host URL] [--models pi|m1,m2] [--tasks t1,t2] [--tag NAME] [--n 3]
+Usage: python harness.py [--host URL] [--models pi|m1,m2] [--tasks t1,t2] [--tag NAME] [--n 3] [--keep-failed]
 --models defaults to 'pi': the local Ollama models listed in ~/.pi/agent/models.json.
 Sampling defaults to each model's own Modelfile settings, as Pi runs it; --fixed-sampling sends
 temperature 0 and a fixed num_ctx instead (comparable with bake-offs before 2026-11-22).
 Appends rows to results.jsonl and writes results-<tag>.md (pass counts per model x task, then every run).
 """
 import argparse
+import importlib.util
 import json
 import math
 import os
 import shutil
 import statistics
+import sys
 import tempfile
 import time
 import urllib.request
@@ -65,6 +67,15 @@ def load_task_config(task_dir):
         cfg.update(json.loads(p.read_text()))
     cfg["test_cmd"] = [a.replace("{bakeoff}", str(HERE)) for a in cfg["test_cmd"]]
     return cfg
+
+
+def require_pytest(tasks):
+    """Python tasks run `sys.executable -m pytest`; without pytest every run_tests call and the
+    final grade fail, so every model would score 0 with no visible error. Refuse to start instead."""
+    uses_pytest = any("pytest" in load_task_config(HERE / "tasks" / t)["test_cmd"] for t in tasks)
+    if uses_pytest and importlib.util.find_spec("pytest") is None:
+        raise SystemExit(f"pytest is not importable by {sys.executable}; run with "
+                         "`uv run --no-project --with pytest python harness.py ...`")
 
 
 def build_options(modelfile_defaults):
@@ -148,9 +159,10 @@ def unload(host, model):
     post(host, "/api/generate", {"model": model, "keep_alive": 0}, timeout=120)
 
 
-def run_one(host, model, task, tag, modelfile_defaults=False, headers=None, run=0):
+def run_one(host, model, task, tag, modelfile_defaults=False, headers=None, run=0, keep_root=None):
     """headers set = remote/cloud host: auth is sent and local memory probing (/api/ps) is skipped.
-    run: repeat index (0-based) for --n repeats."""
+    run: repeat index (0-based) for --n repeats. keep_root: on a fail, keep the workspace and the
+    full conversation under keep_root/<model>-<task>-<run>/ to tell model errors from eval errors."""
     src = HERE / "tasks" / task
     work = Path(tempfile.mkdtemp(prefix=f"bake-{task}-"))
     shutil.copytree(src, work, dirs_exist_ok=True)
@@ -190,6 +202,13 @@ def run_one(host, model, task, tag, modelfile_defaults=False, headers=None, run=
     row["passed"] = sb.run_tests()[0]
     row["hidden_passed"] = hidden_passed(sb, load_hidden(task))
     row["gen_tok_s"] = round(row["eval_tokens"] / (row["eval_ns"] / 1e9), 1) if row["eval_ns"] else None
+    row["kept"] = None
+    if keep_root and (not row["passed"] or row["hidden_passed"] is False):
+        kept = Path(keep_root) / f"{model.replace('/', '_').replace(':', '_')}-{task}-{run}"
+        shutil.rmtree(kept, ignore_errors=True)  # a re-run with the same tag replaces the old copy
+        shutil.copytree(work, kept / "workspace")
+        (kept / "transcript.json").write_text(json.dumps(msgs, indent=1))
+        row["kept"] = str(kept)
     shutil.rmtree(work, ignore_errors=True)
     return row
 
@@ -309,6 +328,8 @@ def parse_args(argv=None):
                     help=f"send temperature 0 and num_ctx {NUM_CTX} (comparable with older results)")
     ap.add_argument("--cloud", action="store_true",
                     help="Ollama Cloud: host https://ollama.com, Bearer auth from $OLLAMA_API_KEY, no local preflight")
+    ap.add_argument("--keep-failed", action="store_true",
+                    help="keep each failed run's workspace + transcript in runs/<tag>/ for inspection")
     return ap.parse_args(argv)
 
 
@@ -316,6 +337,7 @@ def main():
     a = parse_args()
     if a.n < 1:
         raise SystemExit("--n must be >= 1")
+    require_pytest(a.tasks.split(","))
     models = resolve_models(a.models)
     headers = auth_headers("OLLAMA_API_KEY") if a.cloud else None
     host = "https://ollama.com" if a.cloud else a.host
@@ -331,7 +353,9 @@ def main():
         info = model_info(host, model, tags, headers)
         for i in range(a.n):
             for task in a.tasks.split(","):
-                row = {**run_one(host, model, task, a.tag, a.modelfile_defaults, headers, run=i), **info}
+                keep_root = HERE / "runs" / a.tag if a.keep_failed else None
+                row = {**run_one(host, model, task, a.tag, a.modelfile_defaults, headers, run=i, keep_root=keep_root),
+                       **info}
                 rows.append(row)
                 with open(HERE / "results.jsonl", "a") as f:
                     f.write(json.dumps(row) + "\n")

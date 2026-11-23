@@ -223,6 +223,43 @@ def test_each_row_records_its_sampling_mode(monkeypatch, modelfile_defaults, exp
     assert sent[0] == ({} if modelfile_defaults else {"num_ctx": NUM_CTX, "temperature": 0})
 
 
+def _fake_run(monkeypatch):
+    monkeypatch.setattr(harness, "post", lambda *a, **k: {"message": {"role": "assistant", "content": "done"}})
+    monkeypatch.setattr(harness, "loaded_gb", lambda host: 0.0)
+    monkeypatch.setattr(harness, "load_hidden", lambda task: {})
+
+
+def test_preflight_refuses_pytest_tasks_when_pytest_is_missing(monkeypatch):
+    monkeypatch.setattr(harness.importlib.util, "find_spec", lambda name: None)
+    with pytest.raises(SystemExit, match="pytest"):
+        harness.require_pytest(["hard_spec"])
+
+
+def test_preflight_passes_when_pytest_is_importable():
+    harness.require_pytest(["hard_spec"])  # this test suite itself runs under pytest
+
+
+def test_keep_failed_is_off_by_default():
+    assert harness.parse_args([]).keep_failed is False
+    assert harness.parse_args(["--keep-failed"]).keep_failed is True
+
+
+def test_failed_run_keeps_workspace_and_transcript(monkeypatch, tmp_path):
+    _fake_run(monkeypatch)
+    row = harness.run_one("http://h", "org/m:7b", "hard_spec", "t", keep_root=tmp_path, run=2)
+    assert row["passed"] is False
+    kept = tmp_path / "org_m_7b-hard_spec-2"
+    assert row["kept"] == str(kept)
+    assert (kept / "workspace" / "semver.py").exists()
+    msgs = json.loads((kept / "transcript.json").read_text())
+    assert msgs[-1]["content"] == "done"
+
+
+def test_nothing_is_kept_without_keep_root(monkeypatch):
+    _fake_run(monkeypatch)
+    assert harness.run_one("http://h", "m", "hard_spec", "t")["kept"] is None
+
+
 def test_task_without_config_defaults_to_pytest(tmp_path):
     cfg = load_task_config(tmp_path)
     assert cfg["test_globs"] == ["test_*.py"]
