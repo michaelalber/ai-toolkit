@@ -41,7 +41,7 @@ def test_loads_models_and_judge_from_yaml(tmp_path: Path):
 
 
 @pytest.mark.parametrize("url,expected", [
-    ("http://192.168.42.7:11434/v1", "http://<private-host>:11434/v1"),
+    ("http://192.168.1.20:11434/v1", "http://<private-host>:11434/v1"),
     ("http://mac-mini.lan:11434/v1", "http://<private-host>:11434/v1"),
     ("http://10.0.0.5/v1", "http://<private-host>/v1"),
     ("http://127.0.0.1:11434/v1", "http://127.0.0.1:11434/v1"),
