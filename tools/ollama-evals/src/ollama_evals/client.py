@@ -35,9 +35,12 @@ class OllamaClient:
         self.base_url = base_url.rstrip("/")
         self._client = http_client or httpx.Client(timeout=timeout)
         # Ollama Cloud needs a bearer token; a local server needs none. Read from the
-        # environment only — never from a committed config file.
+        # environment only — never from a committed config file — and send it only to
+        # https://ollama.com, so it never crosses a LAN in plain text to a local server.
         key = os.environ.get("OLLAMA_API_KEY")
-        self._headers = {"Authorization": f"Bearer {key}"} if key else {}
+        url = httpx.URL(self.base_url)
+        is_cloud = url.scheme == "https" and url.host == "ollama.com"
+        self._headers = {"Authorization": f"Bearer {key}"} if key and is_cloud else {}
 
     def _tags_url(self) -> str:
         # /api/tags is the native Ollama endpoint and is NOT under /v1.

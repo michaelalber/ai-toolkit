@@ -144,7 +144,9 @@ def test_chat_raises_on_http_error():
         client.chat(model="x", messages=[{"role": "user", "content": "hi"}])
 
 
-def _auth_seen(monkeypatch, key: str | None) -> list[str | None]:
+def _auth_seen(
+    monkeypatch, key: str | None, base_url: str = "https://ollama.com/v1"
+) -> list[str | None]:
     """Authorization header on a chat and a list_models call, with OLLAMA_API_KEY = key."""
     if key is None:
         monkeypatch.delenv("OLLAMA_API_KEY", raising=False)
@@ -158,10 +160,21 @@ def _auth_seen(monkeypatch, key: str | None) -> list[str | None]:
             return httpx.Response(200, json={"models": []})
         return httpx.Response(200, json={"choices": [{"message": {"content": "ok"}}]})
 
-    client = OllamaClient("https://ollama.com/v1", http_client=_mock_client(handler))
+    client = OllamaClient(base_url, http_client=_mock_client(handler))
     client.chat(model="x", messages=[{"role": "user", "content": "hi"}])
     client.list_models()
     return seen
+
+
+@pytest.mark.parametrize("base_url", [
+    "http://192.168.1.20:11434/v1",      # LAN server over plain HTTP
+    "http://127.0.0.1:11434/v1",
+    "http://ollama.com/v1",              # right host, but not encrypted
+    "https://ollama.com.evil.example/v1",
+    "https://my-proxy.example/v1",
+])
+def test_cloud_key_is_never_sent_to_any_other_endpoint(monkeypatch, base_url):
+    assert _auth_seen(monkeypatch, "test-key", base_url) == [None, None]
 
 
 def test_sends_bearer_token_from_ollama_api_key(monkeypatch):
