@@ -115,6 +115,25 @@ def test_summary_shows_hidden_result_and_blank_when_absent():
     assert "| PASS |  |" in table.splitlines()[3]
 
 
+def _row(model, task, passed, hidden, wall=10):
+    return {"model": model, "task": task, "passed": passed, "hidden_passed": hidden, "wall_s": wall}
+
+
+def test_aggregate_counts_passes_per_model_and_task_with_a_model_total():
+    rows = [_row("m1", "t1", True, True), _row("m1", "t1", True, False), _row("m1", "t1", False, False),
+            _row("m1", "t2", True, None, 30), _row("m1", "t2", True, None, 20)]
+    lines = harness.aggregate(rows).splitlines()
+    assert lines[2] == "| m1 | t1 | 2/3 | 1/3 | 10.0 |"
+    assert lines[3] == "| m1 | t2 | 2/2 |  | 25.0 |"
+    assert lines[4] == "| **m1** | **all** | **4/5** | **1/3** |  |"
+
+
+def test_aggregate_keeps_models_in_first_seen_order():
+    rows = [_row("zeta", "t", True, True), _row("alpha", "t", False, False)]
+    body = harness.aggregate(rows)
+    assert body.index("zeta") < body.index("alpha")
+
+
 def test_task_without_config_defaults_to_pytest(tmp_path):
     cfg = load_task_config(tmp_path)
     assert cfg["test_globs"] == ["test_*.py"]

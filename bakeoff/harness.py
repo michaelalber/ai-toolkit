@@ -1,13 +1,14 @@
 # <AI-Generated START>
 """Bake-off: each model x task in a tool loop against Ollama, one model loaded at a time.
 
-Usage: python harness.py [--host URL] [--models m1,m2] [--tasks t1,t2] [--tag NAME]
-Appends rows to results.jsonl and writes results-<tag>.md (summary table).
+Usage: python harness.py [--host URL] [--models m1,m2] [--tasks t1,t2] [--tag NAME] [--n 3]
+Appends rows to results.jsonl and writes results-<tag>.md (pass counts per model x task, then every run).
 """
 import argparse
 import json
 import os
 import shutil
+import statistics
 import tempfile
 import time
 import urllib.request
@@ -141,15 +142,16 @@ def unload(host, model):
     post(host, "/api/generate", {"model": model, "keep_alive": 0}, timeout=120)
 
 
-def run_one(host, model, task, tag, modelfile_defaults=False, headers=None):
-    """headers set = remote/cloud host: auth is sent and local memory probing (/api/ps) is skipped."""
+def run_one(host, model, task, tag, modelfile_defaults=False, headers=None, run=0):
+    """headers set = remote/cloud host: auth is sent and local memory probing (/api/ps) is skipped.
+    run: repeat index (0-based) for --n repeats."""
     src = HERE / "tasks" / task
     work = Path(tempfile.mkdtemp(prefix=f"bake-{task}-"))
     shutil.copytree(src, work, dirs_exist_ok=True)
     cfg = load_task_config(src)
     sb = Sandbox(work, cfg["test_cmd"], cfg["test_timeout"])
     msgs = [{"role": "system", "content": SYSTEM}, {"role": "user", "content": (work / "spec.md").read_text()}]
-    row = {"round": tag, "model": model, "task": task, "turns": 0, "tool_calls": 0, "tool_errors": 0,
+    row = {"round": tag, "model": model, "task": task, "run": run, "turns": 0, "tool_calls": 0, "tool_errors": 0,
            "eval_tokens": 0, "eval_ns": 0, "prompt_tokens": 0, "prompt_ns": 0, "mem_gb": 0.0, "error": None}
     t0 = time.time()
     try:
@@ -189,6 +191,27 @@ def fmt_hidden(v):
     return "" if v is None else "PASS" if v else "FAIL"
 
 
+def _k_of_n(values):
+    vals = [v for v in values if v is not None]
+    return f"{sum(vals)}/{len(vals)}" if vals else ""
+
+
+def aggregate(rows):
+    """Pass counts over repeated runs per model x task, plus a total per model. One run of 6 tasks swings
+    a pass rate by 17 points and temperature 0 is not deterministic on Ollama, so read k/n, not one PASS."""
+    out = ["| model | task | pass | hidden | median wall s |", "|---|---|---|---|---|"]
+    for model in dict.fromkeys(r["model"] for r in rows):
+        mine = [r for r in rows if r["model"] == model]
+        for task in dict.fromkeys(r["task"] for r in mine):
+            runs = [r for r in mine if r["task"] == task]
+            out.append(f"| {model} | {task} | {_k_of_n(r['passed'] for r in runs)} | "
+                       f"{_k_of_n(r.get('hidden_passed') for r in runs)} | "
+                       f"{statistics.median(r['wall_s'] for r in runs):.1f} |")
+        out.append(f"| **{model}** | **all** | **{_k_of_n(r['passed'] for r in mine)}** | "
+                   f"**{_k_of_n(r.get('hidden_passed') for r in mine)}** |  |")
+    return "\n".join(out)
+
+
 def summarize(rows):
     out = ["| model | task | pass | hidden | turns | tool err | gen tok/s | wall s | peak mem GB | tampered | error |",
            "|---|---|---|---|---|---|---|---|---|---|---|"]
@@ -206,11 +229,14 @@ def main():
     ap.add_argument("--models", default=",".join(MODELS))
     ap.add_argument("--tasks", default=",".join(TASKS))
     ap.add_argument("--tag", default="hard")
+    ap.add_argument("--n", type=int, default=3, help="runs per model x task (>=3 to see run-to-run variance)")
     ap.add_argument("--modelfile-defaults", action="store_true",
                     help="send no num_ctx/temperature overrides; test the model's own Modelfile params")
     ap.add_argument("--cloud", action="store_true",
                     help="Ollama Cloud: host https://ollama.com, Bearer auth from $OLLAMA_API_KEY, no local preflight")
     a = ap.parse_args()
+    if a.n < 1:
+        raise SystemExit("--n must be >= 1")
     models = a.models.split(",")
     headers = auth_headers("OLLAMA_API_KEY") if a.cloud else None
     host = "https://ollama.com" if a.cloud else a.host
@@ -220,18 +246,20 @@ def main():
         if busy := loaded(host):
             raise SystemExit(f"Refusing to start: models already loaded on host: {busy}")
     rows = []
-    for model in models:
-        for task in a.tasks.split(","):
-            row = run_one(host, model, task, a.tag, a.modelfile_defaults, headers)
-            rows.append(row)
-            with open(HERE / "results.jsonl", "a") as f:
-                f.write(json.dumps(row) + "\n")
-            print(row, flush=True)
+    for model in models:  # repeats stay inside one model load: one model in memory at a time
+        for i in range(a.n):
+            for task in a.tasks.split(","):
+                row = run_one(host, model, task, a.tag, a.modelfile_defaults, headers, run=i)
+                rows.append(row)
+                with open(HERE / "results.jsonl", "a") as f:
+                    f.write(json.dumps(row) + "\n")
+                print(row, flush=True)
         if not a.cloud:
             unload(host, model)  # one model at a time
             if loaded(host):
                 raise SystemExit(f"Model still loaded after unload: {loaded(host)}")
-    (HERE / f"results-{a.tag}.md").write_text(summarize(rows) + "\n")
+    (HERE / f"results-{a.tag}.md").write_text(
+        f"## Pass counts ({a.n} runs per model x task)\n\n{aggregate(rows)}\n\n## Every run\n\n{summarize(rows)}\n")
 
 
 if __name__ == "__main__":
