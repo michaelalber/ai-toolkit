@@ -67,6 +67,14 @@ def test_network_is_blocked_in_sandbox():
     assert "network disabled" in r.detail.lower()
 
 
+@pytest.mark.parametrize("exit_call", ["import sys\nsys.exit(0)", "import os\nos._exit(0)"])
+def test_exiting_before_tests_run_fails(exit_call):
+    cheat = f"def is_prime(n):\n    return True\n{exit_call}\n"
+    r = code_exec(cheat, _spec(), {})
+    assert not r.passed
+    assert "tests did not complete" in r.detail.lower()
+
+
 def test_syntax_error_in_candidate_fails():
     r = code_exec("def is_prime(n) return n", _spec(), {})
     assert not r.passed

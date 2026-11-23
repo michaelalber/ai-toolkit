@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import os
 import re
+import secrets
 import subprocess
 import sys
 import tempfile
@@ -65,7 +66,9 @@ def code_exec(output: str, spec: dict, context: dict) -> ScoreResult:
         return ScoreResult(0.0, False, "no code found in output")
 
     timeout = int(spec.get("timeout", DEFAULT_TIMEOUT))
-    script = f"{_NETWORK_GUARD}\n{code}\n\n{spec.get('test_code', '')}\n"
+    # Exit 0 alone is not a pass: candidate code could sys.exit(0) before the tests run.
+    sentinel = f"__EVAL_TESTS_DONE_{secrets.token_hex(8)}__"
+    script = f"{_NETWORK_GUARD}\n{code}\n\n{spec.get('test_code', '')}\nprint({sentinel!r})\n"
 
     with tempfile.TemporaryDirectory(prefix="ollama-evals-") as workdir:
         script_path = Path(workdir) / "_candidate.py"
@@ -89,8 +92,10 @@ def code_exec(output: str, spec: dict, context: dict) -> ScoreResult:
         except subprocess.TimeoutExpired:
             return ScoreResult(0.0, False, f"timeout after {timeout}s")
 
-    if proc.returncode == 0:
+    if proc.returncode == 0 and sentinel in proc.stdout:
         return ScoreResult(1.0, True)
+    if proc.returncode == 0:
+        return ScoreResult(0.0, False, "tests did not complete: candidate exited before they ran")
     detail = (proc.stderr or proc.stdout or "").strip()
     return ScoreResult(0.0, False, _tail(detail))
 
