@@ -83,6 +83,38 @@ def test_conftest_cannot_force_a_stub_to_pass(tmp_path):
     assert Sandbox(tmp_path).run_tests()[0] is False
 
 
+def test_task_without_hidden_tests_has_none(tmp_path, monkeypatch):
+    monkeypatch.setattr(harness, "HERE", tmp_path)
+    assert harness.load_hidden("anything") == {}
+
+
+def test_load_hidden_reads_nested_files_relative_to_the_task(tmp_path, monkeypatch):
+    monkeypatch.setattr(harness, "HERE", tmp_path)
+    (tmp_path / "hidden" / "t" / "pkg").mkdir(parents=True)
+    (tmp_path / "hidden" / "t" / "pkg" / "test_h.py").write_text("x")
+    assert harness.load_hidden("t") == {harness.Path("pkg/test_h.py"): b"x"}
+
+
+def test_hidden_grade_is_none_without_hidden_tests(tmp_path):
+    from sandbox import Sandbox
+    assert harness.hidden_passed(Sandbox(tmp_path), {}) is None
+
+
+@pytest.mark.parametrize("body,expected", [("def test_ok():\n    pass\n", True),
+                                           ("def test_bad():\n    assert False\n", False)])
+def test_hidden_grade_runs_the_hidden_tests_in_the_workdir(tmp_path, body, expected):
+    from sandbox import Sandbox
+    assert harness.hidden_passed(Sandbox(tmp_path), {harness.Path("test_hidden.py"): body.encode()}) is expected
+
+
+def test_summary_shows_hidden_result_and_blank_when_absent():
+    base = {"model": "m", "task": "t", "passed": True, "turns": 1, "tool_errors": 0, "tool_calls": 1,
+            "gen_tok_s": 1, "wall_s": 1, "mem_gb": 1, "tests_tampered": False, "error": None}
+    table = harness.summarize([{**base, "hidden_passed": False}, {**base, "hidden_passed": None}])
+    assert "| PASS | FAIL |" in table.splitlines()[2]
+    assert "| PASS |  |" in table.splitlines()[3]
+
+
 def test_task_without_config_defaults_to_pytest(tmp_path):
     cfg = load_task_config(tmp_path)
     assert cfg["test_globs"] == ["test_*.py"]

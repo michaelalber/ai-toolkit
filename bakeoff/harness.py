@@ -89,6 +89,25 @@ def restore_tests(src, work, globs=("test_*.py",)):
     return tampered
 
 
+def load_hidden(task):
+    """Held-out tests for a task as {relative path: bytes}. They live outside tasks/ so the model never sees
+    them; loaded up front so pi_bench can lock hidden/ for the whole batch."""
+    root = HERE / "hidden" / task
+    return {f.relative_to(root): f.read_bytes() for f in root.rglob("*") if f.is_file()} if root.is_dir() else {}
+
+
+def hidden_passed(sb, files):
+    """Add the held-out tests to the workdir and run the full suite. None when the task has none.
+    Catches solutions that special-case the visible tests."""
+    if not files:
+        return None
+    for rel, data in files.items():
+        p = sb.root / rel
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_bytes(data)
+    return sb.run_tests()[0]
+
+
 def auth_headers(env_var):
     """Bearer header from an env var (Ollama Cloud). The key is never printed or logged."""
     if not env_var:
@@ -160,16 +179,22 @@ def run_one(host, model, task, tag, modelfile_defaults=False, headers=None):
     row["wall_s"] = round(time.time() - t0, 1)
     row["tests_tampered"] = restore_tests(src, work, cfg["test_globs"])  # grade against the original tests, but flag it
     row["passed"] = sb.run_tests()[0]
+    row["hidden_passed"] = hidden_passed(sb, load_hidden(task))
     row["gen_tok_s"] = round(row["eval_tokens"] / (row["eval_ns"] / 1e9), 1) if row["eval_ns"] else None
     shutil.rmtree(work, ignore_errors=True)
     return row
 
 
+def fmt_hidden(v):
+    return "" if v is None else "PASS" if v else "FAIL"
+
+
 def summarize(rows):
-    out = ["| model | task | pass | turns | tool err | gen tok/s | wall s | peak mem GB | tampered | error |",
-           "|---|---|---|---|---|---|---|---|---|---|"]
+    out = ["| model | task | pass | hidden | turns | tool err | gen tok/s | wall s | peak mem GB | tampered | error |",
+           "|---|---|---|---|---|---|---|---|---|---|---|"]
     for r in rows:
-        out.append(f"| {r['model']} | {r['task']} | {'PASS' if r['passed'] else 'FAIL'} | {r['turns']} | "
+        out.append(f"| {r['model']} | {r['task']} | {'PASS' if r['passed'] else 'FAIL'} | "
+                   f"{fmt_hidden(r.get('hidden_passed'))} | {r['turns']} | "
                    f"{r['tool_errors']}/{r['tool_calls']} | {r['gen_tok_s']} | {r['wall_s']} | {r['mem_gb']} | "
                    f"{'YES' if r['tests_tampered'] else ''} | {r['error'] or ''} |")
     return "\n".join(out)

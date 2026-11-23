@@ -4,7 +4,7 @@ import shutil
 from pathlib import Path
 
 import pytest
-from harness import load_task_config
+from harness import hidden_passed, load_hidden, load_task_config
 from sandbox import Sandbox
 
 HERE = Path(__file__).parent
@@ -29,4 +29,26 @@ def test_stub_fails(tmp_path, task):
 def test_reference_passes(tmp_path, task):
     passed, out = _prepare(tmp_path, task, True).run_tests()
     assert passed, out
+
+
+HIDDEN = ["hard_debug", "hard_refactor", "hard_spec", "hard_cs_ledger", "hard_py_jobs", "hard_php_booking"]
+
+
+@pytest.mark.parametrize("task", HIDDEN)
+def test_reference_passes_hidden_tests(tmp_path, task):
+    sb = _prepare(tmp_path, task, True)
+    for rel, data in load_hidden(task).items():  # write directly to see the failure output
+        (tmp_path / rel).write_bytes(data)
+    passed, out = sb.run_tests()
+    assert passed, out
+
+
+@pytest.mark.parametrize("task", HIDDEN)
+def test_stub_fails_hidden_tests(tmp_path, task):
+    assert hidden_passed(_prepare(tmp_path, task, False), load_hidden(task)) is False
+
+
+def test_every_harness_task_has_hidden_tests():
+    from harness import TASKS as RUN_TASKS
+    assert set(RUN_TASKS) <= set(HIDDEN)
 # <AI-Generated END>

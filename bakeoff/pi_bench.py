@@ -18,7 +18,7 @@ import tempfile
 import time
 from pathlib import Path
 
-from harness import HERE, TASK_WALL_CAP_S, load_task_config, restore_tests
+from harness import HERE, TASK_WALL_CAP_S, fmt_hidden, hidden_passed, load_hidden, load_task_config, restore_tests
 from sandbox import Sandbox
 
 MODEL = "flint:40b-a2b-qat-int4"
@@ -142,8 +142,8 @@ def outside_refs(out):
 
 
 def reference_refs(out):
-    """How often a run's events name the reference solutions — any hit makes the run suspect."""
-    return out.count(str(HERE / "reference") + "/")
+    """How often a run's events name the reference solutions or held-out tests — any hit makes the run suspect."""
+    return out.count(str(HERE / "reference") + "/") + out.count(str(HERE / "hidden") + "/")
 
 
 def tasks_digest(root):
@@ -234,7 +234,8 @@ def parse_claude(lines):
 PARSERS = {"pi": parse_events, "opencode": parse_opencode, "claude": parse_claude}
 
 
-def run_one(model, task, guarded, tag, i=0, harness="pi"):
+def run_one(model, task, guarded, tag, i=0, harness="pi", hidden=None):
+    """hidden: preloaded held-out tests (main locks hidden/ during the batch); loaded here when not given."""
     src = HERE / "tasks" / task
     work = Path(tempfile.mkdtemp(prefix=f"pibench-{task}-"))
     scratch = Path(tempfile.mkdtemp(prefix="pibench-cfg-"))  # outside the workdir the model can see
@@ -259,17 +260,20 @@ def run_one(model, task, guarded, tag, i=0, harness="pi"):
     row["outside_refs"] = outside_refs(out)
     row["reference_refs"] = reference_refs(out)
     row["tests_tampered"] = restore_tests(src, work, cfg["test_globs"])
-    row["passed"] = Sandbox(work, cfg["test_cmd"], cfg["test_timeout"]).run_tests()[0]
+    sb = Sandbox(work, cfg["test_cmd"], cfg["test_timeout"])
+    row["passed"] = sb.run_tests()[0]
+    row["hidden_passed"] = hidden_passed(sb, load_hidden(task) if hidden is None else hidden)
     shutil.rmtree(work, ignore_errors=True)
     shutil.rmtree(scratch, ignore_errors=True)
     return row
 
 
 def summarize(rows):
-    out = ["| harness | config | task | pass | turns | tool calls | grounding calls | last stop | wall s | tampered | error |",
-           "|---|---|---|---|---|---|---|---|---|---|---|"]
+    out = ["| harness | config | task | pass | hidden | turns | tool calls | grounding calls | last stop | wall s | tampered | error |",
+           "|---|---|---|---|---|---|---|---|---|---|---|---|"]
     for r in rows:
         out.append(f"| {r.get('harness', 'pi')} | {r['config']} | {r['task']} | {'PASS' if r['passed'] else 'FAIL'} | "
+                   f"{fmt_hidden(r.get('hidden_passed'))} | "
                    f"{r['turns']} | {r['tool_calls']} | {r['grounding_calls']} | {r.get('last_stop') or ''} | "
                    f"{r['wall_s']} | {'YES' if r['tests_tampered'] else ''} | {r['error'] or ''} |")
     return "\n".join(out)
@@ -288,13 +292,16 @@ def main():
     model = a.model or DEFAULT_MODEL[a.harness]
     install_sigterm_exit()
     rows = []
-    with read_only_tasks(HERE / "tasks"), hidden_dir(HERE / "reference"):  # digest check below = backstop
+    tasks = a.tasks.split(",")
+    hidden = {t: load_hidden(t) for t in tasks}  # read before hidden/ is locked
+    with (read_only_tasks(HERE / "tasks"), hidden_dir(HERE / "reference"),
+          hidden_dir(HERE / "hidden")):  # digest check below = backstop
         for i in range(a.n):
-            for task in a.tasks.split(","):
+            for task in tasks:
                 order = configs(a.harness) if i % 2 == 0 else tuple(reversed(configs(a.harness)))
                 for guarded in order:  # alternate order to spread drift
                     before = tasks_digest(HERE / "tasks")
-                    row = run_one(model, task, guarded, a.tag, i, a.harness)
+                    row = run_one(model, task, guarded, a.tag, i, a.harness, hidden[task])
                     if tasks_digest(HERE / "tasks") != before:  # the agent escaped its workdir
                         raise SystemExit(f"ABORT: task originals changed during {row}; restore before rerunning")
                     rows.append(row)
