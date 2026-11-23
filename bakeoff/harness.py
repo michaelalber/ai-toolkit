@@ -3,10 +3,13 @@
 
 Usage: python harness.py [--host URL] [--models pi|m1,m2] [--tasks t1,t2] [--tag NAME] [--n 3]
 --models defaults to 'pi': the local Ollama models listed in ~/.pi/agent/models.json.
+Sampling defaults to each model's own Modelfile settings, as Pi runs it; --fixed-sampling sends
+temperature 0 and a fixed num_ctx instead (comparable with bake-offs before 2026-11-22).
 Appends rows to results.jsonl and writes results-<tag>.md (pass counts per model x task, then every run).
 """
 import argparse
 import json
+import math
 import os
 import shutil
 import statistics
@@ -154,7 +157,8 @@ def run_one(host, model, task, tag, modelfile_defaults=False, headers=None, run=
     cfg = load_task_config(src)
     sb = Sandbox(work, cfg["test_cmd"], cfg["test_timeout"])
     msgs = [{"role": "system", "content": SYSTEM}, {"role": "user", "content": (work / "spec.md").read_text()}]
-    row = {"round": tag, "model": model, "task": task, "run": run, "turns": 0, "tool_calls": 0, "tool_errors": 0,
+    row = {"round": tag, "model": model, "task": task, "run": run,
+           "sampling": "modelfile" if modelfile_defaults else "fixed", "turns": 0, "tool_calls": 0, "tool_errors": 0,
            "eval_tokens": 0, "eval_ns": 0, "prompt_tokens": 0, "prompt_ns": 0, "mem_gb": 0.0, "error": None}
     t0 = time.time()
     try:
@@ -194,9 +198,71 @@ def fmt_hidden(v):
     return "" if v is None else "PASS" if v else "FAIL"
 
 
+def wilson(k, n, z=1.96):
+    """95% Wilson score interval for k passes in n runs. Unlike k/n +/- a normal margin it stays
+    inside [0, 1] and is honest at the small n a bake-off has."""
+    p = k / n
+    denom = 1 + z * z / n
+    centre = (p + z * z / (2 * n)) / denom
+    margin = z * math.sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / denom
+    return max(0.0, centre - margin), min(1.0, centre + margin)
+
+
 def _k_of_n(values):
     vals = [v for v in values if v is not None]
-    return f"{sum(vals)}/{len(vals)}" if vals else ""
+    if not vals:
+        return ""
+    lo, hi = wilson(sum(vals), len(vals))
+    return f"{sum(vals)}/{len(vals)} ({round(lo * 100)}–{round(hi * 100)}%)"
+
+
+def parse_parameters(text):
+    """Ollama /api/show 'parameters' ("key   value" lines) as a dict; repeated keys (stop) become
+    lists, and values are parsed as JSON where they can be (numbers, quoted strings)."""
+    out = {}
+    for line in text.splitlines():
+        key, _, raw = line.strip().partition(" ")
+        if not key:
+            continue
+        try:
+            value = json.loads(raw.strip())
+        except ValueError:
+            value = raw.strip()
+        if key in out:
+            out[key] = (out[key] if isinstance(out[key], list) else [out[key]]) + [value]
+        else:
+            out[key] = value
+    return out
+
+
+def model_info(host, model, tags, headers=None):
+    """What was actually tested: the digest (from /api/tags) and the Modelfile settings and
+    quantization (from /api/show). A failing /api/show leaves the settings empty, never the run."""
+    digest = next((m.get("digest") for m in tags if m.get("name") == model), None)
+    try:
+        show = post(host, "/api/show", {"model": model}, timeout=30, headers=headers)
+    except Exception:  # metadata only; one unreachable endpoint must not stop the bake-off
+        show = {}
+    return {"model_digest": digest,
+            "quantization": (show.get("details") or {}).get("quantization_level"),
+            "model_params": parse_parameters(show.get("parameters") or "")}
+
+
+def models_table(rows):
+    """One row per model: digest, quantization and the sampling settings that applied. With
+    Modelfile sampling and no num_ctx in the Modelfile, the server's OLLAMA_CONTEXT_LENGTH applies."""
+    out = ["| model | digest | quant | num_ctx | other settings |", "|---|---|---|---|---|"]
+    for model in dict.fromkeys(r["model"] for r in rows):
+        r = next(x for x in rows if x["model"] == model and x.get("model_params") is not None)
+        params = dict(r.get("model_params") or {})
+        if r.get("sampling") == "fixed":
+            params.update(temperature=0, num_ctx=NUM_CTX)
+        num_ctx = params.pop("num_ctx", "server default")
+        params.pop("stop", None)  # prompt-format tokens, not sampling settings
+        other = ", ".join(f"{k}={v}" for k, v in sorted(params.items()))
+        out.append(f"| {model} | {(r.get('model_digest') or '')[:12]} | {r.get('quantization') or ''} | "
+                   f"{num_ctx} | {other} |")
+    return "\n".join(out)
 
 
 def aggregate(rows):
@@ -226,7 +292,7 @@ def summarize(rows):
     return "\n".join(out)
 
 
-def main():
+def parse_args(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--host", default="http://localhost:11434")
     ap.add_argument("--models", default="pi",
@@ -235,26 +301,37 @@ def main():
     ap.add_argument("--tasks", default=",".join(TASKS))
     ap.add_argument("--tag", default="hard")
     ap.add_argument("--n", type=int, default=3, help="runs per model x task (>=3 to see run-to-run variance)")
-    ap.add_argument("--modelfile-defaults", action="store_true",
-                    help="send no num_ctx/temperature overrides; test the model's own Modelfile params")
+    # Default: each model's own Modelfile settings, as Pi runs it. --fixed-sampling reproduces
+    # bake-offs from before 2026-11-22 (temperature 0, num_ctx 32768).
+    ap.add_argument("--modelfile-defaults", dest="modelfile_defaults", action="store_true",
+                    default=True, help="send no num_ctx/temperature overrides (the default)")
+    ap.add_argument("--fixed-sampling", dest="modelfile_defaults", action="store_false",
+                    help=f"send temperature 0 and num_ctx {NUM_CTX} (comparable with older results)")
     ap.add_argument("--cloud", action="store_true",
                     help="Ollama Cloud: host https://ollama.com, Bearer auth from $OLLAMA_API_KEY, no local preflight")
-    a = ap.parse_args()
+    return ap.parse_args(argv)
+
+
+def main():
+    a = parse_args()
     if a.n < 1:
         raise SystemExit("--n must be >= 1")
     models = resolve_models(a.models)
     headers = auth_headers("OLLAMA_API_KEY") if a.cloud else None
     host = "https://ollama.com" if a.cloud else a.host
+    tags = []
     if not a.cloud:
-        if missing := [m for m in models if m not in {x["name"] for x in get(host, "/api/tags")["models"]}]:
+        tags = get(host, "/api/tags")["models"]
+        if missing := [m for m in models if m not in {x["name"] for x in tags}]:
             raise SystemExit(f"Models not installed on host: {missing}")
         if busy := loaded(host):
             raise SystemExit(f"Refusing to start: models already loaded on host: {busy}")
     rows = []
     for model in models:  # repeats stay inside one model load: one model in memory at a time
+        info = model_info(host, model, tags, headers)
         for i in range(a.n):
             for task in a.tasks.split(","):
-                row = run_one(host, model, task, a.tag, a.modelfile_defaults, headers, run=i)
+                row = {**run_one(host, model, task, a.tag, a.modelfile_defaults, headers, run=i), **info}
                 rows.append(row)
                 with open(HERE / "results.jsonl", "a") as f:
                     f.write(json.dumps(row) + "\n")
@@ -264,7 +341,11 @@ def main():
             if loaded(host):
                 raise SystemExit(f"Model still loaded after unload: {loaded(host)}")
     (HERE / f"results-{a.tag}.md").write_text(
-        f"## Pass counts ({a.n} runs per model x task)\n\n{aggregate(rows)}\n\n## Every run\n\n{summarize(rows)}\n")
+        f"## Pass counts ({a.n} runs per model x task, "
+        f"{'Modelfile' if a.modelfile_defaults else 'fixed: temperature 0'} sampling)\n\n"
+        f"{aggregate(rows)}\n\nIntervals are 95% Wilson confidence intervals; overlapping "
+        f"intervals mean the difference may be noise.\n\n## Models tested\n\n{models_table(rows)}\n\n"
+        f"## Every run\n\n{summarize(rows)}\n")
 
 
 if __name__ == "__main__":

@@ -123,9 +123,56 @@ def test_aggregate_counts_passes_per_model_and_task_with_a_model_total():
     rows = [_row("m1", "t1", True, True), _row("m1", "t1", True, False), _row("m1", "t1", False, False),
             _row("m1", "t2", True, None, 30), _row("m1", "t2", True, None, 20)]
     lines = harness.aggregate(rows).splitlines()
-    assert lines[2] == "| m1 | t1 | 2/3 | 1/3 | 10.0 |"
-    assert lines[3] == "| m1 | t2 | 2/2 |  | 25.0 |"
-    assert lines[4] == "| **m1** | **all** | **4/5** | **1/3** |  |"
+    assert lines[2] == "| m1 | t1 | 2/3 (21–94%) | 1/3 (6–79%) | 10.0 |"
+    assert lines[3] == "| m1 | t2 | 2/2 (34–100%) |  | 25.0 |"
+    assert lines[4] == "| **m1** | **all** | **4/5 (38–96%)** | **1/3 (6–79%)** |  |"
+
+
+@pytest.mark.parametrize("k,n,expected", [(15, 18, (0.608, 0.942)), (0, 6, (0.0, 0.390)),
+                                          (6, 6, (0.610, 1.0))])
+def test_wilson_interval_matches_known_values(k, n, expected):
+    lo, hi = harness.wilson(k, n)
+    assert (round(lo, 3), round(hi, 3)) == expected
+
+
+def test_parameters_text_parses_numbers_strings_and_repeated_keys():
+    text = ('num_ctx                        131072\ntemperature                    1\n'
+            'top_p                          0.95\nstop                           "<|a|>"\n'
+            'stop                           "<|b|>"')
+    assert harness.parse_parameters(text) == {
+        "num_ctx": 131072, "temperature": 1, "top_p": 0.95, "stop": ["<|a|>", "<|b|>"]}
+    assert harness.parse_parameters("") == {}
+
+
+def test_model_info_takes_digest_from_tags_and_settings_from_show(monkeypatch):
+    def fake_post(host, path, body, timeout=600, headers=None):
+        assert path == "/api/show" and body == {"model": "m"}
+        return {"parameters": "temperature 1", "details": {"quantization_level": "Q4_K_M"}}
+
+    monkeypatch.setattr(harness, "post", fake_post)
+    tags = [{"name": "other", "digest": "x"}, {"name": "m", "digest": "abc123"}]
+    assert harness.model_info("http://h", "m", tags) == {
+        "model_digest": "abc123", "quantization": "Q4_K_M", "model_params": {"temperature": 1}}
+
+
+def test_model_info_survives_a_failing_show(monkeypatch):
+    def boom(*a, **k):
+        raise OSError("down")
+
+    monkeypatch.setattr(harness, "post", boom)
+    info = harness.model_info("http://h", "m", [{"name": "m", "digest": "abc"}])
+    assert info == {"model_digest": "abc", "quantization": None, "model_params": {}}
+
+
+def test_models_table_shows_digest_quant_and_effective_settings():
+    rows = [{"model": "m", "model_digest": "0a8c266910232fd3", "quantization": "Q4_K_M",
+             "model_params": {"temperature": 1, "top_p": 0.95}, "sampling": "modelfile"},
+            {"model": "m", "model_digest": "0a8c266910232fd3", "quantization": "Q4_K_M",
+             "model_params": {}, "sampling": "modelfile"}]
+    lines = harness.models_table(rows).splitlines()
+    assert len(lines) == 3  # one row per model, not per run
+    assert lines[2] == ("| m | 0a8c26691023 | Q4_K_M | server default | "
+                        "temperature=1, top_p=0.95 |")
 
 
 def test_aggregate_keeps_models_in_first_seen_order():
@@ -152,6 +199,28 @@ def test_resolve_models_takes_an_explicit_list_or_pi(tmp_path, monkeypatch):
     monkeypatch.setattr(harness, "pi_models", lambda: ["from-pi"])
     assert harness.resolve_models("pi") == ["from-pi"]
     assert harness.resolve_models("a, b") == ["a", "b"]
+
+
+def test_sampling_defaults_to_the_models_own_modelfile_settings():
+    assert harness.parse_args([]).modelfile_defaults is True
+    assert harness.parse_args(["--modelfile-defaults"]).modelfile_defaults is True  # still accepted
+    assert harness.parse_args(["--fixed-sampling"]).modelfile_defaults is False
+
+
+@pytest.mark.parametrize("modelfile_defaults,expected", [(True, "modelfile"), (False, "fixed")])
+def test_each_row_records_its_sampling_mode(monkeypatch, modelfile_defaults, expected):
+    sent = []
+
+    def fake_post(host, path, body, timeout=600, headers=None):
+        sent.append(body["options"])
+        return {"message": {"role": "assistant", "content": "done"}}
+
+    monkeypatch.setattr(harness, "post", fake_post)
+    monkeypatch.setattr(harness, "loaded_gb", lambda host: 0.0)
+    monkeypatch.setattr(harness, "load_hidden", lambda task: {})
+    row = harness.run_one("http://h", "m", "hard_spec", "t", modelfile_defaults)
+    assert row["sampling"] == expected
+    assert sent[0] == ({} if modelfile_defaults else {"num_ctx": NUM_CTX, "temperature": 0})
 
 
 def test_task_without_config_defaults_to_pytest(tmp_path):
